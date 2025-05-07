@@ -3,8 +3,19 @@ import ControlledAccordions from "../components/AccordionMui";
 
 const Compliance_And_Prioritization = () => {
     return (
-        <div className="bg-gray-200 py-10 px-4">
+        
+        <div className="py-10 px-4">
+                 <div className="video-background">
+
+  
+<video className="absolute w-full h-full object-cover" autoPlay loop muted>
+  <source src="img/Navbar/bg-header.mp4" type="video/mp4" />
+</video>
+
+</div>
+
             <div className="text-center mb-6">
+                
                 <h1 className="text-2xl font-semibold mb-2">Uyğunluq üçün kriteriyalar</h1>
                 <p className="text-gray-600 text-sm md:text-base max-w-3xl mx-auto">
                     "Sənaye 4.0 Hazırlıq" Proqramından faydalanmaq üçün şirkətlər aşağıdakı kriteriyalara cavab verməlidir:

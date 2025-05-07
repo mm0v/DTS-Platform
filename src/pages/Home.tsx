@@ -1,4 +1,8 @@
 import { Link } from 'react-router-dom';
+import LogoCarousel from '../components/LogoCarousel';
+
+
+
 
 const PartnerLogo = ({ src, alt }: { src: string, alt: string }) => (
   <div className="flex items-center justify-center p-2">
@@ -58,7 +62,39 @@ const Home = () => {
             <PartnerLogo src="/img/Home/STP.png" alt="STP" />
           </div>
         </div>
+
+
       </div>
+      {/* Mission section */}
+<div className="bg-gray-200 h-[800px] mt-8 md:mt-16">
+  <div className="container mx-auto px-4">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      
+      {/* Kart 1 */}
+      <div className="bg-white rounded-[12px] shadow p-6 h-[385px] flex flex-col justify-start items-start mt-16">
+        <img className='mt-2' src="img/Home/mission.svg" alt="" />
+        <h3 className="text-2xl py-3 px-2 mb-2">Missiyamız</h3>
+        <p className="text-l p-2">Proqramın məqsədi bizneslərin rəqəmsallaşma və innovasiya yolu ilə səmərəliliyinin və uzunmüddətli artımının dəstəklənməsi, bununla da Azərbaycan iqtisadiyyatının ümumi inkişafına töhfə verməkdir.</p>
+      </div>
+
+      {/* Kart 2 */}
+      <div className="bg-white rounded-[12px] shadow p-6 h-[385px] flex flex-col justify-start items-start mt-16">
+      <img className='mt-2' src="img/Home/vision.svg" alt="" />
+        <h3 className="text-2xl py-3 px-2 mb-2">Vizyonumuz</h3>
+        <p className="text-l p-2 ">“Sənaye 4.0 Hazırlıq” Proqramı 2030-cu ilədək İqtisadiyyat Nazirliyinin dəstəyi ilə ölkəmizin istehsal yönümlü müəssisələrinin rəqəmsal transformasiyasına hədəflənmişdir.</p>
+      </div>
+
+
+     
+
+    </div>
+  </div>
+
+<div className="logo mt-24 px-64">
+  <LogoCarousel />
+  </div>
+</div>
+
     </div>
   );
 };
