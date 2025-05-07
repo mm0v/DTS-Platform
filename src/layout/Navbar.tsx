@@ -33,6 +33,7 @@ const Navbar = () => {
                         <Link to="/compliance" className="hover:text-blue-300 whitespace-nowrap">Uyğunluq və Prioritetləşdirmə</Link>
                         <Link to="/success" className="hover:text-blue-300">Uğurlarımız</Link>
                         <Link to="/fag" className="hover:text-blue-300">FAQ</Link>
+                        <Link to="/contact" className="hover:text-blue-300">Əlaqə</Link>
                         <Link to="/apply" className="bg-blue-700 px-4 py-1 rounded">Müraciət et</Link>
                         <button
                             className="border border-white px-2 py-1 rounded"
@@ -82,6 +83,7 @@ const Navbar = () => {
                         <Link to="/compliance" className="block py-2 hover:bg-blue-800 px-2 rounded">Uyğunluq və Prioritetləşdirmə</Link>
                         <Link to="/success" className="block py-2 hover:bg-blue-800 px-2 rounded">Uğurlarımız</Link>
                         <Link to="/fag" className="block py-2 hover:bg-blue-800 px-2 rounded">FAQ</Link>
+                        <Link to="/contact" className="block py-2 hover:bg-blue-800 px-2 rounded">Əlaqə</Link>
                         <Link to="/apply" className="block bg-blue-700 px-4 py-2 rounded text-center">Müraciət et</Link>
                     </div>
                 )}
