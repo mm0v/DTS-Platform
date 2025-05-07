@@ -25,7 +25,7 @@ const Navbar = () => {
                             <img src="img/Navbar/4SIM_logo.png" alt="Logo" className="ml-4" />
                         </div>
                         <div className="ml-8 text-sm">
-                            <span>SƏNAYE 4.0 <br /> HAZIRLIĞ <br /> PROQRAMI</span>
+                            <span>SƏNAYE 4.0 <br /> HAZIRLIQ <br /> PROQRAMI</span>
                         </div>
                     </div>
 
@@ -77,8 +77,8 @@ const Navbar = () => {
 
                 {/* Mobile Menu */}
                 {isMenuOpen && (
-                    <div className="lg:hidden pt-4 pb-2 space-y-2 text-sm">
-                        <Link to="/" className="block py-2 hover:bg-blue-800 px-2 rounded">SƏNAYE 4.0 HAZIRLIĞ PROQRAMI</Link>
+                    <div className="lg:hidden pt-6 mt-4 max-h-screen pb-4 space-y-2 text-sm">
+                        <Link to="/" className="block py-2 hover:bg-blue-800 px-2 rounded">Ana Səhifə</Link>
                         <Link to="/compliance" className="block py-2 hover:bg-blue-800 px-2 rounded">Uyğunluq və Prioritetləşdirmə</Link>
                         <Link to="/success" className="block py-2 hover:bg-blue-800 px-2 rounded">Uğurlarımız</Link>
                         <Link to="/fag" className="block py-2 hover:bg-blue-800 px-2 rounded">FAQ</Link>
