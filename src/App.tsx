@@ -4,7 +4,7 @@ function App() {
 
   return (
     <>
-      <h1>DTS Platform</h1>
+      <h1>DTS Platform C4IR</h1>
     </>
   )
 }
