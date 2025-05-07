@@ -20,7 +20,7 @@ const LogoCarousel = () => {
             id: 1,
             src: "/img/Logo/iqtisadiyyat.svg",
             alt: "four_center_logo",
-            href: "https://www.economy.gov.az"
+            href: ""
         },
         {
             id: 2,
