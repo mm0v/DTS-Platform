@@ -6,7 +6,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 export default function AccordionExpandDefault() {
     return (
-        <div>
+        <div >
             <Accordion  defaultExpanded>
                 <AccordionSummary
                     expandIcon={<ExpandMoreIcon />}

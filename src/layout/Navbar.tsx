@@ -21,7 +21,9 @@ const Navbar = () => {
                     <div className="flex items-center space-x-6">
                         {/* Logo */}
                         <div className="flex items-center">
-                            <img src="img/Navbar/economy_logo.png" alt="Logo" />
+                            <Link to={""}>
+                                <img src="img/Navbar/economy_logo.png" alt="Logo" />
+                            </Link>
                             <img src="img/Navbar/4SIM_logo.png" alt="Logo" className="ml-4" />
                         </div>
                         <div className="ml-8 text-sm border-l-2 border-gray-300 pl-5">
@@ -30,10 +32,10 @@ const Navbar = () => {
                     </div>
 
                     <div className="flex items-center space-x-4 text-sm">
-                        <Link to="/compliance" className="hover:text-blue-300 whitespace-nowrap">Uyğunluq və Prioritetləşdirmə</Link>
-                        <Link to="/success" className="hover:text-blue-300">Uğurlarımız</Link>
-                        <Link to="/fag" className="hover:text-blue-300">FAQ</Link>
-                        <Link to="/contact" className="hover:text-blue-300">Əlaqə</Link>
+                        <Link to="/compliance" className="hover:text-blue-400 whitespace-nowrap">Uyğunluq və Prioritetləşdirmə</Link>
+                        <Link to="/success" className="hover:text-blue-400">Uğurlarımız</Link>
+                        <Link to="/fag" className="hover:text-blue-400">FAQ</Link>
+                        <Link to="/contact" className="hover:text-blue-400">Əlaqə</Link>
                         <Link to="/apply" className="bg-blue-700 px-4 py-1 rounded">Müraciət et</Link>
                         <button
                             className="border border-white px-2 py-1 rounded"
