@@ -59,34 +59,37 @@ const Home = () => {
           </div>
         </div>
 
-
       </div>
+      {/* Video */}
+
       {/* Mission section */}
-      <div className="bg-gray-200 h-[800px] mt-8 md:mt-16">
+      <div className="bg-gray-200 py-12 md:py-16 lg:py-24">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Section heading - can be added if needed */}
 
-            {/* Kart 1 */}
-            <div className="bg-white rounded-[12px] shadow p-6 h-[385px] flex flex-col justify-start items-start mt-16">
-              <img className='mt-2' src="img/Home/mission.svg" alt="" />
-              <h3 className="text-2xl py-3 px-2 mb-2">Missiyamız</h3>
-              <p className="text-l p-2">Proqramın məqsədi bizneslərin rəqəmsallaşma və innovasiya yolu ilə səmərəliliyinin və uzunmüddətli artımının dəstəklənməsi, bununla da Azərbaycan iqtisadiyyatının ümumi inkişafına töhfə verməkdir.</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-8">
+            {/* Mission Card */}
+            <div className="bg-white rounded-lg shadow-md p-5 lg:p-8 h-full flex flex-col justify-start items-start transform transition-all duration-300 hover:shadow-lg">
+              <img className="h-12 w-auto mb-3" src="img/Home/mission.svg" alt="Mission icon" />
+              <h3 className="text-xl md:text-2xl font-semibold mb-3">Missiyamız</h3>
+              <p className="text-sm md:text-base text-gray-700">
+                Proqramın məqsədi bizneslərin rəqəmsallaşma və innovasiya yolu ilə səmərəliliyinin və uzunmüddətli artımının dəstəklənməsi, bununla da Azərbaycan iqtisadiyyatının ümumi inkişafına töhfə verməkdir.
+              </p>
             </div>
 
-            {/* Kart 2 */}
-            <div className="bg-white rounded-[12px] shadow p-6 h-[385px] flex flex-col justify-start items-start mt-16">
-              <img className='mt-2' src="img/Home/vision.svg" alt="" />
-              <h3 className="text-2xl py-3 px-2 mb-2">Vizyonumuz</h3>
-              <p className="text-l p-2 ">“Sənaye 4.0 Hazırlıq” Proqramı 2030-cu ilədək İqtisadiyyat Nazirliyinin dəstəyi ilə ölkəmizin istehsal yönümlü müəssisələrinin rəqəmsal transformasiyasına hədəflənmişdir.</p>
+            {/* Vision Card */}
+            <div className="bg-white rounded-lg shadow-md p-5 lg:p-8 h-full flex flex-col justify-start items-start transform transition-all duration-300 hover:shadow-lg">
+              <img className="h-12 w-auto mb-3" src="img/Home/vision.svg" alt="Vision icon" />
+              <h3 className="text-xl md:text-2xl font-semibold mb-3">Vizyonumuz</h3>
+              <p className="text-sm md:text-base text-gray-700">
+                "Sənaye 4.0 Hazırlıq" Proqramı 2030-cu ilədək İqtisadiyyat Nazirliyinin dəstəyi ilə ölkəmizin istehsal yönümlü müəssisələrinin rəqəmsal transformasiyasına hədəflənmişdir.
+              </p>
             </div>
-
-
-
-
           </div>
         </div>
 
-        <div className="logo mt-24 px-64">
+        {/* Logo Carousel Section */}
+        <div className="mt-12 md:mt-16 lg:mt-20 px-4 md:px-8 lg:px-16">
           <LogoCarousel />
         </div>
       </div>
