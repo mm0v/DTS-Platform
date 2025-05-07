@@ -26,7 +26,7 @@ const LogoCarousel = () => {
             id: 2,
             src: "/img/Logo/4sim.png",
             alt: "iqtisadiyyat_center_logo",
-            href: "https://4sim.gov.az/az"
+            href: ""
         },
         {
             id: 3,
