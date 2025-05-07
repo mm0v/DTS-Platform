@@ -9,10 +9,14 @@ const PartnerLogo = ({ src, alt }: { src: string, alt: string }) => (
 const Home = () => {
   return (
     <div className="relative min-h-screen">
+      <div className="video-background">
+
+  
       <video className="absolute w-full h-full object-cover" autoPlay loop muted>
         <source src="img/Navbar/bg-header.mp4" type="video/mp4" />
       </video>
 
+      </div>
       {/* Content */}
       <div className="relative z-10 container mx-auto px-4 py-8 md:py-16 min-h-screen flex flex-col">
         {/* Main content */}

@@ -14,7 +14,7 @@ const Navbar = () => {
     };
 
     return (
-        <nav className=" bg-black text-white top-0 z-50">
+        <nav className="text-white top-0 z-50">
             <div className="container mx-auto px-4 py-3">
                 {/* Desktop Navigation */}
                 <div className="hidden lg:flex justify-between items-center">
@@ -24,7 +24,7 @@ const Navbar = () => {
                             <img src="img/Navbar/economy_logo.png" alt="Logo" />
                             <img src="img/Navbar/4SIM_logo.png" alt="Logo" className="ml-4" />
                         </div>
-                        <div className="ml-8 text-sm">
+                        <div className="ml-8 text-sm border-l-2 border-gray-300 pl-5">
                             <span>SƏNAYE 4.0 <br /> HAZIRLIQ <br /> PROQRAMI</span>
                         </div>
                     </div>
