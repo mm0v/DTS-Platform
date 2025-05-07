@@ -116,9 +116,6 @@ const Our_Success = () => {
           </div>
         </div>
 
-
-
-
       </div>
     </div>
   );
