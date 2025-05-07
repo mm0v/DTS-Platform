@@ -32,7 +32,7 @@ const LogoCarousel = () => {
             id: 3,
             src: "/img/Logo/metak.svg",
             alt: "sim_center_logo",
-            href: "https://4sim.gov.az/az"
+            href: ""
         },
         {
             id: 4,
