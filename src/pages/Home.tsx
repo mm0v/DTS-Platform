@@ -49,11 +49,17 @@ const Home = () => {
 
         {/* Partners section */}
         <div className="mt-8 md:mt-16">
-          <h2 className="text-center text-gray-400 text-sm mb-6">Proqrama uğurla başa vuran şirkətlər</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 justify-items-center">
-            <PartnerLogo src="/img/Home/Metak.png" alt="METAK" />
-            <PartnerLogo src="/img/Home/AzerFload.png" alt="azerfloat" />
-            <PartnerLogo src="/img/Home/STP.png" alt="STP" />
+          <h2 className="text-center text-white text-sm mb-6">Proqrama uğurla başa vuran şirkətlər</h2>
+          <div className="flex justify-around items-center flex-wrap">
+            <div>
+              <PartnerLogo src="/img/Home/Metak.png" alt="METAK" />
+            </div>
+            <div className='ml-10 mr-10'>
+              <PartnerLogo src="/img/Home/AzerFload.png" alt="azerfloat" />
+            </div>
+            <div>
+              <PartnerLogo src="/img/Home/STP.png" alt="STP" />
+            </div>
           </div>
         </div>
 

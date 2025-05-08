@@ -1,8 +1,8 @@
 import ControlledAccordions from "../components/AccordionMui";
-import gif1 from "../../public/img/Comp_Prior/ccf568541b193233fb9e3e6c868b3cb2ed09cc41.gif";
-import gif2 from "../../public/img/Comp_Prior/10ba024cb528d82f11d09e2ab8ea9d467241d3fb.gif";
-import gif3 from "../../public/img/Comp_Prior/7c12dee339a0796d4f49232e6f68531d944fdd3d.gif";
-import gif4 from "../../public/img/Comp_Prior/8bc14bdaaeec72bb08e93c6d73b4476b5ae8bdc5.gif";
+import gif1 from "../../public/img/Comp_Prior/1.gif";
+import gif2 from "../../public/img/Comp_Prior/2.gif";
+import gif3 from "../../public/img/Comp_Prior/3.gif";
+import gif4 from "../../public/img/Comp_Prior/4.gif";
 const Compliance_And_Prioritization = () => {
   return (
     <div className="mt-24">
