@@ -7,7 +7,7 @@ interface Logo {
     href: string;
 }
 
-const LogoCarousel = () => {
+const LogoCarousel: React.FC = () => {
     const carouselRef = useRef<HTMLDivElement>(null);
     const [isDragging, setIsDragging] = useState<boolean>(false);
     const [startX, setStartX] = useState<number>(0);
@@ -45,12 +45,11 @@ const LogoCarousel = () => {
             src: "/img/Logo/stp.svg",
             alt: "iqtisadiyyat_center_logo",
             href: "https://4sim.gov.az/az"
-        },
-       
+        }
     ];
 
     // Create a bigger array for infinite scrolling
-    const clonedLogos = [...logos, ...logos, ...logos, ...logos,...logos];
+    const clonedLogos: Logo[] = [...logos, ...logos, ...logos];
 
     // Auto scroll animation
     useEffect(() => {
@@ -59,11 +58,17 @@ const LogoCarousel = () => {
 
         let animationId: number;
         let position = carousel.scrollLeft;
-        const speed = 0.7;
-        const fullScrollWidth = logos.length * 460; // Approximate width of each logo item
+
+        // Adjust speed based on screen size
+        const speed = window.innerWidth < 768 ? 0.5 : 0.7;
+
+        // Calculate full scroll width dynamically based on item count and container width
+        const firstChild = carousel.firstChild as HTMLElement;
+        const itemWidth = firstChild?.offsetWidth || 0;
+        const fullScrollWidth = logos.length * itemWidth;
 
         // Core animation
-        const scroll = () => {
+        const scroll = (): void => {
             if (!carousel || !autoScroll) return;
 
             position += speed;
@@ -87,7 +92,7 @@ const LogoCarousel = () => {
     }, [autoScroll, logos.length]);
 
     // Handle interaction start
-    const handleInteractionStart = (e: React.MouseEvent | React.TouchEvent) => {
+    const handleInteractionStart = (e: React.MouseEvent | React.TouchEvent): void => {
         setAutoScroll(false);
         setIsDragging(true);
 
@@ -101,7 +106,7 @@ const LogoCarousel = () => {
     };
 
     // Handle dragging
-    const handleDrag = (e: React.MouseEvent | React.TouchEvent) => {
+    const handleDrag = (e: React.MouseEvent | React.TouchEvent): void => {
         if (!isDragging) return;
         e.preventDefault();
 
@@ -115,13 +120,15 @@ const LogoCarousel = () => {
     };
 
     // Handle interaction end
-    const handleInteractionEnd = () => {
+    const handleInteractionEnd = (): void => {
         setIsDragging(false);
 
         // Handle loop correction
         const carousel = carouselRef.current;
         if (carousel) {
-            const totalWidth = logos.length * 160;
+            const firstChild = carousel.firstChild as HTMLElement;
+            const itemWidth = firstChild?.offsetWidth || 0;
+            const totalWidth = logos.length * itemWidth;
 
             // If we're past the repeated section, jump back
             if (carousel.scrollLeft >= totalWidth * 2) {
@@ -138,7 +145,7 @@ const LogoCarousel = () => {
     };
 
     // Handle wheel events
-    const handleWheel = () => {
+    const handleWheel = (): void => {
         setAutoScroll(false);
 
         // Resume auto-scroll after pause
@@ -147,12 +154,12 @@ const LogoCarousel = () => {
     };
 
     return (
-        <div className="py-12  rounded-xl overflow-hidden">
-            <div className="max-w-7xl mx-auto px-1">
+        <div className="w-full py-8 md:py-10 lg:py-12 rounded-xl overflow-hidden">
+            <div className="w-full mx-auto px-2 sm:px-4">
                 <div className="relative">
                     <div
                         ref={carouselRef}
-                        className="flex overflow-x-scroll scrollbar-hide py-6"
+                        className="flex overflow-x-scroll scrollbar-hide py-4 md:py-6"
                         style={{
                             scrollbarWidth: 'none',
                             msOverflowStyle: 'none',
@@ -171,7 +178,7 @@ const LogoCarousel = () => {
                         {clonedLogos.map((logo, index) => (
                             <div
                                 key={`${logo.id}-${index}`}
-                                className="flex-shrink-0 w-1/6 px-4 flex justify-center items-center"
+                                className="flex-shrink-0 w-1/2 xs:w-1/3 sm:w-1/4 md:w-1/5 lg:w-1/6 px-2 sm:px-3 md:px-4 flex justify-center items-center"
                             >
                                 <a
                                     href={logo.href}
@@ -183,7 +190,7 @@ const LogoCarousel = () => {
                                     <img
                                         src={logo.src}
                                         alt={logo.alt}
-                                        className="h-20 p-2 object-contain filter hover:brightness-105"
+                                        className="h-12 sm:h-14 md:h-16 lg:h-20 p-1 sm:p-2 object-contain filter hover:brightness-105"
                                         draggable="false"
                                     />
                                 </a>
@@ -191,13 +198,19 @@ const LogoCarousel = () => {
                         ))}
                     </div>
 
-                    {/* Add subtle gradient overlays to suggest continued content */}
-                    {/* <div className="absolute left-0 top-0 h-full w-16 bg-gradient-to-r from-gray-50 to-transparent pointer-events-none"></div>
-                    <div className="absolute right-0 top-0 h-full w-16 bg-gradient-to-l from-gray-50 to-transparent pointer-events-none"></div> */}
                 </div>
             </div>
         </div>
     );
 };
 
-export default LogoCarousel;
+// Wrapper component with the responsive container
+const ResponsiveLogoSection: React.FC = () => {
+    return (
+        <div className="mt-12 md:mt-16 lg:mt-20 px-4 md:px-8 lg:px-16">
+            <LogoCarousel />
+        </div>
+    );
+};
+
+export default ResponsiveLogoSection;
