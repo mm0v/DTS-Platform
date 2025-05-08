@@ -1,4 +1,9 @@
+import { useState } from "react";
+
 const Our_Success = () => {
+  const [expanded1, setExpanded1] = useState(false);
+  const [expanded2, setExpanded2] = useState(false);
+  const [expanded3, setExpanded3] = useState(false);
   return (
     <div className="mt-24">
       <div className="video-background">
@@ -34,7 +39,11 @@ const Our_Success = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-7xl mx-auto">
           {/* Card 1 */}
-          <div className="bg-white rounded-lg p-6 m-4 shadow-[2px_2px_12px_0px_#2323234D] border-[1px] border-[#D0D0D0] flex flex-col">
+          <div
+            className={`bg-white rounded-lg p-6 m-4 shadow-[2px_2px_12px_0px_#2323234D] border-[1px] border-[#D0D0D0] flex flex-col transition-all duration-300 ease-in-out overflow-hidden ${
+              expanded1 ? "max-h-[1000px]" : "max-h-[260px]"
+            }`}
+          >
             <div className="flex flex-col items-center justify-center text-center">
               <div className="h-[100px] flex items-center justify-center">
                 <svg
@@ -75,7 +84,14 @@ const Our_Success = () => {
                 </svg>
               </div>
               <div className="mt-6">
-                <p className="font-normal text-16  text-[#323232] text-center font-semibold">
+                <p
+                  onClick={() => setExpanded1(!expanded1)}
+                  className={`font-normal text-16 text-[#323232] text-center  cursor-pointer transition-all duration-300 ease-in-out ${
+                    expanded1
+                      ? "max-h-full whitespace-normal line-clamp-none"
+                      : "max-h-[6.8em] overflow-hidden line-clamp-4"
+                  }`}
+                >
                   Azərbaycanın aparıcı boru istehsalı şirkətlərindən olan Metak,
                   "Sənaye 4.0 Hazırlıq" Proqramına qoşularaq iştirak etmişdir.
                   Proqram çərçivəsində şirkətin rəqəmsal hazırlıq səviyyəsi
@@ -89,7 +105,12 @@ const Our_Success = () => {
           </div>
 
           {/* Card 2 */}
-          <div className="bg-white rounded-lg p-6 m-4 shadow-[2px_2px_12px_0px_#2323234D] border-[1px] border-[#D0D0D0] flex flex-col">
+          <div
+            className={`bg-white rounded-lg p-6 m-4 shadow-[2px_2px_12px_0px_#2323234D] border-[1px] border-[#D0D0D0] flex flex-col transition-all duration-300 ease-in-out overflow-hidden ${
+              expanded2 ? "max-h-[1000px]" : "max-h-[260px]"
+            }`}
+          >
+            {" "}
             <div className="flex flex-col items-center justify-center text-center">
               <div className="h-[100px] flex items-center justify-center">
                 <svg
@@ -190,7 +211,15 @@ const Our_Success = () => {
                 </svg>
               </div>
               <div className="mt-6">
-                <p className="font-normal text-16  text-[#323232] text-center font-semibold">
+                <p
+                  onClick={() => setExpanded2(!expanded2)}
+                  className={`font-normal text-16 text-[#323232] text-center  cursor-pointer transition-all duration-300 ease-in-out ${
+                    expanded2
+                      ? "max-h-full whitespace-normal line-clamp-none"
+                      : "max-h-[6.8em] overflow-hidden line-clamp-4"
+                  }`}
+                >
+                  {" "}
                   Şüşə istehsalı üzrə ixtisaslaşmış Azerfloat şirkəti üçün
                   proqram çərçivəsində əməliyyat səmərəliliyinin artırılması,
                   istehsal proseslərinin optimallaşdırılması və resurs
@@ -204,13 +233,26 @@ const Our_Success = () => {
           </div>
 
           {/* Card 3 */}
-          <div className="bg-white rounded-lg p-6 m-4 shadow-[2px_2px_12px_0px_#2323234D] border-[1px] border-[#D0D0D0] flex flex-col">
+          <div
+            className={`bg-white rounded-lg p-6 m-4 shadow-[2px_2px_12px_0px_#2323234D] border-[1px] border-[#D0D0D0] flex flex-col transition-all duration-300 ease-in-out overflow-hidden ${
+              expanded3 ? "max-h-[1000px]" : "max-h-[260px]"
+            }`}
+          >
+            {" "}
             <div className="flex flex-col items-center justify-center text-center">
               <div className="h-[100px] flex items-center justify-center">
                 <img src="/img/Success/logo_stp.png" alt="logo_stp" />
               </div>
               <div className="mt-6">
-                <p className="font-normal text-16 text-[#323232] text-center font-semibold">
+                <p
+                  onClick={() => setExpanded3(!expanded3)}
+                  className={`font-normal text-16 text-[#323232] text-center  cursor-pointer transition-all duration-300 ease-in-out ${
+                    expanded3
+                      ? "max-h-full whitespace-normal line-clamp-none"
+                      : "max-h-[6.8em] overflow-hidden line-clamp-4"
+                  }`}
+                >
+                  {" "}
                   Azərbaycanın ən böyük sənaye mərkəzlərindən biri olan STP
                   Kabel MMC, süni intellektlə idarə olunan monitorinq sistemləri
                   və ağıllı logistika həllərini tətbiq etməklə rəqəmsal
