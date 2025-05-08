@@ -28,7 +28,7 @@ const Our_Success = () => {
           <h1 className="mb-2 font-medium text-[24px] md:text-[36px] leading-[32px] md:leading-[40px] text-[#323232]">
             Uğur hekayələri
           </h1>
-          <p className=" max-w-5xl mx-auto mt-4 text-[16px] md:text-[18px] leading-[140%] md:leading-[120%] text-[#323232]">
+          <p className=" max-w-5xl p-2 mx-auto mt-4 text-[16px] md:text-[18px] leading-[140%] md:leading-[120%] text-[#323232]">
             “Sənaye 4.0 Hazırlıq” Proqramı çərçivəsində artıq 3 aparıcı istehsal
             yönümlü şirkətin rəqəmsal transformasiya prosesinə dəstək
             göstərilmişdir. Pilot iştirakçılar-Metak, Azerfloat və STP -
