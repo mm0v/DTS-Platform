@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import LogoCarousel from '../components/LogoCarousel';
 import BasicModal from '../components/ModalMui';
+import Timeline from './Timeline';
 
 const PartnerLogo = ({ src, alt }: { src: string, alt: string }) => (
   <div className="flex items-center justify-center p-2">
@@ -65,6 +66,9 @@ const Home = () => {
 
       </div>
       {/* Video */}
+      <div>
+        <Timeline />
+      </div>
 
       {/* Mission section */}
       <div className="bg-gray-200 py-12 md:py-16 lg:py-24">
