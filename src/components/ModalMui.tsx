@@ -1,0 +1,73 @@
+import * as React from 'react';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import Modal from '@mui/material/Modal';
+import Backdrop from '@mui/material/Backdrop';
+import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
+
+const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 400,
+    bgcolor: 'background.paper',
+    borderRadius: 2,
+    boxShadow: '0px 20px 40px rgba(0, 0, 0, 0.5)',
+    p: 4,
+};
+
+export default function BasicModal() {
+    const [open, setOpen] = React.useState(false);
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
+
+    return (
+        <div>
+            <Button onClick={handleOpen} sx={{ color: "#000000", padding: "8px 18px", border: "1px solid #ffff", backgroundColor: "#ffff" }}>Ətraflı</Button>
+            <Modal
+                open={open}
+                onClose={handleClose}
+                closeAfterTransition
+                slots={{ backdrop: Backdrop }}
+                slotProps={{
+                    backdrop: {
+                        sx: {
+                            backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                            backdropFilter: 'blur(15px)',
+                        },
+                    },
+                }}
+            >
+                <Box sx={style}>
+                    {/* Close Icon */}
+                    <IconButton
+                        onClick={handleClose}
+                        sx={{
+                            position: 'absolute',
+                            top: 8,
+                            right: 8,
+                            color: 'grey.700',
+                        }}
+                    >
+                        <CloseIcon />
+                    </IconButton>
+
+                    {/* Modal Content */}
+                    <Typography variant="h6" component="h2">
+                        Bu proqram üzrə ümumi koordinasiya Dördüncü Sənaye İnqilabının Təhlili və Koordinasiya Mərkəzi (4SİM)
+                        tərəfindən həyata keçirilir. Proqram, Azərbaycan Respublikası İqtisadiyyat Nazirliyinin (İN) dəstəyi
+                        ilə həyata keçirilir. Proqram, "Azərbaycan Respublikasının 2022-2026-cı illərdə Sosial-İqtisadi İnkişaf Strategiyası"
+                        ilə müəyyən edilmiş məqsədlərə xidmət edərək Azərbaycan bizneslərinə kompleks rəqəmsal transformasiya prosesini həyata
+                        keçirməkdə kömək edir.
+                    </Typography>
+                </Box>
+            </Modal>
+        </div>
+    );
+}
+
+
+
