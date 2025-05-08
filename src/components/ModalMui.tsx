@@ -12,11 +12,17 @@ const style = {
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width: 400,
+    width: {
+        xs: '90%',
+        sm: 800,
+    },
     bgcolor: 'background.paper',
     borderRadius: 2,
     boxShadow: '0px 20px 40px rgba(0, 0, 0, 0.5)',
-    p: 4,
+    p: {
+        xs: 2,
+        sm: 4,
+    },
 };
 
 export default function BasicModal() {
@@ -26,7 +32,17 @@ export default function BasicModal() {
 
     return (
         <div>
-            <Button onClick={handleOpen} sx={{ color: "#000000", padding: "8px 18px", border: "1px solid #ffff", backgroundColor: "#ffff" }}>Ətraflı</Button>
+            <Button
+                onClick={handleOpen}
+                sx={{
+                    color: "#000000",
+                    padding: "8px 18px",
+                    border: "1px solid #ffff",
+                    backgroundColor: "#ffff"
+                }}
+            >
+                Ətraflı
+            </Button>
             <Modal
                 open={open}
                 onClose={handleClose}
@@ -35,14 +51,13 @@ export default function BasicModal() {
                 slotProps={{
                     backdrop: {
                         sx: {
-                            backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                            backgroundColor: 'rgba(255, 255, 255, 0.05)',
                             backdropFilter: 'blur(15px)',
                         },
                     },
                 }}
             >
                 <Box sx={style}>
-                    {/* Close Icon */}
                     <IconButton
                         onClick={handleClose}
                         sx={{
@@ -54,12 +69,10 @@ export default function BasicModal() {
                     >
                         <CloseIcon />
                     </IconButton>
-
-                    {/* Modal Content */}
-                    <Typography variant="h6" component="h2">
+                    <Typography variant="h6" sx={{ fontWeight: "300" }} component="h2">
                         Bu proqram üzrə ümumi koordinasiya Dördüncü Sənaye İnqilabının Təhlili və Koordinasiya Mərkəzi (4SİM)
                         tərəfindən həyata keçirilir. Proqram, Azərbaycan Respublikası İqtisadiyyat Nazirliyinin (İN) dəstəyi
-                        ilə həyata keçirilir. Proqram, "Azərbaycan Respublikasının 2022-2026-cı illərdə Sosial-İqtisadi İnkişaf Strategiyası"
+                        ilə həyata keçirilir. <br /> <br /> Proqram, "Azərbaycan Respublikasının 2022-2026-cı illərdə Sosial-İqtisadi İnkişaf Strategiyası"
                         ilə müəyyən edilmiş məqsədlərə xidmət edərək Azərbaycan bizneslərinə kompleks rəqəmsal transformasiya prosesini həyata
                         keçirməkdə kömək edir.
                     </Typography>

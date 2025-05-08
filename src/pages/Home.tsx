@@ -41,9 +41,6 @@ const Home = () => {
             >
               Müraciət et
             </Link>
-            {/* <div className="bg-white text-blue-900 hover:bg-gray-100 transition-colors px-6 py-2 rounded text-center">
-              Ətraflı
-            </div> */}
             <div>
               <BasicModal />
             </div>
