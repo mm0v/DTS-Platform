@@ -22,7 +22,7 @@ export default function ControlledAccordions() {
             onChange={handleChange("panel1")}
           >
             <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
+              expandIcon={<img src={Down} className="w-8 h-4 object-contain" />}
               aria-controls="panel1bh-content"
               id="panel1bh-header"
             >
@@ -97,7 +97,7 @@ export default function ControlledAccordions() {
             onChange={handleChange("panel2")}
           >
             <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
+              expandIcon={<img src={Down} className="w-8 h-4 object-contain" />}
               aria-controls="panel2bh-content"
               id="panel2bh-header"
             >
@@ -273,9 +273,6 @@ export default function ControlledAccordions() {
               {/* <Typography component="span" sx={{ color: 'text.secondary' }}>
                         You are currently not an owner
                     </Typography> */}
-              <Typography component="span" sx={{ color: "text.secondary" }}>
-                <img src={Down} className="w-12 h-12 object-contain" />
-              </Typography>
             </AccordionSummary>
             <AccordionDetails>
               <Typography className="text-center text-[#323232] font-semibold text-[14px] leading-[24px]">
@@ -297,7 +294,7 @@ export default function ControlledAccordions() {
             onChange={handleChange("panel3")}
           >
             <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
+              expandIcon={<img src={Down} className="w-8 h-4 object-contain" />}
               aria-controls="panel3bh-content"
               id="panel3bh-header"
             >
