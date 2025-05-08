@@ -18,7 +18,7 @@ const Compliance_And_Prioritization = () => {
       </div>
 
       <div className="text-center">
-        <h1 className="text-2xl md:text-5xl font-semibold text-[#FAFAFA] pb-20 mb-10 leading-[36px] md:leading-[48px]">
+        <h1 className="text-2xl pl-2 pr-2 md:text-5xl font-semibold text-[#FAFAFA] pb-18 mb-10 leading-[36px] md:leading-[48px]">
           Uyğunluq və Prioritetləşdirmə
         </h1>
       </div>
