@@ -3,7 +3,7 @@ import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import Typography from "@mui/material/Typography";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import "../App.css";
 import Down from "../../public/img/Comp_Prior/formkit_down.svg";
 export default function ControlledAccordions() {
   const [expanded, setExpanded] = React.useState<string | false>(false);
@@ -14,12 +14,17 @@ export default function ControlledAccordions() {
     };
 
   return (
-    <div className="flex flex-wrap justify-center gap-5 max-w-7xl">
+    <div className="flex flex-wrap justify-center gap-5 max-w-7xl ">
       <div className=" w-full md:w-1/3 p-2">
-        <div className="accordion">
+        <div className="accordion ">
           <Accordion
             expanded={expanded === "panel1"}
             onChange={handleChange("panel1")}
+            sx={{
+              borderRadius: "12px",
+              border: "1px solid #D0D0D0",
+              boxShadow: "2px 2px 12px 0px #2323234D",
+            }}
           >
             <AccordionSummary
               expandIcon={<img src={Down} className="w-8 h-4 object-contain" />}
@@ -95,6 +100,11 @@ export default function ControlledAccordions() {
           <Accordion
             expanded={expanded === "panel2"}
             onChange={handleChange("panel2")}
+            sx={{
+              borderRadius: "12px",
+              border: "1px solid #D0D0D0",
+              boxShadow: "2px 2px 12px 0px #2323234D",
+            }}
           >
             <AccordionSummary
               expandIcon={<img src={Down} className="w-8 h-4 object-contain" />}
@@ -292,6 +302,11 @@ export default function ControlledAccordions() {
           <Accordion
             expanded={expanded === "panel3"}
             onChange={handleChange("panel3")}
+            sx={{
+              borderRadius: "12px",
+              border: "1px solid #D0D0D0",
+              boxShadow: "2px 2px 12px 0px #2323234D",
+            }}
           >
             <AccordionSummary
               expandIcon={<img src={Down} className="w-8 h-4 object-contain" />}

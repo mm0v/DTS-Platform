@@ -36,7 +36,7 @@ const Compliance_And_Prioritization = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-7xl mx-auto">
           {/* Card 1 */}
-          <div className="bg-white rounded-lg p-6 m-4 shadow-md flex flex-col">
+          <div className="bg-white rounded-lg p-6 m-4 shadow-[2px_2px_12px_0px_#2323234D] border-[1px] border-[#D0D0D0] flex flex-col">
             <div className="flex items-center mb-4 flex-wrap sm:flex-nowrap">
               <div className=" p-2  mr-4">
                 {/* <ClipboardList size={24} className="text-blue-600" />*/}
@@ -55,7 +55,7 @@ const Compliance_And_Prioritization = () => {
           </div>
 
           {/* Card 2 */}
-          <div className="bg-white rounded-lg p-6 m-4 shadow-md flex flex-col">
+          <div className="bg-white rounded-lg p-6 m-4 shadow-[2px_2px_12px_0px_#2323234D] border-[1px] border-[#D0D0D0] flex flex-col">
             <div className="flex items-center mb-4 flex-wrap sm:flex-nowrap">
               <div className=" p-2 mr-4">
                 {/*<Briefcase size={24} className="text-blue-600" />*/}
@@ -74,7 +74,7 @@ const Compliance_And_Prioritization = () => {
           </div>
 
           {/* Card 3 */}
-          <div className="bg-white rounded-lg p-6 m-4 shadow-md flex flex-col">
+          <div className="bg-white rounded-lg p-6 m-4 shadow-[2px_2px_12px_0px_#2323234D] border-[1px] border-[#D0D0D0] flex flex-col">
             <div className="flex items-start mb-4 flex-wrap sm:flex-nowrap">
               <div className=" mr-4 flex items-start">
                 {/* <BarChart3 size={24} className="text-blue-600" />*/}
@@ -99,7 +99,7 @@ const Compliance_And_Prioritization = () => {
           </div>
 
           {/* Card 4 */}
-          <div className="bg-white rounded-lg p-6 m-4 shadow-md flex flex-col">
+          <div className="bg-white rounded-lg p-6 m-4 shadow-[2px_2px_12px_0px_#2323234D] border-[1px] border-[#D0D0D0] flex flex-col">
             <div className="flex items-start mb-4 flex-wrap sm:flex-nowrap">
               <div className=" mr-4 flex items-start">
                 {/*   <UsersRound size={24} className="text-blue-600" />*/}
