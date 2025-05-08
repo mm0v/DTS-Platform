@@ -9,7 +9,7 @@ const FAG = () => {
         </div>
 
         <div style={{
-          background: 'linear-gradient(to top, rgba(255, 255, 255, 1), rgba(52, 96, 220, .99)'
+          background: "linear-gradient(180deg, #1A4381 -96.34%, #FFF 99.92%)",
         }}>
 
           <div className="video-background">

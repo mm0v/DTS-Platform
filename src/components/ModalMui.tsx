@@ -10,6 +10,7 @@ import CloseIcon from '@mui/icons-material/Close';
 const style = {
     position: 'absolute',
     top: '50%',
+    background: "linear-gradient(180deg, #1A4381 -96.34%, #FFF 99.92%)",
     left: '50%',
     transform: 'translate(-50%, -50%)',
     width: {
@@ -51,7 +52,6 @@ export default function BasicModal() {
                 slotProps={{
                     backdrop: {
                         sx: {
-                            backgroundColor: 'rgba(255, 255, 255, 0.05)',
                             backdropFilter: 'blur(15px)',
                         },
                     },
