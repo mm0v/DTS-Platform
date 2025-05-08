@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import LogoCarousel from '../components/LogoCarousel';
+import BasicModal from '../components/ModalMui';
 
 const PartnerLogo = ({ src, alt }: { src: string, alt: string }) => (
   <div className="flex items-center justify-center p-2">
@@ -40,12 +41,12 @@ const Home = () => {
             >
               Müraciət et
             </Link>
-            <Link
-              to="/compliance"
-              className="bg-white text-blue-900 hover:bg-gray-100 transition-colors px-6 py-2 rounded text-center"
-            >
+            {/* <div className="bg-white text-blue-900 hover:bg-gray-100 transition-colors px-6 py-2 rounded text-center">
               Ətraflı
-            </Link>
+            </div> */}
+            <div>
+              <BasicModal />
+            </div>
           </div>
         </div>
 
