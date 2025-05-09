@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom';
 import LogoCarousel from '../components/LogoCarousel';
 import BasicModal from '../components/ModalMui';
-import Timeline from './Timeline';
+import Timeline from '../components/Timeline';
+import BackgroundVideo from '../components/BackgroundVideo';
 
 const PartnerLogo = ({ src, alt }: { src: string, alt: string }) => (
   <div className="flex items-center justify-center p-2">
@@ -14,11 +15,13 @@ const Home = () => {
     <>
       <div className="relative min-h-screen">
 
-        <div className="video-background">
+        {/* <div className="video-background">
           <video className="absolute w-full h-full object-cover" autoPlay loop muted>
             <source src="img/Navbar/bg-header.mp4" type="video/mp4" />
           </video>
-        </div>
+        </div> */}
+
+        <BackgroundVideo />
 
         {/* Content */}
         <div className="relative z-10 container mx-auto px-4 py-8 md:py-16 min-h-screen flex flex-col">
@@ -72,7 +75,7 @@ const Home = () => {
         </div>
 
         {/* Video section */}
-        <div className="relative w-full min-h-[100vh]">
+        {/* <div className="relative w-full min-h-[100vh]">
           <video
             className="absolute top-0 left-0 w-full h-full object-contain"
             autoPlay
@@ -83,7 +86,7 @@ const Home = () => {
             <source src="video/video-section.mp4" type="video/mp4" />
             Your browser does not support the video tag.
           </video>
-        </div>
+        </div> */}
 
 
         {/* Mission section */}

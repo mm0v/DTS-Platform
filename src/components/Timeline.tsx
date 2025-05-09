@@ -280,14 +280,14 @@ const Timeline: React.FC = (): ReactElement => {
                                         {/* Mobile content */}
                                         <div className="w-full px-4">
                                             <div
-                                                className={`bg-gradient-to-r from-[#1A4381] to-[#050E1B] text-white px-6 py-6 rounded-xl w-full transition-all duration-300 shadow-lg cursor-pointer
+                                                className={`bg-gradient-to-r from-[#1A4381] to-[#050E1B] text-white px-4 py-7 rounded-xl w-full transition-all duration-300 shadow-lg cursor-pointer
                                                 ${isActive ? 'from-[#2255a7] to-[#0a1e3e] shadow-xl' : ''}`}
                                                 onClick={() => handleStepClick(step.id)}
                                             >
                                                 <div className="flex items-center justify-between">
                                                     <div className="flex flex-col">
-                                                        <p className="text-xs font-medium">{step.title.line1}</p>
-                                                        <p className="text-xs font-medium">{step.title.line2}</p>
+                                                        <p className="text-base font-medium">{step.title.line1}</p>
+                                                        <p className="text-base font-medium">{step.title.line2}</p>
                                                     </div>
 
                                                     {/* Mobile accordion icon */}
