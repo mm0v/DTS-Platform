@@ -90,10 +90,10 @@ const Home = () => {
           <div className="container mx-auto px-4">
             {/* Section heading - can be added if needed */}
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-8">
+            <div className="flex flex-col md:flex-row items-center justify-center gap-4 lg:gap-8">
               {/* Mission Card */}
-              <div className="bg-white rounded-lg shadow-md p-5 lg:p-8 h-full flex flex-col justify-start items-start transform transition-all duration-300 hover:shadow-lg">
-                <img className="h-12 w-auto mb-3" src="img/Home/mission.svg" alt="Mission icon" />
+              <div className="bg-white rounded-lg shadow-md p-5 lg:p-8 w-full md:w-1/2 lg:w-1/3 flex flex-col justify-start items-start transform transition-all duration-300 hover:shadow-lg">
+                <img className="h-12 w-auto mb-3" src="/img/Home/mission.gif" alt="Mission icon" />
                 <h3 className="text-xl md:text-2xl font-semibold mb-3">Missiyamız</h3>
                 <p className="text-sm md:text-base text-gray-700">
                   Proqramın məqsədi bizneslərin rəqəmsallaşma və innovasiya yolu ilə səmərəliliyinin və uzunmüddətli artımının dəstəklənməsi, bununla da Azərbaycan iqtisadiyyatının ümumi inkişafına töhfə verməkdir.
@@ -101,17 +101,16 @@ const Home = () => {
               </div>
 
               {/* Vision Card */}
-              <div className="bg-white rounded-lg shadow-md p-5 lg:p-8 h-full flex flex-col justify-start items-start transform transition-all duration-300 hover:shadow-lg">
-                <img className="h-12 w-auto mb-3" src="img/Home/vision.svg" alt="Vision icon" />
+              <div className="bg-white rounded-lg shadow-md p-5 lg:p-8 w-full md:w-1/2 lg:w-1/3 flex flex-col justify-start items-start transform transition-all duration-300 hover:shadow-lg">
+                <img className="h-12 w-auto mb-3" src="/img/Home/vision.gif" alt="Vision icon" />
                 <h3 className="text-xl md:text-2xl font-semibold mb-3">Vizyonumuz</h3>
                 <p className="text-sm md:text-base text-gray-700">
                   "Sənaye 4.0 Hazırlıq" Proqramı 2030-cu ilədək İqtisadiyyat Nazirliyinin dəstəyi ilə ölkəmizin istehsal yönümlü müəssisələrinin rəqəmsal transformasiyasına hədəflənmişdir.
                 </p>
               </div>
             </div>
-          </div>
 
-          {/* Logo Carousel Section */}
+          </div>
         </div>
       </div>
 
