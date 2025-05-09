@@ -71,12 +71,12 @@ const Home = () => {
         <Timeline />
       </div>
 
-{/* Video section */}
-<div className="relative w-full h-screen">
-  <video className="absolute top-0 left-0 w-full h-full object-cover" autoPlay loop muted>
+      <div className="relative w-full aspect-video md:h-screen md:aspect-auto">
+  <video className="w-full h-full object-cover" autoPlay loop muted>
     <source src="video/video-section.mp4" type="video/mp4" />
   </video>
 </div>
+
 
       {/* Mission section */}
       <div className="bg-gray-200 py-12 md:py-16 lg:py-24">

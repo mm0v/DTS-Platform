@@ -56,7 +56,7 @@ export default function Timeline() {
                                 {/* Left or right item */}
                                 <div className={`flex-1 ${step.position === 'left' ? 'pr-8 text-right' : 'pl-8 order-last'}`}>
                                     <div
-                                        className={`bg-gradient-to-r from-[#1A4381] to-[#050E1B] text-white px-8 py-5 mx-3 w-full max-w-[336px] rounded-[36px] inline-block hover:bg-blue-700 transition-all duration-300 shadow-lg cursor-pointer relative`}
+                                        className={`bg-gradient-to-r from-[#1A4381] to-[#050E1B] text-white px-8 py-5 sm:mx-3 sm:w-full max-w-[336px] w-[100vw] sm:mt-0 rounded-[36px] inline-block hover:bg-blue-700 transition-all duration-300 shadow-lg cursor-pointer relative`}
                                         onMouseEnter={() => setHoveredStep(step.id)}
                                         onMouseLeave={() => setHoveredStep(null)}
                                     >
@@ -77,7 +77,7 @@ export default function Timeline() {
                                 </div>
 
                                 {/* Circle in middle */}
-                                <div className="absolute left-1/2 transform -translate-x-1/2 flex items-center justify-center">
+                                <div className="absolute left-1/2 transform -translate-x-1/2 flex items-center justify-center sm:mb-0 mb-[130px]">
                                     <div className="bg-gradient-to-r from-[#1A4381] to-[#050E1B] rounded-full h-10 w-10 z-10 flex items-center justify-center shadow-lg">
                                         <span className="text-white font-bold">{step.id}</span>
                                     </div>
