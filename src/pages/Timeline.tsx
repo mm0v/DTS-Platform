@@ -76,7 +76,7 @@ export default function Timeline() {
                                     </div>
                                 </div>
 
-                                {/* Circle in middle */}
+                                {/* Circle in middle  */}
                                 <div className="absolute left-1/2 transform -translate-x-1/2 flex items-center justify-center sm:mb-0 mb-[130px]">
                                     <div className="bg-gradient-to-r from-[#1A4381] to-[#050E1B] rounded-full h-10 w-10 z-10 flex items-center justify-center shadow-lg">
                                         <span className="text-white font-bold">{step.id}</span>
