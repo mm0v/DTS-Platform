@@ -1,9 +1,10 @@
 import ControlledAccordions from "../components/AccordionMui";
+import BackgroundVideo from "../components/BackgroundVideo";
 
 const Compliance_And_Prioritization = () => {
   return (
     <div className="mt-24">
-      <div className="video-background filter brightness-70">
+      {/* <div className="video-background filter brightness-70">
         <video
           className="absolute w-full h-full object-cover"
           autoPlay
@@ -12,7 +13,8 @@ const Compliance_And_Prioritization = () => {
         >
           <source src="img/Navbar/bg-header.mp4" type="video/mp4" />
         </video>
-      </div>
+      </div> */}
+      <BackgroundVideo />
 
       <div className="text-center">
         <h1 className="text-2xl pl-2 pr-2 md:text-5xl font-semibold text-[#FAFAFA] pb-18 mb-10 leading-[36px] md:leading-[48px]">

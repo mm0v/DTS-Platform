@@ -1,4 +1,5 @@
 import AccordionExpandDefault from "../components/AccordionSimpleMui"
+import BackgroundVideo from "../components/BackgroundVideo";
 
 const FAG = () => {
   return (
@@ -12,11 +13,13 @@ const FAG = () => {
           background: "linear-gradient(180deg, #1A4381 -96.34%, #FFF 99.92%)",
         }}>
 
-          <div className="video-background">
+          {/* <div className="video-background">
             <video className="absolute w-full h-full object-cover" autoPlay loop muted>
               <source src="img/Navbar/bg-header.mp4" type="video/mp4" />
             </video>
-          </div>
+          </div> */}
+
+           <BackgroundVideo />
 
           <div className="max-w-2xl mx-auto pt-10 pb-10">
             <div className="mr-2 ml-2">

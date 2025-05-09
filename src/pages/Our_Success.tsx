@@ -1,4 +1,5 @@
 import { useState } from "react";
+import BackgroundVideo from "../components/BackgroundVideo";
 
 const Our_Success = () => {
   const [expanded1, setExpanded1] = useState(false);
@@ -6,7 +7,10 @@ const Our_Success = () => {
   const [expanded3, setExpanded3] = useState(false);
   return (
     <div className="mt-24">
-      <div className="video-background">
+
+      <BackgroundVideo />
+
+      {/* <div className="video-background">
         <video
           className="absolute w-full h-full object-cover"
           autoPlay
@@ -15,7 +19,7 @@ const Our_Success = () => {
         >
           <source src="img/Navbar/bg-header.mp4" type="video/mp4" />
         </video>
-      </div>
+      </div> */}
 
       <div className="text-center">
         <h1 className="text-2xl md:text-5xl font-semibold text-[#FAFAFA] pb-20 mb-10 leading-[36px] md:leading-[48px]">
@@ -40,9 +44,8 @@ const Our_Success = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-7xl mx-auto">
           {/* Card 1 */}
           <div
-            className={`bg-white rounded-lg p-6 m-4 shadow-[2px_2px_12px_0px_#2323234D] border-[1px] border-[#D0D0D0] flex flex-col transition-all duration-300 ease-in-out overflow-hidden ${
-              expanded1 ? "max-h-[1000px]" : "max-h-[260px]"
-            }`}
+            className={`bg-white rounded-lg p-6 m-4 shadow-[2px_2px_12px_0px_#2323234D] border-[1px] border-[#D0D0D0] flex flex-col transition-all duration-300 ease-in-out overflow-hidden ${expanded1 ? "max-h-[1000px]" : "max-h-[260px]"
+              }`}
           >
             <div className="flex flex-col items-center justify-center text-center">
               <div className="h-[100px] flex items-center justify-center">
@@ -86,11 +89,10 @@ const Our_Success = () => {
               <div className="mt-6">
                 <p
                   onClick={() => setExpanded1(!expanded1)}
-                  className={`font-normal text-16 text-[#323232] text-center  cursor-pointer transition-all duration-300 ease-in-out ${
-                    expanded1
-                      ? "max-h-full whitespace-normal line-clamp-none"
-                      : "max-h-[6.8em] overflow-hidden line-clamp-4"
-                  }`}
+                  className={`font-normal text-16 text-[#323232] text-center  cursor-pointer transition-all duration-300 ease-in-out ${expanded1
+                    ? "max-h-full whitespace-normal line-clamp-none"
+                    : "max-h-[6.8em] overflow-hidden line-clamp-4"
+                    }`}
                 >
                   Azərbaycanın aparıcı boru istehsalı şirkətlərindən olan Metak,
                   "Sənaye 4.0 Hazırlıq" Proqramına qoşularaq iştirak etmişdir.
@@ -106,9 +108,8 @@ const Our_Success = () => {
 
           {/* Card 2 */}
           <div
-            className={`bg-white rounded-lg p-6 m-4 shadow-[2px_2px_12px_0px_#2323234D] border-[1px] border-[#D0D0D0] flex flex-col transition-all duration-300 ease-in-out overflow-hidden ${
-              expanded2 ? "max-h-[1000px]" : "max-h-[260px]"
-            }`}
+            className={`bg-white rounded-lg p-6 m-4 shadow-[2px_2px_12px_0px_#2323234D] border-[1px] border-[#D0D0D0] flex flex-col transition-all duration-300 ease-in-out overflow-hidden ${expanded2 ? "max-h-[1000px]" : "max-h-[260px]"
+              }`}
           >
             {" "}
             <div className="flex flex-col items-center justify-center text-center">
@@ -213,11 +214,10 @@ const Our_Success = () => {
               <div className="mt-6">
                 <p
                   onClick={() => setExpanded2(!expanded2)}
-                  className={`font-normal text-16 text-[#323232] text-center  cursor-pointer transition-all duration-300 ease-in-out ${
-                    expanded2
-                      ? "max-h-full whitespace-normal line-clamp-none"
-                      : "max-h-[6.8em] overflow-hidden line-clamp-4"
-                  }`}
+                  className={`font-normal text-16 text-[#323232] text-center  cursor-pointer transition-all duration-300 ease-in-out ${expanded2
+                    ? "max-h-full whitespace-normal line-clamp-none"
+                    : "max-h-[6.8em] overflow-hidden line-clamp-4"
+                    }`}
                 >
                   {" "}
                   Şüşə istehsalı üzrə ixtisaslaşmış Azerfloat şirkəti üçün
@@ -234,9 +234,8 @@ const Our_Success = () => {
 
           {/* Card 3 */}
           <div
-            className={`bg-white rounded-lg p-6 m-4 shadow-[2px_2px_12px_0px_#2323234D] border-[1px] border-[#D0D0D0] flex flex-col transition-all duration-300 ease-in-out overflow-hidden ${
-              expanded3 ? "max-h-[1000px]" : "max-h-[260px]"
-            }`}
+            className={`bg-white rounded-lg p-6 m-4 shadow-[2px_2px_12px_0px_#2323234D] border-[1px] border-[#D0D0D0] flex flex-col transition-all duration-300 ease-in-out overflow-hidden ${expanded3 ? "max-h-[1000px]" : "max-h-[260px]"
+              }`}
           >
             {" "}
             <div className="flex flex-col items-center justify-center text-center">
@@ -246,11 +245,10 @@ const Our_Success = () => {
               <div className="mt-6">
                 <p
                   onClick={() => setExpanded3(!expanded3)}
-                  className={`font-normal text-16 text-[#323232] text-center  cursor-pointer transition-all duration-300 ease-in-out ${
-                    expanded3
-                      ? "max-h-full whitespace-normal line-clamp-none"
-                      : "max-h-[6.8em] overflow-hidden line-clamp-4"
-                  }`}
+                  className={`font-normal text-16 text-[#323232] text-center  cursor-pointer transition-all duration-300 ease-in-out ${expanded3
+                    ? "max-h-full whitespace-normal line-clamp-none"
+                    : "max-h-[6.8em] overflow-hidden line-clamp-4"
+                    }`}
                 >
                   {" "}
                   Azərbaycanın ən böyük sənaye mərkəzlərindən biri olan STP
