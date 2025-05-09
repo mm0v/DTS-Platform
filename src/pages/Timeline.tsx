@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
+import type { ReactElement } from 'react';
 
 // Define TypeScript interfaces for the component
 interface TitleContent {
@@ -27,7 +28,7 @@ interface DropdownArrowProps {
     isOpen: boolean;
 }
 
-export default function Timeline(): JSX.Element {
+const Timeline: React.FC = (): ReactElement => {
     const [hoveredStep, setHoveredStep] = useState<number | null>(null);
     const [selectedStep, setSelectedStep] = useState<number | null>(null);
     const [isMobile, setIsMobile] = useState<boolean>(false);
@@ -133,7 +134,7 @@ export default function Timeline(): JSX.Element {
     };
 
     // Component for the step content
-    const StepContent = ({ heading, description }: StepContentProps): JSX.Element => (
+    const StepContent: React.FC<StepContentProps> = ({ heading, description }): ReactElement => (
         <div className="flex flex-col">
             <h6 className="text-lg font-bold mb-2">{heading}</h6>
             <p className="text-sm">{description}</p>
@@ -141,7 +142,7 @@ export default function Timeline(): JSX.Element {
     );
 
     // Component for dropdown arrow
-    const DropdownArrow = ({ isOpen }: DropdownArrowProps): JSX.Element => (
+    const DropdownArrow: React.FC<DropdownArrowProps> = ({ isOpen }): ReactElement => (
         <svg
             xmlns="http://www.w3.org/2000/svg"
             className={`h-5 w-5 transform transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`}
@@ -155,13 +156,15 @@ export default function Timeline(): JSX.Element {
     );
 
     return (
-        <div style={{ background: "linear-gradient(180deg, #1A4381 -96.34%, #FFF 99.92%)" }} className="flex flex-col items-center text-white min-h-screen w-full p-4 md:p-8">
+        <div style={{ background: "linear-gradient(180deg, #666a84 -96.34%, #9fa0aa 99.92%)" }} className="flex flex-col items-center text-white min-h-screen w-full p-4 md:p-8">
             <div className="max-w-4xl w-full">
-                <h1 className="text-xl md:text-4xl font-bold text-center mb-2">Proqramın əhatə dairəsi</h1>
-                <p className="text-center mb-8 md:mb-22 text-xs md:text-lg">
-                    Proqram çərçivəsində rəqəmsal transformasiya dəstəyi alan hədəf şirkətlər,
-                    <br className="hidden md:block" /> 5 əsas istiqamətdə dəstək alacaqlar:
-                </p>
+                <div className='mb-20'>
+                    <h1 className="text-xl md:text-4xl font-bold text-center mb-2">Proqramın əhatə dairəsi</h1>
+                    <p className="text-center mb-8 md:mb-12 text-xs md:text-lg">
+                        Proqram çərçivəsində rəqəmsal transformasiya dəstəyi alan hədəf şirkətlər,
+                        <br className="hidden md:block" /> 5 əsas istiqamətdə dəstək alacaqlar:
+                    </p>
+                </div>
 
                 {/* Desktop Timeline */}
                 {!isMobile && (
@@ -314,4 +317,6 @@ export default function Timeline(): JSX.Element {
             </div>
         </div>
     );
-}
+};
+
+export default Timeline;
