@@ -45,18 +45,49 @@ const Navbar = () => {
                     </div>
 
                     <div className="flex items-center space-x-4 text-sm">
-                        <Link to="/compliance" className="hover:text-blue-400 whitespace-nowrap">Uyğunluq və Prioritetləşdirmə</Link>
-                        <Link to="/success" className="hover:text-blue-400">Uğurlarımız</Link>
-                        <Link to="/fag" className="hover:text-blue-400">FAQ</Link>
-                        <Link to="/contact" className="hover:text-blue-400">Əlaqə</Link>
-                        <Link to="/apply" className="bg-[#275AA8] px-5 py-2 rounded">Müraciət et</Link>
+                        <Link
+                            to="/compliance"
+                            className="hover:text-blue-400 whitespace-nowrap focus:outline-none focus-visible:outline-none focus:ring-0"
+                        >
+                            Uyğunluq və Prioritetləşdirmə
+                        </Link>
+
+                        <Link
+                            to="/success"
+                            className="hover:text-blue-400 focus:outline-none focus-visible:outline-none focus:ring-0"
+                        >
+                            Uğurlarımız
+                        </Link>
+
+                        <Link
+                            to="/fag"
+                            className="hover:text-blue-400 focus:outline-none focus-visible:outline-none focus:ring-0"
+                        >
+                            FAQ
+                        </Link>
+
+                        <Link
+                            to="/contact"
+                            className="hover:text-blue-400 focus:outline-none focus-visible:outline-none focus:ring-0"
+                        >
+                            Əlaqə
+                        </Link>
+
+                        <Link
+                            to="/apply"
+                            className="bg-[#275AA8] px-5 py-2 rounded text-white focus:outline-none focus-visible:outline-none focus:ring-0"
+                        >
+                            Müraciət et
+                        </Link>
+
                         <button
-                            className="border border-white px-2 py-1 rounded"
+                            className="border border-white px-2 py-1 rounded focus:outline-none focus-visible:outline-none focus:ring-0"
                             onClick={toggleLanguage}
                         >
                             {language}
                         </button>
                     </div>
+
                 </div>
 
                 {/* Mobile Navigation Header */}
