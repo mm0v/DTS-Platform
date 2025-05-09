@@ -158,7 +158,7 @@ const Timeline: React.FC = (): ReactElement => {
     return (
         <div style={{ background: "linear-gradient(180deg, #1A4381 -96.34%, #FFF 99.92%)" }} className="flex flex-col items-center text-white min-h-screen w-full p-4 md:p-8">
             <div className="max-w-4xl w-full">
-                <div className='mb-12 mt-10'>
+                <div className='mb-18 mt-10'>
                     <h1 className="text-2xl md:text-4xl font-bold text-center mb-2">Proqramın əhatə dairəsi</h1>
                     <p className="text-center mt-8 mb-8 md:mb-12 text-xs md:text-lg">
                         Proqram çərçivəsində rəqəmsal transformasiya dəstəyi alan hədəf şirkətlər,
