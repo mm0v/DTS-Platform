@@ -156,7 +156,7 @@ const Timeline: React.FC = (): ReactElement => {
     );
 
     return (
-        <div style={{ background: "linear-gradient(180deg, #666a84 -96.34%, #9fa0aa 99.92%)" }} className="flex flex-col items-center text-white min-h-screen w-full p-4 md:p-8">
+        <div style={{ background: "linear-gradient(180deg, #1A4381 -96.34%, #FFF 99.92%)" }} className="flex flex-col items-center text-white min-h-screen w-full p-4 md:p-8">
             <div className="max-w-4xl w-full">
                 <div className='mb-20'>
                     <h1 className="text-xl md:text-4xl font-bold text-center mb-2">Proqramın əhatə dairəsi</h1>
@@ -182,7 +182,7 @@ const Timeline: React.FC = (): ReactElement => {
                                         <div className={`w-5/12 flex ${step.position === 'left' ? 'justify-end' : 'justify-start'}`}>
                                             {step.position === 'left' && (
                                                 <div
-                                                    className={`bg-gradient-to-r from-[#1A4381] to-[#050E1B] text-white px-6 py-5 rounded-3xl transition-all duration-300 shadow-lg cursor-pointer mr-16 w-64 h-20 flex items-center
+                                                    className={`bg-gradient-to-r from-[#1A4381] to-[#050E1B] text-white px-6 py-5 rounded-3xl transition-all duration-300 shadow-lg cursor-pointer w-72 h-24 flex items-center
                                                     ${isActive ? 'from-[#2255a7] to-[#0a1e3e] shadow-xl' : 'hover:from-[#1d4b92] hover:to-[#071528]'}`}
                                                     onMouseEnter={() => handleStepBoxMouseEnter(step.id)}
                                                     onMouseLeave={handleStepMouseLeave}
@@ -212,10 +212,10 @@ const Timeline: React.FC = (): ReactElement => {
                                         </div>
 
                                         {/* Right side */}
-                                        <div className={`w-5/12 flex ${step.position === 'right' ? 'justify-end' : 'justify-start'}`}>
+                                        <div className={`w-5/12 ml-14 flex ${step.position === 'right' ? 'justify-end' : 'justify-start'}`}>
                                             {step.position === 'right' && (
                                                 <div
-                                                    className={`bg-gradient-to-r from-[#1A4381] to-[#050E1B] text-white px-6 py-5 rounded-3xl transition-all duration-300 shadow-lg cursor-pointer ml-16 w-64 h-20 flex items-center
+                                                    className={`bg-gradient-to-r from-[#1A4381] to-[#050E1B] text-white px-6 py-5 rounded-3xl transition-all duration-300 shadow-lg cursor-pointer ml-16 w-72 h-24 flex items-center
                                                     ${isActive ? 'from-[#2255a7] to-[#0a1e3e] shadow-xl' : 'hover:from-[#1d4b92] hover:to-[#071528]'}`}
                                                     onMouseEnter={() => handleStepBoxMouseEnter(step.id)}
                                                     onMouseLeave={handleStepMouseLeave}
@@ -280,7 +280,7 @@ const Timeline: React.FC = (): ReactElement => {
                                         {/* Mobile content */}
                                         <div className="w-full px-4">
                                             <div
-                                                className={`bg-gradient-to-r from-[#1A4381] to-[#050E1B] text-white px-4 py-4 rounded-xl w-full transition-all duration-300 shadow-lg cursor-pointer
+                                                className={`bg-gradient-to-r from-[#1A4381] to-[#050E1B] text-white px-6 py-6 rounded-xl w-full transition-all duration-300 shadow-lg cursor-pointer
                                                 ${isActive ? 'from-[#2255a7] to-[#0a1e3e] shadow-xl' : ''}`}
                                                 onClick={() => handleStepClick(step.id)}
                                             >
