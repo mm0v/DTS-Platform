@@ -22,13 +22,13 @@ export default function ApplyFour() {
   }
 
   // Checkbox değişiklikleri için
-  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, checked } = e.target
-    setFormData(prevState => ({
-      ...prevState,
-      [name]: checked ? "Bəli" : "Xeyr"
-    }))
-  }
+  // const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const { name, checked } = e.target
+  //   setFormData(prevState => ({
+  //     ...prevState,
+  //     [name]: checked ? "Bəli" : "Xeyr"
+  //   }))
+  // }
 
   // Geri butonuna basıldığında ApplyThree sayfasına git
   const handleGoBack = () => {

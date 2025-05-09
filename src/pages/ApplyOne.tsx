@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { ChevronDown } from "lucide-react"
+// import { ChevronDown } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 
 export default function ApplyOne() {
@@ -46,31 +46,30 @@ export default function ApplyOne() {
       <div className="absolute top-0 left-0 w-full h-full bg-black opacity-50 z-10"></div>
 
       {/* Main Content */}
-    <div className="relative z-20 w-full max-w-4xl mb-8 px-4">
-  {/* Step indicators */}
-  <div className="relative w-full h-[1px] bg-blue-500">
-    {[1, 2, 3, 4, 5].map((num) => (
-      <div
-        key={num}
-        className={`absolute top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center text-sm ${
-          num <= step ? "bg-blue-500"  : "bg-blue-900 "
-        }`}
-        style={{ left: `${(num - 1) * 25}%` }}
-      >
-        {num}
-      </div>
-    ))}
-  </div>
+      <div className="relative z-20 w-full max-w-4xl mb-8 px-4">
+        {/* Step indicators */}
+        <div className="relative w-full h-[1px] bg-blue-500">
+          {[1, 2, 3, 4, 5].map((num) => (
+            <div
+              key={num}
+              className={`absolute top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center text-sm ${num <= step ? "bg-blue-500" : "bg-blue-900 "
+                }`}
+              style={{ left: `${(num - 1) * 25}%` }}
+            >
+              {num}
+            </div>
+          ))}
+        </div>
 
-  {/* Step descriptions */}
-  <div className="flex justify-between mt-4 text-xs text-gray-400 space-y-2">
-    <div className="text-center max-w-[150px] text-blue-400">Şirkət haqqında məlumat</div>
-    <div className="text-center max-w-[150px]">Hüquqi və hüquqi quruluş</div>
-    <div className="text-center max-w-[150px]">Rəqəmsal hüquqi və transformasiya xidmətləri</div>
-    <div className="text-center max-w-[150px]">Lisenzli və əhatəlidir</div>
-    <div className="text-center max-w-[150px]">Tələb olunan sənədlər</div>
-  </div>
-</div>
+        {/* Step descriptions */}
+        <div className="flex justify-between mt-4 text-xs text-gray-400 space-y-2">
+          <div className="text-center max-w-[150px] text-blue-400">Şirkət haqqında məlumat</div>
+          <div className="text-center max-w-[150px]">Hüquqi və hüquqi quruluş</div>
+          <div className="text-center max-w-[150px]">Rəqəmsal hüquqi və transformasiya xidmətləri</div>
+          <div className="text-center max-w-[150px]">Lisenzli və əhatəlidir</div>
+          <div className="text-center max-w-[150px]">Tələb olunan sənədlər</div>
+        </div>
+      </div>
 
       <div className="text-center mb-8 relative z-20">
         <h1 className="text-2xl md:text-3xl font-medium">Şirkət haqqında məlumat</h1>
