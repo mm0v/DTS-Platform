@@ -6,38 +6,38 @@ export default function Timeline() {
     const steps = [
         {
             id: 1,
-            title: "Rəqəmsal hazırlıq səviyyəsinin qiymətləndirilməsi",
-            content: "Rəqəmsal hazırlıq səviyyəsinin qiymətləndirilməsi haqqında ətraflı məlumat burada göstəriləcək.",
+            title: "Rəqəmsal hazırlıq səviyyəsinin <br />qiymətləndirilməsi",
+            content: "<h6> Rəqəmsal hazırlıq səviyyəsinin qiymətləndirilməsi </h6> <br /> <small>Hədəf Şirkətlərin mövcud rəqəmsal potensialının, infrastrukturunun və hazırlıq səviyyəsinin qiymətləndirilməsi, müvafiq çatışmazlıqların və təkmilləşmə üçün imkanlarının müəyyən edilməsi. </small>",
             position: "left"
         },
         {
             id: 2,
-            title: "Rəqəmsal transformasiya yol xəritəsinin hazırlanması",
-            content: "Rəqəmsal transformasiya yol xəritəsinin hazırlanması haqqında ətraflı məlumat burada göstəriləcək.",
+            title: "Rəqəmsal transformasiya yol <br /> xəritəsinin hazırlanması",
+            content: "<h6> Rəqəmsal hazırlıq səviyyəsinin qiymətləndirilməsi </h6> <br /> <small>Hədəf Şirkətlərin mövcud rəqəmsal potensialının, infrastrukturunun və hazırlıq səviyyəsinin qiymətləndirilməsi, müvafiq çatışmazlıqların və təkmilləşmə üçün imkanlarının müəyyən edilməsi. </small>",
             position: "right"
         },
         {
             id: 3,
-            title: "Maliyyə dəstəyinin göstərilməsi",
-            content: "Maliyyə dəstəyinin göstərilməsi haqqında ətraflı məlumat burada göstəriləcək.",
+            title: "Maliyyə dəstəyinin <br /> göstərilməsi",
+            content: "<h6> Rəqəmsal hazırlıq səviyyəsinin qiymətləndirilməsi </h6> <br /> <small>Hədəf Şirkətlərin mövcud rəqəmsal potensialının, infrastrukturunun və hazırlıq səviyyəsinin qiymətləndirilməsi, müvafiq çatışmazlıqların və təkmilləşmə üçün imkanlarının müəyyən edilməsi. </small>",
             position: "left"
         },
         {
             id: 4,
-            title: "Rəqəmsal bilik və bacarıqların gücləndirilməsi",
-            content: "Rəqəmsal bilik və bacarıqların gücləndirilməsi haqqında ətraflı məlumat burada göstəriləcək.",
+            title: "Rəqəmsal bilik və bacarıqların <br />gücləndirilməsi",
+            content: "<h6> Rəqəmsal hazırlıq səviyyəsinin qiymətləndirilməsi </h6> <br /> <small>Hədəf Şirkətlərin mövcud rəqəmsal potensialının, infrastrukturunun və hazırlıq səviyyəsinin qiymətləndirilməsi, müvafiq çatışmazlıqların və təkmilləşmə üçün imkanlarının müəyyən edilməsi. </small>",
             position: "right"
         },
         {
             id: 5,
-            title: "İcra dəstəyinin göstərilməsi",
-            content: "İcra dəstəyinin göstərilməsi haqqında ətraflı məlumat burada göstəriləcək.",
+            title: "İcra dəstəyinin <br />göstərilməsi",
+            content: "<h6> Rəqəmsal hazırlıq səviyyəsinin qiymətləndirilməsi </h6> <br /> <small>Hədəf Şirkətlərin mövcud rəqəmsal potensialının, infrastrukturunun və hazırlıq səviyyəsinin qiymətləndirilməsi, müvafiq çatışmazlıqların və təkmilləşmə üçün imkanlarının müəyyən edilməsi. </small>",
             position: "left"
         }
     ];
 
     return (
-        <div style={{ background: "linear-gradient(180deg, #1A4381 -96.34%, #FFF 99.92%)" }} className="flex flex-col items-center text-white min-h-screen w-full p-8">
+        <div style={{ background: "linear-gradient(180deg, #666a84 -96.34%, #9fa0aa 99.92%)" }} className="flex flex-col items-center text-white min-h-screen w-full p-8">
             <div className="max-w-4xl w-full">
                 <h1 className="text-2xl font-bold text-center mb-2">Proqramın əhatə dairəsi</h1>
                 <p className="text-center mb-12 text-sm">
@@ -47,14 +47,7 @@ export default function Timeline() {
 
                 <div className="relative">
                     {/* Center line */}
-                    <div className="absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-gray-300"></div>
-
-                    {/* Hover content display in center */}
-                    {hoveredStep && (
-                        <div className="absolute left-1/2 transform -translate-x-1/2 bg-blue-800 p-4 rounded-lg text-white shadow-lg z-20 w-64 text-center transition-all duration-300">
-                            {steps.find(step => step.id === hoveredStep)?.content}
-                        </div>
-                    )}
+                    <div className="absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-white"></div>
 
                     {/* Timeline steps */}
                     <div className="relative">
@@ -63,17 +56,29 @@ export default function Timeline() {
                                 {/* Left or right item */}
                                 <div className={`flex-1 ${step.position === 'left' ? 'pr-8 text-right' : 'pl-8 order-last'}`}>
                                     <div
-                                        className={`bg-blue-900 text-white p-3 rounded-lg inline-block hover:bg-blue-700 transition-all duration-300 shadow-lg cursor-pointer`}
+                                        className={`bg-gradient-to-r from-[#1A4381] to-[#050E1B] text-white px-8 py-5 mx-3 w-full max-w-[336px] rounded-[36px] inline-block hover:bg-blue-700 transition-all duration-300 shadow-lg cursor-pointer relative`}
                                         onMouseEnter={() => setHoveredStep(step.id)}
                                         onMouseLeave={() => setHoveredStep(null)}
                                     >
-                                        <p className="text-sm font-medium">{step.title}</p>
+                                        <p
+                                            className="text-sm font-medium text-center whitespace-pre-line"
+                                            dangerouslySetInnerHTML={{ __html: step.title }}
+                                        ></p>
+
+                                        {/* Hover content */}
+                                        {hoveredStep === step.id && (
+                                            <div
+                                                className={`absolute top-1/2 transform -translate-y-1/2 z-20 w-[336px] text-white text-center shadow-lg p-4 rounded-[24px] bg-gradient-to-r from-[#1A4381] to-[#050E1B] transition-all duration-300
+                                                ${step.position === 'left' ? 'left-full ml-4' : 'right-full mr-4 text-left'}`}
+                                                dangerouslySetInnerHTML={{ __html: step.content }}
+                                            />
+                                        )}
                                     </div>
                                 </div>
 
                                 {/* Circle in middle */}
                                 <div className="absolute left-1/2 transform -translate-x-1/2 flex items-center justify-center">
-                                    <div className="bg-blue-600 rounded-full h-10 w-10 z-10 flex items-center justify-center shadow-lg">
+                                    <div className="bg-gradient-to-r from-[#1A4381] to-[#050E1B] rounded-full h-10 w-10 z-10 flex items-center justify-center shadow-lg">
                                         <span className="text-white font-bold">{step.id}</span>
                                     </div>
                                 </div>

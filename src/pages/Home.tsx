@@ -38,7 +38,7 @@ const Home = () => {
           <div className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4 mt-4 md:mt-8">
             <Link
               to="/apply"
-              className="bg-blue-700 hover:bg-blue-600 transition-colors px-6 py-2 rounded text-center"
+              className="bg-[#275AA8] hover:bg-blue-600 transition-colors px-6 py-2 rounded text-center"
             >
               Müraciət et
             </Link>
@@ -50,25 +50,33 @@ const Home = () => {
 
         {/* Partners section */}
         <div className="mt-8 md:mt-16">
-          <h2 className="text-center text-white text-sm mb-6">Proqrama uğurla başa vuran şirkətlər</h2>
-          <div className="flex justify-around items-center flex-wrap">
-            <div>
-              <PartnerLogo src="/img/Home/Metak.png" alt="METAK" />
-            </div>
-            <div className='ml-10 mr-10'>
-              <PartnerLogo src="/img/Home/AzerFload.png" alt="azerfloat" />
-            </div>
-            <div>
-              <PartnerLogo src="/img/Home/STP.png" alt="STP" />
-            </div>
-          </div>
-        </div>
+  <h2 className="text-center text-white text-sm mb-6">Proqramı uğurla başa vuran şirkətlər</h2>
+  <div className="flex justify-around items-center flex-wrap gap-x-1 gap-y-2">
+    <div>
+      <PartnerLogo src="/img/Home/Metak.png" alt="METAK" />
+    </div>
+    <div>
+      <PartnerLogo src="/img/Home/AzerFload.png" alt="azerfloat" />
+    </div>
+    <div>
+      <PartnerLogo src="/img/Home/STP.png" alt="STP" />
+    </div>
+  </div>
+</div>
+
 
       </div>
       {/* Video */}
       <div>
         <Timeline />
       </div>
+
+{/* Video section */}
+<div className="relative w-full h-screen">
+  <video className="absolute top-0 left-0 w-full h-full object-cover" autoPlay loop muted>
+    <source src="video/video-section.mp4" type="video/mp4" />
+  </video>
+</div>
 
       {/* Mission section */}
       <div className="bg-gray-200 py-12 md:py-16 lg:py-24">

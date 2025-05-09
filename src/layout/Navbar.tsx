@@ -49,7 +49,7 @@ const Navbar = () => {
                         <Link to="/success" className="hover:text-blue-400">Uğurlarımız</Link>
                         <Link to="/fag" className="hover:text-blue-400">FAQ</Link>
                         <Link to="/contact" className="hover:text-blue-400">Əlaqə</Link>
-                        <Link to="/apply" className="bg-blue-700 px-4 py-1 rounded">Müraciət et</Link>
+                        <Link to="/apply" className="bg-[#275AA8] px-5 py-2 rounded">Müraciət et</Link>
                         <button
                             className="border border-white px-2 py-1 rounded"
                             onClick={toggleLanguage}
