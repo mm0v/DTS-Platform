@@ -1,31 +1,30 @@
 import AccordionExpandDefault from "../components/AccordionSimpleMui"
+import BackgroundVideo from "../components/BackgroundVideo";
 
 const FAG = () => {
   return (
     <div>
       <div className="mt-24">
-        <div className="video-background">
-          <video className="absolute w-full h-full object-cover" autoPlay loop muted>
-            <source src="img/Navbar/bg-header.mp4" type="video/mp4" />
-          </video>
-        </div>
-
         <div className="text-center">
-          <h1 className="text-4xl font-semibold text-white pb-20 mb-10">Tez-tez verilən suallar</h1>
+          <h1 className="text-4xl font-semibold text-white pl-2 pr-2 pb-20 mb-10">Tez-tez verilən suallar</h1>
         </div>
 
         <div style={{
-          background: 'linear-gradient(to top, rgba(255, 255, 255, 1), rgba(52, 96, 220, .99)'
+          background: "linear-gradient(180deg, #1A4381 -96.34%, #FFF 99.92%)",
         }}>
 
-          <div className="video-background">
+          {/* <div className="video-background">
             <video className="absolute w-full h-full object-cover" autoPlay loop muted>
               <source src="img/Navbar/bg-header.mp4" type="video/mp4" />
             </video>
-          </div>
+          </div> */}
+
+           <BackgroundVideo />
 
           <div className="max-w-2xl mx-auto pt-10 pb-10">
-            <AccordionExpandDefault />
+            <div className="mr-2 ml-2">
+              <AccordionExpandDefault />
+            </div>
           </div>
         </div>
 
