@@ -3,6 +3,7 @@ import LogoCarousel from '../components/LogoCarousel';
 import BasicModal from '../components/ModalMui';
 import Timeline from '../components/Timeline';
 import BackgroundVideo from '../components/BackgroundVideo';
+import VideoSection from '../components/VideoSection';
 
 const PartnerLogo = ({ src, alt }: { src: string, alt: string }) => (
   <div className="flex items-center justify-center p-2">
@@ -24,9 +25,9 @@ const Home = () => {
         <BackgroundVideo />
 
         {/* Content */}
-        <div className="relative z-10 container mx-auto px-4 py-8 md:py-16 min-h-screen flex flex-col">
+        <div className="relative z-10 container mx-auto px-4 py-8 md:py-32 min-h-screen flex flex-col">
           {/* Main content */}
-          <div className="flex-grow flex flex-col items-center justify-center text-white text-center py-8 md:py-16">
+          <div className="flex-grow flex flex-col items-center justify-center text-white text-center">
             <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6">"Sənaye 4.0 Hazırlıq" proqramı</h1>
 
             <div className="max-w-4xl mx-auto">
@@ -53,20 +54,25 @@ const Home = () => {
           </div>
 
           {/* Partners section */}
-          <div className="mt-8 md:mt-16">
-            <h2 className="text-center text-white text-sm mb-6">Proqramı uğurla başa vuran şirkətlər</h2>
-            <div className="flex justify-around items-center flex-wrap gap-x-1 gap-y-2">
-              <div>
+          <div className="mt-8 md:mt-16 px-4">
+            <h2 className="text-center text-white text-base md:text-2xl font-medium mb-6">
+              Proqramı uğurla başa vuran şirkətlər
+            </h2>
+
+            <div className="flex flex-col md:flex-row items-center justify-center gap-y-6 md:gap-x-10">
+              <div className="w-40">
                 <PartnerLogo src="/img/Home/Metak.png" alt="METAK" />
               </div>
-              <div>
-                <PartnerLogo src="/img/Home/AzerFload.png" alt="azerfloat" />
+              <div className="w-40">
+                <PartnerLogo src="/img/Home/AzerFload.png" alt="Azerfloat" />
               </div>
-              <div>
+              <div className="w-40">
                 <PartnerLogo src="/img/Home/STP.png" alt="STP" />
               </div>
             </div>
           </div>
+
+
         </div>
 
         {/* TimeLine Section */}
@@ -75,19 +81,9 @@ const Home = () => {
         </div>
 
         {/* Video section */}
-        {/* <div className="relative w-full min-h-[100vh]">
-          <video
-            className="absolute top-0 left-0 w-full h-full object-contain"
-            autoPlay
-            loop
-            muted
-            playsInline // Required for iOS and some Android browsers
-          >
-            <source src="video/video-section.mp4" type="video/mp4" />
-            Your browser does not support the video tag.
-          </video>
-        </div> */}
-
+        <div>
+          <VideoSection />
+        </div>
 
         {/* Mission section */}
         <div className="bg-gray-200 py-12 md:py-16 lg:py-24">
