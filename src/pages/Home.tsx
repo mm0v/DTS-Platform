@@ -26,34 +26,6 @@ const Home = () => {
           <div className="flex-grow flex flex-col items-center justify-center text-white text-center py-8 md:py-16">
             <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6">"Sənaye 4.0 Hazırlıq" proqramı</h1>
 
-<<<<<<< HEAD
-
-      </div>
-      {/* Video */}
-      <div>
-        <Timeline />
-      </div>
-
-      <div className="relative w-full aspect-video md:h-screen md:aspect-auto">
-  <video className="w-full h-full object-cover" autoPlay loop muted>
-    <source src="video/video-section.mp4" type="video/mp4" />
-  </video>
-</div>
-
-
-      {/* Mission section */}
-      <div className="bg-gray-200 py-12 md:py-16 lg:py-24">
-        <div className="container mx-auto px-4">
-          {/* Section heading - can be added if needed */}
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-8">
-            {/* Mission Card */}
-            <div className="bg-white rounded-lg shadow-md p-5 lg:p-8 h-full flex flex-col justify-start items-start transform transition-all duration-300 hover:shadow-lg">
-              <img className="h-12 w-auto mb-3" src="img/Home/mission.svg" alt="Mission icon" />
-              <h3 className="text-xl md:text-2xl font-semibold mb-3">Missiyamız</h3>
-              <p className="text-sm md:text-base text-gray-700">
-                Proqramın məqsədi bizneslərin rəqəmsallaşma və innovasiya yolu ilə səmərəliliyinin və uzunmüddətli artımının dəstəklənməsi, bununla da Azərbaycan iqtisadiyyatının ümumi inkişafına töhfə verməkdir.
-=======
             <div className="max-w-4xl mx-auto">
               <p className="text-base md:text-lg mb-8">
                 Proqram çərçivəsində şirkətlərin mövcud rəqəmsal bacarıqlarının
@@ -61,7 +33,6 @@ const Home = () => {
                 hazırlığa dair yol xəritəsinin tərtib edilməsi, maliyyə dəstəyinin göstərilməsi, habelə
                 transformasiyanın uğurlu icrası təmin etmək üçün davamlı əsasda metodiki dəstək
                 və institusional potensialın gücləndirilməsi kimi tədbirlər həyata keçirilir.
->>>>>>> main
               </p>
             </div>
 
@@ -101,11 +72,19 @@ const Home = () => {
         </div>
 
         {/* Video section */}
-        <div className="relative w-full h-screen">
-          <video className="absolute top-0 left-0 w-full h-full object-cover" autoPlay loop muted>
+        <div className="relative w-full min-h-[100vh]">
+          <video
+            className="absolute top-0 left-0 w-full h-full object-contain"
+            autoPlay
+            loop
+            muted
+            playsInline // Required for iOS and some Android browsers
+          >
             <source src="video/video-section.mp4" type="video/mp4" />
+            Your browser does not support the video tag.
           </video>
         </div>
+
 
         {/* Mission section */}
         <div className="bg-gray-200 py-12 md:py-16 lg:py-24">
@@ -135,10 +114,8 @@ const Home = () => {
 
           {/* Logo Carousel Section */}
         </div>
-
-
-
       </div>
+
       <div className='bg-gray-200 py-12 md:py-16 lg:py-24'>
         <LogoCarousel />
       </div>

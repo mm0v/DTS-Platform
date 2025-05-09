@@ -1,8 +1,5 @@
 import ControlledAccordions from "../components/AccordionMui";
-import gif1 from "../../public/img/Comp_Prior/1.gif";
-import gif2 from "../../public/img/Comp_Prior/2.gif";
-import gif3 from "../../public/img/Comp_Prior/3.gif";
-import gif4 from "../../public/img/Comp_Prior/4.gif";
+
 const Compliance_And_Prioritization = () => {
   return (
     <div className="mt-24">
@@ -40,7 +37,7 @@ const Compliance_And_Prioritization = () => {
             <div className="flex items-center mb-4 flex-wrap sm:flex-nowrap">
               <div className=" p-2  mr-4">
                 {/* <ClipboardList size={24} className="text-blue-600" />*/}
-                <img src={gif1} className="w-28 h-28 object-contain" />
+                <img alt="logo" src="/img/Comp_Prior/1.gif" className="w-28 h-28 object-contain" />
               </div>
               <div>
                 <h3 className=" text-[#323232] mb-2 font-medium text-[30px]">
@@ -59,7 +56,7 @@ const Compliance_And_Prioritization = () => {
             <div className="flex items-center mb-4 flex-wrap sm:flex-nowrap">
               <div className=" p-2 mr-4">
                 {/*<Briefcase size={24} className="text-blue-600" />*/}
-                <img src={gif2} className="w-28 h-28 object-contain" />
+                <img alt="logo" src="/img/Comp_Prior/2.gif" className="w-28 h-28 object-contain" />
               </div>
               <div>
                 <h3 className=" text-[#323232] mb-2 font-medium text-[30px]">
@@ -78,7 +75,7 @@ const Compliance_And_Prioritization = () => {
             <div className="flex items-start mb-4 flex-wrap sm:flex-nowrap">
               <div className=" mr-4 flex items-start">
                 {/* <BarChart3 size={24} className="text-blue-600" />*/}
-                <img src={gif3} className="w-24 h-24 object-contain" />
+                <img alt="logo" src="/img/Comp_Prior/3.gif" className="w-24 h-24 object-contain" />
               </div>
               <div>
                 <h3 className=" text-[#323232] mb-2 font-medium text-[30px]">
@@ -103,7 +100,7 @@ const Compliance_And_Prioritization = () => {
             <div className="flex items-start mb-4 flex-wrap sm:flex-nowrap">
               <div className=" mr-4 flex items-start">
                 {/*   <UsersRound size={24} className="text-blue-600" />*/}
-                <img src={gif4} className="w-24 h-24 object-contain" />
+                <img alt="logo" src="/img/Comp_Prior/4.gif" className="w-24 h-24 object-contain" />
               </div>
               <div>
                 <h3 className=" text-[#323232] mb-2 font-medium text-[30px]">

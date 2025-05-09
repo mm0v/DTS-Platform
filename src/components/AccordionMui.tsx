@@ -4,7 +4,7 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import Typography from "@mui/material/Typography";
 import "../App.css";
-import Down from "../../public/img/Comp_Prior/formkit_down.svg";
+// import Down from "../../public/img/Comp_Prior/formkit_down.svg";
 export default function ControlledAccordions() {
   const [expanded, setExpanded] = React.useState<string | false>(false);
 
@@ -27,7 +27,7 @@ export default function ControlledAccordions() {
             }}
           >
             <AccordionSummary
-              expandIcon={<img src={Down} className="w-8 h-4 object-contain" />}
+              // expandIcon={<img src={Down} className="w-8 h-4 object-contain" />}
               aria-controls="panel1bh-content"
               id="panel1bh-header"
             >
@@ -107,7 +107,7 @@ export default function ControlledAccordions() {
             }}
           >
             <AccordionSummary
-              expandIcon={<img src={Down} className="w-8 h-4 object-contain" />}
+              // expandIcon={<img src={Down} className="w-8 h-4 object-contain" />}
               aria-controls="panel2bh-content"
               id="panel2bh-header"
             >
@@ -309,7 +309,7 @@ export default function ControlledAccordions() {
             }}
           >
             <AccordionSummary
-              expandIcon={<img src={Down} className="w-8 h-4 object-contain" />}
+              // expandIcon={<img src={Down} className="w-8 h-4 object-contain" />}
               aria-controls="panel3bh-content"
               id="panel3bh-header"
             >
