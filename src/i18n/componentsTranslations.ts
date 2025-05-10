@@ -58,12 +58,12 @@ export const componentsTranslations = {
           AZ: {
             heading: "Rəqəmsal transformasiya yol xəritəsinin hazırlanması",
             description:
-              "Hədəf Şirkətlərin mövcud rəqəmsal potensialının, infrastrukturunun və hazırlıq səviyyəsinin qiymətləndirilməsi, müvafiq çatışmazlıqların və təkmilləşmə üçün imkanlarının müəyyən edilməsi.",
+              "Təşəbbüsləri, texnologiya istifadəsini, ehtimal olunan maliyyə tələblərini və icra planını əhatə edən, həmçinin vendorların müəyyənləşdirilməsi və əməkdaşlığın qurulmasında dəstək verəcək strateji planın hazırlanması.",
           },
           EN: {
             heading: "Preparation of Digital Transformation Roadmap",
             description:
-              "Evaluation of target companies' existing digital potential, infrastructure and readiness level, identifying relevant deficiencies and opportunities for improvement.",
+              "Preparation of a strategic plan that includes initiatives, the use of technology, potential financial requirements, and an implementation plan, as well as support in identifying vendors and establishing collaboration.",
           },
         },
       },
@@ -84,12 +84,12 @@ export const componentsTranslations = {
           AZ: {
             heading: "Maliyyə dəstəyinin göstərilməsi",
             description:
-              "Hədəf Şirkətlərin mövcud rəqəmsal potensialının, infrastrukturunun və hazırlıq səviyyəsinin qiymətləndirilməsi, müvafiq çatışmazlıqların və təkmilləşmə üçün imkanlarının müəyyən edilməsi.",
+              "Hədəf Şirkətlərə rəqəmsal transformasiya, o cümlədən qiymətləndirmələri aparmaqda, texnologiyaları mənimsəməkdə və icra işləri üçün zəruri maliyyələşməni müəyyən edib cəlb etməkdə dəstəyin göstərilməsi.",
           },
           EN: {
             heading: "Provision of Financial Support",
             description:
-              "Evaluation of target companies' existing digital potential, infrastructure and readiness level, identifying relevant deficiencies and opportunities for improvement.",
+              "Providing support to target companies in their digital transformation, including conducting assessments, adopting technologies, and identifying and securing the necessary funding for implementation efforts.",
           },
         },
       },
@@ -110,12 +110,11 @@ export const componentsTranslations = {
           AZ: {
             heading: "Rəqəmsal bilik və bacarıqların gücləndirilməsi",
             description:
-              "Hədəf Şirkətlərin mövcud rəqəmsal potensialının, infrastrukturunun və hazırlıq səviyyəsinin qiymətləndirilməsi, müvafiq çatışmazlıqların və təkmilləşmə üçün imkanlarının müəyyən edilməsi.",
+              "Rəqəmsal texnologiyaların uğurlu mənimsənilməsini təmin etmək məqsədilə təlimlər və resurslar vasitəsilə əməkdaşların bilik və bacarıqlarının gücləndirilməsi.",
           },
           EN: {
             heading: "Strengthening of Digital Knowledge and Skills",
-            description:
-              "Evaluation of target companies' existing digital potential, infrastructure and readiness level, identifying relevant deficiencies and opportunities for improvement.",
+            description: `Strengthening employees' knowledge and skills through training and resources to ensure the successful adoption of digital technologies.`,
           },
         },
       },
@@ -136,12 +135,11 @@ export const componentsTranslations = {
           AZ: {
             heading: "İcra dəstəyinin göstərilməsi",
             description:
-              "Hədəf Şirkətlərin mövcud rəqəmsal potensialının, infrastrukturunun və hazırlıq səviyyəsinin qiymətləndirilməsi, müvafiq çatışmazlıqların və təkmilləşmə üçün imkanlarının müəyyən edilməsi.",
+              "Rəqəmsallaşma təşəbbüslərinin effektiv icrasını təmin etmək məqsədilə metodiki-texniki dəstəyin göstərilməsi.",
           },
           EN: {
             heading: "Provision of Implementation Support",
-            description:
-              "Evaluation of target companies' existing digital potential, infrastructure and readiness level, identifying relevant deficiencies and opportunities for improvement.",
+            description: `Providing methodological and technical support to ensure the effective implementation of digitalization initiatives.`,
           },
         },
       },
