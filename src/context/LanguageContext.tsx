@@ -11,7 +11,7 @@ interface LanguageContextType {
   toggleLanguage: () => void;
   layoutTranslations: typeof layoutTranslations;
   pagesTranslations: typeof pagesTranslations;
-  componentsTranslations: typeof componentsTranslations; 
+  componentsTranslations: typeof componentsTranslations;
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
@@ -26,7 +26,7 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
   const value: LanguageContextType = {
     language,
     toggleLanguage,
-    layoutTranslations, 
+    layoutTranslations,
     pagesTranslations,
     componentsTranslations
   };

@@ -39,7 +39,7 @@ const Timeline: React.FC = (): ReactElement => {
 
     const steps: Step[] = stepsRaw.map(step => ({
         id: step.id,
-        position: step.position,
+        position: step.position === 'left' || step.position === 'right' ? step.position : 'left', // Ensure valid position
         title: {
             line1: step.title[language].line1,
             line2: step.title[language].line2,
