@@ -1,10 +1,15 @@
 import { useState } from "react";
 import BackgroundVideo from "../components/BackgroundVideo";
+import { useLanguage } from "../context/LanguageContext";
 
 const Our_Success = () => {
   const [expanded1, setExpanded1] = useState(false);
   const [expanded2, setExpanded2] = useState(false);
   const [expanded3, setExpanded3] = useState(false);
+
+  const { language, pagesTranslations } = useLanguage();
+  const page = pagesTranslations.success;
+
   return (
     <div className="mt-24">
 
@@ -23,21 +28,17 @@ const Our_Success = () => {
 
       <div className="text-center">
         <h1 className="text-2xl md:text-5xl font-semibold text-[#FAFAFA] pb-20 mb-10 leading-[36px] md:leading-[48px]">
-          Uğurlarımız
+          {page.pageTitle[language]}
         </h1>
       </div>
 
       <div className="bg-[#FAFAFA] pt-10 pb-10 ">
         <div className="text-center mb-6">
           <h1 className="mb-2 font-medium text-[24px] md:text-[36px] leading-[32px] md:leading-[40px] text-[#323232]">
-            Uğur hekayələri
+            {page.storiesTitle[language]}
           </h1>
           <p className=" max-w-5xl p-2 mx-auto mt-4 text-[16px] md:text-[18px] leading-[140%] md:leading-[120%] text-[#323232]">
-            “Sənaye 4.0 Hazırlıq” Proqramı çərçivəsində artıq 3 aparıcı istehsal
-            yönümlü şirkətin rəqəmsal transformasiya prosesinə dəstək
-            göstərilmişdir. Pilot iştirakçılar-Metak, Azerfloat və STP -
-            proqramı uğurla başa vurmuş və hazırda transformasiya təşəbbüslərini
-            reallaşdırmaq məqsədilə maliyyə dəstəyi almaq prosesindədirlər.
+            {page.description[language]}
           </p>
         </div>
 
@@ -94,13 +95,7 @@ const Our_Success = () => {
                     : "max-h-[6.8em] overflow-hidden line-clamp-4"
                     }`}
                 >
-                  Azərbaycanın aparıcı boru istehsalı şirkətlərindən olan Metak,
-                  "Sənaye 4.0 Hazırlıq" Proqramına qoşularaq iştirak etmişdir.
-                  Proqram çərçivəsində şirkətin rəqəmsal hazırlıq səviyyəsi
-                  qiymətləndirilmiş, eləcə də genişmiqyaslı rəqəmsal
-                  transformasiya yol xəritəsi hazırlanmışdır. Hazırda Metak,
-                  qabaqcıl avtomatlaşdırma və ağıllı istehsalat həllərinin
-                  tətbiqinə hazırlaşır.
+                  {page.metak[language]}
                 </p>
               </div>
             </div>
@@ -220,13 +215,7 @@ const Our_Success = () => {
                     }`}
                 >
                   {" "}
-                  Şüşə istehsalı üzrə ixtisaslaşmış Azerfloat şirkəti üçün
-                  proqram çərçivəsində əməliyyat səmərəliliyinin artırılması,
-                  istehsal proseslərinin optimallaşdırılması və resurs
-                  idarəçiliyinin təkmilləşdirilməsi məqsədilə rəqəmsal
-                  transformasiya yol xəritəsi hazırlanmışdır. Hazırda yol
-                  xəritəsinin icrası çərçivəsində məlumat əsaslı qərarvermə və
-                  təkmilləşdirilmiş istehsal prosesləri üzrə addımlar atılır.
+                  {page.azerfloat[language]}
                 </p>
               </div>
             </div>
@@ -251,12 +240,7 @@ const Our_Success = () => {
                     }`}
                 >
                   {" "}
-                  Azərbaycanın ən böyük sənaye mərkəzlərindən biri olan STP
-                  Kabel MMC, süni intellektlə idarə olunan monitorinq sistemləri
-                  və ağıllı logistika həllərini tətbiq etməklə rəqəmsal
-                  transformasiyanı mənimsəmişdir. Şirkətin proqramda iştirakı,
-                  texnologiya əsaslı innovasiyalar vasitəsilə məhsuldarlıq və
-                  davamlılıq imkanlarını genişləndirmişdir.
+                  {page.stp[language]}
                 </p>
               </div>
             </div>

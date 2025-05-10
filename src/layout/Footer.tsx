@@ -1,6 +1,11 @@
 import { Link } from 'react-router-dom';
+import { useLanguage } from "../context/LanguageContext";
 
 const Footer = () => {
+    const { language, layoutTranslations } = useLanguage();
+    const navbar = layoutTranslations.navbar;
+    const footer = layoutTranslations.footer;
+    
     return (
         <footer className=" text-white py-8 bg-gradient-to-r from-[rgba(26,67,129,1)] to-[rgba(5,14,27,1)]">
             <div className="container mx-auto px-4">
@@ -15,31 +20,31 @@ const Footer = () => {
                     </div>
 
                     <div>
-                        <h3 className="text-lg font-semibold mb-4">Faydalı keçidlər</h3>
+                        <h3 className="text-lg font-semibold mb-4">{footer.usefulLinks[language]}</h3>
                         <ul className="space-y-2 text-sm text-gray-300">
                             <li>
-                                <Link to="/" className="hover:text-white">Ana səhifə</Link>
+                                <Link to="/" className="hover:text-white">{navbar.home[language]}</Link>
                             </li>
                             <li>
-                                <Link to="/compliance" className="hover:text-white">Uyğunluq və Prioritetləşdirmə</Link>
+                                <Link to="/compliance" className="hover:text-white">{navbar.compliance[language]}</Link>
                             </li>
                             <li>
-                                <Link to="/success" className="hover:text-white">Uğurlarımız</Link>
+                                <Link to="/success" className="hover:text-white">{navbar.success[language]}</Link>
                             </li>
                             <li>
                                 <Link to="/fag" className="hover:text-white">FAQ</Link>
                             </li>
                             <li>
-                                <Link to="/contact" className="hover:text-white">Əlaqə</Link>
+                                <Link to="/contact" className="hover:text-white">{navbar.contact[language]}</Link>
                             </li>
                         </ul>
                     </div>
 
                     <div>
-                        <h3 className="text-lg font-semibold mb-4">Əlaqə</h3>
+                        <h3 className="text-lg font-semibold mb-4">{footer.contact[language]}</h3>
                         <address className="not-italic text-sm text-gray-300 space-y-2">
-                            <p>Bakı şəhəri, Azərbaycan</p>
-                            <p>{"Tel: +994 12 310 28 00 (daxili 2419)"}</p>
+                            <p>{footer.address[language]}</p>
+                            <p>{footer.phone[language]}</p>
                             <a href="mailto:office@4sim.gov.az" className="text-sm md:text-base hover:text-blue-300 transition-colors">
                                 office@4sim.gov.az
                             </a>
@@ -65,7 +70,7 @@ const Footer = () => {
                 </div>
 
                 <div className="mt-8 pt-6 border-t border-blue-800 text-center text-sm text-gray-400">
-                    <p>© {new Date().getFullYear()} Bütün hüquqlar qorunur.</p>
+                    <p>© {new Date().getFullYear()} {footer.rightsReserved[language]}</p>
                 </div>
             </div>
         </footer>

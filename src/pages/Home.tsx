@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { useLanguage } from "../context/LanguageContext";
 import LogoCarousel from '../components/LogoCarousel';
 import BasicModal from '../components/ModalMui';
 import Timeline from '../components/Timeline';
@@ -12,6 +13,9 @@ const PartnerLogo = ({ src, alt }: { src: string, alt: string }) => (
 );
 
 const Home = () => {
+  const { language, pagesTranslations } = useLanguage();
+  const page = pagesTranslations.home;
+
   return (
     <>
       <div className="relative min-h-screen">
@@ -28,15 +32,11 @@ const Home = () => {
         <div className="relative z-10 container mx-auto px-4 py-8 md:py-32 min-h-screen flex flex-col">
           {/* Main content */}
           <div className="flex-grow flex flex-col items-center justify-center text-white text-center">
-            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6">"Sənaye 4.0 Hazırlıq" proqramı</h1>
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6">{page.title[language]}</h1>
 
             <div className="max-w-4xl mx-auto">
               <p className="text-base md:text-lg mb-8">
-                Proqram çərçivəsində şirkətlərin mövcud rəqəmsal bacarıqlarının
-                qiymətləndirilməsi, fərdiləşdirilmiş yol xəritələrinin hazırlanması, dayanıqlı inkişafa
-                hazırlığa dair yol xəritəsinin tərtib edilməsi, maliyyə dəstəyinin göstərilməsi, habelə
-                transformasiyanın uğurlu icrası təmin etmək üçün davamlı əsasda metodiki dəstək
-                və institusional potensialın gücləndirilməsi kimi tədbirlər həyata keçirilir.
+                {page.description[language]}
               </p>
             </div>
 
@@ -45,7 +45,7 @@ const Home = () => {
                 to="/apply"
                 className="bg-[#275AA8] hover:bg-blue-600 transition-colors px-6 py-2 rounded text-center"
               >
-                Müraciət et
+                {page.applyBtn[language]}
               </Link>
               <div>
                 <BasicModal />
@@ -56,7 +56,7 @@ const Home = () => {
           {/* Partners section */}
           <div className="mt-8 md:mt-16 px-4">
             <h2 className="text-center text-white text-base md:text-2xl font-medium mb-6">
-              Proqramı uğurla başa vuran şirkətlər
+              {page.companiesTitle[language]}
             </h2>
 
             <div className="flex flex-col md:flex-row items-center justify-center gap-y-6 md:gap-x-10">
@@ -94,18 +94,18 @@ const Home = () => {
               {/* Mission Card */}
               <div className="bg-white rounded-lg shadow-md p-5 lg:p-8 w-full md:w-1/2 lg:w-1/3 flex flex-col justify-start items-start transform transition-all duration-300 hover:shadow-lg">
                 <img className="h-12 w-auto mb-3" src="/img/Home/mission.gif" alt="Mission icon" />
-                <h3 className="text-xl md:text-2xl font-semibold mb-3">Missiyamız</h3>
+                <h3 className="text-xl md:text-2xl font-semibold mb-3">{page.missionTitle[language]}</h3>
                 <p className="text-sm md:text-base text-gray-700">
-                  Proqramın məqsədi bizneslərin rəqəmsallaşma və innovasiya yolu ilə səmərəliliyinin və uzunmüddətli artımının dəstəklənməsi, bununla da Azərbaycan iqtisadiyyatının ümumi inkişafına töhfə verməkdir.
+                  {page.missionDescription[language]}
                 </p>
               </div>
 
               {/* Vision Card */}
               <div className="bg-white rounded-lg shadow-md p-5 lg:p-8 w-full md:w-1/2 lg:w-1/3 flex flex-col justify-start items-start transform transition-all duration-300 hover:shadow-lg">
                 <img className="h-12 w-auto mb-3" src="/img/Home/vision.gif" alt="Vision icon" />
-                <h3 className="text-xl md:text-2xl font-semibold mb-3">Vizyonumuz</h3>
+                <h3 className="text-xl md:text-2xl font-semibold mb-3">{page.visionTitle[language]}</h3>
                 <p className="text-sm md:text-base text-gray-700">
-                  "Sənaye 4.0 Hazırlıq" Proqramı 2030-cu ilədək İqtisadiyyat Nazirliyinin dəstəyi ilə ölkəmizin istehsal yönümlü müəssisələrinin rəqəmsal transformasiyasına hədəflənmişdir.
+                  {page.visionDescription[language]}
                 </p>
               </div>
             </div>

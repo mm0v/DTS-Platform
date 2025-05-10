@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useLanguage } from '../context/LanguageContext';
 
 const Navbar = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const [language, setLanguage] = useState('AZ');
+    const { language, toggleLanguage, layoutTranslations } = useLanguage();
+    const page = layoutTranslations.navbar;
 
     // Handle body scroll lock when menu is open
     useEffect(() => {
@@ -22,10 +24,6 @@ const Navbar = () => {
         setIsMenuOpen(!isMenuOpen);
     };
 
-    const toggleLanguage = () => {
-        setLanguage(language === 'AZ' ? 'EN' : 'AZ');
-    };
-
     return (
         <nav className="text-white top-0 z-50 relative">
             <div className="container mx-auto px-4 py-3">
@@ -40,7 +38,9 @@ const Navbar = () => {
                             <img src="img/Navbar/4SIM_logo.png" alt="Logo" className="ml-4" />
                         </div>
                         <div className="ml-8 text-sm border-l-2 border-gray-300 pl-5">
-                            <span>SƏNAYE 4.0 <br /> HAZIRLIQ <br /> PROQRAMI</span>
+                            {page.programText[language][0]} <br />
+                            {page.programText[language][1]} <br />
+                            {page.programText[language][2]}
                         </div>
                     </div>
 
@@ -49,14 +49,14 @@ const Navbar = () => {
                             to="/compliance"
                             className="hover:text-blue-400 whitespace-nowrap focus:outline-none focus-visible:outline-none focus:ring-0"
                         >
-                            Uyğunluq və Prioritetləşdirmə
+                            {page.compliance[language]}
                         </Link>
 
                         <Link
                             to="/success"
                             className="hover:text-blue-400 focus:outline-none focus-visible:outline-none focus:ring-0"
                         >
-                            Uğurlarımız
+                            {page.success[language]}
                         </Link>
 
                         <Link
@@ -70,14 +70,14 @@ const Navbar = () => {
                             to="/contact"
                             className="hover:text-blue-400 focus:outline-none focus-visible:outline-none focus:ring-0"
                         >
-                            Əlaqə
+                            {page.contact[language]}
                         </Link>
 
                         <Link
                             to="/apply"
                             className="bg-[#275AA8] px-5 py-2 rounded text-white focus:outline-none focus-visible:outline-none focus:ring-0"
                         >
-                            Müraciət et
+                            {page.apply[language]}
                         </Link>
 
                         <button
@@ -130,7 +130,9 @@ const Navbar = () => {
                                 <img src="img/Navbar/4SIM_logo.png" alt="Logo" className="h-10" />
                             </div>
                             <div className="text-sm border-l-2 border-gray-300 pl-4">
-                                <span>SƏNAYE 4.0 <br /> HAZIRLIQ <br /> PROQRAMI</span>
+                                {page.programText[language][0]} <br />
+                                {page.programText[language][1]} <br />
+                                {page.programText[language][2]}
                             </div>
                         </div>
 
@@ -140,7 +142,7 @@ const Navbar = () => {
                                 className="py-3 border-b border-blue-800 flex items-center justify-between"
                                 onClick={toggleMenu}
                             >
-                                <span>Ana Səhifə</span>
+                                <span>{page.home[language]}</span>
                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                                 </svg>
@@ -150,7 +152,7 @@ const Navbar = () => {
                                 className="py-3 border-b border-blue-800 flex items-center justify-between"
                                 onClick={toggleMenu}
                             >
-                                <span>Uyğunluq və Prioritetləşdirmə</span>
+                                <span>{page.compliance[language]}</span>
                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                                 </svg>
@@ -160,7 +162,7 @@ const Navbar = () => {
                                 className="py-3 border-b border-blue-800 flex items-center justify-between"
                                 onClick={toggleMenu}
                             >
-                                <span>Uğurlarımız</span>
+                                <span>{page.success[language]}</span>
                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                                 </svg>
@@ -180,7 +182,7 @@ const Navbar = () => {
                                 className="py-3 border-b border-blue-800 flex items-center justify-between"
                                 onClick={toggleMenu}
                             >
-                                <span>Əlaqə</span>
+                                <span>{page.contact[language]}</span>
                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                                 </svg>
@@ -193,7 +195,7 @@ const Navbar = () => {
                                 className="bg-blue-700 px-6 py-3 rounded text-center block w-full font-medium text-lg"
                                 onClick={toggleMenu}
                             >
-                                Müraciət et
+                                {page.apply[language]}
                             </Link>
                         </div>
                     </div>

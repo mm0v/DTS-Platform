@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import type { ReactElement } from 'react';
+import { useLanguage } from "../context/LanguageContext";
 
 // Define TypeScript interfaces for the component
 interface TitleContent {
@@ -32,6 +33,22 @@ const Timeline: React.FC = (): ReactElement => {
     const [hoveredStep, setHoveredStep] = useState<number | null>(null);
     const [selectedStep, setSelectedStep] = useState<number | null>(null);
     const [isMobile, setIsMobile] = useState<boolean>(false);
+    const { language, componentsTranslations } = useLanguage();
+    const page = componentsTranslations.timeline;
+    const stepsRaw = page.steps;
+
+    const steps: Step[] = stepsRaw.map(step => ({
+        id: step.id,
+        position: step.position,
+        title: {
+            line1: step.title[language].line1,
+            line2: step.title[language].line2,
+        },
+        content: {
+            heading: step.content[language].heading,
+            description: step.content[language].description,
+        }
+    }));
 
     // Detect if device is mobile
     useEffect(() => {
@@ -48,69 +65,6 @@ const Timeline: React.FC = (): ReactElement => {
         // Cleanup
         return () => window.removeEventListener('resize', checkIfMobile);
     }, []);
-
-    const steps: Step[] = [
-        {
-            id: 1,
-            title: {
-                line1: "Rəqəmsal hazırlıq səviyyəsinin",
-                line2: "qiymətləndirilməsi"
-            },
-            content: {
-                heading: "Rəqəmsal hazırlıq səviyyəsinin qiymətləndirilməsi",
-                description: "Hədəf Şirkətlərin mövcud rəqəmsal potensialının, infrastrukturunun və hazırlıq səviyyəsinin qiymətləndirilməsi, müvafiq çatışmazlıqların və təkmilləşmə üçün imkanlarının müəyyən edilməsi."
-            },
-            position: "left"
-        },
-        {
-            id: 2,
-            title: {
-                line1: "Rəqəmsal transformasiya yol",
-                line2: "xəritəsinin hazırlanması"
-            },
-            content: {
-                heading: "Rəqəmsal transformasiya yol xəritəsinin hazırlanması",
-                description: "Hədəf Şirkətlərin mövcud rəqəmsal potensialının, infrastrukturunun və hazırlıq səviyyəsinin qiymətləndirilməsi, müvafiq çatışmazlıqların və təkmilləşmə üçün imkanlarının müəyyən edilməsi."
-            },
-            position: "right"
-        },
-        {
-            id: 3,
-            title: {
-                line1: "Maliyyə dəstəyinin",
-                line2: "göstərilməsi"
-            },
-            content: {
-                heading: "Maliyyə dəstəyinin göstərilməsi",
-                description: "Hədəf Şirkətlərin mövcud rəqəmsal potensialının, infrastrukturunun və hazırlıq səviyyəsinin qiymətləndirilməsi, müvafiq çatışmazlıqların və təkmilləşmə üçün imkanlarının müəyyən edilməsi."
-            },
-            position: "left"
-        },
-        {
-            id: 4,
-            title: {
-                line1: "Rəqəmsal bilik və bacarıqların",
-                line2: "gücləndirilməsi"
-            },
-            content: {
-                heading: "Rəqəmsal bilik və bacarıqların gücləndirilməsi",
-                description: "Hədəf Şirkətlərin mövcud rəqəmsal potensialının, infrastrukturunun və hazırlıq səviyyəsinin qiymətləndirilməsi, müvafiq çatışmazlıqların və təkmilləşmə üçün imkanlarının müəyyən edilməsi."
-            },
-            position: "right"
-        },
-        {
-            id: 5,
-            title: {
-                line1: "İcra dəstəyinin",
-                line2: "göstərilməsi"
-            },
-            content: {
-                heading: "İcra dəstəyinin göstərilməsi",
-                description: "Hədəf Şirkətlərin mövcud rəqəmsal potensialının, infrastrukturunun və hazırlıq səviyyəsinin qiymətləndirilməsi, müvafiq çatışmazlıqların və təkmilləşmə üçün imkanlarının müəyyən edilməsi."
-            },
-            position: "left"
-        }
-    ];
 
     // Handle click on step for mobile
     const handleStepClick = (stepId: number): void => {
@@ -159,10 +113,10 @@ const Timeline: React.FC = (): ReactElement => {
         <div style={{ background: "linear-gradient(180deg, #1A4381 -96.34%, #FFF 99.92%)" }} className="flex flex-col items-center text-white min-h-screen w-full p-4 md:p-8">
             <div className="max-w-4xl w-full">
                 <div className='mb-18 mt-10'>
-                    <h1 className="text-2xl md:text-4xl font-bold text-center mb-2">Proqramın əhatə dairəsi</h1>
+                    <h1 className="text-2xl md:text-4xl font-bold text-center mb-2">{page.title[language]}</h1>
                     <p className="text-center mt-8 mb-8 md:mb-12 text-xs md:text-lg">
-                        Proqram çərçivəsində rəqəmsal transformasiya dəstəyi alan hədəf şirkətlər,
-                        <br className="hidden md:block" /> 5 əsas istiqamətdə dəstək alacaqlar:
+                        {page.description[language][0]}
+                        <br className="hidden md:block" /> {page.description[language][1]}
                     </p>
                 </div>
 
