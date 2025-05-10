@@ -1,7 +1,11 @@
 import ControlledAccordions from "../components/AccordionMui";
 import BackgroundVideo from "../components/BackgroundVideo";
+import { useLanguage } from "../context/LanguageContext";
 
 const Compliance_And_Prioritization = () => {
+  const { language, pagesTranslations } = useLanguage();
+  const page = pagesTranslations.compliance;
+
   return (
     <div className="mt-24">
       {/* <div className="video-background filter brightness-70">
@@ -18,22 +22,22 @@ const Compliance_And_Prioritization = () => {
 
       <div className="text-center">
         <h1 className="text-2xl pl-2 pr-2 md:text-5xl font-semibold text-[#FAFAFA] pb-18 mb-10 leading-[36px] md:leading-[48px]">
-          Uyğunluq və Prioritetləşdirmə
+          {page.title[language]}
         </h1>
       </div>
 
       <div className="bg-[#FAFAFA] pt-10 pb-10 ">
         <div className="text-center mb-6 p-3 max-w-5xl mx-auto">
           <h1 className="mb-2 font-medium text-[24px] md:text-[36px] leading-[32px] md:leading-[40px] text-[#323232]">
-            Uyğunluq üçün kriteriyalar
+            {page.criteriaTitle[language]}
           </h1>
           <p className=" mx-auto mt-4 text-[16px] md:text-[18px] leading-[140%] md:leading-[120%] text-[#323232]">
-            "Sənaye 4.0 Hazırlıq" Proqramından faydalanmaq üçün şirkətlər
-            aşağıdakı kriteriyalara cavab verməlidir:
+            {page.criteriaIntro[language]}
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-7xl mx-auto">
+          
           {/* Card 1 */}
           <div className="bg-white rounded-lg p-6 m-4 shadow-[2px_2px_12px_0px_#2323234D] border-[1px] border-[#D0D0D0] flex flex-col">
             <div className="flex items-center mb-4 flex-wrap sm:flex-nowrap">
@@ -43,11 +47,10 @@ const Compliance_And_Prioritization = () => {
               </div>
               <div>
                 <h3 className=" text-[#323232] mb-2 font-medium text-[30px]">
-                  Qanuni qeydiyyat ünvanı
+                  {page.cards[0].title[language]}
                 </h3>
                 <p className="  font-medium text-[18px] leading-[28px] text-[#323232]">
-                  Şirkət Azərbaycan Respublikasında qanunvericiliyə uyğun
-                  şəkildə qeydiyyatdan keçmiş və aktiv fəaliyyət göstərməlidir.
+                  {page.cards[0].description[language]}
                 </p>
               </div>
             </div>
@@ -62,11 +65,10 @@ const Compliance_And_Prioritization = () => {
               </div>
               <div>
                 <h3 className=" text-[#323232] mb-2 font-medium text-[30px]">
-                  Yerli mülkiyyətlilik
+                  {page.cards[1].title[language]}
                 </h3>
                 <p className="font-medium text-[18px] leading-[28px] text-[#323232]">
-                  Şirkətin nizamnamə kapitalının minimum 51%-i yerli şəxslərə
-                  məxsus olmalıdır.
+                  {page.cards[1].description[language]}
                 </p>
               </div>
             </div>
@@ -81,17 +83,16 @@ const Compliance_And_Prioritization = () => {
               </div>
               <div>
                 <h3 className=" text-[#323232] mb-2 font-medium text-[30px]">
-                  Prioritet sektorlar
+                  {page.cards[2].title[language]}
                 </h3>
                 <p className="font-medium text-[18px] leading-[28px] text-[#323232]">
-                  Şirkət aşağıdakı prioritet sektorlar üzrə fəaliyyət
-                  göstərməlidir:
+                  {page.cards[2].description[language]}
                 </p>
                 <ul className="list-disc pl-5 text-[16px] leading-[20px] font-medium text-[#323232] mt-3">
-                  <li>İstehsalat</li>
-                  <li>İnformasiya texnologiyaları və rabitə</li>
-                  <li>Səhiyyə</li>
-                  <li>Digər uyğun sahələr</li>
+                  <li>{page.cards[2]?.list?.[language]?.[0]}</li>
+                  <li>{page.cards[2]?.list?.[language]?.[1]}</li>
+                  <li>{page.cards[2]?.list?.[language]?.[2]}</li>
+                  <li>{page.cards[2]?.list?.[language]?.[3]}</li>
                 </ul>
               </div>
             </div>
@@ -106,15 +107,14 @@ const Compliance_And_Prioritization = () => {
               </div>
               <div>
                 <h3 className=" text-[#323232] mb-2 font-medium text-[30px]">
-                  Şirkətin ölçüsü
+                  {page.cards[3].title[language]}
                 </h3>
                 <p className="font-medium text-[18px] leading-[28px] text-[#323232]">
-                  Şirkət aşağıdakı meyarlara əsasən müəyyən edilmiş ölçü
-                  tələblərinə cavab verməlidir:
+                  {page.cards[3].description[language]}
                 </p>
                 <ul className="list-disc pl-5 text-[16px] leading-[20px] font-medium text-[#323232] mt-3">
-                  <li>Əməkdaş sayı: minimum 10 nəfər</li>
-                  <li>İllik dövriyyə: minimum 5 milyon manat</li>
+                  <li>{page.cards[3]?.list?.[language]?.[0]}</li>
+                  <li>{page.cards[3]?.list?.[language]?.[1]}</li>
                 </ul>
               </div>
             </div>
@@ -123,16 +123,10 @@ const Compliance_And_Prioritization = () => {
 
         <div className="text-center mt-20 mb-4 p-3 max-w-5xl mx-auto ">
           <h1 className="mb-2 font-medium text-[24px] md:text-[36px] leading-[32px] md:leading-[40px] text-[#323232]">
-            Prioritetləşdirmə metodologiyası
+            {page.methodologyTitle[language]}
           </h1>
           <p className=" mx-auto mt-5 text-[16px] md:text-[18px] leading-[140%] md:leading-[120%] text-[#323232] ">
-            Proqram çərçivəsində hər il müəyyən sayda şirkətlər iştirak üçün
-            seçilərək proqrama dəvət olunacaq. Uyğun hesab edilən müraciətçilər
-            iştiraklarının başlanmasından əvvəl rəsmi şəkildə
-            məlumatlandırılacaq. Bu vaxt çərçivəsi, iştirakçılara ilkin
-            müzakirələrin aparılması və zəruri hazırlıqların görülməsi üçün
-            kifayət qədər imkan yaradır. Proqramın növbəti mərhələlərində digər
-            şirkətlər də iştirak etmək imkanı əldə edəcəkdir.
+            {page.methodologyText[language]}
           </p>
         </div>
 

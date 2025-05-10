@@ -1,12 +1,15 @@
 import AccordionExpandDefault from "../components/AccordionSimpleMui"
 import BackgroundVideo from "../components/BackgroundVideo";
+import { useLanguage } from "../context/LanguageContext";
 
 const FAG = () => {
+  const { language, pagesTranslations } = useLanguage();
+
   return (
     <div>
       <div className="mt-24">
         <div className="text-center">
-          <h1 className="text-4xl font-semibold text-white pl-2 pr-2 pb-20 mb-10">Tez-tez verilən suallar</h1>
+          <h1 className="text-4xl font-semibold text-white pl-2 pr-2 pb-20 mb-10">{pagesTranslations.fag.title[language]}</h1>
         </div>
 
         <div style={{

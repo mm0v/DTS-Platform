@@ -6,6 +6,7 @@ import Modal from '@mui/material/Modal';
 import Backdrop from '@mui/material/Backdrop';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
+import { useLanguage } from "../context/LanguageContext";
 
 const style = {
     position: 'absolute',
@@ -30,6 +31,7 @@ export default function BasicModal() {
     const [open, setOpen] = React.useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
+    const { language, componentsTranslations } = useLanguage();
 
     return (
         <div>
@@ -42,7 +44,7 @@ export default function BasicModal() {
                     backgroundColor: "#ffff"
                 }}
             >
-                Ətraflı
+                {componentsTranslations.modalMui.btnLabel[language]}
             </Button>
             <Modal
                 open={open}
@@ -70,11 +72,9 @@ export default function BasicModal() {
                         <CloseIcon />
                     </IconButton>
                     <Typography variant="h6" sx={{ fontWeight: "300" }} component="h2">
-                        Bu proqram üzrə ümumi koordinasiya Dördüncü Sənaye İnqilabının Təhlili və Koordinasiya Mərkəzi (4SİM)
-                        tərəfindən həyata keçirilir. Proqram, Azərbaycan Respublikası İqtisadiyyat Nazirliyinin (İN) dəstəyi
-                        ilə həyata keçirilir. <br /> <br /> Proqram, "Azərbaycan Respublikasının 2022-2026-cı illərdə Sosial-İqtisadi İnkişaf Strategiyası"
-                        ilə müəyyən edilmiş məqsədlərə xidmət edərək Azərbaycan bizneslərinə kompleks rəqəmsal transformasiya prosesini həyata
-                        keçirməkdə kömək edir.
+                        {componentsTranslations.modalMui.description[language][0]}
+                        <br /> <br />
+                        {componentsTranslations.modalMui.description[language][1]}
                     </Typography>
                 </Box>
             </Modal>

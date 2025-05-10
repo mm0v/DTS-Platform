@@ -9,6 +9,7 @@ import NotFound from './pages/NotFound'
 import Navbar from './layout/Navbar'
 import Footer from './layout/Footer'
 import Contact from './pages/Contact'
+import { LanguageProvider } from './context/LanguageContext'
 
 import ApplyOne from './pages/ApplyOne'
 import ApplyTwo from './pages/ApplyTwo'
@@ -19,7 +20,7 @@ import ApplyFive from './pages/ApplyFive'
 function App() {
 
   return (
-    <>
+    <LanguageProvider> 
       <Navbar />
 
       <Routes>
@@ -41,7 +42,7 @@ function App() {
       </Routes>
 
       <Footer />
-    </>
+    </LanguageProvider>
   )
 }
 
