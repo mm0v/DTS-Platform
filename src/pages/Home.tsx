@@ -20,19 +20,13 @@ const Home = () => {
     <>
       <div className="relative min-h-screen">
 
-        {/* <div className="video-background">
-          <video className="absolute w-full h-full object-cover" autoPlay loop muted>
-            <source src="img/Navbar/bg-header.mp4" type="video/mp4" />
-          </video>
-        </div> */}
-
         <BackgroundVideo />
 
         {/* Content */}
         <div className="relative z-10 container mx-auto px-4 py-8 md:py-32 min-h-screen flex flex-col">
           {/* Main content */}
           <div className="flex-grow flex flex-col items-center justify-center text-white text-center">
-            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6">{page.title[language]}</h1>
+            <h1 className="text-3xl md:text-4xl pt-12 lg:text-5xl font-bold mb-6">{page.title[language]}</h1>
 
             <div className="max-w-4xl mx-auto">
               <p className="text-base md:text-lg mb-8">
