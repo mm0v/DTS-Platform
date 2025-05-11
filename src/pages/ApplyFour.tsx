@@ -33,12 +33,12 @@ export default function ApplyFour() {
 
   // Geri butonuna basıldığında ApplyThree sayfasına git
   const handleGoBack = () => {
-    navigate('/apply-three') // /apply-three sayfasına yönlendir
+    navigate('/apply/three')
   }
 
   // Növbəti butonuna basıldığında ApplyFive sayfasına git
   const handleNext = () => {
-    navigate('/apply-five') // /apply-five sayfasına yönlendir
+    navigate('/apply/five')
   }
 
   return (

@@ -50,7 +50,7 @@ export default function ApplyFive() {
   }
 
   const handleGoBack = () => {
-    navigate("/apply-four")
+    navigate("/apply/four")
   }
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {

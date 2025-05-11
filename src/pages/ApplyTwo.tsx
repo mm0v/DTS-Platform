@@ -30,7 +30,7 @@ export default function ApplyTwo() {
 
   // Növbəti butonuna basıldığında ApplyThree sayfasına git
   const handleGoNext = () => {
-    navigate('/apply-three') // /apply-three sayfasına yönlendir
+    navigate('/apply/three') // /apply/three sayfasına yönlendir
   }
 
   return (
