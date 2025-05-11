@@ -1,21 +1,85 @@
-import { useNavigate } from "react-router-dom";
+"use client"
+
+import type React from "react"
+
+import { useNavigate } from "react-router-dom"
+import { useState } from "react"
+import { Download } from "lucide-react"
+
+interface FileState {
+  companyRegistry: File | null
+  financialReports: File | null
+}
+
+interface AgreementState {
+  confirmAccuracy: boolean
+  contactConsent: boolean
+  termsAgreement: boolean
+}
 
 export default function ApplyFive() {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
+  const [files, setFiles] = useState<FileState>({
+    companyRegistry: null,
+    financialReports: null,
+  })
+  const [agreements, setAgreements] = useState<AgreementState>({
+    confirmAccuracy: false,
+    contactConsent: false,
+    termsAgreement: false,
+  })
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, fileType: keyof FileState) => {
+    const file = e.target.files?.[0] || null
+    if (file) {
+      setFiles((prev) => ({
+        ...prev,
+        [fileType]: file,
+      }))
+    }
+  }
+
+  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, checked } = e.target
+    setAgreements((prev) => ({
+      ...prev,
+      [name as keyof AgreementState]: checked,
+    }))
+  }
 
   const handleGoBack = () => {
-    navigate("/apply-four");
-  };
+    navigate("/apply-four")
+  }
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    setIsSubmitting(true)
+
+    // Here you would typically upload the files to your server
+    // and submit the form data
+
+    // Simulate API call
+    setTimeout(() => {
+      setIsSubmitting(false)
+      // Navigate to success page or show success message
+      alert("Müraciətiniz uğurla göndərildi!")
+    }, 1500)
+  }
+
+  const allAgreementsChecked = Object.values(agreements).every((value) => value === true)
 
   return (
-    <div className="min-h-screen bg-black bg-[url('/images/space-background.jpg')] bg-cover bg-center bg-no-repeat text-white flex flex-col items-center justify-center p-4">
+    <div className="min-h-screen bg-black bg-[url('/images/space-background.jpg')] bg-cover bg-center bg-no-repeat text-white flex flex-col items-center justify-center py-10">
       {/* Progress Bar */}
       <div className="w-full max-w-4xl mb-8 px-4">
         <div className="relative w-full h-[1px] bg-blue-500">
           {[1, 2, 3, 4, 5].map((num) => (
             <div
               key={num}
-              className={`absolute top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center text-sm ${num <= 5 ? "bg-blue-500" : "bg-blue-900"}`}
+              className={`absolute top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center text-sm ${
+                num <= 5 ? "bg-blue-500" : "bg-blue-900"
+              }`}
               style={{ left: `${(num - 1) * 25}%` }}
             >
               {num}
@@ -24,72 +88,156 @@ export default function ApplyFive() {
         </div>
         <div className="flex justify-between mt-2 text-xs text-gray-400">
           <div className="text-center max-w-[100px]">Şirkət haqqında məlumat</div>
-          <div className="text-center max-w-[100px] text-blue-400">Mülkiyyət və hüquqi quruluş</div>
+          <div className="text-center max-w-[100px]">Mülkiyyət və hüquqi quruluş</div>
           <div className="text-center max-w-[100px]">Rəqəmsal hüquqi və transformasiya xidmətləri</div>
           <div className="text-center max-w-[100px]">Lisenzli və əhatəlidir</div>
-          <div className="text-center max-w-[100px]">Tələb olunan sənədlər</div>
+          <div className="text-center max-w-[100px] text-blue-400">Tələb olunan sənədlər</div>
         </div>
       </div>
 
       {/* Form */}
-      <div className="w-full max-w-4xl bg-opacity-70 p-8 rounded-lg">
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex-1 bg-purple-600 h-1"></div>
-          <div className="text-center text-xl font-semibold">Tələb olunan sənədlər</div>
-          <div className="flex-1 bg-purple-600 h-1"></div>
+      <div className="w-full max-w-4xl p-8 rounded-lg">
+        <div className="text-center mb-10">
+          <h1 className="text-3xl font-bold">Tələb olunan sənədlər</h1>
         </div>
 
-        <form className="space-y-4">
-          <div>
-            <label className="block text-lg">Şirkətin dövlət reyestrindən çıxarış</label>
-            <input type="file" className="w-full mt-2 py-2 px-4 bg-gray-800 text-white rounded-lg" />
-            <p className="mt-2 text-sm text-gray-400">Yüklənən fayl 50 mb – dan çox ola bilməz.</p>
+        <form className="space-y-8" onSubmit={handleSubmit}>
+          {/* First file upload */}
+          <div className="space-y-2">
+            <label className="block text-lg font-medium">Şirkətin dövlət reyestrindən çıxarışı</label>
+            <div className="relative">
+              <div className="w-full h-14 border border-gray-600 rounded-lg flex items-center justify-between px-4 bg-gray-800/30">
+                <span className="text-gray-400 text-sm">
+                  {files.companyRegistry ? files.companyRegistry.name : ".doc, .docx, .pdf"}
+                </span>
+                <button
+                  type="button"
+                  className="text-white"
+                  onClick={() => document.getElementById("companyRegistry")?.click()}
+                >
+                  <Download size={20} />
+                </button>
+              </div>
+              <input
+                id="companyRegistry"
+                type="file"
+                className="hidden"
+                accept=".doc,.docx,.pdf"
+                onChange={(e) => handleFileChange(e, "companyRegistry")}
+              />
+            </div>
+            <p className="text-sm text-gray-400">Yüklənən fayl 50 mb – dan çox ola bilməz.</p>
           </div>
 
-          <div>
-            <label className="block text-lg">Maliyyə hesabatları (son 2 il)</label>
-            <input type="file" className="w-full mt-2 py-2 px-4 bg-gray-800 text-white rounded-lg" />
-            <p className="mt-2 text-sm text-gray-400">Yüklənən fayl 50 mb – dan çox ola bilməz.</p>
+          {/* Dot separator */}
+          <div className="flex justify-center">
+            <div className="w-2 h-2 rounded-full bg-teal-400"></div>
           </div>
 
-          <div className="flex items-center">
-            <input type="checkbox" className="h-4 w-4 text-blue-500" />
-            <span className="ml-2 text-sm text-gray-400">
-              Təqdim olunan məlumatların doğruluğunu təsdiq edirəm.
-            </span>
+          {/* Second file upload */}
+          <div className="space-y-2">
+            <label className="block text-lg font-medium">Maliyyə hesabatları (son 2 il)</label>
+            <div className="relative">
+              <div className="w-full h-14 border border-gray-600 rounded-lg flex items-center justify-between px-4 bg-gray-800/30">
+                <span className="text-gray-400 text-sm">
+                  {files.financialReports ? files.financialReports.name : ".doc, .docx, .pdf, .excel"}
+                </span>
+                <button
+                  type="button"
+                  className="text-white"
+                  onClick={() => document.getElementById("financialReports")?.click()}
+                >
+                  <Download size={20} />
+                </button>
+              </div>
+              <input
+                id="financialReports"
+                type="file"
+                className="hidden"
+                accept=".doc,.docx,.pdf,.xls,.xlsx"
+                onChange={(e) => handleFileChange(e, "financialReports")}
+              />
+            </div>
+            <p className="text-sm text-gray-400">Yüklənən fayl 50 mb – dan çox ola bilməz.</p>
           </div>
 
-          <div className="flex items-center">
-            <input type="checkbox" className="h-4 w-4 text-blue-500" />
-            <span className="ml-2 text-sm text-gray-400">
-              Müraciətimlə əlaqədar 45İM tərəfindən əlaqə saxlanmasını qəbul edirəm.
-            </span>
+          <p className="text-sm text-gray-400 mt-6">
+            Müraciətinizlə bağlı əlavə təsdiqedici sənədlərə ehtiyac olacağı təqdirdə sizinlə əlaqə saxlanılacaqdır.
+          </p>
+
+          {/* Dot separator */}
+          <div className="flex justify-center">
+            <div className="w-2 h-2 rounded-full bg-teal-400"></div>
           </div>
 
-          <div className="flex items-center">
-            <input type="checkbox" className="h-4 w-4 text-blue-500" />
-            <span className="ml-2 text-sm text-gray-400">
-              İstifadə şərtləri və gizlilik şərtləri ilə razıyam.
-            </span>
+          {/* Checkboxes */}
+          <div className="space-y-4">
+            <div className="flex items-start">
+              <input
+                type="checkbox"
+                id="confirmAccuracy"
+                name="confirmAccuracy"
+                checked={agreements.confirmAccuracy}
+                onChange={handleCheckboxChange}
+                className="mt-1 h-4 w-4 text-blue-500 border-gray-600 rounded bg-transparent"
+              />
+              <label htmlFor="confirmAccuracy" className="ml-2 text-sm text-gray-400">
+                Təqdim olunan məlumatların doğruluğunu təsdiq edirəm.
+              </label>
+            </div>
+
+            <div className="flex items-start">
+              <input
+                type="checkbox"
+                id="contactConsent"
+                name="contactConsent"
+                checked={agreements.contactConsent}
+                onChange={handleCheckboxChange}
+                className="mt-1 h-4 w-4 text-blue-500 border-gray-600 rounded bg-transparent"
+              />
+              <label htmlFor="contactConsent" className="ml-2 text-sm text-gray-400">
+                Müraciətimlə əlaqədar 45İM tərəfindən əlaqə saxlanmasını qəbul edirəm.
+              </label>
+            </div>
+
+            <div className="flex items-start">
+              <input
+                type="checkbox"
+                id="termsAgreement"
+                name="termsAgreement"
+                checked={agreements.termsAgreement}
+                onChange={handleCheckboxChange}
+                className="mt-1 h-4 w-4 text-blue-500 border-gray-600 rounded bg-transparent"
+              />
+              <label htmlFor="termsAgreement" className="ml-2 text-sm text-gray-400">
+                İstifadə şərtləri və gizlilik şərtləri ilə razıyam.
+              </label>
+            </div>
           </div>
 
-          <div className="flex space-x-4 mt-6">
+          {/* Buttons */}
+          <div className="flex space-x-4 mt-10">
             <button
               type="button"
               onClick={handleGoBack}
-              className="bg-gray-700 text-white py-2 px-6 rounded-lg hover:bg-gray-600"
+              className="flex-1 bg-blue-900 text-white py-3 rounded-lg hover:bg-blue-800 transition-colors"
             >
               Geri
             </button>
             <button
               type="submit"
-              className="bg-purple-600 text-white py-2 px-6 rounded-lg hover:bg-purple-700"
+              disabled={!allAgreementsChecked || isSubmitting}
+              className={`flex-1 py-3 rounded-lg transition-colors ${
+                allAgreementsChecked && !isSubmitting
+                  ? "bg-blue-600 hover:bg-blue-700 text-white"
+                  : "bg-blue-900/50 text-gray-400 cursor-not-allowed"
+              }`}
             >
-              Təsdiq et
+              {isSubmitting ? "Göndərilir..." : "Təsdiq et"}
             </button>
           </div>
         </form>
       </div>
     </div>
-  );
+  )
 }

@@ -41,7 +41,7 @@ export default function ApplyFour() {
   }
 
   return (
-    <div className="min-h-screen w-full bg-black bg-[url('/images/space-background.jpg')] bg-cover bg-center bg-no-repeat text-white flex flex-col items-center justify-center p-4">
+    <div className="min-h-screen w-full bg-black bg-[url('/images/space-background.jpg')] bg-cover bg-center bg-no-repeat text-white flex flex-col  items-center justify-center py-10">
       {/* Progress Steps */}
       <div className="w-full max-w-4xl mb-8 px-4">
         <div className="relative w-full h-[1px] bg-blue-500">

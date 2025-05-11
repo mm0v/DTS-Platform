@@ -33,7 +33,7 @@ export default function ApplyTwo() {
   }
 
   return (
-    <div className="relative min-h-screen w-full text-white flex flex-col items-center justify-center p-4">
+    <div className="relative min-h-screen w-full text-white flex flex-col items-center justify-center py-10">
       {/* Background Video with Blur Effect */}
       <video autoPlay loop muted className="absolute top-0 left-0 w-full h-full object-cover z-0 filter blur-[10px]">
         <source src="/img/Navbar/bg-header.mp4" type="video/mp4" />
