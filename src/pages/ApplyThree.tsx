@@ -19,13 +19,32 @@ const ApplyThree = () => {
     e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      digitalReadiness: {
-        ...prev.digitalReadiness,
-        [name]: value,
-      },
-    }));
+
+    if (name === "digitalLevel") {
+      // Convert digitalLevel to a number (Byte)
+      const digitalLevelMap: { [key: string]: number } = {
+        "": 0,
+        beginner: 1,
+        intermediate: 2,
+        advanced: 3,
+      };
+
+      setFormData((prev) => ({
+        ...prev,
+        digitalReadiness: {
+          ...prev.digitalReadiness,
+          [name]: digitalLevelMap[value] || 0,
+        },
+      }));
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        digitalReadiness: {
+          ...prev.digitalReadiness,
+          [name]: value,
+        },
+      }));
+    }
   };
 
   const handleCheckboxChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -62,6 +81,22 @@ const ApplyThree = () => {
 
   const handleGoNext = () => {
     navigate("/apply/four");
+  };
+
+  // Convert the numeric digitalLevel back to string for the select input
+  const getDigitalLevelString = (): string => {
+    const levelValue = formData.digitalReadiness.digitalLevel;
+
+    switch (levelValue) {
+      case 1:
+        return "beginner";
+      case 2:
+        return "intermediate";
+      case 3:
+        return "advanced";
+      default:
+        return "";
+    }
   };
 
   return (
@@ -110,7 +145,7 @@ const ApplyThree = () => {
               <label className="w-1/3">Mövcud rəqəmsallaşma səviyyəsi:</label>
               <select
                 name="digitalLevel"
-                value={formData.digitalReadiness.digitalLevel}
+                value={getDigitalLevelString()}
                 onChange={handleInputChange}
                 className="w-2/3 p-2 bg-gray-800 text-white rounded"
               >

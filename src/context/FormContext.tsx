@@ -1,4 +1,7 @@
-import { createContext } from 'react';
+import { createContext } from "react";
+
+// Define Byte type if not already defined elsewhere
+type Byte = number; // 8-bit integer (0-255)
 
 export interface FormContextType {
   formData: {
@@ -26,7 +29,7 @@ export interface FormContextType {
     };
     digitalReadiness: {
       keyChallenges: string[];
-      digitalLevel: string;
+      digitalLevel: Byte; // Changed from string to Byte
       digitalTools: string[];
       companyPurpose: string;
     };
@@ -42,8 +45,12 @@ export interface FormContextType {
       exportBazaar: string;
     };
   };
-  setFormData: React.Dispatch<React.SetStateAction<FormContextType['formData']>>;
+  setFormData: React.Dispatch<
+    React.SetStateAction<FormContextType["formData"]>
+  >;
   handleSubmit: () => Promise<void>;
 }
 
-export const FormContext = createContext<FormContextType | undefined>(undefined); 
+export const FormContext = createContext<FormContextType | undefined>(
+  undefined
+);

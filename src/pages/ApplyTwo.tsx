@@ -1,37 +1,102 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { useNavigate } from "react-router-dom"
-import BackgroundVideo from "../components/BackgroundVideo"
+import { useState, useContext, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import BackgroundVideo from "../components/BackgroundVideo";
+import { FormContext } from "../context/FormContext";
 
 export default function ApplyTwo() {
-  const navigate = useNavigate() // useNavigate hook'u
-  const [formData, setFormData] = useState({
-    companyType: "",
-    businessIndustry: "",
-    mainProducts: "",
-    exportActivity: "",
-    exportMarkets: "",
-    document: "",
-  })
+  const navigate = useNavigate();
+  const context = useContext(FormContext);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target
-    setFormData(prevState => ({
+  if (!context) {
+    throw new Error("ApplyTwo must be used within a FormContext.Provider");
+  }
+
+  const { formData, setFormData } = context;
+  const [localFormData, setLocalFormData] = useState({
+    companyType: formData.propertyLaw.companyLawType,
+    businessIndustry: formData.propertyLaw.businessOperations,
+    mainProducts: formData.propertyLaw.products,
+    exportActivity: formData.propertyLaw.exportActivity ? "Bəli" : "Xeyr",
+    exportMarkets: formData.propertyLaw.exportBazaar,
+    document: "",
+  });
+
+  // Update local form data when context data changes
+  useEffect(() => {
+    setLocalFormData({
+      companyType: formData.propertyLaw.companyLawType,
+      businessIndustry: formData.propertyLaw.businessOperations,
+      mainProducts: formData.propertyLaw.products,
+      exportActivity: formData.propertyLaw.exportActivity ? "Bəli" : "Xeyr",
+      exportMarkets: formData.propertyLaw.exportBazaar,
+      document: "",
+    });
+  }, [formData]);
+
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target;
+    setLocalFormData((prevState) => ({
       ...prevState,
       [name]: value,
-    }))
-  }
+    }));
+
+    // Update the global form context based on the input name
+    if (name === "companyType") {
+      setFormData((prev) => ({
+        ...prev,
+        propertyLaw: {
+          ...prev.propertyLaw,
+          companyLawType: value,
+        },
+      }));
+    } else if (name === "businessIndustry") {
+      setFormData((prev) => ({
+        ...prev,
+        propertyLaw: {
+          ...prev.propertyLaw,
+          businessOperations: value,
+        },
+      }));
+    } else if (name === "mainProducts") {
+      setFormData((prev) => ({
+        ...prev,
+        propertyLaw: {
+          ...prev.propertyLaw,
+          products: value,
+        },
+      }));
+    } else if (name === "exportActivity") {
+      setFormData((prev) => ({
+        ...prev,
+        propertyLaw: {
+          ...prev.propertyLaw,
+          exportActivity: value === "Bəli",
+        },
+      }));
+    } else if (name === "exportMarkets") {
+      setFormData((prev) => ({
+        ...prev,
+        propertyLaw: {
+          ...prev.propertyLaw,
+          exportBazaar: value,
+        },
+      }));
+    }
+  };
 
   // Geri butonuna basıldığında Apply sayfasına git
   const handleGoBack = () => {
-    navigate('/apply') // /apply sayfasına yönlendir
-  }
+    navigate("/apply");
+  };
 
   // Növbəti butonuna basıldığında ApplyThree sayfasına git
   const handleGoNext = () => {
-    navigate('/apply/three') // /apply/three sayfasına yönlendir
-  }
+    navigate("/apply/three");
+  };
 
   return (
     <>
@@ -51,7 +116,9 @@ export default function ApplyTwo() {
             {[1, 2, 3, 4, 5].map((num) => (
               <div
                 key={num}
-                className={`absolute top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center text-sm ${num <= 2 ? "bg-blue-500" : "bg-blue-900"}`}
+                className={`absolute top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center text-sm ${
+                  num <= 2 ? "bg-blue-500" : "bg-blue-900"
+                }`}
                 style={{ left: `${(num - 1) * 25}%` }}
               >
                 {num}
@@ -60,26 +127,40 @@ export default function ApplyTwo() {
           </div>
 
           <div className="flex justify-between mt-4 text-xs text-gray-400">
-            <div className="text-center max-w-[100px]">Şirkət haqqında məlumat</div>
-            <div className="text-center max-w-[100px] text-blue-400">Mülkiyyət və hüquqi quruluş</div>
-            <div className="text-center max-w-[100px]">Rəqəmsal hüquqi və transformasiya xidmətləri</div>
-            <div className="text-center max-w-[100px]">Lisenzli və əhatəlidir</div>
-            <div className="text-center max-w-[100px]">Tələb olunan sənədlər</div>
+            <div className="text-center max-w-[100px]">
+              Şirkət haqqında məlumat
+            </div>
+            <div className="text-center max-w-[100px] text-blue-400">
+              Mülkiyyət və hüquqi quruluş
+            </div>
+            <div className="text-center max-w-[100px]">
+              Rəqəmsal hüquqi və transformasiya xidmətləri
+            </div>
+            <div className="text-center max-w-[100px]">
+              Lisenzli və əhatəlidir
+            </div>
+            <div className="text-center max-w-[100px]">
+              Tələb olunan sənədlər
+            </div>
           </div>
         </div>
 
         <div className="text-center mb-8 relative z-20">
-          <h1 className="text-2xl md:text-3xl font-medium">Mülkiyyət və hüquqi quruluş</h1>
+          <h1 className="text-2xl md:text-3xl font-medium">
+            Mülkiyyət və hüquqi quruluş
+          </h1>
         </div>
 
         <div className="w-full max-w-2xl space-y-6 relative z-20">
           {/* Şirkətin hüquqi növü */}
           <div className="space-y-2">
-            <label className="text-sm">Şirkətin hüquqi növü (MMC, ASC, Fərdi sahibkar və s.)</label>
+            <label className="text-sm">
+              Şirkətin hüquqi növü (MMC, ASC, Fərdi sahibkar və s.)
+            </label>
             <input
               type="text"
               name="companyType"
-              value={formData.companyType}
+              value={localFormData.companyType}
               onChange={handleInputChange}
               className="w-full bg-transparent border border-gray-700 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300"
             />
@@ -91,7 +172,7 @@ export default function ApplyTwo() {
             <input
               type="text"
               name="businessIndustry"
-              value={formData.businessIndustry}
+              value={localFormData.businessIndustry}
               onChange={handleInputChange}
               className="w-full bg-transparent border border-gray-700 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300"
             />
@@ -103,7 +184,7 @@ export default function ApplyTwo() {
             <input
               type="text"
               name="mainProducts"
-              value={formData.mainProducts}
+              value={localFormData.mainProducts}
               onChange={handleInputChange}
               className="w-full bg-transparent border border-gray-700 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300"
             />
@@ -111,7 +192,9 @@ export default function ApplyTwo() {
 
           {/* İxrac fəaliyyəti ilə məşğul olmaq */}
           <div className="space-y-2">
-            <label className="text-sm">İxrac fəaliyyəti ilə məşğul olursunuz?</label>
+            <label className="text-sm">
+              İxrac fəaliyyəti ilə məşğul olursunuz?
+            </label>
             <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-2">
                 <input
@@ -119,7 +202,7 @@ export default function ApplyTwo() {
                   name="exportActivity"
                   value="Bəli"
                   onChange={handleInputChange}
-                  checked={formData.exportActivity === "Bəli"}
+                  checked={localFormData.exportActivity === "Bəli"}
                   className="text-blue-500"
                 />
                 <label className="text-sm">Bəli</label>
@@ -130,7 +213,7 @@ export default function ApplyTwo() {
                   name="exportActivity"
                   value="Xeyr"
                   onChange={handleInputChange}
-                  checked={formData.exportActivity === "Xeyr"}
+                  checked={localFormData.exportActivity === "Xeyr"}
                   className="text-blue-500"
                 />
                 <label className="text-sm">Xeyr</label>
@@ -140,11 +223,13 @@ export default function ApplyTwo() {
 
           {/* Məhsulların ixrac olunduğu bazarlar */}
           <div className="space-y-2">
-            <label className="text-sm">Məhsullarınızın ixrac olunduğu bazarlar</label>
+            <label className="text-sm">
+              Məhsullarınızın ixrac olunduğu bazarlar
+            </label>
             <input
               type="text"
               name="exportMarkets"
-              value={formData.exportMarkets}
+              value={localFormData.exportMarkets}
               onChange={handleInputChange}
               className="w-full bg-transparent border border-gray-700 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300"
             />
@@ -152,7 +237,9 @@ export default function ApplyTwo() {
 
           {/* Təqdimedici sənəd */}
           <div className="space-y-2">
-            <label className="text-sm">Təqdimedici sənəd (.doc, .docx, .pdf)</label>
+            <label className="text-sm">
+              Təqdimedici sənəd (.doc, .docx, .pdf)
+            </label>
             <input
               type="file"
               name="document"
@@ -180,5 +267,5 @@ export default function ApplyTwo() {
         </div>
       </div>
     </>
-  )
+  );
 }

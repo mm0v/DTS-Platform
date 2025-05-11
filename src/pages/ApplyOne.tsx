@@ -1,36 +1,119 @@
 "use client";
 
-import { useState } from "react";
-// import { ChevronDown } from "lucide-react"
+import { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import BackgroundVideo from "../components/BackgroundVideo";
+import { FormContext } from "../context/FormContext";
 
 export default function ApplyOne() {
+  const navigate = useNavigate();
+  const context = useContext(FormContext);
+
+  if (!context) {
+    throw new Error("ApplyOne must be used within a FormContext.Provider");
+  }
+
+  const { formData, setFormData } = context;
   const [step, setStep] = useState(1);
-  const [formData, setFormData] = useState({
-    companyName: "",
-    vatNumber: "",
-    foundingDate: "",
-    companySize: "",
-    annualTurnover: "",
-    companyAddress: "",
-    location: "",
-    website: "",
-    contactPerson: "",
-    email: "",
-    phone: "",
+
+  const [localFormData, setLocalFormData] = useState({
+    companyName: formData.companyData.companyName,
+    vatNumber: formData.companyData.companyRegisterNumber,
+    foundingDate: formData.companyData.createYear?.toString() || "",
+    companySize: formData.companyData.workerCount,
+    annualTurnover: formData.companyData.annualTurnover,
+    companyAddress: formData.companyData.address,
+    location: formData.companyData.cityAndRegion,
+    website: formData.companyData.website,
+    contactPerson: formData.companyData.contactName,
+    email: formData.companyData.contactEmail,
+    phone: formData.companyData.contactPhone,
   });
 
-  const navigate = useNavigate();
+  // Update local form data when context data changes
+  useEffect(() => {
+    setLocalFormData({
+      companyName: formData.companyData.companyName,
+      vatNumber: formData.companyData.companyRegisterNumber,
+      foundingDate: formData.companyData.createYear?.toString() || "",
+      companySize: formData.companyData.workerCount,
+      annualTurnover: formData.companyData.annualTurnover,
+      companyAddress: formData.companyData.address,
+      location: formData.companyData.cityAndRegion,
+      website: formData.companyData.website,
+      contactPerson: formData.companyData.contactName,
+      email: formData.companyData.contactEmail,
+      phone: formData.companyData.contactPhone,
+    });
+  }, [formData]);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
-    setFormData((prevState) => ({
+    setLocalFormData((prevState) => ({
       ...prevState,
       [name]: value,
     }));
+
+    // Update the global form context based on the input name
+    if (name === "companyName") {
+      setFormData((prev) => ({
+        ...prev,
+        companyData: { ...prev.companyData, companyName: value },
+      }));
+    } else if (name === "vatNumber") {
+      setFormData((prev) => ({
+        ...prev,
+        companyData: { ...prev.companyData, companyRegisterNumber: value },
+      }));
+    } else if (name === "foundingDate") {
+      const year = value ? parseInt(value, 10) : null;
+      setFormData((prev) => ({
+        ...prev,
+        companyData: { ...prev.companyData, createYear: year },
+      }));
+    } else if (name === "companySize") {
+      setFormData((prev) => ({
+        ...prev,
+        companyData: { ...prev.companyData, workerCount: value },
+      }));
+    } else if (name === "annualTurnover") {
+      setFormData((prev) => ({
+        ...prev,
+        companyData: { ...prev.companyData, annualTurnover: value },
+      }));
+    } else if (name === "companyAddress") {
+      setFormData((prev) => ({
+        ...prev,
+        companyData: { ...prev.companyData, address: value },
+      }));
+    } else if (name === "location") {
+      setFormData((prev) => ({
+        ...prev,
+        companyData: { ...prev.companyData, cityAndRegion: value },
+      }));
+    } else if (name === "website") {
+      setFormData((prev) => ({
+        ...prev,
+        companyData: { ...prev.companyData, website: value },
+      }));
+    } else if (name === "contactPerson") {
+      setFormData((prev) => ({
+        ...prev,
+        companyData: { ...prev.companyData, contactName: value },
+      }));
+    } else if (name === "email") {
+      setFormData((prev) => ({
+        ...prev,
+        companyData: { ...prev.companyData, contactEmail: value },
+      }));
+    } else if (name === "phone") {
+      setFormData((prev) => ({
+        ...prev,
+        companyData: { ...prev.companyData, contactPhone: value },
+      }));
+    }
   };
 
   const handleNext = () => {
@@ -100,7 +183,7 @@ export default function ApplyOne() {
             <input
               type="text"
               name="companyName"
-              value={formData.companyName}
+              value={localFormData.companyName}
               onChange={handleInputChange}
               className="w-full bg-transparent border border-gray-700 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300"
             />
@@ -109,11 +192,11 @@ export default function ApplyOne() {
           {/* Company VAT and Founding Date */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
-              <label className="text-sm">Şirkətin VÖN nömrəsi</label>
+              <label className="text-sm">Şirkətin VÖEN nömrəsi</label>
               <input
                 type="text"
                 name="vatNumber"
-                value={formData.vatNumber}
+                value={localFormData.vatNumber}
                 onChange={handleInputChange}
                 className="w-full bg-transparent border border-gray-700 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300"
               />
@@ -123,7 +206,7 @@ export default function ApplyOne() {
               <input
                 type="number"
                 name="foundingDate"
-                value={formData.foundingDate}
+                value={localFormData.foundingDate}
                 onChange={handleInputChange}
                 min="1900"
                 max={new Date().getFullYear()}
@@ -141,29 +224,47 @@ export default function ApplyOne() {
               </label>
               <select
                 name="companySize"
-                value={formData.companySize}
+                value={localFormData.companySize}
                 onChange={handleInputChange}
                 className="w-full bg-transparent border border-gray-700 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300"
               >
-                <option className="text-black" value="">Seçin</option>
-                <option className="text-black" value="1-10">1-10</option>
-                <option className="text-black" value="11-50">11-50</option>
-                <option className="text-black" value="51-250">51-250</option>
-                <option className="text-black" value="250+">250+</option>
+                <option className="text-black" value="">
+                  Seçin
+                </option>
+                <option className="text-black" value="1-10">
+                  1-10
+                </option>
+                <option className="text-black" value="11-50">
+                  11-50
+                </option>
+                <option className="text-black" value="51-250">
+                  51-250
+                </option>
+                <option className="text-black" value="250+">
+                  250+
+                </option>
               </select>
             </div>
             <div className="space-y-2">
               <label className="text-sm">İllik dövriyyə (AZN)</label>
               <select
                 name="annualTurnover"
-                value={formData.annualTurnover}
+                value={localFormData.annualTurnover}
                 onChange={handleInputChange}
                 className="w-full bg-transparent border border-gray-700 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300"
               >
-                <option className="text-black" value="">Seçin</option>
-                <option className="text-black" value="3m-ə qədər">3m-ə qədər</option>
-                <option className="text-black" value="3m - 30m">3m - 30m</option>
-                <option className="text-black" value="30m+">30m+</option>
+                <option className="text-black" value="">
+                  Seçin
+                </option>
+                <option className="text-black" value="3m-ə qədər">
+                  3m-ə qədər
+                </option>
+                <option className="text-black" value="3m - 30m">
+                  3m - 30m
+                </option>
+                <option className="text-black" value="30m+">
+                  30m+
+                </option>
               </select>
             </div>
           </div>
@@ -174,7 +275,7 @@ export default function ApplyOne() {
             <input
               type="text"
               name="companyAddress"
-              value={formData.companyAddress}
+              value={localFormData.companyAddress}
               onChange={handleInputChange}
               className="w-full bg-transparent border border-gray-700 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300"
             />
@@ -184,7 +285,7 @@ export default function ApplyOne() {
             <input
               type="text"
               name="location"
-              value={formData.location}
+              value={localFormData.location}
               onChange={handleInputChange}
               className="w-full bg-transparent border border-gray-700 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300"
             />
@@ -196,7 +297,7 @@ export default function ApplyOne() {
             <input
               type="text"
               name="website"
-              value={formData.website}
+              value={localFormData.website}
               onChange={handleInputChange}
               className="w-full bg-transparent border border-gray-700 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300"
             />
@@ -206,7 +307,7 @@ export default function ApplyOne() {
             <input
               type="text"
               name="contactPerson"
-              value={formData.contactPerson}
+              value={localFormData.contactPerson}
               onChange={handleInputChange}
               className="w-full bg-transparent border border-gray-700 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300"
             />
@@ -219,7 +320,7 @@ export default function ApplyOne() {
               <input
                 type="email"
                 name="email"
-                value={formData.email}
+                value={localFormData.email}
                 onChange={handleInputChange}
                 className="w-full bg-transparent border border-gray-700 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300"
               />
@@ -229,7 +330,7 @@ export default function ApplyOne() {
               <input
                 type="tel"
                 name="phone"
-                value={formData.phone}
+                value={localFormData.phone}
                 onChange={handleInputChange}
                 className="w-full bg-transparent border border-gray-700 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300"
               />

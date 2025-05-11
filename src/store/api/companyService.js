@@ -1,56 +1,24 @@
-import API from "./axiosConfig"
+import API from "./axiosConfig";
 
 // Company related API calls
-const companyService = {
-  // Add a new company
+export const companyService = {
+  // Submit company data with files
+  submitCompanyData: async (data) => {
+    try {
+      const response = await API.post("/v1/company/add", data);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  // Add a new company (keep this for backward compatibility)
   addCompany: async (companyData) => {
     try {
-      const response = await API.post("/v1/company/add", companyData)
-      return response.data
+      const response = await API.post("/v1/company/add", companyData);
+      return response.data;
     } catch (error) {
-      throw error
+      throw error;
     }
   },
-
-  // Get company by ID
-  getCompanyById: async (id) => {
-    try {
-      const response = await API.get(`/v1/company/${id}`)
-      return response.data
-    } catch (error) {
-      throw error
-    }
-  },
-
-  // Update company
-  updateCompany: async (id, companyData) => {
-    try {
-      const response = await API.put(`/v1/company/${id}`, companyData)
-      return response.data
-    } catch (error) {
-      throw error
-    }
-  },
-
-  // Delete company
-  deleteCompany: async (id) => {
-    try {
-      const response = await API.delete(`/v1/company/${id}`)
-      return response.data
-    } catch (error) {
-      throw error
-    }
-  },
-
-  // Get all companies
-  getAllCompanies: async () => {
-    try {
-      const response = await API.get("/v1/company/all")
-      return response.data
-    } catch (error) {
-      throw error
-    }
-  },
-}
-
-export default companyService
+};

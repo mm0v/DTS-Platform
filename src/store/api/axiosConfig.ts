@@ -2,8 +2,8 @@ import axios from "axios";
 
 // Create a base axios instance with common configuration
 const API = axios.create({
-  baseURL: "http://localhost:8080/api",
-  timeout: 10000,
+  baseURL: "http://50.16.57.115:8080",
+  timeout: 15000, // Increased timeout for file uploads
   headers: {
     "Content-Type": "application/json",
   },
@@ -12,11 +12,18 @@ const API = axios.create({
 // Request interceptor - useful for adding auth tokens
 API.interceptors.request.use(
   (config) => {
+    // Check if the request is a FormData (file upload) request
+    if (config.data instanceof FormData) {
+      // Remove Content-Type header so that the browser can set it with the boundary
+      config.headers["Content-Type"] = "multipart/form-data";
+    }
+
     // Get token from localStorage if you have authentication
     const token = localStorage.getItem("token");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+
     return config;
   },
   (error) => {
@@ -27,6 +34,15 @@ API.interceptors.request.use(
 // Response interceptor - useful for handling errors globally
 API.interceptors.response.use(
   (response) => {
+    // Store tokens if they are in the response
+    if (response.data?.token) {
+      localStorage.setItem("token", response.data.token);
+    }
+
+    if (response.data?.refreshToken) {
+      localStorage.setItem("refreshToken", response.data.refreshToken);
+    }
+
     return response;
   },
   (error) => {
