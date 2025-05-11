@@ -11,13 +11,13 @@ import ApplyFive from './ApplyFive';
 const Apply = () => {
   return (
     <div>
-    
+
       <Routes>
         <Route path="/" element={<ApplyOne />} />
         <Route path="/apply-two" element={<ApplyTwo />} />
         <Route path="/apply-three" element={<ApplyThree />} />
         <Route path="/apply-four" element={<ApplyFour />} />
-        <Route path="/apply-five" element={<ApplyFive />} /> 
+        <Route path="/apply-five" element={<ApplyFive />} />
         {/* Diğer adımlar */}
       </Routes>
     </div>
