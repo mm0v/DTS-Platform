@@ -1,12 +1,12 @@
-"use client"
+"use client";
 
-import { useState } from "react"
+import { useState } from "react";
 // import { ChevronDown } from "lucide-react"
-import { useNavigate } from "react-router-dom"
-import BackgroundVideo from "../components/BackgroundVideo"
+import { useNavigate } from "react-router-dom";
+import BackgroundVideo from "../components/BackgroundVideo";
 
 export default function ApplyOne() {
-  const [step, setStep] = useState(1)
+  const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     companyName: "",
     vatNumber: "",
@@ -19,22 +19,24 @@ export default function ApplyOne() {
     contactPerson: "",
     email: "",
     phone: "",
-  })
+  });
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target
-    setFormData(prevState => ({
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prevState) => ({
       ...prevState,
       [name]: value,
-    }))
-  }
+    }));
+  };
 
   const handleNext = () => {
-    setStep(prevStep => Math.min(prevStep + 1, 5))
-    navigate('/apply-two')
-  }
+    setStep((prevStep) => Math.min(prevStep + 1, 5));
+    navigate("/apply/two");
+  };
 
   return (
     <>
@@ -44,7 +46,6 @@ export default function ApplyOne() {
         {/* <video autoPlay loop muted className="absolute top-0 left-0 w-full h-full object-cover z-0 filter blur-[10px]">
         <source src="/img/Navbar/bg-header.mp4" type="video/mp4" />
       </video> */}
-
 
         {/* Overlay for the blurred video background */}
         <div className="absolute top-0 left-0 w-full h-full bg-black opacity-50 z-10"></div>
@@ -56,8 +57,9 @@ export default function ApplyOne() {
             {[1, 2, 3, 4, 5].map((num) => (
               <div
                 key={num}
-                className={`absolute top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center text-sm ${num <= step ? "bg-blue-500" : "bg-blue-900 "
-                  }`}
+                className={`absolute top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center text-sm ${
+                  num <= step ? "bg-blue-500" : "bg-blue-900 "
+                }`}
                 style={{ left: `${(num - 1) * 25}%` }}
               >
                 {num}
@@ -67,16 +69,28 @@ export default function ApplyOne() {
 
           {/* Step descriptions */}
           <div className="flex justify-between mt-4 text-xs text-gray-400 space-y-2">
-            <div className="text-center max-w-[150px] text-blue-400">Şirkət haqqında məlumat</div>
-            <div className="text-center max-w-[150px]">Hüquqi və hüquqi quruluş</div>
-            <div className="text-center max-w-[150px]">Rəqəmsal hüquqi və transformasiya xidmətləri</div>
-            <div className="text-center max-w-[150px]">Lisenzli və əhatəlidir</div>
-            <div className="text-center max-w-[150px]">Tələb olunan sənədlər</div>
+            <div className="text-center max-w-[150px] text-blue-400">
+              Şirkət haqqında məlumat
+            </div>
+            <div className="text-center max-w-[150px]">
+              Hüquqi və hüquqi quruluş
+            </div>
+            <div className="text-center max-w-[150px]">
+              Rəqəmsal hüquqi və transformasiya xidmətləri
+            </div>
+            <div className="text-center max-w-[150px]">
+              Lisenzli və əhatəlidir
+            </div>
+            <div className="text-center max-w-[150px]">
+              Tələb olunan sənədlər
+            </div>
           </div>
         </div>
 
         <div className="text-center mb-8 relative z-20">
-          <h1 className="text-2xl md:text-3xl font-medium">Şirkət haqqında məlumat</h1>
+          <h1 className="text-2xl md:text-3xl font-medium">
+            Şirkət haqqında məlumat
+          </h1>
         </div>
 
         <div className="w-full max-w-2xl space-y-6 relative z-20">
@@ -106,28 +120,36 @@ export default function ApplyOne() {
             </div>
             <div className="space-y-2">
               <label className="text-sm">Şirkətin yaranma tarixi</label>
-              <select
+              <input
+                type="number"
                 name="foundingDate"
                 value={formData.foundingDate}
                 onChange={handleInputChange}
+                min="1900"
+                max={new Date().getFullYear()}
                 className="w-full bg-transparent border border-gray-700 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300"
-              >
-                <option value="">Seçin</option>
-              </select>
+                placeholder="YYYY"
+              />
             </div>
           </div>
 
           {/* Company Size and Business Activity */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
-              <label className="text-sm">Şirkətin ölçüsü - Tam ştatlı işçilərin sayı</label>
+              <label className="text-sm">
+                Şirkətin ölçüsü (Tam ştatlı işçilərin sayı)
+              </label>
               <select
                 name="companySize"
                 value={formData.companySize}
                 onChange={handleInputChange}
                 className="w-full bg-transparent border border-gray-700 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300"
               >
-                <option value="">Seçin</option>
+                <option className="text-black" value="">Seçin</option>
+                <option className="text-black" value="1-10">1-10</option>
+                <option className="text-black" value="11-50">11-50</option>
+                <option className="text-black" value="51-250">51-250</option>
+                <option className="text-black" value="250+">250+</option>
               </select>
             </div>
             <div className="space-y-2">
@@ -138,7 +160,10 @@ export default function ApplyOne() {
                 onChange={handleInputChange}
                 className="w-full bg-transparent border border-gray-700 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300"
               >
-                <option value="">Seçin</option>
+                <option className="text-black" value="">Seçin</option>
+                <option className="text-black" value="3m-ə qədər">3m-ə qədər</option>
+                <option className="text-black" value="3m - 30m">3m - 30m</option>
+                <option className="text-black" value="30m+">30m+</option>
               </select>
             </div>
           </div>
@@ -201,22 +226,13 @@ export default function ApplyOne() {
             </div>
             <div className="space-y-2">
               <label className="text-sm">Əlaqə nömrəsi</label>
-              <div className="flex">
-                <div className="relative w-20">
-                  <select
-                    name="phone"
-                    value={formData.phone}
-                    onChange={handleInputChange}
-                    className="w-full h-full appearance-none bg-transparent border border-gray-700 rounded-l-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300"
-                  >
-                    <option value="+1">🇺🇸 +1</option>
-                  </select>
-                </div>
-                <input
-                  type="tel"
-                  className="flex-1 bg-transparent border border-gray-700 border-l-0 rounded-r-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300"
-                />
-              </div>
+              <input
+                type="tel"
+                name="phone"
+                value={formData.phone}
+                onChange={handleInputChange}
+                className="w-full bg-transparent border border-gray-700 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300"
+              />
             </div>
           </div>
 
@@ -230,5 +246,5 @@ export default function ApplyOne() {
         </div>
       </div>
     </>
-  )
+  );
 }

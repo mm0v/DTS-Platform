@@ -1,17 +1,67 @@
 import { useNavigate } from "react-router-dom";
+import { useContext, useState } from "react";
+import type { ChangeEvent } from "react";
 import BackgroundVideo from "../components/BackgroundVideo";
+import { FormContext } from "../context/FormContext";
 
 const ApplyThree = () => {
   const navigate = useNavigate();
+  const context = useContext(FormContext);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-  // Handler for the 'Back' button
-  const handleGoBack = () => {
-    navigate("/apply-two"); // Navigate to apply-two
+  if (!context) {
+    throw new Error("ApplyThree must be used within a FormContext.Provider");
+  }
+
+  const { formData, setFormData } = context;
+
+  const handleInputChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      digitalReadiness: {
+        ...prev.digitalReadiness,
+        [name]: value,
+      },
+    }));
   };
 
-  // Handler for the 'Next' button
+  const handleCheckboxChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { value, checked } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      digitalReadiness: {
+        ...prev.digitalReadiness,
+        keyChallenges: checked
+          ? [...prev.digitalReadiness.keyChallenges, value]
+          : prev.digitalReadiness.keyChallenges.filter(
+              (challenge) => challenge !== value
+            ),
+      },
+    }));
+  };
+
+  const handleDigitalToolChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { value, checked } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      digitalReadiness: {
+        ...prev.digitalReadiness,
+        digitalTools: checked
+          ? [...prev.digitalReadiness.digitalTools, value]
+          : prev.digitalReadiness.digitalTools.filter((tool) => tool !== value),
+      },
+    }));
+  };
+
+  const handleGoBack = () => {
+    navigate("/apply/two");
+  };
+
   const handleGoNext = () => {
-    navigate("/apply-four"); // Navigate to apply-four
+    navigate("/apply/four");
   };
 
   return (
@@ -23,7 +73,9 @@ const ApplyThree = () => {
             {[1, 2, 3, 4, 5].map((num) => (
               <div
                 key={num}
-                className={`absolute top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center text-sm ${num <= 3 ? "bg-blue-500" : "bg-blue-900"}`}
+                className={`absolute top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center text-sm ${
+                  num <= 3 ? "bg-blue-500" : "bg-blue-900"
+                }`}
                 style={{ left: `${(num - 1) * 25}%` }}
               >
                 {num}
@@ -31,11 +83,21 @@ const ApplyThree = () => {
             ))}
           </div>
           <div className="flex justify-between mt-2 text-xs text-gray-400">
-            <div className="text-center max-w-[100px]">Şirkət haqqında məlumat</div>
-            <div className="text-center max-w-[100px] ">Mülkiyyət və hüquqi quruluş</div>
-            <div className="text-center max-w-[100px] text-blue-400">Rəqəmsal hüquqi və transformasiya xidmətləri</div>
-            <div className="text-center max-w-[100px]">Lisenzli və əhatəlidir</div>
-            <div className="text-center max-w-[100px]">Tələb olunan sənədlər</div>
+            <div className="text-center max-w-[100px]">
+              Şirkət haqqında məlumat
+            </div>
+            <div className="text-center max-w-[100px]">
+              Mülkiyyət və hüquqi quruluş
+            </div>
+            <div className="text-center max-w-[100px] text-blue-400">
+              Rəqəmsal hüquqi və transformasiya xidmətləri
+            </div>
+            <div className="text-center max-w-[100px]">
+              Lisenzli və əhatəlidir
+            </div>
+            <div className="text-center max-w-[100px]">
+              Tələb olunan sənədlər
+            </div>
           </div>
         </div>
 
@@ -44,67 +106,121 @@ const ApplyThree = () => {
             Rəqəmsal hazırlıq və transformasiya ehtiyacları
           </div>
           <form className="space-y-6">
-            {/* Dropdown for Current Digitalization Level */}
             <div className="flex justify-between items-center space-x-4">
               <label className="w-1/3">Mövcud rəqəmsallaşma səviyyəsi:</label>
-              <select className="w-2/3 p-2 bg-gray-800 text-white rounded">
+              <select
+                name="digitalLevel"
+                value={formData.digitalReadiness.digitalLevel}
+                onChange={handleInputChange}
+                className="w-2/3 p-2 bg-gray-800 text-white rounded"
+              >
                 <option value="">Seçin</option>
-                {/* Add options here */}
+                <option value="beginner">Başlanğıc</option>
+                <option value="intermediate">Orta</option>
+                <option value="advanced">İnkişaf etmiş</option>
               </select>
             </div>
 
-            {/* Dropdown for Existing Digital Tools */}
             <div className="flex justify-between items-center space-x-4">
-              <label className="w-1/3">Mövcud rəqəmsal alətlər</label>
-              <select className="w-2/3 p-2 bg-gray-800 text-white rounded">
-                <option value="">Seçin</option>
-                {/* Add options here */}
-              </select>
-            </div>
-
-            {/* Key Challenges in Digital Transformation */}
-            <div className="space-y-2">
-              <p className="text-xl">Rəqəmsal transformasiyada əsas çətinliklər:</p>
-              <div className="space-y-1">
-                <label className="inline-flex items-center">
-                  <input type="checkbox" className="form-checkbox text-blue-500" />
-                  <span className="ml-2">Büdcə çatışmazlığı</span>
-                </label>
-                <label className="inline-flex items-center">
-                  <input type="checkbox" className="form-checkbox text-blue-500" />
-                  <span className="ml-2">Texniki təcrübənin (ekspert) çatışmazlığı</span>
-                </label>
-                <label className="inline-flex items-center">
-                  <input type="checkbox" className="form-checkbox text-blue-500" />
-                  <span className="ml-2">Təlimə ehtiyac</span>
-                </label>
-                <label className="inline-flex items-center">
-                  <input type="checkbox" className="form-checkbox text-blue-500" />
-                  <span className="ml-2">Rəqəmsal strategiyanın çatışmazlığı</span>
-                </label>
-                <label className="inline-flex items-center">
-                  <input type="checkbox" className="form-checkbox text-blue-500" />
-                  <span className="ml-2">İnfrastruktur məhdudiyyətləri</span>
-                </label>
-                <label className="inline-flex items-center">
-                  <input type="checkbox" className="form-checkbox text-blue-500" />
-                  <span className="ml-2">Digər</span>
-                </label>
+              <label className="w-1/3">Mövcud rəqəmsal alətlər:</label>
+              <div className="w-2/3 relative">
+                <button
+                  type="button"
+                  onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                  className="w-full p-2 bg-gray-800 text-white rounded text-left flex justify-between items-center"
+                >
+                  <span>
+                    {formData.digitalReadiness.digitalTools.length > 0
+                      ? `${formData.digitalReadiness.digitalTools.length} seçilib`
+                      : "Seçin"}
+                  </span>
+                  <span className="ml-2">▼</span>
+                </button>
+                {isDropdownOpen && (
+                  <div className="absolute z-10 w-full mt-1 bg-gray-800 rounded shadow-lg">
+                    {[
+                      { value: "crm", label: "CRM" },
+                      { value: "erp", label: "ERP" },
+                      { value: "accounting", label: "Mühasibat proqramları" },
+                      { value: "other", label: "Digər" },
+                    ].map((tool) => (
+                      <label
+                        key={tool.value}
+                        className="flex items-center px-4 py-2 hover:bg-gray-700 cursor-pointer"
+                      >
+                        <input
+                          type="checkbox"
+                          value={tool.value}
+                          checked={formData.digitalReadiness.digitalTools.includes(
+                            tool.value
+                          )}
+                          onChange={handleDigitalToolChange}
+                          className="form-checkbox text-blue-500 rounded"
+                        />
+                        <span className="ml-2">{tool.label}</span>
+                      </label>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
 
-            {/* Main Digital Transformation Goals */}
             <div className="space-y-2">
-              <p className="text-xl">Şirkətinizin əsas rəqəmsal transformasiya məqsədləri nədir? (Qısa olaraq qeyd edin)</p>
+              <p className="text-xl">
+                Rəqəmsal transformasiyada əsas çətinliklər:
+              </p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {[
+                  "budget_shortage",
+                  "technical_expertise",
+                  "training_needs",
+                  "digital_strategy",
+                  "infrastructure_limits",
+                  "other",
+                ].map((challenge) => (
+                  <label key={challenge} className="inline-flex items-center">
+                    <input
+                      type="checkbox"
+                      value={challenge}
+                      checked={formData.digitalReadiness.keyChallenges.includes(
+                        challenge
+                      )}
+                      onChange={handleCheckboxChange}
+                      className="form-checkbox text-blue-500"
+                    />
+                    <span className="ml-2">
+                      {challenge === "budget_shortage" && "Büdcə çatışmazlığı"}
+                      {challenge === "technical_expertise" &&
+                        "Texniki təcrübənin çatışmazlığı"}
+                      {challenge === "training_needs" && "Təlimə ehtiyac"}
+                      {challenge === "digital_strategy" &&
+                        "Rəqəmsal strategiyanın çatışmazlığı"}
+                      {challenge === "infrastructure_limits" &&
+                        "İnfrastruktur məhdudiyyətləri"}
+                      {challenge === "other" && "Digər"}
+                    </span>
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <p className="text-xl">
+                Şirkətinizin əsas rəqəmsal transformasiya məqsədləri nədir?
+              </p>
               <textarea
+                name="companyPurpose"
+                value={formData.digitalReadiness.companyPurpose}
+                onChange={handleInputChange}
                 className="w-full p-4 bg-gray-800 text-white rounded"
                 rows={4}
                 placeholder="Minimum 3 simvol, maksimum 500 simvol daxil edə bilərsiniz."
+                maxLength={500}
+                minLength={3}
               />
             </div>
           </form>
 
-          {/* Buttons */}
           <div className="flex justify-between space-x-4 mt-8">
             <button
               onClick={handleGoBack}
@@ -122,7 +238,6 @@ const ApplyThree = () => {
         </div>
       </div>
     </>
-
   );
 };
 
