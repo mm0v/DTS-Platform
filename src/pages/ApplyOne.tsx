@@ -231,16 +231,16 @@ export default function ApplyOne() {
                 <option className="text-black" value="">
                   Seçin
                 </option>
-                <option className="text-black" value="1-10">
+                <option className="text-black" value="10">
                   1-10
                 </option>
-                <option className="text-black" value="11-50">
+                <option className="text-black" value="50">
                   11-50
                 </option>
-                <option className="text-black" value="51-250">
+                <option className="text-black" value="250">
                   51-250
                 </option>
-                <option className="text-black" value="250+">
+                <option className="text-black" value="350">
                   250+
                 </option>
               </select>
@@ -256,13 +256,13 @@ export default function ApplyOne() {
                 <option className="text-black" value="">
                   Seçin
                 </option>
-                <option className="text-black" value="3m-ə qədər">
+                <option className="text-black" value="3">
                   3m-ə qədər
                 </option>
-                <option className="text-black" value="3m - 30m">
+                <option className="text-black" value="30">
                   3m - 30m
                 </option>
-                <option className="text-black" value="30m+">
+                <option className="text-black" value="60">
                   30m+
                 </option>
               </select>

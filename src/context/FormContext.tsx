@@ -29,7 +29,7 @@ export interface FormContextType {
     };
     digitalReadiness: {
       keyChallenges: string[];
-      digitalLevel: Byte; // Changed from string to Byte
+      digitalLevel: Byte; // Changed from Byte to number for consistency
       digitalTools: string[];
       companyPurpose: string;
     };

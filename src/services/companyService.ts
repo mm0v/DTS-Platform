@@ -1,4 +1,4 @@
-import axiosInstance from './axiosConfig';
+import axiosInstance from "./axiosConfig";
 
 interface CompanyRequest {
   companyData: {
@@ -25,7 +25,7 @@ interface CompanyRequest {
   };
   digitalReadiness: {
     keyChallenges: string[];
-    digitalLevel: string;
+    digitalLevel: number; // Changed from string to number
     digitalTools: string[];
     companyPurpose: string;
   };
@@ -43,12 +43,23 @@ interface CompanyRequest {
 }
 
 export const companyService = {
+  // Removed unnecessary try/catch wrapper
   submitCompanyData: async (data: { companyRequest: CompanyRequest }) => {
-    try {
-      const response = await axiosInstance.post('/api/company', data);
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
+    // Update endpoint URL to match your actual API
+    const response = await axiosInstance.post("/v1/company/add", data);
+    return response.data;
   },
-}; 
+};
+
+// import axiosInstance from './axiosConfig';
+
+// export const companyService = {
+//   submitCompanyData: async (data) => {
+//     try {
+//       const response = await axiosInstance.post('/api/company', data);
+//       return response.data;
+//     } catch (error) {
+//       throw error;
+//     }
+//   },
+// };

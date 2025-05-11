@@ -24,9 +24,9 @@ const ApplyThree = () => {
       // Convert digitalLevel to a number (Byte)
       const digitalLevelMap: { [key: string]: number } = {
         "": 0,
-        beginner: 1,
-        intermediate: 2,
-        advanced: 3,
+        "1": 1, // Make sure to use string keys for string values from the select
+        "2": 2,
+        "3": 3,
       };
 
       setFormData((prev) => ({
@@ -46,7 +46,6 @@ const ApplyThree = () => {
       }));
     }
   };
-
   const handleCheckboxChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { value, checked } = e.target;
     setFormData((prev) => ({
@@ -89,11 +88,11 @@ const ApplyThree = () => {
 
     switch (levelValue) {
       case 1:
-        return "beginner";
+        return "1";
       case 2:
-        return "intermediate";
+        return "2";
       case 3:
-        return "advanced";
+        return "3";
       default:
         return "";
     }
@@ -150,9 +149,9 @@ const ApplyThree = () => {
                 className="w-2/3 p-2 bg-gray-800 text-white rounded"
               >
                 <option value="">Seçin</option>
-                <option value="beginner">Başlanğıc</option>
-                <option value="intermediate">Orta</option>
-                <option value="advanced">İnkişaf etmiş</option>
+                <option value="1">Başlanğıc</option>
+                <option value="2">Orta</option>
+                <option value="3">İnkişaf etmiş</option>
               </select>
             </div>
 
