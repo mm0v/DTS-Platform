@@ -4,6 +4,7 @@ import ApplyOne from './ApplyOne';
 import ApplyTwo from './ApplyTwo';
 import ApplyThree from './ApplyThree';
 import ApplyFour from './ApplyFour';
+import ApplyFive from './ApplyFive';
 
 // Diğer adımlar için import yapın
 
@@ -16,10 +17,7 @@ const Apply = () => {
         <Route path="/apply-two" element={<ApplyTwo />} />
         <Route path="/apply-three" element={<ApplyThree />} />
         <Route path="/apply-four" element={<ApplyFour />} />
-        {/* <Route path="/" element={<ApplyFive />} />
-        <Route path="/" element={<ApplySix />} />
-        <Route path="/" element={<ApplySeven />} />
-        <Route path="/" element={<ApplyEight />} /> */ }
+        <Route path="/apply-five" element={<ApplyFive />} /> 
         {/* Diğer adımlar */}
       </Routes>
     </div>
