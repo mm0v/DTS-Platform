@@ -1,5 +1,6 @@
 import AccordionExpandDefault from "../components/AccordionSimpleMui"
 import BackgroundVideo from "../components/BackgroundVideo";
+import ToContact from "../components/ToContact";
 import { useLanguage } from "../context/LanguageContext";
 
 const FAG = () => {
@@ -11,6 +12,8 @@ const FAG = () => {
         <div className="text-center">
           <h1 className="text-4xl font-semibold text-white pl-2 pr-2 pb-20 mb-10">{pagesTranslations.fag.title[language]}</h1>
         </div>
+
+        <ToContact />
 
         <div style={{
           // background: "linear-gradient(180deg, #1A4381 -96.34%, #FFF 99.92%)",

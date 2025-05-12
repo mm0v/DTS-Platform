@@ -159,7 +159,7 @@ const Timeline: React.FC = (): ReactElement => {
                                                         display: isActive ? 'block' : 'none'
                                                     }}
                                                 ></div>
-                                                <div className="bg-gradient-to-r from-[#1A4381] to-[#050E1B] rounded-full h-10 w-10 flex items-center justify-center shadow-lg">
+                                                <div className="bg-gradient-to-r from-[#1A4381] to-[#050E1B] rounded-full h-full w-full flex items-center justify-center shadow-lg">
                                                     <span className="text-white text-base font-bold">{step.id}</span>
                                                 </div>
                                             </div>
@@ -225,7 +225,7 @@ const Timeline: React.FC = (): ReactElement => {
                                                         display: isActive ? 'block' : 'none'
                                                     }}
                                                 ></div>
-                                                <div className="bg-gradient-to-r from-[#1A4381] to-[#050E1B] rounded-full h-8 w-8 flex items-center justify-center shadow-lg">
+                                                <div className="bg-gradient-to-r from-[#1A4381] to-[#050E1B] rounded-full h-full w-full flex items-center justify-center shadow-lg">
                                                     <span className="text-white text-sm font-bold">{step.id}</span>
                                                 </div>
                                             </div>

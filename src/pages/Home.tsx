@@ -5,6 +5,7 @@ import BasicModal from '../components/ModalMui';
 import Timeline from '../components/Timeline';
 import BackgroundVideo from '../components/BackgroundVideo';
 import VideoSection from '../components/VideoSection';
+import ToContact from '../components/ToContact';
 
 // const PartnerLogo = ({ src, alt }: { src: string, alt: string }) => (
 //   <div className="flex items-center justify-center p-2">
@@ -48,8 +49,13 @@ const Home = () => {
                 <BasicModal />
               </div>
             </div>
-
           </div>
+
+          <ToContact />
+
+
+
+
 
           {/* Partners section */}
           <div className="mt-8 md:mt-16 px-4">

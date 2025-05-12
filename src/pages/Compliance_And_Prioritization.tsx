@@ -1,5 +1,6 @@
 import ControlledAccordions from "../components/AccordionMui";
 import BackgroundVideo from "../components/BackgroundVideo";
+import ToContact from "../components/ToContact";
 import { useLanguage } from "../context/LanguageContext";
 
 const Compliance_And_Prioritization = () => {
@@ -8,17 +9,9 @@ const Compliance_And_Prioritization = () => {
 
   return (
     <div className="mt-24">
-      {/* <div className="video-background filter brightness-70">
-        <video
-          className="absolute w-full h-full object-cover"
-          autoPlay
-          loop
-          muted
-        >
-          <source src="img/Navbar/bg-header.mp4" type="video/mp4" />
-        </video>
-      </div> */}
       <BackgroundVideo />
+      <ToContact />
+
 
       <div className="text-center">
         <h1 className="text-2xl pl-2 pr-2 md:text-5xl font-semibold text-[#FAFAFA] pb-18 mb-10 leading-[36px] md:leading-[48px]">
@@ -37,7 +30,7 @@ const Compliance_And_Prioritization = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-7xl mx-auto">
-          
+
           {/* Card 1 */}
           <div className="bg-white rounded-lg p-6 m-4 shadow-[2px_2px_12px_0px_#2323234D] border-[1px] border-[#D0D0D0] flex flex-col">
             <div className="flex items-center mb-4 flex-wrap sm:flex-nowrap">
@@ -120,6 +113,7 @@ const Compliance_And_Prioritization = () => {
             </div>
           </div>
         </div>
+
 
         <div className="text-center mt-20 mb-4 p-3 max-w-5xl mx-auto ">
           <h1 className="mb-2 font-medium text-[24px] md:text-[36px] leading-[32px] md:leading-[40px] text-[#323232]">

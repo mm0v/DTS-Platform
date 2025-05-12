@@ -1,6 +1,7 @@
 import { useState } from "react";
 import BackgroundVideo from "../components/BackgroundVideo";
 import { useLanguage } from "../context/LanguageContext";
+import ToContact from "../components/ToContact";
 
 const Our_Success = () => {
   const [expanded1, setExpanded1] = useState(false);
@@ -15,16 +16,7 @@ const Our_Success = () => {
 
       <BackgroundVideo />
 
-      {/* <div className="video-background">
-        <video
-          className="absolute w-full h-full object-cover"
-          autoPlay
-          loop
-          muted
-        >
-          <source src="img/Navbar/bg-header.mp4" type="video/mp4" />
-        </video>
-      </div> */}
+      <ToContact />
 
       <div className="text-center">
         <h1 className="text-2xl md:text-5xl font-semibold text-[#FAFAFA] pb-20 mb-10 leading-[36px] md:leading-[48px]">
