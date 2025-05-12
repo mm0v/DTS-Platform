@@ -1,10 +1,12 @@
 "use client"
 
-import { useState } from "react"
-import { useNavigate } from "react-router-dom" // useNavigate import et
+import { useState, useEffect } from "react"
+import { useNavigate } from "react-router-dom"
 
 export default function ApplyFour() {
   const navigate = useNavigate() // useNavigate hook'u
+
+  // Form məlumatlarını saxlayacaq state
   const [formData, setFormData] = useState({
     digitalTransformationLeader: "",
     hasStrategy: "",
@@ -13,35 +15,36 @@ export default function ApplyFour() {
     transformationBudget: "",
   })
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  // Komponent yüklənəndə localStorage-dən məlumatları oxumaq
+  useEffect(() => {
+    const savedData = JSON.parse(localStorage.getItem('formDataFour') || '{}')
+    if (savedData) {
+      setFormData(savedData)
+    }
+  }, [])
+
+  // Form sahələrində dəyişiklik olduqda məlumatları localStorage-a yazmaq
+  const handleInputChange = (e: { target: { name: any; value: any } }) => {
     const { name, value } = e.target
-    setFormData(prevState => ({
-      ...prevState,
-      [name]: value,
-    }))
+    setFormData(prevState => {
+      const updatedData = { ...prevState, [name]: value }
+      localStorage.setItem('formDataFour', JSON.stringify(updatedData)) // LocalStorage-a yazılır
+      return updatedData
+    })
   }
 
-  // Checkbox değişiklikleri için
-  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, checked } = e.target
-    setFormData(prevState => ({
-      ...prevState,
-      [name]: checked ? "Bəli" : "Xeyr"
-    }))
-  }
-
-  // Geri butonuna basıldığında ApplyThree sayfasına git
+  // Geri butonuna basıldığında ApplyThree səhifəsinə keçid
   const handleGoBack = () => {
     navigate('/apply-three') // /apply-three sayfasına yönlendir
   }
 
-  // Növbəti butonuna basıldığında ApplyFive sayfasına git
+  // Növbəti butonuna basıldığında ApplyFive səhifəsinə keçid
   const handleNext = () => {
     navigate('/apply-five') // /apply-five sayfasına yönlendir
   }
 
   return (
-    <div className="min-h-screen w-full bg-black bg-[url('/images/space-background.jpg')] bg-cover bg-center bg-no-repeat text-white flex flex-col  items-center justify-center py-10">
+    <div className="min-h-screen w-full bg-black bg-[url('/images/space-background.jpg')] bg-cover bg-center bg-no-repeat text-white flex flex-col items-center justify-center py-10">
       {/* Progress Steps */}
       <div className="w-full max-w-4xl mb-8 px-4">
         <div className="relative w-full h-[1px] bg-blue-500">

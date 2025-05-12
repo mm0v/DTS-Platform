@@ -1,26 +1,72 @@
-import { useNavigate } from "react-router-dom";
+"use client"
+
+import { useState, useEffect } from "react"
+import { useNavigate } from "react-router-dom"
 
 const ApplyThree = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
-  // Handler for the 'Back' button
+  // İstifadəçi məlumatlarını saxlayacaq state
+  const [formData, setFormData] = useState({
+    currentDigitalizationLevel: "",
+    digitalTools: "",
+    digitalChallenges: [] as string[], // Challenges checkbox-ları üçün array
+    digitalGoals: "",
+  })
+
+  // Komponent yüklənəndə, localStorage-dən məlumatları oxumaq
+  useEffect(() => {
+    const savedData = JSON.parse(localStorage.getItem('formDataThree') || '{}')
+    if (savedData) {
+      setFormData(savedData)
+    }
+  }, [])
+
+  // Form sahələrində dəyişiklik olduqda məlumatları localStorage-a yazmaq
+  const handleInputChange = (e: { target: { name: any; value: any } }) => {
+    const { name, value } = e.target
+    setFormData((prevState) => {
+      const updatedData = { ...prevState, [name]: value }
+      localStorage.setItem('formDataThree', JSON.stringify(updatedData)) // LocalStorage-ə yazılır
+      return updatedData
+    })
+  }
+
+  // Checkbox dəyişiklikləri üçün handler
+  const handleCheckboxChange = (e: { target: { name: any; checked: any } }) => {
+    const { name, checked } = e.target
+    setFormData((prevState) => {
+      const updatedData = {
+        ...prevState,
+        digitalChallenges: checked
+          ? [...prevState.digitalChallenges, name] // Seçilibsə əlavə et
+          : prevState.digitalChallenges.filter((item) => item !== name), // Seçilməyibsə sil
+      }
+      localStorage.setItem('formDataThree', JSON.stringify(updatedData)) // LocalStorage-a yazılır
+      return updatedData
+    })
+  }
+
+  // Geri butonuna basıldığında ApplyTwo səhifəsinə keçid
   const handleGoBack = () => {
-    navigate("/apply-two"); // Navigate to apply-two
-  };
+    navigate("/apply-two")
+  }
 
-  // Handler for the 'Next' button
+  // Növbəti butonuna basıldığında ApplyFour səhifəsinə keçid
   const handleGoNext = () => {
-    navigate("/apply-four"); // Navigate to apply-four
-  };
+    navigate("/apply-four")
+  }
 
   return (
     <div className="min-h-screen bg-black bg-[url('/images/space-background.jpg')] bg-cover bg-center text-white flex flex-col items-center justify-center py-10">
-       <div className="w-full max-w-4xl mb-8 px-4">
+      <div className="w-full max-w-4xl mb-8 px-4">
         <div className="relative w-full h-[1px] bg-blue-500">
           {[1, 2, 3, 4, 5].map((num) => (
             <div
               key={num}
-              className={`absolute top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center text-sm ${num <= 3 ? "bg-blue-500" : "bg-blue-900"}`}
+              className={`absolute top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center text-sm ${
+                num <= 3 ? "bg-blue-500" : "bg-blue-900"
+              }`}
               style={{ left: `${(num - 1) * 25}%` }}
             >
               {num}
@@ -44,18 +90,31 @@ const ApplyThree = () => {
           {/* Dropdown for Current Digitalization Level */}
           <div className="flex justify-between items-center space-x-4">
             <label className="w-1/3">Mövcud rəqəmsallaşma səviyyəsi:</label>
-            <select className="w-2/3 p-2 bg-gray-800 text-white rounded">
+            <select
+              className="w-2/3 p-2 bg-gray-800 text-white rounded"
+              name="currentDigitalizationLevel"
+              value={formData.currentDigitalizationLevel}
+              onChange={handleInputChange}
+            >
               <option value="">Seçin</option>
-              {/* Add options here */}
+              <option value="low">Aşağı</option>
+              <option value="medium">Orta</option>
+              <option value="high">Yüksək</option>
             </select>
           </div>
 
           {/* Dropdown for Existing Digital Tools */}
           <div className="flex justify-between items-center space-x-4">
             <label className="w-1/3">Mövcud rəqəmsal alətlər</label>
-            <select className="w-2/3 p-2 bg-gray-800 text-white rounded">
+            <select
+              className="w-2/3 p-2 bg-gray-800 text-white rounded"
+              name="digitalTools"
+              value={formData.digitalTools}
+              onChange={handleInputChange}
+            >
               <option value="">Seçin</option>
-              {/* Add options here */}
+              <option value="tool1">Alət 1</option>
+              <option value="tool2">Alət 2</option>
             </select>
           </div>
 
@@ -64,27 +123,63 @@ const ApplyThree = () => {
             <p className="text-xl">Rəqəmsal transformasiyada əsas çətinliklər:</p>
             <div className="space-y-1">
               <label className="inline-flex items-center">
-                <input type="checkbox" className="form-checkbox text-blue-500" />
+                <input
+                  type="checkbox"
+                  className="form-checkbox text-blue-500"
+                  name="budget"
+                  checked={formData.digitalChallenges.includes("budget")}
+                  onChange={handleCheckboxChange}
+                />
                 <span className="ml-2">Büdcə çatışmazlığı</span>
               </label>
               <label className="inline-flex items-center">
-                <input type="checkbox" className="form-checkbox text-blue-500" />
+                <input
+                  type="checkbox"
+                  className="form-checkbox text-blue-500"
+                  name="technicalSkills"
+                  checked={formData.digitalChallenges.includes("technicalSkills")}
+                  onChange={handleCheckboxChange}
+                />
                 <span className="ml-2">Texniki təcrübənin (ekspert) çatışmazlığı</span>
               </label>
               <label className="inline-flex items-center">
-                <input type="checkbox" className="form-checkbox text-blue-500" />
+                <input
+                  type="checkbox"
+                  className="form-checkbox text-blue-500"
+                  name="trainingNeeds"
+                  checked={formData.digitalChallenges.includes("trainingNeeds")}
+                  onChange={handleCheckboxChange}
+                />
                 <span className="ml-2">Təlimə ehtiyac</span>
               </label>
               <label className="inline-flex items-center">
-                <input type="checkbox" className="form-checkbox text-blue-500" />
+                <input
+                  type="checkbox"
+                  className="form-checkbox text-blue-500"
+                  name="strategyLack"
+                  checked={formData.digitalChallenges.includes("strategyLack")}
+                  onChange={handleCheckboxChange}
+                />
                 <span className="ml-2">Rəqəmsal strategiyanın çatışmazlığı</span>
               </label>
               <label className="inline-flex items-center">
-                <input type="checkbox" className="form-checkbox text-blue-500" />
+                <input
+                  type="checkbox"
+                  className="form-checkbox text-blue-500"
+                  name="infrastructureLimitations"
+                  checked={formData.digitalChallenges.includes("infrastructureLimitations")}
+                  onChange={handleCheckboxChange}
+                />
                 <span className="ml-2">İnfrastruktur məhdudiyyətləri</span>
               </label>
               <label className="inline-flex items-center">
-                <input type="checkbox" className="form-checkbox text-blue-500" />
+                <input
+                  type="checkbox"
+                  className="form-checkbox text-blue-500"
+                  name="other"
+                  checked={formData.digitalChallenges.includes("other")}
+                  onChange={handleCheckboxChange}
+                />
                 <span className="ml-2">Digər</span>
               </label>
             </div>
@@ -97,6 +192,9 @@ const ApplyThree = () => {
               className="w-full p-4 bg-gray-800 text-white rounded"
               rows={4}
               placeholder="Minimum 3 simvol, maksimum 500 simvol daxil edə bilərsiniz."
+              name="digitalGoals"
+              value={formData.digitalGoals}
+              onChange={handleInputChange}
             />
           </div>
         </form>
@@ -118,7 +216,7 @@ const ApplyThree = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default ApplyThree;
+export default ApplyThree

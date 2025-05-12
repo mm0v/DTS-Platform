@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 
 export default function ApplyTwo() {
@@ -14,12 +14,25 @@ export default function ApplyTwo() {
     document: "",
   })
 
+  // LocalStorage'dən məlumatları oxumaq və tətbiq etmək
+  useEffect(() => {
+    const savedData = JSON.parse(localStorage.getItem('formDataTwo') || '{}')
+    if (savedData) {
+      setFormData(savedData)
+    }
+  }, [])
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target
-    setFormData(prevState => ({
-      ...prevState,
-      [name]: value,
-    }))
+    setFormData(prevState => {
+      const updatedData = {
+        ...prevState,
+        [name]: value,
+      }
+      // LocalStorage-a yazırıq
+      localStorage.setItem('formDataTwo', JSON.stringify(updatedData))
+      return updatedData
+    })
   }
 
   // Geri butonuna basıldığında Apply sayfasına git

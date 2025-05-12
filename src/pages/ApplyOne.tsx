@@ -1,7 +1,6 @@
 "use client"
 
-import { useState } from "react"
-import { ChevronDown } from "lucide-react"
+import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 
 export default function ApplyOne() {
@@ -22,12 +21,25 @@ export default function ApplyOne() {
 
   const navigate = useNavigate()
 
+  // LocalStorage-dən məlumatları oxumaq və tətbiq etmək
+  useEffect(() => {
+    const savedData = JSON.parse(localStorage.getItem('formDataOne') || '{}')
+    if (savedData) {
+      setFormData(savedData)
+    }
+  }, [])
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target
-    setFormData(prevState => ({
-      ...prevState,
-      [name]: value,
-    }))
+    setFormData(prevState => {
+      const updatedData = {
+        ...prevState,
+        [name]: value,
+      }
+      // LocalStorage-a yazırıq
+      localStorage.setItem('formDataOne', JSON.stringify(updatedData))
+      return updatedData
+    })
   }
 
   const handleNext = () => {
@@ -46,38 +58,36 @@ export default function ApplyOne() {
       <div className="absolute top-0 left-0 w-full h-full bg-black opacity-50 z-10"></div>
 
       {/* Main Content */}
-    <div className="relative z-20 w-full max-w-4xl mb-8 px-4">
-  {/* Step indicators */}
-  <div className="relative w-full h-[1px] bg-blue-500">
-    {[1, 2, 3, 4, 5].map((num) => (
-      <div
-        key={num}
-        className={`absolute top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center text-sm ${
-          num <= step ? "bg-blue-500"  : "bg-blue-900 "
-        }`}
-        style={{ left: `${(num - 1) * 25}%` }}
-      >
-        {num}
-      </div>
-    ))}
-  </div>
+      <div className="relative z-20 w-full max-w-4xl mb-8 px-4">
+        {/* Step indicators */}
+        <div className="relative w-full h-[1px] bg-blue-500">
+          {[1, 2, 3, 4, 5].map((num) => (
+            <div
+              key={num}
+              className={`absolute top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center text-sm ${num <= step ? "bg-blue-500" : "bg-blue-900"}`}
+              style={{ left: `${(num - 1) * 25}%` }}
+            >
+              {num}
+            </div>
+          ))}
+        </div>
 
-  {/* Step descriptions */}
-  <div className="flex justify-between mt-4 text-xs text-gray-400 space-y-2">
-    <div className="text-center max-w-[150px] text-blue-400">Şirkət haqqında məlumat</div>
-    <div className="text-center max-w-[150px]">Hüquqi və hüquqi quruluş</div>
-    <div className="text-center max-w-[150px]">Rəqəmsal hüquqi və transformasiya xidmətləri</div>
-    <div className="text-center max-w-[150px]">Lisenzli və əhatəlidir</div>
-    <div className="text-center max-w-[150px]">Tələb olunan sənədlər</div>
-  </div>
-</div>
+        {/* Step descriptions */}
+        <div className="flex justify-between mt-4 text-xs text-gray-400 space-y-2">
+          <div className="text-center max-w-[150px] text-blue-400">Şirkət haqqında məlumat</div>
+          <div className="text-center max-w-[150px]">Hüquqi və hüquqi quruluş</div>
+          <div className="text-center max-w-[150px]">Rəqəmsal hüquqi və transformasiya xidmətləri</div>
+          <div className="text-center max-w-[150px]">Lisenzli və əhatəlidir</div>
+          <div className="text-center max-w-[150px]">Tələb olunan sənədlər</div>
+        </div>
+      </div>
 
       <div className="text-center mb-8 relative z-20">
         <h1 className="text-2xl md:text-3xl font-medium">Şirkət haqqında məlumat</h1>
       </div>
 
       <div className="w-full max-w-2xl space-y-6 relative z-20">
-        {/* Company Name */}
+        {/* Şirkət adı */}
         <div className="space-y-2">
           <label className="text-sm">Şirkətin adı (Tam hüquqi adı)</label>
           <input
@@ -89,7 +99,7 @@ export default function ApplyOne() {
           />
         </div>
 
-        {/* Company VAT and Founding Date */}
+        {/* Şirkət VÖN nömrəsi və yaranma tarixi */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-2">
             <label className="text-sm">Şirkətin VÖN nömrəsi</label>
@@ -114,7 +124,7 @@ export default function ApplyOne() {
           </div>
         </div>
 
-        {/* Company Size and Business Activity */}
+        {/* Şirkətin ölçüsü və illik dövriyyə */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-2">
             <label className="text-sm">Şirkətin ölçüsü - Tam ştatlı işçilərin sayı</label>
@@ -140,7 +150,7 @@ export default function ApplyOne() {
           </div>
         </div>
 
-        {/* Address and Location */}
+        {/* Ünvan və şəhər */}
         <div className="space-y-2">
           <label className="text-sm">Şirkətin ünvanı</label>
           <input
@@ -162,7 +172,7 @@ export default function ApplyOne() {
           />
         </div>
 
-        {/* Website and Contact Person */}
+        {/* Vebsayt və əlaqələndirici şəxs */}
         <div className="space-y-2">
           <label className="text-sm">Vebsayt (əgər varsa)</label>
           <input
@@ -184,7 +194,7 @@ export default function ApplyOne() {
           />
         </div>
 
-        {/* Email and Phone */}
+        {/* Email və telefon */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-2">
             <label className="text-sm">Elektron poçt ünvanı</label>
@@ -217,7 +227,7 @@ export default function ApplyOne() {
           </div>
         </div>
 
-        {/* Next Button */}
+        {/* Növbəti Button */}
         <button
           className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg transition duration-300 mt-6"
           onClick={handleNext}
