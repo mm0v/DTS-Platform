@@ -4,10 +4,14 @@ import { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import BackgroundVideo from "../components/BackgroundVideo";
 import { FormContext } from "../context/FormContext";
+import { useLanguage } from "../context/LanguageContext";
 
 export default function ApplyOne() {
   const navigate = useNavigate();
   const context = useContext(FormContext);
+  const { language, pagesTranslations } = useLanguage();
+  const page = pagesTranslations.apply1;
+  const steps = pagesTranslations.applySteps;
 
   if (!context) {
     throw new Error("ApplyOne must be used within a FormContext.Provider");
@@ -152,34 +156,35 @@ export default function ApplyOne() {
           {/* Step descriptions */}
           <div className="flex justify-between mt-4 text-xs text-gray-400 space-y-2">
             <div className="text-center max-w-[150px] text-blue-400">
-              Şirkət haqqında məlumat
+              {steps.step1[language]}
             </div>
             <div className="text-center max-w-[150px]">
-              Mülkiyyət və hüquqi quruluş
+              {steps.step2[language]}
             </div>
             <div className="text-center max-w-[150px]">
               
-              Rəqəmsal hazırlıq və transformasiya ehtiyacları
+              {steps.step3[language]}
             </div>
             <div className="text-center max-w-[150px]">
-              Liderlik və öhdəliklər
+            {steps.step4[language]}
+            
             </div>
             <div className="text-center max-w-[150px]">
-              Tələb olunan sənədlər
+              {steps.step5[language]}
             </div>
           </div>
         </div>
 
         <div className="text-center mb-8 relative z-20">
           <h1 className="text-2xl md:text-3xl font-medium">
-            Şirkət haqqında məlumat
+            {steps.step1[language]}
           </h1>
         </div>
 
         <div className="w-full max-w-2xl space-y-6 relative z-20">
           {/* Company Name */}
           <div className="space-y-2">
-            <label className="text-sm">Şirkətin adı (Tam hüquqi adı)</label>
+            <label className="text-sm">{page.companyName[language]}</label>
             <input
               type="text"
               name="companyName"
@@ -192,7 +197,7 @@ export default function ApplyOne() {
           {/* Company VAT and Founding Date */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
-              <label className="text-sm">Şirkətin VÖEN nömrəsi</label>
+              <label className="text-sm">{page.vatNumber[language]}</label>
               <input
                 type="text"
                 name="vatNumber"
@@ -202,7 +207,7 @@ export default function ApplyOne() {
               />
             </div>
             <div className="space-y-2">
-              <label className="text-sm">Şirkətin yaranma tarixi</label>
+              <label className="text-sm">{page.foundingDate[language]}</label>
               <input
                 type="number"
                 name="foundingDate"
@@ -219,9 +224,7 @@ export default function ApplyOne() {
           {/* Company Size and Business Activity */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
-              <label className="text-sm">
-                Şirkətin ölçüsü (Tam ştatlı işçilərin sayı)
-              </label>
+              <label className="text-sm">{page.companySize[language]}</label>
               <select
                 name="companySize"
                 value={localFormData.companySize}
@@ -229,7 +232,7 @@ export default function ApplyOne() {
                 className="w-full bg-transparent border border-gray-700 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300"
               >
                 <option className="text-black" value="">
-                  Seçin
+                  {page.placeholder[language]}
                 </option>
                 <option className="text-black" value="10">
                   1-10
@@ -246,7 +249,7 @@ export default function ApplyOne() {
               </select>
             </div>
             <div className="space-y-2">
-              <label className="text-sm">İllik dövriyyə (AZN)</label>
+              <label className="text-sm">{page.annualTurnover[language]}</label>
               <select
                 name="annualTurnover"
                 value={localFormData.annualTurnover}
@@ -254,10 +257,10 @@ export default function ApplyOne() {
                 className="w-full bg-transparent border border-gray-700 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300"
               >
                 <option className="text-black" value="">
-                  Seçin
+                  {page.placeholder[language]}
                 </option>
                 <option className="text-black" value="3">
-                  3m-ə qədər
+                  {page.annualTurnoverOption1[language]}
                 </option>
                 <option className="text-black" value="30">
                   3m - 30m
@@ -271,7 +274,7 @@ export default function ApplyOne() {
 
           {/* Address and Location */}
           <div className="space-y-2">
-            <label className="text-sm">Şirkətin ünvanı</label>
+            <label className="text-sm">{page.companyAddress[language]}</label>
             <input
               type="text"
               name="companyAddress"
@@ -281,7 +284,7 @@ export default function ApplyOne() {
             />
           </div>
           <div className="space-y-2">
-            <label className="text-sm">Yerləşdiyi şəhər/region</label>
+            <label className="text-sm">{page.location[language]}</label>
             <input
               type="text"
               name="location"
@@ -293,7 +296,7 @@ export default function ApplyOne() {
 
           {/* Website and Contact Person */}
           <div className="space-y-2">
-            <label className="text-sm">Vebsayt (əgər varsa)</label>
+            <label className="text-sm">{page.website[language]}</label>
             <input
               type="text"
               name="website"
@@ -303,7 +306,7 @@ export default function ApplyOne() {
             />
           </div>
           <div className="space-y-2">
-            <label className="text-sm">Əlaqələndirici şəxs (ad və soyad)</label>
+            <label className="text-sm">{page.contactPerson[language]}</label>
             <input
               type="text"
               name="contactPerson"
@@ -316,7 +319,7 @@ export default function ApplyOne() {
           {/* Email and Phone */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
-              <label className="text-sm">Elektron poçt ünvanı</label>
+              <label className="text-sm">{page.email[language]}</label>
               <input
                 type="email"
                 name="email"
@@ -326,7 +329,7 @@ export default function ApplyOne() {
               />
             </div>
             <div className="space-y-2">
-              <label className="text-sm">Əlaqə nömrəsi</label>
+              <label className="text-sm">{page.phone[language]}</label>
               <input
                 type="tel"
                 name="phone"
@@ -342,7 +345,7 @@ export default function ApplyOne() {
             className="w-full cursor-pointer bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg transition duration-300 mt-6"
             onClick={handleNext}
           >
-            Növbəti
+            {pagesTranslations.applyBtns.nextBtn[language]}
           </button>
         </div>
       </div>

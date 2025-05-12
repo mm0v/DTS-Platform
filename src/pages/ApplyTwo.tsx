@@ -4,10 +4,15 @@ import { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import BackgroundVideo from "../components/BackgroundVideo";
 import { FormContext } from "../context/FormContext";
+import { useLanguage } from "../context/LanguageContext";
 
 export default function ApplyTwo() {
   const navigate = useNavigate();
   const context = useContext(FormContext);
+  const { language, pagesTranslations } = useLanguage();
+  const page = pagesTranslations.apply2;
+  const steps = pagesTranslations.applySteps;
+  const buttons = pagesTranslations.applyBtns;
 
   if (!context) {
     throw new Error("ApplyTwo must be used within a FormContext.Provider");
@@ -127,35 +132,33 @@ export default function ApplyTwo() {
 
           <div className="flex justify-between mt-4 text-xs text-gray-400">
             <div className="text-center max-w-[100px]">
-              Şirkət haqqında məlumat
+              {steps.step1[language]}
             </div>
             <div className="text-center max-w-[100px] text-blue-400">
-              Mülkiyyət və hüquqi quruluş
+              {steps.step2[language]}
             </div>
             <div className="text-center max-w-[100px]">
-              Rəqəmsal hazırlıq və transformasiya ehtiyacları
+              {steps.step3[language]}
             </div>
             <div className="text-center max-w-[100px]">
-              Liderlik və öhdəliklər
+              {steps.step4[language]}
             </div>
             <div className="text-center max-w-[100px]">
-              Tələb olunan sənədlər
+              {steps.step5[language]}
             </div>
           </div>
         </div>
 
         <div className="text-center mb-8 relative z-20">
           <h1 className="text-2xl md:text-3xl font-medium">
-            Mülkiyyət və hüquqi quruluş
+            {steps.step2[language]}
           </h1>
         </div>
 
         <div className="w-full max-w-2xl space-y-6 relative z-20">
           {/* Şirkətin hüquqi növü */}
           <div className="space-y-2">
-            <label className="text-sm">
-              Şirkətin hüquqi növü (MMC, ASC, Fərdi sahibkar və s.)
-            </label>
+            <label className="text-sm">{page.companyType[language]}</label>
             <input
               type="text"
               name="companyType"
@@ -167,7 +170,7 @@ export default function ApplyTwo() {
 
           {/* Sənaye və biznes fəaliyyətləri */}
           {/* <div className="space-y-2">
-            <label className="text-sm">Sənaye və biznes əməliyyatları</label>
+            <label className="text-sm">{page.businessIndustry[language]}</label>
             <input
               type="text"
               name="businessIndustry"
@@ -223,7 +226,7 @@ export default function ApplyTwo() {
 
           {/* Əsas məhsullar/xidmətlər */}
           <div className="space-y-2">
-            <label className="text-sm">Əsas məhsullar/xidmətlər</label>
+            <label className="text-sm">{page.mainProducts[language]}</label>
             <input
               type="text"
               name="mainProducts"
@@ -235,9 +238,7 @@ export default function ApplyTwo() {
 
           {/* İxrac fəaliyyəti ilə məşğul olmaq */}
           <div className="space-y-2">
-            <label className="text-sm">
-              İxrac fəaliyyəti ilə məşğul olursunuz?
-            </label>
+            <label className="text-sm">{page.exportActivity[language]}</label>
             <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-2">
                 <input
@@ -248,7 +249,7 @@ export default function ApplyTwo() {
                   checked={localFormData.exportActivity === "Bəli"}
                   className="text-blue-500"
                 />
-                <label className="text-sm">Bəli</label>
+                <label className="text-sm">{page.yes[language]}</label>
               </div>
               <div className="flex items-center space-x-2">
                 <input
@@ -259,16 +260,14 @@ export default function ApplyTwo() {
                   checked={localFormData.exportActivity === "Xeyr"}
                   className="text-blue-500"
                 />
-                <label className="text-sm">Xeyr</label>
+                <label className="text-sm">{page.no[language]}</label>
               </div>
             </div>
           </div>
 
           {/* Məhsulların ixrac olunduğu bazarlar */}
           <div className="space-y-2">
-            <label className="text-sm">
-              Məhsullarınızın ixrac olunduğu bazarlar
-            </label>
+            <label className="text-sm">{page.exportMarkets[language]}</label>
             <input
               type="text"
               name="exportMarkets"
@@ -280,9 +279,7 @@ export default function ApplyTwo() {
 
           {/* Təqdimedici sənəd */}
           <div className="space-y-2">
-            <label className="text-sm">
-              Təqdimedici sənəd (.doc, .docx, .pdf)
-            </label>
+            <label className="text-sm">{page.document[language]}</label>
             <input
               type="file"
               name="document"
@@ -298,13 +295,13 @@ export default function ApplyTwo() {
               className="w-[48%] bg-gray-600 cursor-pointer text-white py-3 rounded-lg transition duration-300"
               onClick={handleGoBack}
             >
-              Geri
+              {buttons.backBtn[language]}
             </button>
             <button
               className="w-[48%] bg-blue-600 cursor-pointer hover:bg-blue-700 text-white py-3 rounded-lg transition duration-300"
               onClick={handleGoNext}
             >
-              Növbəti
+              {buttons.nextBtn[language]}
             </button>
           </div>
         </div>

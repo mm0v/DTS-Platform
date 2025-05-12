@@ -3,11 +3,16 @@ import { useContext, useState, useEffect } from "react";
 import type { ChangeEvent } from "react";
 import BackgroundVideo from "../components/BackgroundVideo";
 import { FormContext } from "../context/FormContext";
+import { useLanguage } from "../context/LanguageContext";
 
 const ApplyThree = () => {
   const navigate = useNavigate();
   const context = useContext(FormContext);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const { language, pagesTranslations } = useLanguage();
+  const page = pagesTranslations.apply3;
+  const steps = pagesTranslations.applySteps;
+  const buttons = pagesTranslations.applyBtns;
 
   if (!context) {
     throw new Error("ApplyThree must be used within a FormContext.Provider");
@@ -143,27 +148,26 @@ const ApplyThree = () => {
           </div>
           <div className="flex justify-between mt-2 text-xs text-gray-400">
             <div className="text-center max-w-[100px]">
-              Şirkət haqqında məlumat
+              {steps.step1[language]}
             </div>
             <div className="text-center max-w-[100px]">
-              Mülkiyyət və hüquqi quruluş
+              {steps.step2[language]}
             </div>
             <div className="text-center max-w-[100px] text-blue-400">
-              
-              Rəqəmsal hazırlıq və transformasiya ehtiyacları
+              {steps.step3[language]}
             </div>
             <div className="text-center max-w-[100px]">
-              Liderlik və öhdəliklər
+              {steps.step4[language]}
             </div>
             <div className="text-center max-w-[100px]">
-              Tələb olunan sənədlər
+              {steps.step5[language]}
             </div>
           </div>
         </div>
 
         <div className="w-full max-w-4xl mb-8 px-6">
           <div className="text-center text-3xl font-semibold mb-6">
-            Rəqəmsal hazırlıq və transformasiya ehtiyacları
+            {steps.step3[language]}
           </div>
 
           {/* Digital Level Debug Info */}
@@ -176,22 +180,28 @@ const ApplyThree = () => {
 
           <form className="space-y-6">
             <div className="flex justify-between items-center space-x-4">
-              <label className="w-1/3">Mövcud rəqəmsallaşma səviyyəsi:</label>
+              <label className="w-1/3">{page.digitalLevel[language]}</label>
               <select
                 name="digitalLevel"
                 value={getDigitalLevelString()}
                 onChange={handleInputChange}
                 className="w-2/3 p-2 bg-gray-800 text-white rounded"
               >
-                <option value="">Seçin</option>
-                <option value="1">Başlanğıc</option>
-                <option value="2">Orta</option>
-                <option value="3">İnkişaf etmiş</option>
+                <option value="">{page.placeholder[language]}</option>
+                <option value="1">
+                  {page.digitalLevelOptions.level1[language]}
+                </option>
+                <option value="2">
+                  {page.digitalLevelOptions.level2[language]}
+                </option>
+                <option value="3">
+                  {page.digitalLevelOptions.level3[language]}
+                </option>
               </select>
             </div>
 
             <div className="flex justify-between items-center space-x-4">
-              <label className="w-1/3">Mövcud rəqəmsal alətlər:</label>
+              <label className="w-1/3">{page.digitalTools[language]}</label>
               <div className="w-2/3 relative">
                 <button
                   type="button"
@@ -200,8 +210,8 @@ const ApplyThree = () => {
                 >
                   <span>
                     {formData.digitalReadiness.digitalTools.length > 0
-                      ? `${formData.digitalReadiness.digitalTools.length} seçilib`
-                      : "Seçin"}
+                      ? `${formData.digitalReadiness.digitalTools.length} ${page.digitalToolsOptions.selected[language]}`
+                      : page.placeholder[language]}
                   </span>
                   <span className="ml-2">▼</span>
                 </button>
@@ -210,8 +220,14 @@ const ApplyThree = () => {
                     {[
                       { value: "crm", label: "CRM" },
                       { value: "erp", label: "ERP" },
-                      { value: "accounting", label: "Mühasibat proqramları" },
-                      { value: "other", label: "Digər" },
+                      {
+                        value: "accounting",
+                        label: page.digitalToolsOptions.accounting[language],
+                      },
+                      {
+                        value: "other",
+                        label: page.digitalToolsOptions.other[language],
+                      },
                     ].map((tool) => (
                       <label
                         key={tool.value}
@@ -235,9 +251,7 @@ const ApplyThree = () => {
             </div>
 
             <div className="space-y-2">
-              <p className="text-xl">
-                Rəqəmsal transformasiyada əsas çətinliklər:
-              </p>
+              <p className="text-xl">{page.keyChallenges.title[language]}</p>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {[
                   "budget_shortage",
@@ -258,15 +272,18 @@ const ApplyThree = () => {
                       className="form-checkbox text-blue-500"
                     />
                     <span className="ml-2">
-                      {challenge === "budget_shortage" && "Büdcə çatışmazlığı"}
+                      {challenge === "budget_shortage" &&
+                        page.keyChallenges.budget_shortage[language]}
                       {challenge === "technical_expertise" &&
-                        "Texniki təcrübənin çatışmazlığı"}
-                      {challenge === "training_needs" && "Təlimə ehtiyac"}
+                        page.keyChallenges.technical_expertise[language]}
+                      {challenge === "training_needs" &&
+                        page.keyChallenges.training_needs[language]}
                       {challenge === "digital_strategy" &&
-                        "Rəqəmsal strategiyanın çatışmazlığı"}
+                        page.keyChallenges.digital_strategy[language]}
                       {challenge === "infrastructure_limits" &&
-                        "İnfrastruktur məhdudiyyətləri"}
-                      {challenge === "other" && "Digər"}
+                        page.keyChallenges.infrastructure_limits[language]}
+                      {challenge === "other" &&
+                        page.keyChallenges.other[language]}
                     </span>
                   </label>
                 ))}
@@ -274,16 +291,14 @@ const ApplyThree = () => {
             </div>
 
             <div className="space-y-2">
-              <p className="text-xl">
-                Şirkətinizin əsas rəqəmsal transformasiya məqsədləri nədir?
-              </p>
+              <p className="text-xl">{page.companyPurpose.title[language]}</p>
               <textarea
                 name="companyPurpose"
                 value={formData.digitalReadiness.companyPurpose}
                 onChange={handleInputChange}
                 className="w-full p-4 bg-gray-800 text-white rounded"
                 rows={4}
-                placeholder="Minimum 3 simvol, maksimum 500 simvol daxil edə bilərsiniz."
+                placeholder={page.companyPurpose.placeholder[language]}
                 maxLength={500}
                 minLength={3}
               />
@@ -295,13 +310,13 @@ const ApplyThree = () => {
               onClick={handleGoBack}
               className="bg-blue-500 cursor-pointer hover:bg-blue-600 text-white py-2 px-4 rounded"
             >
-              Geri
+              {buttons.backBtn[language]}
             </button>
             <button
               onClick={handleGoNext}
               className="bg-blue-500 cursor-pointer hover:bg-blue-600 text-white py-2 px-4 rounded"
             >
-              Növbəti
+              {buttons.nextBtn[language]}
             </button>
           </div>
         </div>

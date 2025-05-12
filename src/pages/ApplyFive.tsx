@@ -7,6 +7,7 @@ import { Download } from "lucide-react";
 import BackgroundVideo from "../components/BackgroundVideo";
 import { FormContext } from "../context/FormContext";
 import API from "../services/axiosConfig";
+import { useLanguage } from "../context/LanguageContext";
 
 interface FileState {
   companyRegistry: File | null;
@@ -28,6 +29,9 @@ interface ApiTestResult {
 export default function ApplyFive() {
   const navigate = useNavigate();
   const context = useContext(FormContext);
+  const { language, pagesTranslations } = useLanguage();
+  const page = pagesTranslations.apply5;
+  const steps = pagesTranslations.applySteps;
 
   if (!context) {
     throw new Error("ApplyFive must be used within a FormContext.Provider");
@@ -170,7 +174,7 @@ export default function ApplyFive() {
           JSON.stringify(apiResponse.data)
         );
         addTestResult(true, "Form submitted successfully", apiResponse.data);
-        alert("Müraciətiniz uğurla göndərildi!");
+        alert(page.alerts.success[language]);
         return;
       } catch (jsonError) {
         console.error("JSON submission failed:", jsonError);
@@ -273,7 +277,7 @@ export default function ApplyFive() {
             "Form submitted successfully with multipart/form-data",
             multipartResponse.data
           );
-          alert("Müraciətiniz uğurla göndərildi!");
+          alert(page.alerts.success[language]);
         } catch (multipartError) {
           console.error("Multipart submission failed:", multipartError);
           setDebugInfo(
@@ -284,7 +288,7 @@ export default function ApplyFive() {
           );
           addTestResult(false, "Multipart submission failed", multipartError);
           alert(
-            "Müraciət zamanı xəta baş verdi. Zəhmət olmasa yenidən cəhd edin."
+            page.alerts.error[language]
           );
         }
       }
@@ -294,7 +298,7 @@ export default function ApplyFive() {
         `Error: ${error instanceof Error ? error.message : "Unknown error"}`
       );
       addTestResult(false, "Overall form submission failed", error);
-      alert("Müraciət zamanı xəta baş verdi. Zəhmət olmasa yenidən cəhd edin.");
+      alert(page.alerts.error[language]);
     } finally {
       setIsSubmitting(false);
     }
@@ -399,20 +403,22 @@ export default function ApplyFive() {
           </div>
           <div className="flex justify-between mt-2 text-xs text-gray-400">
             <div className="text-center max-w-[100px]">
-              Şirkət haqqında məlumat
+              {steps.step1[language]}
             </div>
             <div className="text-center max-w-[100px]">
-              Mülkiyyət və hüquqi quruluş
+              {steps.step2[language]}
             </div>
             <div className="text-center max-w-[100px]">
 
-              Rəqəmsal hazırlıq və transformasiya ehtiyacları
+
+              {steps.step3[language]}
             </div>
             <div className="text-center max-w-[100px]">
-              Liderlik və öhdəliklər
+              {steps.step4[language]}
+
             </div>
             <div className="text-center max-w-[100px] text-blue-400">
-              Tələb olunan sənədlər
+              {steps.step5[language]}
             </div>
           </div>
         </div>
@@ -420,7 +426,7 @@ export default function ApplyFive() {
         {/* Form */}
         <div className="w-full max-w-4xl p-8 rounded-lg">
           <div className="text-center mb-10">
-            <h1 className="text-3xl font-bold">Tələb olunan sənədlər</h1>
+            <h1 className="text-3xl font-bold">{steps.step5[language]}</h1>
           </div>
 
           {debugInfo && (
@@ -486,7 +492,7 @@ export default function ApplyFive() {
             {/* First file upload */}
             <div className="space-y-2">
               <label className="block text-lg font-medium">
-                Şirkətin dövlət reyestrindən çıxarışı
+                {page.companyRegistry[language]}
               </label>
               <div className="relative">
                 <div className="w-full h-14 border border-gray-600 rounded-lg flex items-center justify-between px-4 bg-gray-800/30">
@@ -514,7 +520,7 @@ export default function ApplyFive() {
                 />
               </div>
               <p className="text-sm text-gray-400">
-                Yüklənən fayl 50 mb – dan çox ola bilməz.
+                {page.fileFormatText[language]}
               </p>
             </div>
 
@@ -526,7 +532,7 @@ export default function ApplyFive() {
             {/* Second file upload */}
             <div className="space-y-2">
               <label className="block text-lg font-medium">
-                Maliyyə hesabatları (son 2 il)
+                {page.financialReports[language]}
               </label>
               <div className="relative">
                 <div className="w-full h-14 border border-gray-600 rounded-lg flex items-center justify-between px-4 bg-gray-800/30">
@@ -554,13 +560,12 @@ export default function ApplyFive() {
                 />
               </div>
               <p className="text-sm text-gray-400">
-                Yüklənən fayl 50 mb – dan çox ola bilməz.
+                {page.fileFormatText[language]}
               </p>
             </div>
 
             <p className="text-sm text-gray-400 mt-6">
-              Müraciətinizlə bağlı əlavə təsdiqedici sənədlərə ehtiyac olacağı
-              təqdirdə sizinlə əlaqə saxlanılacaqdır.
+              {page.additionalInfo[language]}
             </p>
 
             {/* Dot separator */}
@@ -583,7 +588,7 @@ export default function ApplyFive() {
                   htmlFor="confirmAccuracy"
                   className="ml-2 text-sm text-gray-400"
                 >
-                  Təqdim olunan məlumatların doğruluğunu təsdiq edirəm.
+                  {page.checkboxes.confirmAccuracy[language]}
                 </label>
               </div>
 
@@ -600,8 +605,7 @@ export default function ApplyFive() {
                   htmlFor="contactConsent"
                   className="ml-2 text-sm text-gray-400"
                 >
-                  Müraciətimlə əlaqədar 4SİM tərəfindən əlaqə saxlanmasını qəbul
-                  edirəm.
+                  {page.checkboxes.contactConsent[language]}
                 </label>
               </div>
 
@@ -621,9 +625,9 @@ export default function ApplyFive() {
                     className="underline cursor-pointer text-blue-500"
                     onClick={(e) => e.stopPropagation()} // prevent label checkbox toggling
                   >
-                    İstifadə şərtləri və gizlilik şərtləri
+                    {page.checkboxes.termsAgreement[language][0]}
                   </a>{" "}
-                  ilə razıyam.
+                  {page.checkboxes.termsAgreement[language][1]}
                 </label>
 
               </div>
@@ -636,7 +640,7 @@ export default function ApplyFive() {
                 onClick={handleGoBack}
                 className="flex-1 cursor-pointer bg-blue-900 text-white py-3 rounded-lg hover:bg-blue-800 transition-colors"
               >
-                Geri
+                {pagesTranslations.applyBtns.backBtn[language]}
               </button>
               <button
                 type="submit"
@@ -646,7 +650,9 @@ export default function ApplyFive() {
                   : "bg-blue-900/50 text-gray-400 cursor-not-allowed "
                   }`}
               >
-                {isSubmitting ? "Göndərilir..." : "Təsdiq et"}
+                {isSubmitting
+                  ? page.buttons.submitting[language]
+                  : page.buttons.confirm[language]}
               </button>
             </div>
 

@@ -185,4 +185,290 @@ of the Ministry of Economy.`,
       EN: `Each year, a certain number of companies will be selected to participate in the program. Applicants deemed eligible will be officially informed prior to the start of their participation. This timeline allows sufficient opportunity for preliminary discussions and necessary preparations. Other companies will have the opportunity to participate in future phases of the program.`,
     },
   },
+  applySteps: {
+    step1: {
+      AZ: "Şirkət haqqında məlumat",
+      EN: "Company Information",
+    },
+    step2: {
+      AZ: "Mülkiyyət və hüquqi quruluş",
+      EN: "Ownership and Legal Structure",
+    },
+    step3: {
+      AZ: "Rəqəmsal hazırlıq və transformasiya ehtiyacları",
+      EN: "Digital Readiness and Transformation Needs",
+    },
+    step4: {
+      AZ: "Liderlik və öhdəliklər",
+      EN: "Leadership and Commitments",
+    },
+    step5: {
+      AZ: "Tələb olunan sənədlər",
+      EN: "Required Documents",
+    },
+  },
+  applyBtns: {
+    backBtn: {
+      AZ: "Geri",
+      EN: "Back",
+    },
+    nextBtn: {
+      AZ: "Növbəti",
+      EN: "Next",
+    },
+  },
+  apply1: {
+    companyName: {
+      AZ: "Şirkətin adı (Tam hüquqi adı)",
+      EN: "Company Name (Full Legal Name)",
+    },
+    vatNumber: {
+      AZ: "Şirkətin VÖEN nömrəsi",
+      EN: "Company VAT Number",
+    },
+    foundingDate: {
+      AZ: "Şirkətin yaranma tarixi",
+      EN: "Company Founding Date",
+    },
+    companySize: {
+      AZ: "Şirkətin ölçüsü (Tam ştatlı işçilərin sayı)",
+      EN: "Company Size (Number of Full-Time Employees)",
+    },
+    placeholder: {
+      AZ: "Seçin",
+      EN: "Select",
+    },
+    annualTurnover: {
+      AZ: "İllik Dövriyyə (AZN)",
+      EN: "Annual Turnover (AZN)",
+    },
+    annualTurnoverOption1: {
+      AZ: "3m-ə qədər",
+      EN: "Up to 3m",
+    },
+    companyAddress: {
+      AZ: "Şirkətin ünvanı",
+      EN: "Company Address",
+    },
+    location: {
+      AZ: "Yerləşdiyi şəhər/region",
+      EN: "City/Region",
+    },
+    website: {
+      AZ: "Vebsayt (əgər varsa)",
+      EN: "Website (if available)",
+    },
+    contactPerson: {
+      AZ: "Əlaqələndirici şəxs (ad və soyad)",
+      EN: "Contact Person (First and Last Name)",
+    },
+    email: {
+      AZ: "Elektron poçt ünvanı",
+      EN: "Email Address",
+    },
+    phone: {
+      AZ: "Əlaqə nömrəsi",
+      EN: "Contact Number",
+    },
+  },
+  apply2: {
+    companyType: {
+      AZ: "Şirkətin hüquqi növü (MMC, ASC, Fərdi sahibkar və s.)",
+      EN: "Legal Type of Company (LLC, JSC, Individual Entrepreneur, etc.)",
+    },
+    businessIndustry: {
+      AZ: "Sənaye və biznes əməliyyatları",
+      EN: "Industry and Business Operations",
+    },
+    mainProducts: {
+      AZ: "Əsas məhsullar/xidmətlər",
+      EN: "Main Products/Services",
+    },
+    exportActivity: {
+      AZ: "İxrac fəaliyyəti ilə məşğul olursunuz?",
+      EN: "Are you engaged in export activities?",
+    },
+    yes: {
+      AZ: "Bəli",
+      EN: "Yes",
+    },
+    no: {
+      AZ: "Xeyr",
+      EN: "No",
+    },
+    exportMarkets: {
+      AZ: "Məhsullarınızın ixrac olunduğu bazarlar",
+      EN: "Markets where your products are exported",
+    },
+    document: {
+      AZ: "Təqdimedici sənəd (.doc, .docx, .pdf)",
+      EN: "Presentation document (.doc, .docx, .pdf)",
+    },
+  },
+  apply3: {
+    digitalLevel: {
+      AZ: "Mövcud rəqəmsallaşma səviyyəsi:",
+      EN: "Current Digitalization Level:",
+    },
+    digitalLevelOptions: {
+      level1: {
+        AZ: "Başlanğıc",
+        EN: "Basic",
+      },
+      level2: {
+        AZ: "Orta",
+        EN: "Intermediate",
+      },
+      level3: {
+        AZ: "İnkişaf etmiş",
+        EN: "Advanced",
+      },
+    },
+    digitalTools: {
+      AZ: "Mövcud rəqəmsal alətlər:",
+      EN: "Existing Digital Tools:",
+    },
+    placeholder: {
+      AZ: "Seçin",
+      EN: "Select",
+    },
+    digitalToolsOptions: {
+      selected: {
+        AZ: "seçilib",
+        EN: "selected",
+      },
+      accounting: {
+        AZ: "Mühasibat proqramları",
+        EN: "Accounting Software",
+      },
+      other: {
+        AZ: "Digər",
+        EN: "Other",
+      },
+    },
+    keyChallenges: {
+      title: {
+        AZ: "Rəqəmsal transformasiyada əsas çətinliklər:",
+        EN: "Key Challenges in Digital Transformation:",
+      },
+      budget_shortage: {
+        AZ: "Büdcə çatışmazlığı",
+        EN: "Budget Shortage",
+      },
+      technical_expertise: {
+        AZ: "Texniki təcrübənin çatışmazlığı",
+        EN: "Lack of Technical Expertise",
+      },
+      training_needs: {
+        AZ: "Təlimə ehtiyac",
+        EN: "Training Needs",
+      },
+      digital_strategy: {
+        AZ: "Rəqəmsal strategiyanın çatışmazlığı",
+        EN: "Lack of Digital Strategy",
+      },
+      infrastructure_limits: {
+        AZ: "İnfrastruktur məhdudiyyətləri",
+        EN: "Infrastructure Limitations",
+      },
+      other: {
+        AZ: "Digər",
+        EN: "Other",
+      },
+    },
+    companyPurpose: {
+      title: {
+        AZ: "Şirkətinizin əsas rəqəmsal transformasiya məqsədləri nədir?",
+        EN: "What are your company's main digital transformation goals?",
+      },
+      placeholder: {
+        AZ: "Minimum 3 simvol, maksimum 500 simvol daxil edə bilərsiniz.",
+        EN: "You can enter minimum 3 characters, maximum 500 characters.",
+      },
+    },
+  },
+  apply4: {
+    digitalTransformationLeader: {
+      AZ: "Şirkətinizin rəqəmsal transformasiya lideri və ya komandası var mı?",
+      EN: "Does your company have a digital transformation leader or team?",
+    },
+    hasStrategy: {
+      AZ: "Şirkətiniz əvvəllər rəqəmsal transformasiya strategiyası və ya yol xəritəsi hazırlayıbmı?",
+      EN: "Has your company previously prepared a digital transformation strategy or roadmap?",
+    },
+    highLevelManagementSupport: {
+      AZ: "Yüksək səviyyəli rəhbərlər rəqəmsal transformasiya strategiyasının həyata keçirilməsinə sadiqdirmi?",
+      EN: "Are high-level managers committed to implementing the digital transformation strategy?",
+    },
+    financialNeeds: {
+      AZ: "Şirkətinizin rəqəmsal halleri tətbiq etmək üçün maliyyə dəstəyinə ehtiyacı varmı?",
+      EN: "Does your company need financial support to implement digital solutions?",
+    },
+    transformationBudget: {
+      AZ: "Rəqəmsal transformasiya üçün tələb olunan texniki büdcə (əgər məlumdursa)",
+      EN: "Technical budget required for digital transformation (if known)",
+    },
+    optionLabels: {
+      yes: {
+        AZ: "Bəli",
+        EN: "Yes",
+      },
+      no: {
+        AZ: "Xeyr",
+        EN: "No",
+      },
+    },
+  },
+  apply5: {
+    companyRegistry: {
+      AZ: "Şirkətin dövlət reyestrindən çıxarışı",
+      EN: "Extract from the state registry of the company",
+    },
+    financialReports: {
+      AZ: "Maliyyə hesabatları (son 2 il)",
+      EN: "Financial reports (last 2 years)",
+    },
+    fileFormatText: {
+      AZ: "Yüklənən fayl 50 mb – dan çox ola bilməz.",
+      EN: "The uploaded file cannot exceed 50 MB.",
+    },
+    additionalInfo: {
+      AZ: "Müraciətinizlə bağlı əlavə təsdiqedici sənədlərə ehtiyac olacağı təqdirdə sizinlə əlaqə saxlanılacaqdır.",
+      EN: "If additional supporting documents are needed for your application, you will be contacted.",
+    },
+    checkboxes: {
+      confirmAccuracy: {
+        AZ: "Təqdim olunan məlumatların doğruluğunu təsdiq edirəm.",
+        EN: "I confirm the accuracy of the submitted information.",
+      },
+      contactConsent: {
+        AZ: "Müraciətimlə əlaqədar 4SİM tərəfindən əlaqə saxlanmasını qəbul edirəm.",
+        EN: "I accept to be contacted by 4SIM regarding my application.",
+      },
+      termsAgreement: {
+        AZ: ["İstifadə şərtləri və gizlilik şərtləri", "ilə razıyam."],
+        EN: ["I agree with the terms of use", "and privacy terms."],
+      },
+    },
+    buttons: {
+      confirm: {
+        AZ: "Təsdiq et",
+        EN: "Confirm",
+      },
+      submitting: {
+        AZ: "Göndərilir...",
+        EN: "Submitting...",
+      },
+    },
+    alerts: {
+      success: {
+        AZ: "Müraciətiniz uğurla göndərildi!",
+        EN: "Your application was submitted successfully!",
+      },
+      error: {
+        AZ: "Müraciət zamanı xəta baş verdi. Zəhmət olmasa yenidən cəhd edin.",
+        EN: "An error occurred during submission. Please try again.",
+      },
+    },
+  },
 };
