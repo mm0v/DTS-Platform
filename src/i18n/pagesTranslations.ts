@@ -40,11 +40,11 @@ export const pagesTranslations = {
       EN: "Our Vision",
     },
     visionDescription: {
-      AZ: `"Sənaye 4.0 Hazırlıq" Proqramı 2030-cu ilədək İqtisadiyyat Nazirliyinin dəstəyi ilə ölkəmizin
-  istehsal yönümlü müəssisələrinin rəqəmsal transformasiyasına hədəflənmişdir.`,
+      AZ: `"Sənaye 4.0 Hazırlıq" Proqramı 2030-cu ilədək
+İqtisadiyyat Nazirliyinin dəstəyi ilə ölkəmizin istehsal yönümlü müəssisələrinin rəqəmsal transformasiyasına hədəflənmişdir.`,
       EN: `The "Industry 4.0 Readiness" Program aims to drive digital transformation
-  of manufacturing-oriented enterprises in Azerbaijan by 2030, with the support
-  of the Ministry of Economy.`,
+of manufacturing-oriented enterprises in Azerbaijan by 2030, with the support
+of the Ministry of Economy.`,
     },
   },
   success: {

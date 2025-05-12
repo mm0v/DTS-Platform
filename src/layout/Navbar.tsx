@@ -29,7 +29,7 @@ const Navbar = () => {
             <div className="container mx-auto px-4 py-3">
                 {/* Desktop Navigation */}
                 <div className="hidden lg:flex justify-between items-center">
-                    <div className="flex items-center space-x-6">
+                    <div className="flex p-2 items-center space-x-6">
                         {/* Logo */}
                         <div className="flex items-center">
                             <a href="https://www.economy.gov.az" target='_blank'>
@@ -121,11 +121,13 @@ const Navbar = () => {
                             </a>
 
                         </div>
-                        <div className="ml-8 text-sm border-l-2 border-gray-300 pl-5">
-                            {page.programText[language][0]} <br />
-                            {page.programText[language][1]} <br />
-                            {page.programText[language][2]}
-                        </div>
+                        <Link to={"/"}>
+                            <div className="ml-8 text-xs border-l-2 border-gray-300 pl-5">
+                                {page.programText[language][0]} <br />
+                                {page.programText[language][1]} <br />
+                                {page.programText[language][2]}
+                            </div>
+                        </Link>
                     </div>
 
                     <div className="flex items-center space-x-4 text-base">
@@ -159,17 +161,18 @@ const Navbar = () => {
 
                         <Link
                             to="/apply"
-                            className="bg-[#275AA8] px-5 py-2 rounded text-white focus:outline-none focus-visible:outline-none focus:ring-0"
+                            className="bg-[#1A4381] px-5 py-2 rounded text-white hover:bg-blue-800 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                            aria-label={`${page.apply[language]} button`}
                         >
                             {page.apply[language]}
                         </Link>
 
                         <button
-                            className="border flex items-center border-white px-2 py-1 cursor-pointer rounded focus:outline-none focus-visible:outline-none focus:ring-0"
+                            className="border border-white flex items-center cursor-pointer gap-2 px-3 py-2 rounded hover:bg-white/10 transition-colors duration-200 text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-1"
                             onClick={toggleLanguage}
                         >
                             {language}
-
+                            <span className="sr-only">Change language</span>
                         </button>
                     </div>
 

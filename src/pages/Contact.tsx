@@ -18,7 +18,9 @@ const Contact = () => {
       <BackgroundVideo />
 
       <div style={{
-        background: 'linear-gradient(to top, rgba(255, 255, 255, 1), rgba(52, 96, 220, .99)'
+        // background: 'linear-gradient(to top, rgba(255, 255, 255, 1), rgba(52, 96, 220, .99)'
+        background: "linear-gradient(180deg, rgba(35, 42, 96, 0.90) -4.83%, rgba(0, 0, 0, 0.00) 102.71%), var(--surface-white-primary, #FFF)",
+
       }}>
         <div className="w-full max-w-6xl mx-auto px-4 py-12" >
           <div className="w-full flex flex-col items-center">
