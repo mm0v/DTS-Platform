@@ -6,7 +6,7 @@ import { useState, useContext } from "react";
 import { Download } from "lucide-react";
 import BackgroundVideo from "../components/BackgroundVideo";
 import { FormContext } from "../context/FormContext";
-import axios from "axios";
+import API from "../services/axiosConfig";
 
 interface FileState {
   companyRegistry: File | null;
@@ -22,7 +22,7 @@ interface AgreementState {
 interface ApiTestResult {
   success: boolean;
   message: string;
-  data?: unknown; // Using unknown instead of any for better type safety
+  data?: unknown;
 }
 
 export default function ApplyFive() {
@@ -49,9 +49,6 @@ export default function ApplyFive() {
   const [testResults, setTestResults] = useState<ApiTestResult[]>([]);
   const [showAdvancedOptions, setShowAdvancedOptions] = useState(false);
   const [authToken, setAuthToken] = useState("");
-
-  // Enable CORS anywhere service for development (only if needed)
-  const CORS_PROXY = ""; // e.g. "https://cors-anywhere.herokuapp.com/" - leave empty to disable
 
   const handleFileChange = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -98,10 +95,7 @@ export default function ApplyFive() {
   };
 
   const addTestResult = (success: boolean, message: string, data?: unknown) => {
-    setTestResults((prev) => [
-      { success, message, data },
-      ...prev.slice(0, 4), // Keep only the last 5 results
-    ]);
+    setTestResults((prev) => [{ success, message, data }, ...prev.slice(0, 4)]);
   };
 
   const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -110,54 +104,72 @@ export default function ApplyFive() {
     setDebugInfo("Submitting form...");
 
     try {
-      // Update form data with agreement values - IMPORTANT: Keep digitalLevel as a number (byte)
-      const updatedFormData = {
+      // Prepare the form data, ensuring digitalLevel is a number (byte)
+      // We need to make sure it's properly formatted for the API
+      const finalFormData = {
         ...formData,
         digitalReadiness: {
           ...formData.digitalReadiness,
-          // Important: Keep digitalLevel as a number (byte), don't convert to string
-          digitalLevel: formData.digitalReadiness.digitalLevel,
+          // Ensure digitalLevel is a number between 0-255 (byte range)
+          digitalLevel: Number(formData.digitalReadiness.digitalLevel),
+        },
+        digitalLeadership: {
+          digitalTeamOrLead: Boolean(
+            formData.digitalLeadership.digitalTeamOrLead
+          ),
+          digitalPath: Boolean(formData.digitalLeadership.digitalPath),
+          digitalTransformationLoyality: Boolean(
+            formData.digitalLeadership.digitalTransformationLoyality
+          ),
         },
         declarationConsent: {
-          dataIsReal: agreements.confirmAccuracy,
-          permitContact: agreements.contactConsent,
+          dataIsReal: Boolean(agreements.confirmAccuracy),
+          permitContact: Boolean(agreements.contactConsent),
         },
       };
 
-      // Show the actual payload being sent
+      setDebugInfo(
+        "Final request payload: " +
+          JSON.stringify({ companyRequest: finalFormData }, null, 2)
+      );
       console.log(
         "Digital level type:",
-        typeof updatedFormData.digitalReadiness.digitalLevel
+        typeof finalFormData.digitalReadiness.digitalLevel
       );
       console.log(
         "Digital level value:",
-        updatedFormData.digitalReadiness.digitalLevel
-      );
-      console.log(
-        "Full request payload:",
-        JSON.stringify({ companyRequest: updatedFormData }, null, 2)
+        finalFormData.digitalReadiness.digitalLevel
       );
 
-      // APPROACH 1: Try submitting form data with json format
-      setDebugInfo("Trying JSON approach with authorization...");
+      // APPROACH 1: Use JSON approach
       try {
-        // Add auth headers if token is provided
-        const headers: Record<string, string> = {};
+        // Set up headers
+        const headers: Record<string, string> = {
+          "Content-Type": "application/json",
+        };
+
         if (authToken) {
           headers["Authorization"] = `Bearer ${authToken}`;
         }
 
-        await axios.post(
-          `${CORS_PROXY}http://50.16.57.115:8080/api/v1/company/add`,
-          { companyRequest: updatedFormData },
+        // Add CORS headers if needed for development
+        headers["Access-Control-Allow-Origin"] = "*";
+        headers["Access-Control-Allow-Methods"] =
+          "GET, POST, PUT, DELETE, OPTIONS";
+        headers["Access-Control-Allow-Headers"] =
+          "Origin, Content-Type, Accept, Authorization";
+
+        const apiResponse = await API.post(
+          "/api/v1/company/add",
+          { companyRequest: finalFormData },
           { headers }
         );
 
-        setDebugInfo("JSON submission successful!");
-        addTestResult(
-          true,
-          "Form submitted successfully with JSON and auth token"
+        setDebugInfo(
+          "JSON submission successful! Response: " +
+            JSON.stringify(apiResponse.data)
         );
+        addTestResult(true, "Form submitted successfully", apiResponse.data);
         alert("Müraciətiniz uğurla göndərildi!");
         return;
       } catch (jsonError) {
@@ -168,64 +180,116 @@ export default function ApplyFive() {
           }`
         );
         addTestResult(false, "JSON submission failed", jsonError);
+
+        // Try a direct fetch call as fallback
+        try {
+          setDebugInfo("Trying direct fetch approach...");
+          const response = await fetch(
+            "http://50.16.57.115:8080/api/v1/company/add",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}),
+              },
+              body: JSON.stringify({ companyRequest: finalFormData }),
+            }
+          );
+
+          if (response.ok) {
+            const data = await response.json();
+            setDebugInfo("Direct fetch successful: " + JSON.stringify(data));
+            addTestResult(
+              true,
+              "Form submitted successfully with direct fetch"
+            );
+            alert("Müraciətiniz uğurla göndərildi!");
+            return;
+          } else {
+            const errorText = await response.text();
+            throw new Error(
+              `Server responded with ${response.status}: ${errorText}`
+            );
+          }
+        } catch (fetchError) {
+          console.error("Direct fetch failed:", fetchError);
+          setDebugInfo(
+            `Direct fetch failed: ${
+              fetchError instanceof Error ? fetchError.message : "Unknown error"
+            }`
+          );
+          addTestResult(false, "Direct fetch failed", fetchError);
+        }
       }
 
-      // APPROACH 2: Try multipart/form-data approach
-      setDebugInfo("Trying multipart/form-data approach...");
-      try {
-        const formDataToSubmit = new FormData();
+      // APPROACH 2: Try multipart/form-data if we have files
+      if (files.companyRegistry || files.financialReports) {
+        setDebugInfo("Trying multipart/form-data approach...");
+        try {
+          const formDataToSubmit = new FormData();
 
-        // Add the files if they exist
-        if (files.companyRegistry) {
-          formDataToSubmit.append("registerCertificate", files.companyRegistry);
-        }
-
-        if (files.financialReports) {
-          formDataToSubmit.append("financialStatement", files.financialReports);
-        }
-
-        // Add the JSON data
-        // Make sure digitalLevel is still a number in the JSON
-        formDataToSubmit.append(
-          "companyRequest",
-          JSON.stringify({ companyRequest: updatedFormData })
-        );
-
-        const headers: Record<string, string> = {};
-        if (authToken) {
-          headers["Authorization"] = `Bearer ${authToken}`;
-        }
-
-        await axios.post(
-          `${CORS_PROXY}http://50.16.57.115:8080/api/v1/company/add`,
-          formDataToSubmit,
-          {
-            headers: {
-              ...headers,
-              "Content-Type": "multipart/form-data",
-            },
+          // Add the files if they exist
+          if (files.companyRegistry) {
+            formDataToSubmit.append(
+              "registerCertificate",
+              files.companyRegistry
+            );
           }
-        );
 
-        setDebugInfo("Multipart submission successful!");
-        addTestResult(
-          true,
-          "Form submitted successfully with multipart/form-data"
-        );
-        alert("Müraciətiniz uğurla göndərildi!");
-      } catch (multipartError) {
-        console.error("Multipart submission failed:", multipartError);
-        setDebugInfo(
-          `Multipart approach failed: ${
-            multipartError instanceof Error
-              ? multipartError.message
-              : "Unknown error"
-          }`
-        );
-        addTestResult(false, "Multipart submission failed", multipartError);
-        alert(
-          "Müraciət zamanı xəta baş verdi. Zəhmət olmasa yenidən cəhd edin."
-        );
+          if (files.financialReports) {
+            formDataToSubmit.append(
+              "financialStatement",
+              files.financialReports
+            );
+          }
+
+          // Convert the finalFormData to a stringified JSON and append
+          formDataToSubmit.append(
+            "companyRequest",
+            JSON.stringify({ companyRequest: finalFormData })
+          );
+
+          const headers: Record<string, string> = {};
+          if (authToken) {
+            headers["Authorization"] = `Bearer ${authToken}`;
+          }
+
+          const multipartResponse = await API.post(
+            "/api/v1/company/add",
+            formDataToSubmit,
+            {
+              headers: {
+                ...headers,
+                // Let browser set the correct Content-Type with boundary
+                "Content-Type": "multipart/form-data",
+              },
+            }
+          );
+
+          setDebugInfo(
+            "Multipart submission successful! Response: " +
+              JSON.stringify(multipartResponse.data)
+          );
+          addTestResult(
+            true,
+            "Form submitted successfully with multipart/form-data",
+            multipartResponse.data
+          );
+          alert("Müraciətiniz uğurla göndərildi!");
+        } catch (multipartError) {
+          console.error("Multipart submission failed:", multipartError);
+          setDebugInfo(
+            `Multipart approach failed: ${
+              multipartError instanceof Error
+                ? multipartError.message
+                : "Unknown error"
+            }`
+          );
+          addTestResult(false, "Multipart submission failed", multipartError);
+          alert(
+            "Müraciət zamanı xəta baş verdi. Zəhmət olmasa yenidən cəhd edin."
+          );
+        }
       }
     } catch (error) {
       console.error("Error submitting form:", error);
@@ -255,9 +319,7 @@ export default function ApplyFive() {
 
       for (const endpoint of testEndpoints) {
         try {
-          const healthResponse = await axios.get(
-            `${CORS_PROXY}http://50.16.57.115:8080${endpoint.url}`
-          );
+          const healthResponse = await API.get(endpoint.url);
           setDebugInfo(
             `${endpoint.name} successful: ${JSON.stringify(
               healthResponse.data
@@ -282,9 +344,9 @@ export default function ApplyFive() {
 
       // Try OPTIONS request to check CORS and allowed methods
       try {
-        const optionsResponse = await axios({
+        const optionsResponse = await API({
           method: "OPTIONS",
-          url: `${CORS_PROXY}http://50.16.57.115:8080/api/v1/company/add`,
+          url: "/api/v1/company/add",
         });
         setDebugInfo(
           `OPTIONS request successful: ${JSON.stringify(
@@ -350,7 +412,7 @@ export default function ApplyFive() {
               Rəqəmsal hüquqi və transformasiya xidmətləri
             </div>
             <div className="text-center max-w-[100px]">
-              Lisenzli və əhatəlidir
+              Liderlik və öhdəliklər
             </div>
             <div className="text-center max-w-[100px] text-blue-400">
               Tələb olunan sənədlər
@@ -386,7 +448,7 @@ export default function ApplyFive() {
             </div>
           )}
 
-          {/* Digital Level Type Info - NEW! */}
+          {/* Digital Level Type Info */}
           <div className="bg-blue-900/50 p-4 rounded mb-6">
             <h3 className="text-blue-300 mb-2">Digital Level Info</h3>
             <p className="text-sm mb-2">

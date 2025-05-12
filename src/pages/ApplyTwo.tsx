@@ -137,7 +137,7 @@ export default function ApplyTwo() {
               Rəqəmsal hüquqi və transformasiya xidmətləri
             </div>
             <div className="text-center max-w-[100px]">
-              Lisenzli və əhatəlidir
+              Liderlik və öhdəliklər
             </div>
             <div className="text-center max-w-[100px]">
               Tələb olunan sənədlər

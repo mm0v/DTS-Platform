@@ -35,7 +35,7 @@ const Apply = () => {
     },
     digitalReadiness: {
       keyChallenges: [],
-      digitalLevel: 0, // Using Byte (number) in the form state
+      digitalLevel: 0, // This is a Byte (number between 0-255)
       digitalTools: [],
       companyPurpose: "",
     },
@@ -54,7 +54,7 @@ const Apply = () => {
 
   const handleSubmit = async () => {
     try {
-      // Prepare form data with the correct types
+      // Ensure digitalLevel is properly formatted as a byte
       const apiData = {
         companyRequest: {
           companyData: {
@@ -71,67 +71,87 @@ const Apply = () => {
             contactEmail: formData.companyData.contactEmail,
             contactPhone: formData.companyData.contactPhone,
           },
-          declarationConsent: formData.declarationConsent,
-          digitalLeadership: formData.digitalLeadership,
+          declarationConsent: {
+            dataIsReal: Boolean(formData.declarationConsent.dataIsReal),
+            permitContact: Boolean(formData.declarationConsent.permitContact),
+          },
+          digitalLeadership: {
+            digitalTeamOrLead: Boolean(
+              formData.digitalLeadership.digitalTeamOrLead
+            ),
+            digitalPath: Boolean(formData.digitalLeadership.digitalPath),
+            digitalTransformationLoyality: Boolean(
+              formData.digitalLeadership.digitalTransformationLoyality
+            ),
+          },
           digitalReadiness: {
             ...formData.digitalReadiness,
-            digitalLevel: formData.digitalReadiness.digitalLevel.toString(), // Convert to string for API
+            // Keep digitalLevel as a number for the API
+            digitalLevel: Number(formData.digitalReadiness.digitalLevel),
+            // Ensure arrays are properly formatted
+            keyChallenges: formData.digitalReadiness.keyChallenges || [],
+            digitalTools: formData.digitalReadiness.digitalTools || [],
           },
-          financialNeeding: formData.financialNeeding,
-          propertyLaw: formData.propertyLaw,
+          financialNeeding: {
+            financialNeed: Boolean(formData.financialNeeding.financialNeed),
+            neededBudget: formData.financialNeeding.neededBudget,
+          },
+          propertyLaw: {
+            businessOperations: formData.propertyLaw.businessOperations,
+            companyLawType: formData.propertyLaw.companyLawType,
+            products: formData.propertyLaw.products,
+            exportActivity: Boolean(formData.propertyLaw.exportActivity),
+            exportBazaar: formData.propertyLaw.exportBazaar,
+          },
         },
       };
 
       console.log("Submitting form data:", apiData);
+      console.log(
+        "Digital level type:",
+        typeof apiData.companyRequest.digitalReadiness.digitalLevel
+      );
+      console.log(
+        "Digital level value:",
+        apiData.companyRequest.digitalReadiness.digitalLevel
+      );
 
-      // Try different API URL variations to see which works
+      // First attempt: standard API call
       try {
-        // Attempt 1: Use the full URL path
-        console.log("Trying full URL path...");
+        console.log("Trying submission with API...");
         const response = await API.post("/api/v1/company/add", apiData);
-        console.log("Success with full URL path:", response.data);
+        console.log("Submission successful!", response.data);
         return response.data;
-      } catch (error1) {
-        console.error("Error with full URL path:", error1);
+      } catch (error) {
+        console.error("Standard submission failed:", error);
 
-        try {
-          // Attempt 2: Use the path without /api
-          console.log("Trying path without /api...");
-          const response = await API.post("/v1/company/add", apiData);
-          console.log("Success with path without /api:", response.data);
-          return response.data;
-        } catch (error2) {
-          console.error("Error with path without /api:", error2);
+        // Second attempt: direct fetch
+        console.log("Trying with direct fetch...");
+        const fetchResponse = await fetch(
+          "http://50.16.57.115:8080/api/v1/company/add",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(apiData),
+          }
+        );
 
-          // Attempt 3: Final attempt with a different approach
-          console.log("Trying with XMLHttpRequest for debugging...");
-          return new Promise((resolve, reject) => {
-            const xhr = new XMLHttpRequest();
-            xhr.open("POST", "http://50.16.57.115:8080/api/v1/company/add");
-            xhr.setRequestHeader("Content-Type", "application/json");
-
-            xhr.onload = function () {
-              if (xhr.status >= 200 && xhr.status < 300) {
-                console.log("XHR Success:", xhr.responseText);
-                resolve(JSON.parse(xhr.responseText));
-              } else {
-                console.error(
-                  "XHR Error:",
-                  xhr.status,
-                  xhr.statusText,
-                  xhr.responseText
-                );
-                reject(new Error(`XHR Error: ${xhr.status} ${xhr.statusText}`));
-              }
-            };
-
-            xhr.onerror = function () {
-              console.error("XHR Network Error");
-              reject(new Error("Network Error"));
-            };
-
-            xhr.send(JSON.stringify(apiData));
-          });
+        if (fetchResponse.ok) {
+          const data = await fetchResponse.json();
+          console.log("Direct fetch successful!", data);
+          return data;
+        } else {
+          const errorText = await fetchResponse.text();
+          console.error(
+            "Direct fetch failed:",
+            fetchResponse.status,
+            errorText
+          );
+          throw new Error(
+            `Server responded with ${fetchResponse.status}: ${errorText}`
+          );
         }
       }
     } catch (error) {

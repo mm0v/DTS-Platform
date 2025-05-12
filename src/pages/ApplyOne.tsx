@@ -162,7 +162,7 @@ export default function ApplyOne() {
               Rəqəmsal hüquqi və transformasiya xidmətləri
             </div>
             <div className="text-center max-w-[150px]">
-              Lisenzli və əhatəlidir
+              Liderlik və öhdəliklər
             </div>
             <div className="text-center max-w-[150px]">
               Tələb olunan sənədlər

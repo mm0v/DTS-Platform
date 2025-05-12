@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import type { ChangeEvent } from "react";
 import BackgroundVideo from "../components/BackgroundVideo";
 import { FormContext } from "../context/FormContext";
@@ -15,6 +15,18 @@ const ApplyThree = () => {
 
   const { formData, setFormData } = context;
 
+  // Debug current value of digitalLevel on component mount
+  useEffect(() => {
+    console.log(
+      "Current digitalLevel value:",
+      formData.digitalReadiness.digitalLevel
+    );
+    console.log(
+      "Current digitalLevel type:",
+      typeof formData.digitalReadiness.digitalLevel
+    );
+  }, [formData.digitalReadiness.digitalLevel]);
+
   const handleInputChange = (
     e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
   ) => {
@@ -29,11 +41,18 @@ const ApplyThree = () => {
         "3": 3,
       };
 
+      // Ensure we're setting a number value by using Number()
+      const numericValue = digitalLevelMap[value] || 0;
+
+      console.log(
+        `Setting digitalLevel to ${numericValue} (${typeof numericValue})`
+      );
+
       setFormData((prev) => ({
         ...prev,
         digitalReadiness: {
           ...prev.digitalReadiness,
-          [name]: digitalLevelMap[value] || 0,
+          digitalLevel: numericValue,
         },
       }));
     } else {
@@ -46,6 +65,7 @@ const ApplyThree = () => {
       }));
     }
   };
+
   const handleCheckboxChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { value, checked } = e.target;
     setFormData((prev) => ({
@@ -79,6 +99,7 @@ const ApplyThree = () => {
   };
 
   const handleGoNext = () => {
+    // Add validation if needed
     navigate("/apply/four");
   };
 
@@ -86,7 +107,11 @@ const ApplyThree = () => {
   const getDigitalLevelString = (): string => {
     const levelValue = formData.digitalReadiness.digitalLevel;
 
-    switch (levelValue) {
+    console.log(
+      `Getting digital level string for value: ${levelValue} (${typeof levelValue})`
+    );
+
+    switch (Number(levelValue)) {
       case 1:
         return "1";
       case 2:
@@ -127,7 +152,7 @@ const ApplyThree = () => {
               Rəqəmsal hüquqi və transformasiya xidmətləri
             </div>
             <div className="text-center max-w-[100px]">
-              Lisenzli və əhatəlidir
+              Liderlik və öhdəliklər
             </div>
             <div className="text-center max-w-[100px]">
               Tələb olunan sənədlər
@@ -139,6 +164,15 @@ const ApplyThree = () => {
           <div className="text-center text-3xl font-semibold mb-6">
             Rəqəmsal hazırlıq və transformasiya ehtiyacları
           </div>
+
+          {/* Digital Level Debug Info */}
+          <div className="mb-4 p-3 bg-blue-900/30 rounded">
+            <p className="text-sm">
+              Current digitalLevel: {formData.digitalReadiness.digitalLevel}{" "}
+              (type: {typeof formData.digitalReadiness.digitalLevel})
+            </p>
+          </div>
+
           <form className="space-y-6">
             <div className="flex justify-between items-center space-x-4">
               <label className="w-1/3">Mövcud rəqəmsallaşma səviyyəsi:</label>
