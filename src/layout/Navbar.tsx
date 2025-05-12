@@ -36,7 +36,6 @@ const Navbar = () => {
                                 <img src="img/Navbar/economy_logo.png" width={"120px"} alt="Logo" />
                             </a>
                             <a href="https://4sim.gov.az/az" target='_blank' >
-                                {/* <img src="img/Navbar/4SIM_logo.png" alt="Logo" className="ml-4" /> */}
                                 <div className="ml-4">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="139" height="55" viewBox="0 0 139 55" fill="none">
                                         <path d="M29.9516 4.06872C30.1215 4.19802 30.3464 4.21399 30.5296 4.12619L32.5186 5.65068L33.5781 17.1794C33.4015 17.2767 33.2882 17.4651 33.3082 17.6711C33.3348 17.9552 33.5947 18.1643 33.8912 18.1388C34.1877 18.1133 34.4059 17.8642 34.3793 17.5801C34.361 17.3725 34.2144 17.2066 34.0228 17.1411L33.7979 14.6939L40.911 8.98063L43.4431 9.25045C43.5064 9.4356 43.678 9.57927 43.8929 9.60163C44.1877 9.63351 44.4542 9.42918 44.4876 9.14666C44.5209 8.86407 44.3077 8.60867 44.0128 8.57679C43.7979 8.55443 43.598 8.65657 43.493 8.82419L40.7711 8.53525L33.7496 14.1751L32.9467 5.43039L30.8094 3.79096C30.8594 3.60099 30.7944 3.39347 30.6245 3.26417C30.393 3.08697 30.0548 3.12209 29.8683 3.34399C29.6833 3.56587 29.72 3.89153 29.9516 4.06872Z" fill="white" />
@@ -122,7 +121,7 @@ const Navbar = () => {
 
                         </div>
                         <Link to={"/"}>
-                            <div className="ml-8 text-xs border-l-2 border-gray-300 pl-5">
+                            <div className="ml-2 text-xs border-l-2 border-gray-300 pl-5">
                                 {page.programText[language][0]} <br />
                                 {page.programText[language][1]} <br />
                                 {page.programText[language][2]}
@@ -182,13 +181,14 @@ const Navbar = () => {
                 <div className="lg:hidden flex justify-between items-center">
                     {/* Logo */}
                     <div className="flex items-center">
-                        <img src="img/Navbar/economy_logo.png" alt="Logo" className="h-8" />
+                        <a href="https://www.economy.gov.az" target='_blank'>
+                            <img src="img/Navbar/economy_logo.png" width={"120px"} alt="Logo" />
+                        </a>
                     </div>
-
                     {/* Language and Menu Toggle */}
                     <div className="flex items-center space-x-3">
                         <button
-                            className="border border-white px-2 py-1 rounded text-xs"
+                            className="border cursor-pointer border-white px-2 py-1 rounded text-xs"
                             onClick={toggleLanguage}
                         >
                             {language}
@@ -198,7 +198,7 @@ const Navbar = () => {
                             onClick={toggleMenu}
                             aria-label="Toggle menu"
                         >
-                            <div className={`hamburger-icon ${isMenuOpen ? 'open' : ''}`}>
+                            <div className={`hamburger-icon cursor-pointer ${isMenuOpen ? 'open' : ''}`}>
                                 <span className={`block w-6 h-0.5 bg-white mb-1.5 transition-all duration-300 ${isMenuOpen ? 'rotate-45 translate-y-2' : ''}`}></span>
                                 <span className={`block w-6 h-0.5 bg-white mb-1.5 transition-all duration-300 ${isMenuOpen ? 'opacity-0' : ''}`}></span>
                                 <span className={`block w-6 h-0.5 bg-white transition-all duration-300 ${isMenuOpen ? '-rotate-45 -translate-y-2' : ''}`}></span>
