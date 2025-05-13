@@ -1,7 +1,11 @@
 import { MapPin, Phone, Mail } from "lucide-react";
 import BackgroundVideo from "../components/BackgroundVideo";
+import { useLanguage } from "../context/LanguageContext";
 
 const Contact = () => {
+  const { language, pagesTranslations } = useLanguage();
+  const page = pagesTranslations.contact;
+
   return (
 
     <div className="mt-24" >
@@ -14,18 +18,20 @@ const Contact = () => {
       <BackgroundVideo />
 
       <div style={{
-        background: 'linear-gradient(to top, rgba(255, 255, 255, 1), rgba(52, 96, 220, .99)'
+        // background: 'linear-gradient(to top, rgba(255, 255, 255, 1), rgba(52, 96, 220, .99)'
+        background: "linear-gradient(180deg, rgba(35, 42, 96, 0.90) -4.83%, rgba(0, 0, 0, 0.00) 102.71%), var(--surface-white-primary, #FFF)",
+
       }}>
         <div className="w-full max-w-6xl mx-auto px-4 py-12" >
           <div className="w-full flex flex-col items-center">
 
             <div className="w-full bg-slate-900 text-white flex justify-center items-center text-center rounded-lg shadow-lg overflow-hidden mb-8">
               <div className="p-6 md:p-8 flex flex-col space-y-4">
-                <h1 className="text-3xl font-bold mb-8 text-center text-white">Əlaqə</h1>
+                <h1 className="text-3xl font-bold mb-8 text-center text-white">{page.title[language]}</h1>
                 <div className="flex items-start space-x-3">
                   <MapPin className="flex-shrink-0 h-5 w-5 text-gray-300 mt-0.5" />
                   <p className="text-sm md:text-base">
-                    Bakı, Azərbaycan, AZ1000, Üzeyir Hacıbəyli küç. 84,
+                    {page.address[language]}
                     <br className="hidden md:block" />
                     (Government House)
                   </p>
@@ -33,7 +39,7 @@ const Contact = () => {
 
                 <div className="flex items-center justify-center space-x-3">
                   <Phone className="flex-shrink-0 h-5 w-5 text-gray-300" />
-                  <p className="text-sm md:text-base ">+ 99412 310 28 00 (daxili 2419)</p>
+                  <p className="text-sm md:text-base ">{page.phone[language]}</p>
                 </div>
 
                 <div className="flex items-center justify-center space-x-3">
@@ -60,7 +66,7 @@ const Contact = () => {
                   rel="noopener noreferrer"
                   className="bg-white text-blue-600 px-3 py-2 rounded-md text-sm font-medium shadow-md hover:bg-blue-50 transition-colors"
                 >
-                  Google Maps-də açın
+                  {page.mapBtn[language]}
                 </a>
               </div>
             </div>

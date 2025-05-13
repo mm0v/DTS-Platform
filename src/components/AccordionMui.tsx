@@ -4,8 +4,12 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import Typography from "@mui/material/Typography";
 import "../App.css";
+import { useLanguage } from "../context/LanguageContext";
+
 export default function ControlledAccordions() {
   const [expanded, setExpanded] = React.useState<string | false>(false);
+  const { language, componentsTranslations } = useLanguage();
+  const page = componentsTranslations.accordionMui;
 
   const handleChange =
     (panel: string) => (_: React.SyntheticEvent, isExpanded: boolean) => {
@@ -74,7 +78,7 @@ export default function ControlledAccordions() {
                     </svg>
                   </div>
                   <div className="ml-4 text-[20px] md:text-[30px] font-medium text-[#323232]">
-                    İxrac potensialı
+                    {page.panel1.title[language]}
                   </div>
                 </div>
               </Typography>
@@ -84,11 +88,7 @@ export default function ControlledAccordions() {
             </AccordionSummary>
             <AccordionDetails>
               <Typography className="text-center text-[#323232] font-semibold text-[14px] leading-[24px]">
-                İxrac potensialı yüksək olan, yəni məhsullarını daha çox xarici
-                bazarlara çıxaran və beynəlxalq səviyyədə fəaliyyət göstərən
-                şirkətlərə üstünlük veriləcək. Çünki bu cür şirkətlər qlobal
-                rəqabətə daha hazırlıqlı olur və proqramın məqsədlərinə daha çox
-                uyğun gəlir
+                {page.panel1.content[language]}
               </Typography>
             </AccordionDetails>
           </Accordion>
@@ -275,7 +275,7 @@ export default function ControlledAccordions() {
                     </svg>
                   </div>
                   <div className="ml-4 text-[20px] md:text-[30px] font-medium text-[#323232]">
-                    Liderlik öhdəliyi
+                    {page.panel2.title[language]}
                   </div>
                 </div>
               </Typography>
@@ -285,12 +285,7 @@ export default function ControlledAccordions() {
             </AccordionSummary>
             <AccordionDetails>
               <Typography className="text-center text-[#323232] font-semibold text-[14px] leading-[24px]">
-                Bir çox təşkilatlarda adətən təşkilatın yuxarı rəhbərliyi və
-                digər əsas idarəetmə strukturları rəqəmsal transformasiya
-                prosesinə aktiv şəkildə dəstək göstərir və ona liderlik edirlər.
-                Həmçinin, belə şirkətlərin ya artıq mövcud rəqəmsal strategiyası
-                olur, ya da bu strategiyanın inkişaf etdirilməsi üzrə konkret
-                addımlar atılır.
+                {page.panel2.content[language]}
               </Typography>
             </AccordionDetails>
           </Accordion>
@@ -376,7 +371,7 @@ export default function ControlledAccordions() {
                     </svg>
                   </div>
                   <div className="ml-4 text-[20px] md:text-[30px] font-medium text-[#323232]">
-                    Sənaye mərkəzi
+                    {page.panel3.title[language]}
                   </div>
                 </div>
               </Typography>
@@ -386,14 +381,7 @@ export default function ControlledAccordions() {
             </AccordionSummary>
             <AccordionDetails>
               <Typography className="text-center text-[#323232] font-semibold text-[14px] leading-[24px]">
-                Proqram çərçivəsində iqtisadi diversifikasiyaya və sənaye
-                inkişafına töhfə verən istehsalat şirkətlərinə üstünlük verilir.
-                Bu üstünlük, xüsusilə qida və içkilər, mürəkkəb neft məhsulları,
-                kimyəvi maddələr, qarışıq mineral məhsullar, əsas metallar,
-                maşın və avadanlıqların təmiri və quraşdırılması, plastik və
-                lastik məmulatlar, metal məmulatlar, tekstil, maşınqayırma və
-                elektrik avadanlıqları sahəsində fəaliyyət göstərən şirkətlərə
-                şamil olunur.
+                {page.panel3.content[language]}
               </Typography>
             </AccordionDetails>
           </Accordion>

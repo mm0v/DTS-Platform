@@ -1,50 +1,44 @@
 import { useState } from "react";
 import BackgroundVideo from "../components/BackgroundVideo";
+import { useLanguage } from "../context/LanguageContext";
+import ToContact from "../components/ToContact";
 
 const Our_Success = () => {
   const [expanded1, setExpanded1] = useState(false);
   const [expanded2, setExpanded2] = useState(false);
   const [expanded3, setExpanded3] = useState(false);
+
+  const { language, pagesTranslations } = useLanguage();
+  const page = pagesTranslations.success;
+
   return (
     <div className="mt-24">
 
       <BackgroundVideo />
 
-      {/* <div className="video-background">
-        <video
-          className="absolute w-full h-full object-cover"
-          autoPlay
-          loop
-          muted
-        >
-          <source src="img/Navbar/bg-header.mp4" type="video/mp4" />
-        </video>
-      </div> */}
+      <ToContact />
 
       <div className="text-center">
         <h1 className="text-2xl md:text-5xl font-semibold text-[#FAFAFA] pb-20 mb-10 leading-[36px] md:leading-[48px]">
-          Uğurlarımız
+          {page.pageTitle[language]}
         </h1>
       </div>
 
       <div className="bg-[#FAFAFA] pt-10 pb-10 ">
         <div className="text-center mb-6">
           <h1 className="mb-2 font-medium text-[24px] md:text-[36px] leading-[32px] md:leading-[40px] text-[#323232]">
-            Uğur hekayələri
+            {page.storiesTitle[language]}
           </h1>
           <p className=" max-w-5xl p-2 mx-auto mt-4 text-[16px] md:text-[18px] leading-[140%] md:leading-[120%] text-[#323232]">
-            “Sənaye 4.0 Hazırlıq” Proqramı çərçivəsində artıq 3 aparıcı istehsal
-            yönümlü şirkətin rəqəmsal transformasiya prosesinə dəstək
-            göstərilmişdir. Pilot iştirakçılar-Metak, Azerfloat və STP -
-            proqramı uğurla başa vurmuş və hazırda transformasiya təşəbbüslərini
-            reallaşdırmaq məqsədilə maliyyə dəstəyi almaq prosesindədirlər.
+            {page.description[language]}
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-7xl mx-auto">
           {/* Card 1 */}
-          <div
-            className={`bg-white rounded-lg p-6 m-4 shadow-[2px_2px_12px_0px_#2323234D] border-[1px] border-[#D0D0D0] flex flex-col transition-all duration-300 ease-in-out overflow-hidden ${expanded1 ? "max-h-[1000px]" : "max-h-[260px]"
+          <div onMouseEnter={() => setExpanded1(!expanded1)}
+            onMouseLeave={() => setExpanded1(!expanded1)}
+            className={`cursor-pointer bg-white rounded-lg p-6 m-4 shadow-[2px_2px_12px_0px_#2323234D] border-[1px] border-[#D0D0D0] flex flex-col transition-all duration-300 ease-in-out overflow-hidden ${expanded1 ? "max-h-[1000px]" : "max-h-[260px]"
               }`}
           >
             <div className="flex flex-col items-center justify-center text-center">
@@ -88,27 +82,23 @@ const Our_Success = () => {
               </div>
               <div className="mt-6">
                 <p
-                  onClick={() => setExpanded1(!expanded1)}
-                  className={`font-normal text-16 text-[#323232] text-center  cursor-pointer transition-all duration-300 ease-in-out ${expanded1
+
+
+                  className={`font-normal text-16 text-[#323232] text-center transition-all duration-300 ease-in-out ${expanded1
                     ? "max-h-full whitespace-normal line-clamp-none"
                     : "max-h-[6.8em] overflow-hidden line-clamp-4"
                     }`}
                 >
-                  Azərbaycanın aparıcı boru istehsalı şirkətlərindən olan Metak,
-                  "Sənaye 4.0 Hazırlıq" Proqramına qoşularaq iştirak etmişdir.
-                  Proqram çərçivəsində şirkətin rəqəmsal hazırlıq səviyyəsi
-                  qiymətləndirilmiş, eləcə də genişmiqyaslı rəqəmsal
-                  transformasiya yol xəritəsi hazırlanmışdır. Hazırda Metak,
-                  qabaqcıl avtomatlaşdırma və ağıllı istehsalat həllərinin
-                  tətbiqinə hazırlaşır.
+                  {page.metak[language]}
                 </p>
               </div>
             </div>
           </div>
 
           {/* Card 2 */}
-          <div
-            className={`bg-white rounded-lg p-6 m-4 shadow-[2px_2px_12px_0px_#2323234D] border-[1px] border-[#D0D0D0] flex flex-col transition-all duration-300 ease-in-out overflow-hidden ${expanded2 ? "max-h-[1000px]" : "max-h-[260px]"
+          <div onMouseEnter={() => setExpanded2(!expanded2)}
+            onMouseLeave={() => setExpanded2(!expanded2)}
+            className={`cursor-pointer bg-white rounded-lg p-6 m-4 shadow-[2px_2px_12px_0px_#2323234D] border-[1px] border-[#D0D0D0] flex flex-col transition-all duration-300 ease-in-out overflow-hidden ${expanded2 ? "max-h-[1000px]" : "max-h-[260px]"
               }`}
           >
             {" "}
@@ -213,28 +203,23 @@ const Our_Success = () => {
               </div>
               <div className="mt-6">
                 <p
-                  onClick={() => setExpanded2(!expanded2)}
-                  className={`font-normal text-16 text-[#323232] text-center  cursor-pointer transition-all duration-300 ease-in-out ${expanded2
+                  // onClick={() => setExpanded2(!expanded2)}
+                  className={`font-normal text-16 text-[#323232] text-center transition-all duration-300 ease-in-out ${expanded2
                     ? "max-h-full whitespace-normal line-clamp-none"
                     : "max-h-[6.8em] overflow-hidden line-clamp-4"
                     }`}
                 >
                   {" "}
-                  Şüşə istehsalı üzrə ixtisaslaşmış Azerfloat şirkəti üçün
-                  proqram çərçivəsində əməliyyat səmərəliliyinin artırılması,
-                  istehsal proseslərinin optimallaşdırılması və resurs
-                  idarəçiliyinin təkmilləşdirilməsi məqsədilə rəqəmsal
-                  transformasiya yol xəritəsi hazırlanmışdır. Hazırda yol
-                  xəritəsinin icrası çərçivəsində məlumat əsaslı qərarvermə və
-                  təkmilləşdirilmiş istehsal prosesləri üzrə addımlar atılır.
+                  {page.azerfloat[language]}
                 </p>
               </div>
             </div>
           </div>
 
           {/* Card 3 */}
-          <div
-            className={`bg-white rounded-lg p-6 m-4 shadow-[2px_2px_12px_0px_#2323234D] border-[1px] border-[#D0D0D0] flex flex-col transition-all duration-300 ease-in-out overflow-hidden ${expanded3 ? "max-h-[1000px]" : "max-h-[260px]"
+          <div onMouseEnter={() => setExpanded3(!expanded3)}
+            onMouseLeave={() => setExpanded3(!expanded3)}
+            className={`cursor-pointer bg-white rounded-lg p-6 m-4 shadow-[2px_2px_12px_0px_#2323234D] border-[1px] border-[#D0D0D0] flex flex-col transition-all duration-300 ease-in-out overflow-hidden ${expanded3 ? "max-h-[1000px]" : "max-h-[260px]"
               }`}
           >
             {" "}
@@ -245,18 +230,13 @@ const Our_Success = () => {
               <div className="mt-6">
                 <p
                   onClick={() => setExpanded3(!expanded3)}
-                  className={`font-normal text-16 text-[#323232] text-center  cursor-pointer transition-all duration-300 ease-in-out ${expanded3
+                  className={`font-normal text-16 text-[#323232] text-center transition-all duration-300 ease-in-out ${expanded3
                     ? "max-h-full whitespace-normal line-clamp-none"
                     : "max-h-[6.8em] overflow-hidden line-clamp-4"
                     }`}
                 >
                   {" "}
-                  Azərbaycanın ən böyük sənaye mərkəzlərindən biri olan STP
-                  Kabel MMC, süni intellektlə idarə olunan monitorinq sistemləri
-                  və ağıllı logistika həllərini tətbiq etməklə rəqəmsal
-                  transformasiyanı mənimsəmişdir. Şirkətin proqramda iştirakı,
-                  texnologiya əsaslı innovasiyalar vasitəsilə məhsuldarlıq və
-                  davamlılıq imkanlarını genişləndirmişdir.
+                  {page.stp[language]}
                 </p>
               </div>
             </div>
@@ -264,10 +244,10 @@ const Our_Success = () => {
         </div>
 
         <div className="flex justify-center mt-10 px-4 ">
-          <div className="w-full max-w-[700px] aspect-video ">
+          <div className="w-full max-w-[700px] aspect-video mt-12 mb-10 md:mt-32">
             <iframe
               className="w-full h-full rounded-lg  shadow-[2px_2px_12px_0px_#2323234D] border-[1px] border-[#D0D0D0]"
-              src="https://www.youtube.com/embed/FkhjfqtLiGc"
+              src="https://www.youtube.com/embed/D4TZE5r9-Ks"
               title="YouTube video"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
