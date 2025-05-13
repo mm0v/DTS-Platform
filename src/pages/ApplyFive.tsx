@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom";
 import { Download } from "lucide-react";
 import BackgroundVideo from "../components/BackgroundVideo";
 import { FormContext } from "../context/FormContext";
-import API from "../services/axiosConfig";
 
 interface FileState {
   companyRegistry: File | null;
@@ -18,11 +17,6 @@ interface AgreementState {
   termsAgreement: boolean;
 }
 
-interface ApiTestResult {
-  success: boolean;
-  message: string;
-  data?: unknown;
-}
 
 export default function ApplyFive() {
   const navigate = useNavigate();
@@ -32,7 +26,7 @@ export default function ApplyFive() {
     throw new Error("ApplyFive must be used within a FormContext.Provider");
   }
 
-  const { formData, setFormData } = context;
+  const { setFormData } = context;
 
   const [files, setFiles] = useState<FileState>({
     companyRegistry: null,
@@ -50,8 +44,6 @@ export default function ApplyFive() {
   // Derived state to check if all agreements are checked
   const allAgreementsChecked = Object.values(agreements).every((value) => value === true);
   const [showModal, setShowModal] = useState<boolean>(false); // Modal visibility state
-  const [debugInfo, setDebugInfo] = useState<string>("");
-  const [testResults, setTestResults] = useState<ApiTestResult[]>([]);
 
   // Load data from localStorage when component mounts
   useEffect(() => {
