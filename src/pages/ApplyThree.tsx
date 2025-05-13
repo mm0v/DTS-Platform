@@ -75,8 +75,8 @@ const ApplyThree = () => {
         keyChallenges: checked
           ? [...prev.digitalReadiness.keyChallenges, value]
           : prev.digitalReadiness.keyChallenges.filter(
-              (challenge) => challenge !== value
-            ),
+            (challenge) => challenge !== value
+          ),
       },
     }));
   };
@@ -132,9 +132,8 @@ const ApplyThree = () => {
             {[1, 2, 3, 4, 5].map((num) => (
               <div
                 key={num}
-                className={`absolute top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center text-sm ${
-                  num <= 3 ? "bg-blue-500" : "bg-blue-900"
-                }`}
+                className={`absolute top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center text-sm ${num <= 3 ? "bg-blue-500" : "bg-blue-900"
+                  }`}
                 style={{ left: `${(num - 1) * 25}%` }}
               >
                 {num}
@@ -149,7 +148,7 @@ const ApplyThree = () => {
               Mülkiyyət və hüquqi quruluş
             </div>
             <div className="text-center max-w-[100px] text-blue-400">
-              
+
               Rəqəmsal hazırlıq və transformasiya ehtiyacları
             </div>
             <div className="text-center max-w-[100px]">
@@ -183,7 +182,6 @@ const ApplyThree = () => {
                 onChange={handleInputChange}
                 className="w-2/3 p-2 bg-gray-800 text-white rounded"
               >
-                <option value="">Seçin</option>
                 <option value="1">Başlanğıc</option>
                 <option value="2">Orta</option>
                 <option value="3">İnkişaf etmiş</option>
