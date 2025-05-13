@@ -166,7 +166,7 @@ export default function ApplyTwo() {
           </div>
 
           {/* Sənaye və biznes fəaliyyətləri */}
-          <div className="space-y-2">
+          {/* <div className="space-y-2">
             <label className="text-sm">Sənaye və biznes əməliyyatları</label>
             <input
               type="text"
@@ -175,7 +175,51 @@ export default function ApplyTwo() {
               onChange={handleInputChange}
               className="w-full bg-transparent border border-gray-700 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300"
             />
-          </div>
+          </div> */}
+
+          <label className="text-sm">
+            Sənaye və biznes əməliyyatları
+          </label>
+          <select
+            name="businessIndustry"
+            value={localFormData.businessIndustry}
+            onChange={handleInputChange}
+            className="w-full bg-[#131021] border  border-gray-700 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300"
+          >
+            <option className="text-white" value="">
+              Seçin
+            </option>
+            <option className="text-white" value="Təmsil etdiyimiz sənayə sektoru">
+              Təmsil etdiyimiz sənayə sektoru
+            </option>
+            <option className="text-white" value="Qida və içkilər">
+              Qida və içkilər
+            </option>
+            <option className="text-white" value="Neft - qaz">
+              Neft - qaz
+            </option>
+            <option className="text-white" value=" Kimya">
+              Kimya
+            </option>
+            <option className="text-white" value="Metallurgiya">
+              Metallurgiya
+            </option>
+            <option className="text-white" value="Maşın və avadanlıqların təmiri və quraşdırılması">
+              Maşın və avadanlıqların təmiri və quraşdırılması
+            </option>
+            <option className="text-white" value="Kauçuk və plastik məhsullar">
+              Kauçuk və plastik məhsullar
+            </option>
+            <option className="text-white" value="Tekstil">
+              Tekstil
+            </option>
+            <option className="text-white" value="Elektrik avadanlıqları">
+              Elektrik avadanlıqları
+            </option>
+            <option className="text-white" value="Digər">
+              Digər
+            </option>
+          </select>
 
           {/* Əsas məhsullar/xidmətlər */}
           <div className="space-y-2">

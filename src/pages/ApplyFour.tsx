@@ -106,9 +106,8 @@ export default function ApplyFour() {
             {[1, 2, 3, 4, 5].map((num) => (
               <div
                 key={num}
-                className={`absolute top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center text-sm ${
-                  num <= 4 ? "bg-blue-500" : "bg-blue-900"
-                }`}
+                className={`absolute top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center text-sm ${num <= 4 ? "bg-blue-500" : "bg-blue-900"
+                  }`}
                 style={{ left: `${(num - 1) * 25}%` }}
               >
                 {num}
@@ -120,7 +119,7 @@ export default function ApplyFour() {
               Şirkət haqqında məlumat
             </div>
             <div className="text-center max-w-[100px]">
-              
+
               Mülkiyyət və hüquqi quruluş
             </div>
             <div className="text-center max-w-[100px]">
@@ -173,6 +172,7 @@ export default function ApplyFour() {
               </div>
             </div>
           </div>
+
 
           {/* Strategy and Roadmap */}
           <div className="space-y-1">
@@ -242,6 +242,12 @@ export default function ApplyFour() {
             </div>
           </div>
 
+          <div className="text-center mb-8">
+            <h1 className="text-2xl md:text-3xl font-medium">
+              Maliyyə ehtiyacları
+            </h1>
+          </div>
+
           {/* Financial Needs */}
           <div className="space-y-1">
             <label className="text-sm">
@@ -278,7 +284,7 @@ export default function ApplyFour() {
           <div className="space-y-1">
             <label className="text-sm">
               Rəqəmsal transformasiya üçün tələb olunan texniki büdcə (əgər
-              məlumdur)
+              məlumdursa)
             </label>
             <input
               type="number"
