@@ -1,19 +1,21 @@
-"use client";
+"use client"
 
-import { useState, useContext, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import BackgroundVideo from "../components/BackgroundVideo";
-import { FormContext } from "../context/FormContext";
+import type React from "react"
+
+import { useState, useContext, useEffect } from "react"
+import { useNavigate } from "react-router-dom"
+import BackgroundVideo from "../components/BackgroundVideo"
+import { FormContext } from "../context/FormContext"
 
 export default function ApplyTwo() {
-  const navigate = useNavigate();
-  const context = useContext(FormContext);
+  const navigate = useNavigate()
+  const context = useContext(FormContext)
 
   if (!context) {
-    throw new Error("ApplyTwo must be used within a FormContext.Provider");
+    throw new Error("ApplyTwo must be used within a FormContext.Provider")
   }
 
-  const { formData, setFormData } = context;
+  const { formData, setFormData } = context
   const [localFormData, setLocalFormData] = useState({
     companyType: formData.propertyLaw.companyLawType,
     businessIndustry: formData.propertyLaw.businessOperations,
@@ -21,7 +23,7 @@ export default function ApplyTwo() {
     exportActivity: formData.propertyLaw.exportActivity ? "Bəli" : "Xeyr",
     exportMarkets: formData.propertyLaw.exportBazaar,
     document: "",
-  });
+  })
 
   // Update local form data when context data changes
   useEffect(() => {
@@ -32,71 +34,106 @@ export default function ApplyTwo() {
       exportActivity: formData.propertyLaw.exportActivity ? "Bəli" : "Xeyr",
       exportMarkets: formData.propertyLaw.exportBazaar,
       document: "",
-    });
-  }, [formData]);
+    })
+  }, [formData])
 
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    const { name, value } = e.target;
+  // Load data from localStorage when component mounts
+  useEffect(() => {
+    const savedData = localStorage.getItem("formData")
+    if (savedData) {
+      try {
+        const parsedData = JSON.parse(savedData)
+
+        // Update context with saved data
+        setFormData(parsedData)
+
+        // Also update local form data directly to ensure UI is updated
+        setLocalFormData({
+          companyType: parsedData.propertyLaw?.companyLawType || "",
+          businessIndustry: parsedData.propertyLaw?.businessOperations || "",
+          mainProducts: parsedData.propertyLaw?.products || "",
+          exportActivity: parsedData.propertyLaw?.exportActivity ? "Bəli" : "Xeyr",
+          exportMarkets: parsedData.propertyLaw?.exportBazaar || "",
+          document: "",
+        })
+      } catch (error) {
+        console.error("Error parsing saved form data:", error)
+      }
+    }
+  }, [])
+
+  // Save data to localStorage immediately when any input changes
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target
+
+    // Update local state
     setLocalFormData((prevState) => ({
       ...prevState,
       [name]: value,
-    }));
+    }))
+
+    // Create updated form data
+    let updatedFormData = { ...formData }
 
     // Update the global form context based on the input name
     if (name === "companyType") {
-      setFormData((prev) => ({
-        ...prev,
+      updatedFormData = {
+        ...updatedFormData,
         propertyLaw: {
-          ...prev.propertyLaw,
+          ...updatedFormData.propertyLaw,
           companyLawType: value,
         },
-      }));
+      }
     } else if (name === "businessIndustry") {
-      setFormData((prev) => ({
-        ...prev,
+      updatedFormData = {
+        ...updatedFormData,
         propertyLaw: {
-          ...prev.propertyLaw,
+          ...updatedFormData.propertyLaw,
           businessOperations: value,
         },
-      }));
+      }
     } else if (name === "mainProducts") {
-      setFormData((prev) => ({
-        ...prev,
+      updatedFormData = {
+        ...updatedFormData,
         propertyLaw: {
-          ...prev.propertyLaw,
+          ...updatedFormData.propertyLaw,
           products: value,
         },
-      }));
+      }
     } else if (name === "exportActivity") {
-      setFormData((prev) => ({
-        ...prev,
+      updatedFormData = {
+        ...updatedFormData,
         propertyLaw: {
-          ...prev.propertyLaw,
+          ...updatedFormData.propertyLaw,
           exportActivity: value === "Bəli",
         },
-      }));
+      }
     } else if (name === "exportMarkets") {
-      setFormData((prev) => ({
-        ...prev,
+      updatedFormData = {
+        ...updatedFormData,
         propertyLaw: {
-          ...prev.propertyLaw,
+          ...updatedFormData.propertyLaw,
           exportBazaar: value,
         },
-      }));
+      }
     }
-  };
+
+    // Update context
+    setFormData(updatedFormData)
+
+    // Save to localStorage immediately
+    localStorage.setItem("formData", JSON.stringify(updatedFormData))
+  }
 
   // Geri butonuna basıldığında Apply sayfasına git
   const handleGoBack = () => {
-    navigate("/apply");
-  };
+    navigate("/apply")
+  }
 
   // Növbəti butonuna basıldığında ApplyThree sayfasına git
   const handleGoNext = () => {
-    navigate("/apply/three");
-  };
+    navigate("/apply/three")
+  }
 
   return (
     <>
@@ -116,8 +153,9 @@ export default function ApplyTwo() {
             {[1, 2, 3, 4, 5].map((num) => (
               <div
                 key={num}
-                className={`absolute top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center text-sm ${num <= 2 ? "bg-blue-500" : "bg-blue-900"
-                  }`}
+                className={`absolute top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center text-sm ${
+                  num <= 2 ? "bg-blue-500" : "bg-blue-900"
+                }`}
                 style={{ left: `${(num - 1) * 25}%` }}
               >
                 {num}
@@ -126,36 +164,22 @@ export default function ApplyTwo() {
           </div>
 
           <div className="flex justify-between mt-4 text-xs text-gray-400">
-            <div className="text-center max-w-[100px]">
-              Şirkət haqqında məlumat
-            </div>
-            <div className="text-center max-w-[100px] text-blue-400">
-              Mülkiyyət və hüquqi quruluş
-            </div>
-            <div className="text-center max-w-[100px]">
-              Rəqəmsal hazırlıq və transformasiya ehtiyacları
-            </div>
-            <div className="text-center max-w-[100px]">
-              Liderlik və öhdəliklər
-            </div>
-            <div className="text-center max-w-[100px]">
-              Tələb olunan sənədlər
-            </div>
+            <div className="text-center max-w-[100px]">Şirkət haqqında məlumat</div>
+            <div className="text-center max-w-[100px] text-blue-400">Mülkiyyət və hüquqi quruluş</div>
+            <div className="text-center max-w-[100px]">Rəqəmsal hazırlıq və transformasiya ehtiyacları</div>
+            <div className="text-center max-w-[100px]">Liderlik və öhdəliklər</div>
+            <div className="text-center max-w-[100px]">Tələb olunan sənədlər</div>
           </div>
         </div>
 
         <div className="text-center mb-8 relative z-20">
-          <h1 className="text-2xl md:text-3xl font-medium">
-            Mülkiyyət və hüquqi quruluş
-          </h1>
+          <h1 className="text-2xl md:text-3xl font-medium">Mülkiyyət və hüquqi quruluş</h1>
         </div>
 
         <div className="w-full max-w-2xl space-y-6 relative z-20">
           {/* Şirkətin hüquqi növü */}
           <div className="space-y-2">
-            <label className="text-sm">
-              Şirkətin hüquqi növü (MMC, ASC, Fərdi sahibkar və s.)
-            </label>
+            <label className="text-sm">Şirkətin hüquqi növü (MMC, ASC, Fərdi sahibkar və s.)</label>
             <input
               type="text"
               name="companyType"
@@ -177,9 +201,7 @@ export default function ApplyTwo() {
             />
           </div> */}
 
-          <label className="text-sm">
-            Sənaye və biznes əməliyyatları
-          </label>
+          <label className="text-sm">Sənaye və biznes əməliyyatları</label>
           <select
             name="businessIndustry"
             value={localFormData.businessIndustry}
@@ -235,9 +257,7 @@ export default function ApplyTwo() {
 
           {/* İxrac fəaliyyəti ilə məşğul olmaq */}
           <div className="space-y-2">
-            <label className="text-sm">
-              İxrac fəaliyyəti ilə məşğul olursunuz?
-            </label>
+            <label className="text-sm">İxrac fəaliyyəti ilə məşğul olursunuz?</label>
             <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-2">
                 <input
@@ -266,9 +286,7 @@ export default function ApplyTwo() {
 
           {/* Məhsulların ixrac olunduğu bazarlar */}
           <div className="space-y-2">
-            <label className="text-sm">
-              Məhsullarınızın ixrac olunduğu bazarlar
-            </label>
+            <label className="text-sm">Məhsullarınızın ixrac olunduğu bazarlar</label>
             <input
               type="text"
               name="exportMarkets"
@@ -280,9 +298,7 @@ export default function ApplyTwo() {
 
           {/* Təqdimedici sənəd */}
           <div className="space-y-2">
-            <label className="text-sm">
-              Təqdimedici sənəd (.doc, .docx, .pdf)
-            </label>
+            <label className="text-sm">Təqdimedici sənəd (.doc, .docx, .pdf)</label>
             <input
               type="file"
               name="document"
@@ -310,5 +326,5 @@ export default function ApplyTwo() {
         </div>
       </div>
     </>
-  );
+  )
 }

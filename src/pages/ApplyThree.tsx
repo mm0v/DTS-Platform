@@ -1,36 +1,51 @@
-import { useNavigate } from "react-router-dom";
-import { useContext, useState, useEffect } from "react";
-import type { ChangeEvent } from "react";
-import BackgroundVideo from "../components/BackgroundVideo";
-import { FormContext } from "../context/FormContext";
+"use client"
+
+import { useNavigate } from "react-router-dom"
+import { useContext, useState, useEffect } from "react"
+import type { ChangeEvent } from "react"
+import BackgroundVideo from "../components/BackgroundVideo"
+import { FormContext } from "../context/FormContext"
 
 const ApplyThree = () => {
-  const navigate = useNavigate();
-  const context = useContext(FormContext);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const navigate = useNavigate()
+  const context = useContext(FormContext)
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false)
 
   if (!context) {
-    throw new Error("ApplyThree must be used within a FormContext.Provider");
+    throw new Error("ApplyThree must be used within a FormContext.Provider")
   }
 
-  const { formData, setFormData } = context;
+  const { formData, setFormData } = context
+
+  // Load data from localStorage when component mounts
+  useEffect(() => {
+    const savedData = localStorage.getItem("formData")
+    if (savedData) {
+      try {
+        const parsedData = JSON.parse(savedData)
+        // Update context with saved data
+        setFormData(parsedData)
+      } catch (error) {
+        console.error("Error parsing saved form data:", error)
+      }
+    }
+  }, [])
 
   // Debug current value of digitalLevel on component mount
   useEffect(() => {
-    console.log(
-      "Current digitalLevel value:",
-      formData.digitalReadiness.digitalLevel
-    );
-    console.log(
-      "Current digitalLevel type:",
-      typeof formData.digitalReadiness.digitalLevel
-    );
-  }, [formData.digitalReadiness.digitalLevel]);
+    console.log("Current digitalLevel value:", formData.digitalReadiness.digitalLevel)
+    console.log("Current digitalLevel type:", typeof formData.digitalReadiness.digitalLevel)
+  }, [formData.digitalReadiness.digitalLevel])
 
-  const handleInputChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target;
+  // Function to save data to localStorage
+  const saveToLocalStorage = (updatedData: any) => {
+    localStorage.setItem("formData", JSON.stringify(updatedData))
+  }
+
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target
+
+    let updatedFormData = { ...formData }
 
     if (name === "digitalLevel") {
       // Convert digitalLevel to a number (Byte)
@@ -39,89 +54,103 @@ const ApplyThree = () => {
         "1": 1, // Make sure to use string keys for string values from the select
         "2": 2,
         "3": 3,
-      };
+      }
 
       // Ensure we're setting a number value by using Number()
-      const numericValue = digitalLevelMap[value] || 0;
+      const numericValue = digitalLevelMap[value] || 0
 
-      console.log(
-        `Setting digitalLevel to ${numericValue} (${typeof numericValue})`
-      );
+      console.log(`Setting digitalLevel to ${numericValue} (${typeof numericValue})`)
 
-      setFormData((prev) => ({
-        ...prev,
+      updatedFormData = {
+        ...updatedFormData,
         digitalReadiness: {
-          ...prev.digitalReadiness,
+          ...updatedFormData.digitalReadiness,
           digitalLevel: numericValue,
         },
-      }));
+      }
     } else {
-      setFormData((prev) => ({
-        ...prev,
+      updatedFormData = {
+        ...updatedFormData,
         digitalReadiness: {
-          ...prev.digitalReadiness,
+          ...updatedFormData.digitalReadiness,
           [name]: value,
         },
-      }));
+      }
     }
-  };
+
+    // Update form data in context
+    setFormData(updatedFormData)
+
+    // Save to localStorage
+    saveToLocalStorage(updatedFormData)
+  }
 
   const handleCheckboxChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { value, checked } = e.target;
-    setFormData((prev) => ({
-      ...prev,
+    const { value, checked } = e.target
+
+    const updatedFormData = {
+      ...formData,
       digitalReadiness: {
-        ...prev.digitalReadiness,
+        ...formData.digitalReadiness,
         keyChallenges: checked
-          ? [...prev.digitalReadiness.keyChallenges, value]
-          : prev.digitalReadiness.keyChallenges.filter(
-            (challenge) => challenge !== value
-          ),
+          ? [...formData.digitalReadiness.keyChallenges, value]
+          : formData.digitalReadiness.keyChallenges.filter((challenge) => challenge !== value),
       },
-    }));
-  };
+    }
+
+    // Update form data in context
+    setFormData(updatedFormData)
+
+    // Save to localStorage
+    saveToLocalStorage(updatedFormData)
+  }
 
   const handleDigitalToolChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { value, checked } = e.target;
-    setFormData((prev) => ({
-      ...prev,
+    const { value, checked } = e.target
+
+    const updatedFormData = {
+      ...formData,
       digitalReadiness: {
-        ...prev.digitalReadiness,
+        ...formData.digitalReadiness,
         digitalTools: checked
-          ? [...prev.digitalReadiness.digitalTools, value]
-          : prev.digitalReadiness.digitalTools.filter((tool) => tool !== value),
+          ? [...formData.digitalReadiness.digitalTools, value]
+          : formData.digitalReadiness.digitalTools.filter((tool) => tool !== value),
       },
-    }));
-  };
+    }
+
+    // Update form data in context
+    setFormData(updatedFormData)
+
+    // Save to localStorage
+    saveToLocalStorage(updatedFormData)
+  }
 
   const handleGoBack = () => {
-    navigate("/apply/two");
-  };
+    navigate("/apply/two")
+  }
 
   const handleGoNext = () => {
     // Add validation if needed
-    navigate("/apply/four");
-  };
+    navigate("/apply/four")
+  }
 
   // Convert the numeric digitalLevel back to string for the select input
   const getDigitalLevelString = (): string => {
-    const levelValue = formData.digitalReadiness.digitalLevel;
+    const levelValue = formData.digitalReadiness.digitalLevel
 
-    console.log(
-      `Getting digital level string for value: ${levelValue} (${typeof levelValue})`
-    );
+    console.log(`Getting digital level string for value: ${levelValue} (${typeof levelValue})`)
 
     switch (Number(levelValue)) {
       case 1:
-        return "1";
+        return "1"
       case 2:
-        return "2";
+        return "2"
       case 3:
-        return "3";
+        return "3"
       default:
-        return "";
+        return ""
     }
-  };
+  }
 
   return (
     <>
@@ -132,8 +161,9 @@ const ApplyThree = () => {
             {[1, 2, 3, 4, 5].map((num) => (
               <div
                 key={num}
-                className={`absolute top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center text-sm ${num <= 3 ? "bg-blue-500" : "bg-blue-900"
-                  }`}
+                className={`absolute top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center text-sm ${
+                  num <= 3 ? "bg-blue-500" : "bg-blue-900"
+                }`}
                 style={{ left: `${(num - 1) * 25}%` }}
               >
                 {num}
@@ -141,29 +171,18 @@ const ApplyThree = () => {
             ))}
           </div>
           <div className="flex justify-between mt-2 text-xs text-gray-400">
-            <div className="text-center max-w-[100px]">
-              Şirkət haqqında məlumat
-            </div>
-            <div className="text-center max-w-[100px]">
-              Mülkiyyət və hüquqi quruluş
-            </div>
+            <div className="text-center max-w-[100px]">Şirkət haqqında məlumat</div>
+            <div className="text-center max-w-[100px]">Mülkiyyət və hüquqi quruluş</div>
             <div className="text-center max-w-[100px] text-blue-400">
-
               Rəqəmsal hazırlıq və transformasiya ehtiyacları
             </div>
-            <div className="text-center max-w-[100px]">
-              Liderlik və öhdəliklər
-            </div>
-            <div className="text-center max-w-[100px]">
-              Tələb olunan sənədlər
-            </div>
+            <div className="text-center max-w-[100px]">Liderlik və öhdəliklər</div>
+            <div className="text-center max-w-[100px]">Tələb olunan sənədlər</div>
           </div>
         </div>
 
         <div className="w-full max-w-4xl mb-8 px-6">
-          <div className="text-center text-3xl font-semibold mb-6">
-            Rəqəmsal hazırlıq və transformasiya ehtiyacları
-          </div>
+          <div className="text-center text-3xl font-semibold mb-6">Rəqəmsal hazırlıq və transformasiya ehtiyacları</div>
 
           {/* Digital Level Debug Info */}
           {/* <div className="mb-4 p-3 bg-blue-900/30 rounded">
@@ -211,16 +230,11 @@ const ApplyThree = () => {
                       { value: "accounting", label: "Mühasibat proqramları" },
                       { value: "other", label: "Digər" },
                     ].map((tool) => (
-                      <label
-                        key={tool.value}
-                        className="flex items-center px-4 py-2 hover:bg-gray-700 cursor-pointer"
-                      >
+                      <label key={tool.value} className="flex items-center px-4 py-2 hover:bg-gray-700 cursor-pointer">
                         <input
                           type="checkbox"
                           value={tool.value}
-                          checked={formData.digitalReadiness.digitalTools.includes(
-                            tool.value
-                          )}
+                          checked={formData.digitalReadiness.digitalTools.includes(tool.value)}
                           onChange={handleDigitalToolChange}
                           className="form-checkbox text-blue-500 rounded"
                         />
@@ -233,9 +247,7 @@ const ApplyThree = () => {
             </div>
 
             <div className="space-y-2">
-              <p className="text-xl">
-                Rəqəmsal transformasiyada əsas çətinliklər:
-              </p>
+              <p className="text-xl">Rəqəmsal transformasiyada əsas çətinliklər:</p>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {[
                   "budget_shortage",
@@ -249,21 +261,16 @@ const ApplyThree = () => {
                     <input
                       type="checkbox"
                       value={challenge}
-                      checked={formData.digitalReadiness.keyChallenges.includes(
-                        challenge
-                      )}
+                      checked={formData.digitalReadiness.keyChallenges.includes(challenge)}
                       onChange={handleCheckboxChange}
                       className="form-checkbox text-blue-500"
                     />
                     <span className="ml-2">
                       {challenge === "budget_shortage" && "Büdcə çatışmazlığı"}
-                      {challenge === "technical_expertise" &&
-                        "Texniki təcrübənin çatışmazlığı"}
+                      {challenge === "technical_expertise" && "Texniki təcrübənin çatışmazlığı"}
                       {challenge === "training_needs" && "Təlimə ehtiyac"}
-                      {challenge === "digital_strategy" &&
-                        "Rəqəmsal strategiyanın çatışmazlığı"}
-                      {challenge === "infrastructure_limits" &&
-                        "İnfrastruktur məhdudiyyətləri"}
+                      {challenge === "digital_strategy" && "Rəqəmsal strategiyanın çatışmazlığı"}
+                      {challenge === "infrastructure_limits" && "İnfrastruktur məhdudiyyətləri"}
                       {challenge === "other" && "Digər"}
                     </span>
                   </label>
@@ -272,9 +279,7 @@ const ApplyThree = () => {
             </div>
 
             <div className="space-y-2">
-              <p className="text-xl">
-                Şirkətinizin əsas rəqəmsal transformasiya məqsədləri nədir?
-              </p>
+              <p className="text-xl">Şirkətinizin əsas rəqəmsal transformasiya məqsədləri nədir?</p>
               <textarea
                 name="companyPurpose"
                 value={formData.digitalReadiness.companyPurpose}
@@ -305,7 +310,7 @@ const ApplyThree = () => {
         </div>
       </div>
     </>
-  );
-};
+  )
+}
 
-export default ApplyThree;
+export default ApplyThree

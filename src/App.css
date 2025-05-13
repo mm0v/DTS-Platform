@@ -130,3 +130,43 @@ button:focus-visible {
   outline: none !important;
   box-shadow: none !important;
 }
+
+
+/* -------------- ümumi sarğı -------------- */
+.phone-dark {
+  /* Tailwind-lə yazmaq istəsən:  @apply flex bg-transparent 
+     border border-gray-500 rounded-lg focus-within:ring-2 
+     focus-within:ring-blue-500 transition duration-300; */
+  display: flex;
+  background: transparent;
+  border: 1px solid rgba(200, 200, 200, 0.35);
+  border-radius: 0.75rem;        /* rounded-lg */
+  transition: box-shadow 0.3s;
+}
+
+.phone-dark:focus-within {
+  box-shadow: 0 0 0 2px #3b82f6; /* Tailwind ring-blue-500 */
+}
+
+/* -------------- daxili <input> -------------- */
+.phone-dark-input {
+  background: transparent !important;
+  color: transparent !important;
+  padding: 0.75rem;
+  outline: none;
+}
+
+/* -------------- bayraq düyməsi -------------- */
+
+/* -------- bayraq düyməsi üçün şəffaf/blur fon -------- */
+.phone-dark .rii__selectCountryButton {
+  background: rgba(0, 0, 0, 0.35) !important; /* yarı-şəffaf tünd fon */
+  backdrop-filter: blur(6px);                 /* arxadakı videonu yüngül bulanıqlaşdırır */
+  /* Mövcud sərhədi saxlayırıq */
+}
+
+/* İstəsəniz hover / focus effekti də əlavə edə bilərsiniz */
+.phone-dark .rii__selectCountryButton:hover,
+.phone-dark .rii__selectCountryButton:focus {
+  background: rgba(0, 0, 0, 0.45) !important; /* bir az daha tünd */
+}

@@ -15,7 +15,7 @@ export default function ApplyFour() {
 
   const { formData, setFormData } = context;
 
-  // Initialize local form state from context
+  // Initialize local form state from context or localStorage
   const [localFormData, setLocalFormData] = useState({
     digitalTeamOrLead: formData.digitalLeadership.digitalTeamOrLead
       ? "Bəli"
@@ -29,21 +29,26 @@ export default function ApplyFour() {
     neededBudget: formData.financialNeeding.neededBudget,
   });
 
-  // Update local state when context changes
   useEffect(() => {
-    setLocalFormData({
-      digitalTeamOrLead: formData.digitalLeadership.digitalTeamOrLead
-        ? "Bəli"
-        : "Xeyr",
-      digitalPath: formData.digitalLeadership.digitalPath ? "Bəli" : "Xeyr",
-      digitalTransformationLoyality: formData.digitalLeadership
-        .digitalTransformationLoyality
-        ? "Bəli"
-        : "Xeyr",
-      financialNeed: formData.financialNeeding.financialNeed ? "Bəli" : "Xeyr",
-      neededBudget: formData.financialNeeding.neededBudget,
-    });
-  }, [formData]);
+    const savedData = JSON.parse(localStorage.getItem('formDataFour') || '{}');
+    
+    // Initialize form data from localStorage if available
+    if (savedData) {
+      setLocalFormData((prevState) => ({
+        ...prevState,
+        digitalTeamOrLead: savedData.digitalTeamOrLead || prevState.digitalTeamOrLead,
+        digitalPath: savedData.digitalPath || prevState.digitalPath,
+        digitalTransformationLoyality: savedData.digitalTransformationLoyality || prevState.digitalTransformationLoyality,
+        financialNeed: savedData.financialNeed || prevState.financialNeed,
+        neededBudget: savedData.neededBudget || prevState.neededBudget,
+      }));
+    }
+  }, []);
+
+  useEffect(() => {
+    // Save form data to localStorage whenever it changes
+    localStorage.setItem('formDataFour', JSON.stringify(localFormData));
+  }, [localFormData]);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -119,7 +124,6 @@ export default function ApplyFour() {
               Şirkət haqqında məlumat
             </div>
             <div className="text-center max-w-[100px]">
-
               Mülkiyyət və hüquqi quruluş
             </div>
             <div className="text-center max-w-[100px]">
@@ -173,7 +177,6 @@ export default function ApplyFour() {
             </div>
           </div>
 
-
           {/* Strategy and Roadmap */}
           <div className="space-y-1">
             <label className="text-sm">
@@ -218,9 +221,7 @@ export default function ApplyFour() {
                   type="radio"
                   name="digitalTransformationLoyality"
                   value="Bəli"
-                  checked={
-                    localFormData.digitalTransformationLoyality === "Bəli"
-                  }
+                  checked={localFormData.digitalTransformationLoyality === "Bəli"}
                   onChange={handleInputChange}
                   className="text-blue-500"
                 />
@@ -231,9 +232,7 @@ export default function ApplyFour() {
                   type="radio"
                   name="digitalTransformationLoyality"
                   value="Xeyr"
-                  checked={
-                    localFormData.digitalTransformationLoyality === "Xeyr"
-                  }
+                  checked={localFormData.digitalTransformationLoyality === "Xeyr"}
                   onChange={handleInputChange}
                   className="text-blue-500"
                 />

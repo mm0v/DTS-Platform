@@ -1,9 +1,15 @@
 "use client";
 
-import { useState, useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import BackgroundVideo from "../components/BackgroundVideo";
 import { FormContext } from "../context/FormContext";
+import 'react-international-phone/style.css';
+// NEW import
+import { PhoneInput } from 'react-international-phone';
+import 'react-international-phone/style.css';   // keep near your other global CSS imports
+
+
 
 export default function ApplyOne() {
   const navigate = useNavigate();
@@ -16,45 +22,57 @@ export default function ApplyOne() {
   const { formData, setFormData } = context;
   const [step, setStep] = useState(1);
 
+  // Initialize local state with data from localStorage or context
   const [localFormData, setLocalFormData] = useState({
-    companyName: formData.companyData.companyName,
-    vatNumber: formData.companyData.companyRegisterNumber,
-    foundingDate: formData.companyData.createYear?.toString() || "",
-    companySize: formData.companyData.workerCount,
-    annualTurnover: formData.companyData.annualTurnover,
-    companyAddress: formData.companyData.address,
-    location: formData.companyData.cityAndRegion,
-    website: formData.companyData.website,
-    contactPerson: formData.companyData.contactName,
-    email: formData.companyData.contactEmail,
-    phone: formData.companyData.contactPhone,
+    companyName: "",
+    vatNumber: "",
+    foundingDate: "",
+    companySize: "",
+    annualTurnover: "",
+    companyAddress: "",
+    location: "",
+    website: "",
+    contactPerson: "",
+    email: "",
+    phone: "",
   });
 
-  // Update local form data when context data changes
-  useEffect(() => {
-    setLocalFormData({
-      companyName: formData.companyData.companyName,
-      vatNumber: formData.companyData.companyRegisterNumber,
-      foundingDate: formData.companyData.createYear?.toString() || "",
-      companySize: formData.companyData.workerCount,
-      annualTurnover: formData.companyData.annualTurnover,
-      companyAddress: formData.companyData.address,
-      location: formData.companyData.cityAndRegion,
-      website: formData.companyData.website,
-      contactPerson: formData.companyData.contactName,
-      email: formData.companyData.contactEmail,
-      phone: formData.companyData.contactPhone,
-    });
-  }, [formData]);
+  const [errors, setErrors] = useState({
+    companyName: "",
+  });
 
+  // Load saved data from localStorage when component mounts
+  useEffect(() => {
+    const savedData = {
+      companyName: localStorage.getItem("companyName") || "",
+      vatNumber: localStorage.getItem("vatNumber") || "",
+      foundingDate: localStorage.getItem("foundingDate") || "",
+      companySize: localStorage.getItem("companySize") || "",
+      annualTurnover: localStorage.getItem("annualTurnover") || "",
+      companyAddress: localStorage.getItem("companyAddress") || "",
+      location: localStorage.getItem("location") || "",
+      website: localStorage.getItem("website") || "",
+      contactPerson: localStorage.getItem("contactPerson") || "",
+      email: localStorage.getItem("email") || "",
+      phone: localStorage.getItem("phone") || "",
+    };
+    setLocalFormData(savedData);
+  }, []);
+
+  // Handle input changes and update both local state and localStorage
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
+
+    // Update local state
     setLocalFormData((prevState) => ({
       ...prevState,
       [name]: value,
     }));
+
+    // Update localStorage
+    localStorage.setItem(name, value);
 
     // Update the global form context based on the input name
     if (name === "companyName") {
@@ -117,6 +135,14 @@ export default function ApplyOne() {
   };
 
   const handleNext = () => {
+    if (!localFormData.companyName) {
+      setErrors((prev) => ({
+        ...prev,
+        companyName: "Şirkət adı tələb olunur, zəhmət olmasa daxil edin.",
+      }));
+      return;
+    }
+
     setStep((prevStep) => Math.min(prevStep + 1, 5));
     navigate("/apply/two");
   };
@@ -125,14 +151,6 @@ export default function ApplyOne() {
     <>
       <BackgroundVideo />
       <div className="relative min-h-screen w-full text-white flex flex-col items-center justify-center py-10">
-        {/* Background Video */}
-        {/* <video autoPlay loop muted className="absolute top-0 left-0 w-full h-full object-cover z-0 filter blur-[10px]">
-        <source src="/img/Navbar/bg-header.mp4" type="video/mp4" />
-      </video> */}
-
-        {/* Overlay for the blurred video background */}
-        <div className="absolute top-0 left-0 w-full h-full bg-black opacity-50 z-10"></div>
-
         {/* Main Content */}
         <div className="relative z-20 w-full max-w-4xl mb-8 px-4">
           {/* Step indicators */}
@@ -140,8 +158,7 @@ export default function ApplyOne() {
             {[1, 2, 3, 4, 5].map((num) => (
               <div
                 key={num}
-                className={`absolute top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center text-sm ${num <= step ? "bg-blue-500" : "bg-blue-900 "
-                  }`}
+                className={`absolute top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center text-sm ${num <= step ? "bg-blue-500" : "bg-blue-900"}`}
                 style={{ left: `${(num - 1) * 25}%` }}
               >
                 {num}
@@ -154,19 +171,10 @@ export default function ApplyOne() {
             <div className="text-center max-w-[150px] text-blue-400">
               Şirkət haqqında məlumat
             </div>
-            <div className="text-center max-w-[150px]">
-              Mülkiyyət və hüquqi quruluş
-            </div>
-            <div className="text-center max-w-[150px]">
-              
-              Rəqəmsal hazırlıq və transformasiya ehtiyacları
-            </div>
-            <div className="text-center max-w-[150px]">
-              Liderlik və öhdəliklər
-            </div>
-            <div className="text-center max-w-[150px]">
-              Tələb olunan sənədlər
-            </div>
+            <div className="text-center max-w-[150px]">Mülkiyyət və hüquqi quruluş</div>
+            <div className="text-center max-w-[150px]">Rəqəmsal hazırlıq və transformasiya ehtiyacları</div>
+            <div className="text-center max-w-[150px]">Liderlik və öhdəliklər</div>
+            <div className="text-center max-w-[150px]">Tələb olunan sənədlər</div>
           </div>
         </div>
 
@@ -187,6 +195,9 @@ export default function ApplyOne() {
               onChange={handleInputChange}
               className="w-full bg-transparent border border-gray-700 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300"
             />
+            {errors.companyName && (
+              <p className="text-red-500 text-sm">{errors.companyName}</p>
+            )}
           </div>
 
           {/* Company VAT and Founding Date */}
@@ -325,16 +336,28 @@ export default function ApplyOne() {
                 className="w-full bg-transparent border border-gray-700 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300"
               />
             </div>
-            <div className="space-y-2">
-              <label className="text-sm">Əlaqə nömrəsi</label>
-              <input
-                type="tel"
-                name="phone"
-                value={localFormData.phone}
-                onChange={handleInputChange}
-                className="w-full bg-transparent border border-gray-700 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300"
-              />
-            </div>
+<div className="space-y-2">
+  <label className="text-sm">Əlaqə nömrəsi</label>
+
+  <PhoneInput
+    defaultCountry="az"
+    value={localFormData.phone}
+    onChange={(phone: string) => {
+      setLocalFormData(p => ({ ...p, phone }));
+      localStorage.setItem("phone", phone);
+      setFormData(p => ({
+        ...p,
+        companyData: { ...p.companyData, contactPhone: phone },
+      }));
+    }}
+
+    /* Bu iki prop komponentin tanıdığı yeganə stil prop-larıdır  */
+    className="phone-dark w-full"          
+    inputClassName="phone-dark-input flex-1"
+  />
+</div>
+
+
           </div>
 
           {/* Next Button */}
