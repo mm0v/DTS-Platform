@@ -151,22 +151,22 @@ button:focus-visible {
 /* -------------- daxili <input> -------------- */
 .phone-dark-input {
   background: transparent !important;
-  color: transparent !important;
+  color: #fff;
   padding: 0.75rem;
   outline: none;
 }
 
 /* -------------- bayraq düyməsi -------------- */
-
-/* -------- bayraq düyməsi üçün şəffaf/blur fon -------- */
 .phone-dark .rii__selectCountryButton {
-  background: rgba(0, 0, 0, 0.35) !important; /* yarı-şəffaf tünd fon */
-  backdrop-filter: blur(6px);                 /* arxadakı videonu yüngül bulanıqlaşdırır */
-  /* Mövcud sərhədi saxlayırıq */
+  background: transparent !important;
+  border-right: 1px solid rgba(200, 200, 200, 0.35);
+  padding: 0.75rem 0.75rem 0.75rem 0.75rem;
 }
 
-/* İstəsəniz hover / focus effekti də əlavə edə bilərsiniz */
-.phone-dark .rii__selectCountryButton:hover,
-.phone-dark .rii__selectCountryButton:focus {
-  background: rgba(0, 0, 0, 0.45) !important; /* bir az daha tünd */
+/* -------------- açılan ölkə siyahısı -------------- */
+.phone-dark .rii__countryDropdown {
+  background: rgba(0, 0, 0, 0.85) !important;   /* tünd + şəffaf */
+  backdrop-filter: blur(6px);                   /* video azca bulanıq olsun */
+  color: #fff;
+  border: 1px solid rgba(200, 200, 200, 0.25);
 }
