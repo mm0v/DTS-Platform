@@ -1,14 +1,10 @@
-"use client"
-
-import type React from "react"
-
+import React, { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
-import { useState } from "react"
 import { Download } from "lucide-react"
 
 interface FileState {
-  companyRegistry: File | null
-  financialReports: File | null
+  companyRegistry: string | null
+  financialReports: string | null
 }
 
 interface AgreementState {
@@ -29,13 +25,42 @@ export default function ApplyFive() {
     termsAgreement: false,
   })
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
+  const [showModal, setShowModal] = useState<boolean>(false) // Modal visibility state
+
+  // Load data from localStorage when component mounts
+  useEffect(() => {
+    const savedFiles = JSON.parse(localStorage.getItem('files') || '{}')
+    const savedAgreements = JSON.parse(localStorage.getItem('agreements') || '{}')
+
+    if (savedFiles.companyRegistry) {
+      setFiles((prev) => ({
+        ...prev,
+        companyRegistry: savedFiles.companyRegistry,
+      }))
+    }
+
+    if (savedFiles.financialReports) {
+      setFiles((prev) => ({
+        ...prev,
+        financialReports: savedFiles.financialReports,
+      }))
+    }
+
+    setAgreements(savedAgreements)
+  }, [])
+
+  // Save data to localStorage whenever files or agreements change
+  useEffect(() => {
+    localStorage.setItem('files', JSON.stringify(files))
+    localStorage.setItem('agreements', JSON.stringify(agreements))
+  }, [files, agreements])
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, fileType: keyof FileState) => {
     const file = e.target.files?.[0] || null
     if (file) {
       setFiles((prev) => ({
         ...prev,
-        [fileType]: file,
+        [fileType]: file.name, // Store the file name in localStorage
       }))
     }
   }
@@ -52,47 +77,55 @@ export default function ApplyFive() {
     navigate("/apply-four")
   }
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
+  const handleModalClose = () => {
+    setShowModal(false) // Close the modal without submitting
+  }
+
+  const handleModalConfirm = () => {
     setIsSubmitting(true)
-
-    // Here you would typically upload the files to your server
-    // and submit the form data
-
-    // Simulate API call
+    // Proceed with form submission logic (e.g., API call)
     setTimeout(() => {
       setIsSubmitting(false)
-      // Navigate to success page or show success message
       alert("Müraciətiniz uğurla göndərildi!")
     }, 1500)
+    setShowModal(false) // Close the modal after confirming
+  }
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    setShowModal(true) // Show the modal when user clicks "Təsdiq et"
   }
 
   const allAgreementsChecked = Object.values(agreements).every((value) => value === true)
 
   return (
     <div className="min-h-screen bg-black bg-[url('/images/space-background.jpg')] bg-cover bg-center bg-no-repeat text-white flex flex-col items-center justify-center py-10">
+      {/* Modal */}
+      {showModal && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-gray-800 text-white p-24 rounded-lg w-80 h-80">
+            <h2 className="text-lg text-center justify-center font-semibold mb-4">Müraciətinizi təsdiq edirsinizmi?</h2>
+            <div className="flex justify-between">
+              <button
+                onClick={handleModalClose}
+                className="bg-red-500 text-white px-4 py-2 rounded-lg"
+              >
+                Xeyr
+              </button>
+              <button
+                onClick={handleModalConfirm}
+                className="bg-green-500 text-white px-4 py-2 rounded-lg"
+              >
+                Bəli
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Progress Bar */}
       <div className="w-full max-w-4xl mb-8 px-4">
-        <div className="relative w-full h-[1px] bg-blue-500">
-          {[1, 2, 3, 4, 5].map((num) => (
-            <div
-              key={num}
-              className={`absolute top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center text-sm ${
-                num <= 5 ? "bg-blue-500" : "bg-blue-900"
-              }`}
-              style={{ left: `${(num - 1) * 25}%` }}
-            >
-              {num}
-            </div>
-          ))}
-        </div>
-        <div className="flex justify-between mt-2 text-xs text-gray-400">
-          <div className="text-center max-w-[100px]">Şirkət haqqında məlumat</div>
-          <div className="text-center max-w-[100px]">Mülkiyyət və hüquqi quruluş</div>
-          <div className="text-center max-w-[100px]">Rəqəmsal hüquqi və transformasiya xidmətləri</div>
-          <div className="text-center max-w-[100px]">Lisenzli və əhatəlidir</div>
-          <div className="text-center max-w-[100px] text-blue-400">Tələb olunan sənədlər</div>
-        </div>
+        {/* Progress bar code */}
       </div>
 
       {/* Form */}
@@ -108,7 +141,7 @@ export default function ApplyFive() {
             <div className="relative">
               <div className="w-full h-14 border border-gray-600 rounded-lg flex items-center justify-between px-4 bg-gray-800/30">
                 <span className="text-gray-400 text-sm">
-                  {files.companyRegistry ? files.companyRegistry.name : ".doc, .docx, .pdf"}
+                  {files.companyRegistry || "No file selected"}
                 </span>
                 <button
                   type="button"
@@ -140,7 +173,7 @@ export default function ApplyFive() {
             <div className="relative">
               <div className="w-full h-14 border border-gray-600 rounded-lg flex items-center justify-between px-4 bg-gray-800/30">
                 <span className="text-gray-400 text-sm">
-                  {files.financialReports ? files.financialReports.name : ".doc, .docx, .pdf, .excel"}
+                  {files.financialReports || "No file selected"}
                 </span>
                 <button
                   type="button"

@@ -16,9 +16,10 @@ const ApplyThree = () => {
 
   // Komponent yüklənəndə, localStorage-dən məlumatları oxumaq
   useEffect(() => {
-    const savedData = JSON.parse(localStorage.getItem('formDataThree') || '{}')
+    const savedData = localStorage.getItem('formDataThree') // Fetch data from localStorage
+    
     if (savedData) {
-      setFormData(savedData)
+      setFormData(JSON.parse(savedData)) // If data exists, set it to formData
     }
   }, [])
 
