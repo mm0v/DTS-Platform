@@ -519,9 +519,9 @@ export default function ApplyFive() {
             </div>
 
             {/* Dot separator */}
-            <div className="flex justify-center">
+            {/* <div className="flex justify-center">
               <div className="w-2 h-2 rounded-full bg-teal-400"></div>
-            </div>
+            </div> */}
 
             {/* Second file upload */}
             <div className="space-y-2">
@@ -564,9 +564,9 @@ export default function ApplyFive() {
             </p>
 
             {/* Dot separator */}
-            <div className="flex justify-center">
+            {/* <div className="flex justify-center">
               <div className="w-2 h-2 rounded-full bg-teal-400"></div>
-            </div>
+            </div> */}
 
             {/* Checkboxes */}
             <div className="space-y-4">
