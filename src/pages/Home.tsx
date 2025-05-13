@@ -133,28 +133,35 @@ const Home = () => {
 
             <div className="flex flex-col md:flex-row items-center justify-center gap-4 lg:gap-8">
               {/* Mission Card */}
-              <div className="bg-white rounded-lg shadow-md p-5 lg:p-8 w-full md:w-1/2 lg:w-1/3 flex flex-col h-full transform transition-all duration-300 hover:shadow-lg">
-                <div className="flex flex-col h-full">
-                  <div className="mb-auto">
-                    <img className="h-20 w-auto mb-3" src="/img/Home/mission.gif" alt="Mission icon" />
-                    <h3 className="text-xl md:text-2xl font-semibold mb-3">{page.missionTitle[language]}</h3>
+              <div className="flex flex-col md:flex-row items-center justify-center gap-4 lg:gap-8 w-full">
+                {/* Mission Card */}
+                <div className="bg-white rounded-lg shadow-md p-5 lg:p-4 w-full md:w-[48%] lg:max-w-[400px] flex flex-col h-80 transform transition-all duration-300 hover:shadow-lg">
+                  <div className="flex flex-col h-full">
+                    <div className="mb-4">
+                      <img className="h-16 w-auto mb-3" src="/img/Home/mission.gif" alt="Mission icon" />
+                      <h3 className="text-xl md:text-2xl font-semibold">{page.missionTitle[language]}</h3>
+                    </div>
+                    <div className="overflow-y-auto flex-grow">
+                      <p className="text-sm md:text-base text-gray-700">
+                        {page.missionDescription[language]}
+                      </p>
+                    </div>
                   </div>
-                  <p className="text-sm md:text-base text-gray-700">
-                    {page.missionDescription[language]}
-                  </p>
                 </div>
-              </div>
 
-              {/* Vision Card */}
-              <div className="bg-white rounded-lg shadow-md p-5 lg:p-8 w-full md:w-1/2 lg:w-1/3 flex flex-col h-full transform transition-all duration-300 hover:shadow-lg">
-                <div className="flex flex-col h-full">
-                  <div className="mb-auto">
-                    <img className="h-20 w-auto mb-3" src="/img/Home/vision.gif" alt="Vision icon" />
-                    <h3 className="text-xl md:text-2xl font-semibold mb-3 ">{page.visionTitle[language]}</h3>
+                {/* Vision Card */}
+                <div className="bg-white rounded-lg shadow-md p-5 lg:p-4 w-full md:w-[48%] lg:max-w-[400px] flex flex-col h-78 transform transition-all duration-300 hover:shadow-lg">
+                  <div className="flex flex-col h-full">
+                    <div className="mb-4">
+                      <img className="h-16 w-auto mb-3" src="/img/Home/vision.gif" alt="Vision icon" />
+                      <h3 className="text-xl md:text-2xl font-semibold">{page.visionTitle[language]}</h3>
+                    </div>
+                    <div className="overflow-y-auto flex-grow">
+                      <p className="text-sm md:text-base text-gray-700">
+                        {page.visionDescription[language]}
+                      </p>
+                    </div>
                   </div>
-                  <p className="text-sm md:text-base text-gray-700">
-                    {page.visionDescription[language]}
-                  </p>
                 </div>
               </div>
             </div>
