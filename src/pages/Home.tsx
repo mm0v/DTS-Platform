@@ -42,9 +42,6 @@ const Home = () => {
               >
                 {page.applyBtn[language]}
               </Link>
-              {/* <div className="w-full sm:w-auto">
-                <BasicModal />
-              </div> */}
               <div>
                 <BasicModal />
               </div>

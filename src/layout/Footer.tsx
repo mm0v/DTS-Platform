@@ -8,16 +8,16 @@ const Footer = () => {
     const page = layoutTranslations.navbar;
 
     return (
-        <footer className="text-white py-8 bg-gradient-to-r from-[rgba(26,67,129,1)] to-[rgba(5,14,27,1)]">
-            <div className="container mx-auto px-4">
+        <footer className="text-white px-2 py-8 bg-gradient-to-r from-[rgba(26,67,129,1)] to-[rgba(5,14,27,1)]">
+            <div className="container mx-auto">
                 {/* Top section with logos and navigation */}
-                <div className="flex flex-col md:flex-row justify-between items-center gap-6 md:gap-8">
+                <div className="flex flex-col md:flex-row justify-around items-center gap-6 md:gap-8">
                     {/* Left side with logos and text */}
-                    <div className="flex sm:flex-row items-center sm:items-center gap-4">
+                    <div className="flex sm:flex-row items-center justify-center sm:items-center">
                         <div className="flex items-center justify-center">
-                            <img src="img/Navbar/economy_logo.png" width={"96px"} alt="Economy Logo" />
+                            <img src="img/Navbar/economy_logo.png" width={"120px"} alt="Economy Logo" />
                         </div>
-                        <div className="mt-4 sm:mt-0 sm:ml-8">
+                        <div className="ml-4 mr-4 sm:mt-0 sm:ml-8">
                             <svg xmlns="http://www.w3.org/2000/svg" width="124" height="50" viewBox="0 0 139 55" fill="none">
                                 <path d="M29.9516 4.06872C30.1215 4.19802 30.3464 4.21399 30.5296 4.12619L32.5186 5.65068L33.5781 17.1794C33.4015 17.2767 33.2882 17.4651 33.3082 17.6711C33.3348 17.9552 33.5947 18.1643 33.8912 18.1388C34.1877 18.1133 34.4059 17.8642 34.3793 17.5801C34.361 17.3725 34.2144 17.2066 34.0228 17.1411L33.7979 14.6939L40.911 8.98063L43.4431 9.25045C43.5064 9.4356 43.678 9.57927 43.8929 9.60163C44.1877 9.63351 44.4542 9.42918 44.4876 9.14666C44.5209 8.86407 44.3077 8.60867 44.0128 8.57679C43.7979 8.55443 43.598 8.65657 43.493 8.82419L40.7711 8.53525L33.7496 14.1751L32.9467 5.43039L30.8094 3.79096C30.8594 3.60099 30.7944 3.39347 30.6245 3.26417C30.393 3.08697 30.0548 3.12209 29.8683 3.34399C29.6833 3.56587 29.72 3.89153 29.9516 4.06872Z" fill="white" />
                                 <path d="M27.9743 0.98334V13.4475L25.5904 11.5447L26.0035 7.04142C26.1952 6.976 26.3401 6.80996 26.36 6.60243C26.3867 6.31828 26.1668 6.06926 25.8719 6.04372C25.5755 6.01818 25.3156 6.22889 25.289 6.51144C25.2706 6.71897 25.3822 6.90734 25.5588 7.00312L25.124 11.7299L27.9743 14.0046V19.7881L28.4207 19.7897V15.4445L31.2709 13.1681L30.8361 8.44138C31.0127 8.34401 31.126 8.15569 31.106 7.94977C31.0793 7.66559 30.8194 7.4565 30.5229 7.48203C30.2265 7.50757 30.0082 7.75661 30.0349 8.04072C30.0532 8.24823 30.1981 8.41426 30.3913 8.47975L30.8045 12.983L28.419 14.8874V0.98334C28.6039 0.901925 28.7338 0.72314 28.7338 0.515615C28.7338 0.231468 28.4923 0 28.1958 0C27.8992 0 27.6577 0.231468 27.6577 0.515615C27.6594 0.72314 27.7893 0.901925 27.9743 0.98334Z" fill="white" />
@@ -98,7 +98,7 @@ const Footer = () => {
                                 <path d="M91.8604 20.7523V27.4856H89.7046V16.3767H92.9549L95.0292 22.5896C95.1224 22.936 95.219 23.2856 95.317 23.6352C95.4157 23.9848 95.5123 24.3328 95.6054 24.6792C95.6655 24.4797 95.7235 24.2818 95.7787 24.0838C95.8332 23.8859 95.8904 23.6879 95.947 23.4884C96.005 23.2888 96.0637 23.0909 96.123 22.8962L98.254 16.3751H101.487V27.484H99.3319V20.7523C99.3319 20.6006 99.3381 20.2941 99.3519 19.8343C99.365 19.3746 99.3864 18.8733 99.4133 18.3323C99.2215 19.0362 99.0517 19.6364 98.9068 20.1297C98.7619 20.6246 98.6418 21.0109 98.5486 21.2886L96.4584 27.4856H94.7304L92.6402 21.2886L91.7589 18.3323C91.7921 18.942 91.8169 19.448 91.8342 19.8504C91.8507 20.2526 91.8604 20.5527 91.8604 20.7523Z" fill="white" />
                             </svg>
                         </div>
-                        <div className="mt-4 sm:mt-0 sm:ml-8 text-xs border-l-2 border-gray-300 pl-5 text-center sm:text-left">
+                        <div className="sm:mt-0 sm:ml-8 text-xs border-l-2 border-gray-300 pl-5 text-center sm:text-left">
                             <Link to={"/"}>
                                 <div className='text-start'>
                                     {page.programText[language][0]} <br />
