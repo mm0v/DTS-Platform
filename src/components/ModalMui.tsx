@@ -120,7 +120,8 @@ export default function ResponsiveModal() {
                     '&:hover': {
                         backgroundColor: '#e2e8f0',
                     },
-                    fontSize: isMobile ? '0.875rem' : '1rem',
+                    fontSize: isMobile ? '0.875rem' : '.88rem',
+                    textTransform: "none"
                 }}
             >
                 {componentsTranslations.modalMui.btnLabel[language]}

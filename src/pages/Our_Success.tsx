@@ -36,8 +36,9 @@ const Our_Success = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-7xl mx-auto">
           {/* Card 1 */}
-          <div
-            className={`bg-white rounded-lg p-6 m-4 shadow-[2px_2px_12px_0px_#2323234D] border-[1px] border-[#D0D0D0] flex flex-col transition-all duration-300 ease-in-out overflow-hidden ${expanded1 ? "max-h-[1000px]" : "max-h-[260px]"
+          <div onMouseEnter={() => setExpanded1(!expanded1)}
+            onMouseLeave={() => setExpanded1(!expanded1)}
+            className={`cursor-pointer bg-white rounded-lg p-6 m-4 shadow-[2px_2px_12px_0px_#2323234D] border-[1px] border-[#D0D0D0] flex flex-col transition-all duration-300 ease-in-out overflow-hidden ${expanded1 ? "max-h-[1000px]" : "max-h-[260px]"
               }`}
           >
             <div className="flex flex-col items-center justify-center text-center">
@@ -81,8 +82,9 @@ const Our_Success = () => {
               </div>
               <div className="mt-6">
                 <p
-                  onClick={() => setExpanded1(!expanded1)}
-                  className={`font-normal text-16 text-[#323232] text-center  cursor-pointer transition-all duration-300 ease-in-out ${expanded1
+
+
+                  className={`font-normal text-16 text-[#323232] text-center transition-all duration-300 ease-in-out ${expanded1
                     ? "max-h-full whitespace-normal line-clamp-none"
                     : "max-h-[6.8em] overflow-hidden line-clamp-4"
                     }`}
@@ -94,8 +96,9 @@ const Our_Success = () => {
           </div>
 
           {/* Card 2 */}
-          <div
-            className={`bg-white rounded-lg p-6 m-4 shadow-[2px_2px_12px_0px_#2323234D] border-[1px] border-[#D0D0D0] flex flex-col transition-all duration-300 ease-in-out overflow-hidden ${expanded2 ? "max-h-[1000px]" : "max-h-[260px]"
+          <div onMouseEnter={() => setExpanded2(!expanded2)}
+            onMouseLeave={() => setExpanded2(!expanded2)}
+            className={`cursor-pointer bg-white rounded-lg p-6 m-4 shadow-[2px_2px_12px_0px_#2323234D] border-[1px] border-[#D0D0D0] flex flex-col transition-all duration-300 ease-in-out overflow-hidden ${expanded2 ? "max-h-[1000px]" : "max-h-[260px]"
               }`}
           >
             {" "}
@@ -200,8 +203,8 @@ const Our_Success = () => {
               </div>
               <div className="mt-6">
                 <p
-                  onClick={() => setExpanded2(!expanded2)}
-                  className={`font-normal text-16 text-[#323232] text-center  cursor-pointer transition-all duration-300 ease-in-out ${expanded2
+                  // onClick={() => setExpanded2(!expanded2)}
+                  className={`font-normal text-16 text-[#323232] text-center transition-all duration-300 ease-in-out ${expanded2
                     ? "max-h-full whitespace-normal line-clamp-none"
                     : "max-h-[6.8em] overflow-hidden line-clamp-4"
                     }`}
@@ -214,8 +217,9 @@ const Our_Success = () => {
           </div>
 
           {/* Card 3 */}
-          <div
-            className={`bg-white rounded-lg p-6 m-4 shadow-[2px_2px_12px_0px_#2323234D] border-[1px] border-[#D0D0D0] flex flex-col transition-all duration-300 ease-in-out overflow-hidden ${expanded3 ? "max-h-[1000px]" : "max-h-[260px]"
+          <div onMouseEnter={() => setExpanded3(!expanded3)}
+            onMouseLeave={() => setExpanded3(!expanded3)}
+            className={`cursor-pointer bg-white rounded-lg p-6 m-4 shadow-[2px_2px_12px_0px_#2323234D] border-[1px] border-[#D0D0D0] flex flex-col transition-all duration-300 ease-in-out overflow-hidden ${expanded3 ? "max-h-[1000px]" : "max-h-[260px]"
               }`}
           >
             {" "}
@@ -226,7 +230,7 @@ const Our_Success = () => {
               <div className="mt-6">
                 <p
                   onClick={() => setExpanded3(!expanded3)}
-                  className={`font-normal text-16 text-[#323232] text-center  cursor-pointer transition-all duration-300 ease-in-out ${expanded3
+                  className={`font-normal text-16 text-[#323232] text-center transition-all duration-300 ease-in-out ${expanded3
                     ? "max-h-full whitespace-normal line-clamp-none"
                     : "max-h-[6.8em] overflow-hidden line-clamp-4"
                     }`}
@@ -240,12 +244,10 @@ const Our_Success = () => {
         </div>
 
         <div className="flex justify-center mt-10 px-4 ">
-          <div className="w-full max-w-[700px] aspect-video ">
+          <div className="w-full max-w-[700px] aspect-video mt-12 mb-10 md:mt-32">
             <iframe
               className="w-full h-full rounded-lg  shadow-[2px_2px_12px_0px_#2323234D] border-[1px] border-[#D0D0D0]"
               src="https://www.youtube.com/embed/D4TZE5r9-Ks"
-              // https://youtu.be/D4TZE5r9-Ks?si=O8JMqmN2rkvjxjoG
-              // https://youtu.be/D4TZE5r9-Ks?si=BN2840Pe8-kdWlsF
               title="YouTube video"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
