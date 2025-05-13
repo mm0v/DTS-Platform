@@ -614,12 +614,18 @@ export default function ApplyFive() {
                   onChange={handleCheckboxChange}
                   className="mt-1 h-4 w-4 text-blue-500 border-gray-600 rounded bg-transparent"
                 />
-                <label
-                  htmlFor="termsAgreement"
-                  className="ml-2 text-sm text-gray-400"
-                >
-                  İstifadə şərtləri və gizlilik şərtləri ilə razıyam.
+                <label htmlFor="termsAgreement" className="ml-2 text-sm text-gray-400">
+                  <a
+                    href="/Privacy.pdf" // <-- Update with the correct path to your PDF
+                    download
+                    className="underline cursor-pointer text-blue-500"
+                    onClick={(e) => e.stopPropagation()} // prevent label checkbox toggling
+                  >
+                    İstifadə şərtləri və gizlilik şərtləri
+                  </a>{" "}
+                  ilə razıyam.
                 </label>
+
               </div>
             </div>
 
@@ -636,8 +642,8 @@ export default function ApplyFive() {
                 type="submit"
                 disabled={!allAgreementsChecked || isSubmitting}
                 className={`flex-1 py-3 rounded-lg transition-colors ${allAgreementsChecked && !isSubmitting
-                    ? "bg-blue-600 hover:bg-blue-700 text-white cursor-pointer"
-                    : "bg-blue-900/50 text-gray-400 cursor-not-allowed "
+                  ? "bg-blue-600 hover:bg-blue-700 text-white cursor-pointer"
+                  : "bg-blue-900/50 text-gray-400 cursor-not-allowed "
                   }`}
               >
                 {isSubmitting ? "Göndərilir..." : "Təsdiq et"}

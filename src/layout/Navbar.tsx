@@ -33,7 +33,7 @@ const Navbar = () => {
                         {/* Logo */}
                         <div className="flex items-center">
                             <a href="https://www.economy.gov.az" target='_blank'>
-                                <img src="img/Navbar/economy_logo.png" width={"120px"} alt="Logooo" />
+                                <img src="img/Navbar/economy_logo.png" width={"120px"} alt="Logo" />
                             </a>
                             <a href="https://4sim.gov.az/az" target='_blank' >
                                 <div className="ml-4">
