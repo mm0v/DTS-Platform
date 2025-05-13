@@ -47,8 +47,8 @@ export default function ApplyFive() {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [debugInfo, setDebugInfo] = useState<string>("");
   const [testResults, setTestResults] = useState<ApiTestResult[]>([]);
-  const [showAdvancedOptions, setShowAdvancedOptions] = useState(false);
-  const [authToken, setAuthToken] = useState("");
+  // const [showAdvancedOptions, setShowAdvancedOptions] = useState(false);
+  // const [authToken, setAuthToken] = useState("");
 
   const handleFileChange = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -130,7 +130,7 @@ export default function ApplyFive() {
 
       setDebugInfo(
         "Final request payload: " +
-          JSON.stringify({ companyRequest: finalFormData }, null, 2)
+        JSON.stringify({ companyRequest: finalFormData }, null, 2)
       );
       console.log(
         "Digital level type:",
@@ -148,9 +148,9 @@ export default function ApplyFive() {
           "Content-Type": "application/json",
         };
 
-        if (authToken) {
-          headers["Authorization"] = `Bearer ${authToken}`;
-        }
+        // if (authToken) {
+        //   headers["Authorization"] = `Bearer ${authToken}`;
+        // }
 
         // Add CORS headers if needed for development
         headers["Access-Control-Allow-Origin"] = "*";
@@ -167,7 +167,7 @@ export default function ApplyFive() {
 
         setDebugInfo(
           "JSON submission successful! Response: " +
-            JSON.stringify(apiResponse.data)
+          JSON.stringify(apiResponse.data)
         );
         addTestResult(true, "Form submitted successfully", apiResponse.data);
         alert("Müraciətiniz uğurla göndərildi!");
@@ -175,8 +175,7 @@ export default function ApplyFive() {
       } catch (jsonError) {
         console.error("JSON submission failed:", jsonError);
         setDebugInfo(
-          `JSON approach failed: ${
-            jsonError instanceof Error ? jsonError.message : "Unknown error"
+          `JSON approach failed: ${jsonError instanceof Error ? jsonError.message : "Unknown error"
           }`
         );
         addTestResult(false, "JSON submission failed", jsonError);
@@ -190,7 +189,7 @@ export default function ApplyFive() {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",
-                ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}),
+                // ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}),
               },
               body: JSON.stringify({ companyRequest: finalFormData }),
             }
@@ -214,8 +213,7 @@ export default function ApplyFive() {
         } catch (fetchError) {
           console.error("Direct fetch failed:", fetchError);
           setDebugInfo(
-            `Direct fetch failed: ${
-              fetchError instanceof Error ? fetchError.message : "Unknown error"
+            `Direct fetch failed: ${fetchError instanceof Error ? fetchError.message : "Unknown error"
             }`
           );
           addTestResult(false, "Direct fetch failed", fetchError);
@@ -250,9 +248,9 @@ export default function ApplyFive() {
           );
 
           const headers: Record<string, string> = {};
-          if (authToken) {
-            headers["Authorization"] = `Bearer ${authToken}`;
-          }
+          // if (authToken) {
+          //   headers["Authorization"] = `Bearer ${authToken}`;
+          // }
 
           const multipartResponse = await API.post(
             "/api/v1/company/add",
@@ -268,7 +266,7 @@ export default function ApplyFive() {
 
           setDebugInfo(
             "Multipart submission successful! Response: " +
-              JSON.stringify(multipartResponse.data)
+            JSON.stringify(multipartResponse.data)
           );
           addTestResult(
             true,
@@ -279,10 +277,9 @@ export default function ApplyFive() {
         } catch (multipartError) {
           console.error("Multipart submission failed:", multipartError);
           setDebugInfo(
-            `Multipart approach failed: ${
-              multipartError instanceof Error
-                ? multipartError.message
-                : "Unknown error"
+            `Multipart approach failed: ${multipartError instanceof Error
+              ? multipartError.message
+              : "Unknown error"
             }`
           );
           addTestResult(false, "Multipart submission failed", multipartError);
@@ -304,79 +301,79 @@ export default function ApplyFive() {
   };
 
   // For testing API access with different methods
-  const tryDirectApiCall = async () => {
-    setIsSubmitting(true);
-    setDebugInfo("Testing direct API call...");
+  // const tryDirectApiCall = async () => {
+  //   setIsSubmitting(true);
+  //   setDebugInfo("Testing direct API call...");
 
-    try {
-      // Try simple GET requests to test API access
-      const testEndpoints = [
-        { url: "/api/health", name: "Health Check" },
-        { url: "/api/", name: "API Root" },
-        { url: "/", name: "Server Root" },
-        { url: "/api/v1", name: "API V1" },
-      ];
+  //   try {
+  //     // Try simple GET requests to test API access
+  //     const testEndpoints = [
+  //       { url: "/api/health", name: "Health Check" },
+  //       { url: "/api/", name: "API Root" },
+  //       { url: "/", name: "Server Root" },
+  //       { url: "/api/v1", name: "API V1" },
+  //     ];
 
-      for (const endpoint of testEndpoints) {
-        try {
-          const healthResponse = await API.get(endpoint.url);
-          setDebugInfo(
-            `${endpoint.name} successful: ${JSON.stringify(
-              healthResponse.data
-            )}`
-          );
-          addTestResult(
-            true,
-            `${endpoint.name} successful`,
-            healthResponse.data
-          );
-        } catch (endpointError) {
-          setDebugInfo(
-            `${endpoint.name} failed: ${
-              endpointError instanceof Error
-                ? endpointError.message
-                : "Unknown error"
-            }`
-          );
-          addTestResult(false, `${endpoint.name} failed`, endpointError);
-        }
-      }
+  //     for (const endpoint of testEndpoints) {
+  //       try {
+  //         const healthResponse = await API.get(endpoint.url);
+  //         setDebugInfo(
+  //           `${endpoint.name} successful: ${JSON.stringify(
+  //             healthResponse.data
+  //           )}`
+  //         );
+  //         addTestResult(
+  //           true,
+  //           `${endpoint.name} successful`,
+  //           healthResponse.data
+  //         );
+  //       } catch (endpointError) {
+  //         setDebugInfo(
+  //           `${endpoint.name} failed: ${
+  //             endpointError instanceof Error
+  //               ? endpointError.message
+  //               : "Unknown error"
+  //           }`
+  //         );
+  //         addTestResult(false, `${endpoint.name} failed`, endpointError);
+  //       }
+  //     }
 
-      // Try OPTIONS request to check CORS and allowed methods
-      try {
-        const optionsResponse = await API({
-          method: "OPTIONS",
-          url: "/api/v1/company/add",
-        });
-        setDebugInfo(
-          `OPTIONS request successful: ${JSON.stringify(
-            optionsResponse.headers
-          )}`
-        );
-        addTestResult(
-          true,
-          "OPTIONS request successful",
-          optionsResponse.headers
-        );
-      } catch (corsError) {
-        setDebugInfo(
-          `OPTIONS request failed: ${
-            corsError instanceof Error ? corsError.message : "Unknown error"
-          }`
-        );
-        addTestResult(false, "OPTIONS request failed", corsError);
-      }
-    } catch (error) {
-      setDebugInfo(
-        `API tests failed: ${
-          error instanceof Error ? error.message : "Unknown error"
-        }`
-      );
-      addTestResult(false, "API tests failed", error);
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+  //     // Try OPTIONS request to check CORS and allowed methods
+  //     try {
+  //       const optionsResponse = await API({
+  //         method: "OPTIONS",
+  //         url: "/api/v1/company/add",
+  //       });
+  //       setDebugInfo(
+  //         `OPTIONS request successful: ${JSON.stringify(
+  //           optionsResponse.headers
+  //         )}`
+  //       );
+  //       addTestResult(
+  //         true,
+  //         "OPTIONS request successful",
+  //         optionsResponse.headers
+  //       );
+  //     } catch (corsError) {
+  //       setDebugInfo(
+  //         `OPTIONS request failed: ${
+  //           corsError instanceof Error ? corsError.message : "Unknown error"
+  //         }`
+  //       );
+  //       addTestResult(false, "OPTIONS request failed", corsError);
+  //     }
+  //   } catch (error) {
+  //     setDebugInfo(
+  //       `API tests failed: ${
+  //         error instanceof Error ? error.message : "Unknown error"
+  //       }`
+  //     );
+  //     addTestResult(false, "API tests failed", error);
+  //   } finally {
+  //     setIsSubmitting(false);
+  //   }
+  // };
 
   const allAgreementsChecked = Object.values(agreements).every(
     (value) => value === true
@@ -392,9 +389,8 @@ export default function ApplyFive() {
             {[1, 2, 3, 4, 5].map((num) => (
               <div
                 key={num}
-                className={`absolute top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center text-sm ${
-                  num <= 5 ? "bg-blue-500" : "bg-blue-900"
-                }`}
+                className={`absolute top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center text-sm ${num <= 5 ? "bg-blue-500" : "bg-blue-900"
+                  }`}
                 style={{ left: `${(num - 1) * 25}%` }}
               >
                 {num}
@@ -439,9 +435,8 @@ export default function ApplyFive() {
               {testResults.map((result, index) => (
                 <div
                   key={index}
-                  className={`${
-                    result.success ? "text-green-400" : "text-red-400"
-                  } mb-1`}
+                  className={`${result.success ? "text-green-400" : "text-red-400"
+                    } mb-1`}
                 >
                   {result.message}
                 </div>
@@ -450,7 +445,7 @@ export default function ApplyFive() {
           )}
 
           {/* Digital Level Type Info */}
-          <div className="bg-blue-900/50 p-4 rounded mb-6">
+          {/* <div className="bg-blue-900/50 p-4 rounded mb-6">
             <h3 className="text-blue-300 mb-2">Digital Level Info</h3>
             <p className="text-sm mb-2">
               Current digitalLevel value:{" "}
@@ -467,9 +462,9 @@ export default function ApplyFive() {
               Digital level is being sent as a numeric value (byte) as required
               by the API.
             </p>
-          </div>
+          </div> */}
 
-          {showAdvancedOptions && (
+          {/* {showAdvancedOptions && (
             <div className="bg-gray-800 p-4 rounded mb-6">
               <h3 className="text-blue-400 mb-2 text-lg">Advanced Options</h3>
               <div className="mb-4">
@@ -485,7 +480,7 @@ export default function ApplyFive() {
                 />
               </div>
             </div>
-          )}
+          )} */}
 
           <form className="space-y-8" onSubmit={handleFormSubmit}>
             {/* First file upload */}
@@ -640,18 +635,17 @@ export default function ApplyFive() {
               <button
                 type="submit"
                 disabled={!allAgreementsChecked || isSubmitting}
-                className={`flex-1 py-3 rounded-lg transition-colors ${
-                  allAgreementsChecked && !isSubmitting
+                className={`flex-1 py-3 rounded-lg transition-colors ${allAgreementsChecked && !isSubmitting
                     ? "bg-blue-600 hover:bg-blue-700 text-white cursor-pointer"
                     : "bg-blue-900/50 text-gray-400 cursor-not-allowed "
-                }`}
+                  }`}
               >
                 {isSubmitting ? "Göndərilir..." : "Təsdiq et"}
               </button>
             </div>
 
             {/* Debug Tools */}
-            <div className="mt-4 text-center flex justify-center space-x-4">
+            {/* <div className="mt-4 text-center flex justify-center space-x-4">
               <button
                 type="button"
                 onClick={tryDirectApiCall}
@@ -668,7 +662,7 @@ export default function ApplyFive() {
                   ? "Hide Advanced Options"
                   : "Show Advanced Options"}
               </button>
-            </div>
+            </div> */}
           </form>
         </div>
       </div>

@@ -167,12 +167,12 @@ const ApplyThree = () => {
           </div>
 
           {/* Digital Level Debug Info */}
-          <div className="mb-4 p-3 bg-blue-900/30 rounded">
+          {/* <div className="mb-4 p-3 bg-blue-900/30 rounded">
             <p className="text-sm">
               Current digitalLevel: {formData.digitalReadiness.digitalLevel}{" "}
               (type: {typeof formData.digitalReadiness.digitalLevel})
             </p>
-          </div>
+          </div> */}
 
           <form className="space-y-6">
             <div className="flex justify-between items-center space-x-4">
