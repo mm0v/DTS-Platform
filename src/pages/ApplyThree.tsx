@@ -149,7 +149,8 @@ const ApplyThree = () => {
               Mülkiyyət və hüquqi quruluş
             </div>
             <div className="text-center max-w-[100px] text-blue-400">
-              Rəqəmsal hüquqi və transformasiya xidmətləri
+              
+              Rəqəmsal hazırlıq və transformasiya ehtiyacları
             </div>
             <div className="text-center max-w-[100px]">
               Liderlik və öhdəliklər

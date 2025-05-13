@@ -409,7 +409,8 @@ export default function ApplyFive() {
               Mülkiyyət və hüquqi quruluş
             </div>
             <div className="text-center max-w-[100px]">
-              Rəqəmsal hüquqi və transformasiya xidmətləri
+
+              Rəqəmsal hazırlıq və transformasiya ehtiyacları
             </div>
             <div className="text-center max-w-[100px]">
               Liderlik və öhdəliklər

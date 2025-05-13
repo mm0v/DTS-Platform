@@ -120,7 +120,8 @@ export default function ApplyFour() {
               Şirkət haqqında məlumat
             </div>
             <div className="text-center max-w-[100px]">
-              Hüquqi və hüquqi quruluş
+              
+              Mülkiyyət və hüquqi quruluş
             </div>
             <div className="text-center max-w-[100px]">
               Rəqəmsal hazırlıq və transformasiya ehtiyacları

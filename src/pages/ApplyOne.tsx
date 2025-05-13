@@ -140,9 +140,8 @@ export default function ApplyOne() {
             {[1, 2, 3, 4, 5].map((num) => (
               <div
                 key={num}
-                className={`absolute top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center text-sm ${
-                  num <= step ? "bg-blue-500" : "bg-blue-900 "
-                }`}
+                className={`absolute top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center text-sm ${num <= step ? "bg-blue-500" : "bg-blue-900 "
+                  }`}
                 style={{ left: `${(num - 1) * 25}%` }}
               >
                 {num}
@@ -156,10 +155,11 @@ export default function ApplyOne() {
               Şirkət haqqında məlumat
             </div>
             <div className="text-center max-w-[150px]">
-              Hüquqi və hüquqi quruluş
+              Mülkiyyət və hüquqi quruluş
             </div>
             <div className="text-center max-w-[150px]">
-              Rəqəmsal hüquqi və transformasiya xidmətləri
+              
+              Rəqəmsal hazırlıq və transformasiya ehtiyacları
             </div>
             <div className="text-center max-w-[150px]">
               Liderlik və öhdəliklər
