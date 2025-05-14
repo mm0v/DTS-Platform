@@ -22,7 +22,7 @@ export default function ApplyOne() {
   }
 
   const { setFormData } = context;
-  const [step, setStep] = useState(1);
+  // Removed unused step state
 
   // Initialize local state with data from localStorage or context
   const [localFormData, setLocalFormData] = useState({
@@ -145,7 +145,7 @@ export default function ApplyOne() {
       return;
     }
 
-    setStep((prevStep) => Math.min(prevStep + 1, 5));
+    // Removed setStep as step state is not used
     navigate("/apply/two");
   };
 

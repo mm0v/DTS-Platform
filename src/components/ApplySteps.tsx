@@ -1,6 +1,10 @@
 import { useLanguage } from "../context/LanguageContext";
 
-const ApplySteps = ({ step }) => {
+interface ApplyStepsProps {
+  step: number;
+}
+
+const ApplySteps = ({ step }: ApplyStepsProps) => {
   const { language, componentsTranslations } = useLanguage();
   const steps = componentsTranslations.applySteps;
 
