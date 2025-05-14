@@ -10,10 +10,7 @@ export const pagesTranslations = {
   hazırlığa dair yol xəritəsinin tərtib edilməsi, maliyyə dəstəyinin göstərilməsi, habelə
   transformasiyanın uğurlu icrası təmin etmək üçün davamlı əsasda metodiki dəstək
   və institusional potensialın gücləndirilməsi kimi tədbirlər həyata keçirilir.`,
-      EN: `Within the program, activities such as assessment of companies' current digital capabilities,
-  preparation of customized roadmaps, development of sustainability-readiness strategies,
-  financial support, as well as continuous methodological assistance and institutional capacity
-  building to ensure successful transformation are carried out.`,
+      EN: `The program aims to empower Azerbaijani businesses by supporting their comprehensive digital transformation. It offers a variety of support for digitalization, including assessments of current digital maturity, development of tailored roadmaps, financial assistance, and digital capacity building to ensure successful implementation`,
     },
     applyBtn: {
       AZ: "Müraciət et",
@@ -42,9 +39,7 @@ export const pagesTranslations = {
     visionDescription: {
       AZ: `"Sənaye 4.0 Hazırlıq" Proqramı 2030-cu ilədək
 İqtisadiyyat Nazirliyinin dəstəyi ilə ölkəmizin istehsal yönümlü müəssisələrinin rəqəmsal transformasiyasına hədəflənmişdir.`,
-      EN: `The "Industry 4.0 Readiness" Program aims to drive digital transformation
-of manufacturing-oriented enterprises in Azerbaijan by 2030, with the support
-of the Ministry of Economy.`,
+      EN: `The "Industry 4.0 Readiness" Program aims to drive digital transformation of Azerbaijani businesses by 2030, with the support of the Ministry of Economy`,
     },
   },
   success: {
@@ -100,7 +95,7 @@ of the Ministry of Economy.`,
   compliance: {
     title: {
       AZ: "Uyğunluq və Prioritetləşdirmə",
-      EN: "Compliance and Prioritization",
+      EN: "Eligibility and Prioritization",
     },
     criteriaTitle: {
       AZ: "Uyğunluq üçün kriteriyalar",
@@ -128,17 +123,17 @@ of the Ministry of Economy.`,
         },
         description: {
           AZ: "Şirkətin nizamnamə kapitalının minimum 51%-i yerli şəxslərə məxsus olmalıdır.",
-          EN: "At least 51% of the company's charter capital must be owned by local individuals.",
+          EN: "At least 51% of the company must be owned by Azerbaijani nationals  - they might not understand what charter capital means ",
         },
       },
       {
         title: {
           AZ: "Prioritet sektorlar",
-          EN: "Priority sectors",
+          EN: "Industry Focus",
         },
         description: {
           AZ: "Şirkət aşağıdakı prioritet sektorlar üzrə fəaliyyət göstərməlidir:",
-          EN: "The company must operate in one of the following priority sectors:",
+          EN: "The company must operate in one of the following Industry Focus:",
         },
         list: {
           AZ: [

@@ -25,7 +25,7 @@ export const componentsTranslations = {
           },
           EN: {
             line1: "Assessment of Digital",
-            line2: "Readiness Level",
+            line2: "Maturity Level ",
           },
         },
         content: {
@@ -35,7 +35,7 @@ export const componentsTranslations = {
               "Hədəf Şirkətlərin mövcud rəqəmsal potensialının, infrastrukturunun və hazırlıq səviyyəsinin qiymətləndirilməsi, müvafiq çatışmazlıqların və təkmilləşmə üçün imkanlarının müəyyən edilməsi.",
           },
           EN: {
-            heading: "Assessment of Digital Readiness Level",
+            heading: "Assessment of Digital Maturity Level ",
             description:
               "Evaluation of target companies' existing digital potential, infrastructure and readiness level, identifying relevant deficiencies and opportunities for improvement.",
           },
@@ -89,7 +89,7 @@ export const componentsTranslations = {
           EN: {
             heading: "Provision of Financial Support",
             description:
-              "Providing support to target companies in their digital transformation, including conducting assessments, adopting technologies, and identifying and securing the necessary funding for implementation efforts.",
+              "Providing support to companies in identifying and securing the necessary funding for implementation efforts.",
           },
         },
       },
@@ -102,8 +102,8 @@ export const componentsTranslations = {
             line2: "gücləndirilməsi",
           },
           EN: {
-            line1: "Strengthening of Digital",
-            line2: "Knowledge and Skills",
+            line1: "Building Digital Capability",
+            line2: "",
           },
         },
         content: {
@@ -113,8 +113,8 @@ export const componentsTranslations = {
               "Rəqəmsal texnologiyaların uğurlu mənimsənilməsini təmin etmək məqsədilə təlimlər və resurslar vasitəsilə əməkdaşların bilik və bacarıqlarının gücləndirilməsi.",
           },
           EN: {
-            heading: "Strengthening of Digital Knowledge and Skills",
-            description: `Strengthening employees' knowledge and skills through training and resources to ensure the successful adoption of digital technologies.`,
+            heading: "Building Digital Capability",
+            description: `Building digital capabilities through training and resources to support the successful execution of the Digital Transformation Roadmap and the adoption of digital technologies.`,
           },
         },
       },
@@ -185,11 +185,11 @@ export const componentsTranslations = {
     panel3: {
       title: {
         AZ: "Sənaye mərkəzi",
-        EN: "Industry center",
+        EN: "Industry Focus",
       },
       content: {
         AZ: "Proqram çərçivəsində iqtisadi diversifikasiyaya və sənaye inkişafına töhfə verən istehsalat şirkətlərinə üstünlük verilir. Bu üstünlük, xüsusilə qida və içkilər, mürəkkəb neft məhsulları, kimyəvi maddələr, qarışıq mineral məhsullar, əsas metallar, maşın və avadanlıqların təmiri və quraşdırılması, plastik və lastik məmulatlar, metal məmulatlar, tekstil, maşınqayırma və elektrik avadanlıqları sahəsində fəaliyyət göstərən şirkətlərə şamil olunur.",
-        EN: "Within the framework of the program, preference is given to manufacturing companies that contribute to economic diversification and industrial development. This preference applies especially to companies operating in the fields of food and beverages, complex petroleum products, chemicals, mixed mineral products, base metals, repair and installation of machinery and equipment, plastic and rubber products, metal products, textiles, machinery, and electrical equipment.",
+        EN: "Under the program, priority is given to manufacturing companies that contribute to economic diversification and industrial development. This priority particularly applies to companies operating in the fields of food and beverages, refined petroleum products, chemicals, non-metallic mineral products, basic metals, repair and installation of machinery and equipment, rubber and plastic products, fabricated metal products, textiles, machinery, and electrical equipment.",
       },
     },
   },
@@ -229,21 +229,18 @@ export const componentsTranslations = {
         AZ: "7. Şirkət seçilmədiyi təqdirdə, yenidən müraciət etmək mümkündürmü?",
         EN: "7. If the company is not selected, is it possible to apply again?",
       },
-      q8: {
-        AZ: "8. Şirkətimizin rəqəmsal transformasiya prosesinə hazır olub-olmadığını necə bilə bilərik?",
-        EN: "8. How can we know if our company is ready for the digital transformation process?",
-      },
+      // 8 question remove
       q9: {
-        AZ: "9. Proqram çərçivəsində hansı növ təlim və bacarıqların artırılması dəstəyi təklif edilir?",
-        EN: "9. What kind of training and skill enhancement support is offered under the program?",
+        AZ: "8. Proqram çərçivəsində hansı növ təlim və bacarıqların artırılması dəstəyi təklif edilir?",
+        EN: "8. What kind of training and skill enhancement support is offered under the program?",
       },
       q10: {
-        AZ: "10. Proqram çərçivəsində maliyyə dəstəyi hansı fəaliyyətləri əhatə edir və istifadəyə dair hər hansı məhdudiyyət varmı?",
-        EN: "10. What activities does the financial support cover under the program and are there any restrictions on use?",
+        AZ: "9. Proqram çərçivəsində maliyyə dəstəyi hansı fəaliyyətləri əhatə edir və istifadəyə dair hər hansı məhdudiyyət varmı?",
+        EN: "9. What activities does the financial support cover under the program and are there any restrictions on use?",
       },
       q11: {
-        AZ: "11. Proqramda iştirak etmək beynəlxalq miqyasda rəqabət qabiliyyətimizi artırmağa kömək edəcəkmi?",
-        EN: "11. Will participating in the program help increase our international competitiveness?",
+        AZ: "10. Proqramda iştirak etmək beynəlxalq miqyasda rəqabət qabiliyyətimizi artırmağa kömək edəcəkmi?",
+        EN: "10. Will participating in the program help increase our international competitiveness?",
       },
     },
     answers: {
@@ -268,7 +265,7 @@ export const componentsTranslations = {
         },
         EN: {
           item1:
-            "Assessment and roadmap development: Companies will receive funding for assessing their digital readiness level and developing an individual digital transformation roadmap.",
+            "Digital Maturity Assessment and digital transformation roadmap development: The assessment and tailored roadmap development will be carried out by a third-party technology vendor, bringing both industry and technology expertise. The vendor’s services will be funded by the program.",
           item2:
             "Implementation phase support: Companies participating in the program are eligible to apply for low-interest loans from the EDF to support the implementation of their transformation plans. This funding is directed towards technology implementation, infrastructure modernization, and covering the costs of related initiatives.",
         },
@@ -284,10 +281,6 @@ export const componentsTranslations = {
       a7: {
         AZ: "Bəli, əgər şirkətiniz cari seçim dövründə seçilməzsə, gələcək dövrlərdə yenidən müraciət edə bilərsiniz. Əslində, biz şirkətləri seçim prosesi zamanı müəyyən edilmiş boşluqları aradan qaldırdıqdan və rəqəmsal hazırlıq səviyyələrinin yüksəldikdən sonra təkrar müraciət etməyə təşviq edirik.",
         EN: "Yes, if your company is not selected in the current selection period, you can reapply in future periods. In fact, we encourage companies to reapply after addressing gaps identified during the selection process and improving their digital readiness levels.",
-      },
-      a8: {
-        AZ: "Proqram çərçivəsindən biz mövcud rəqəmsal imkanları qiymətləndirmək məqsədilə Rəqəmsal hazırlıq səviyyəsinin qiymətləndirilməsini həyata keçirəcəyik. Bu qiymətləndirmə prosesi, şirkətinizin güclü və inkişaf etdirilməli sahələrini müəyyən etməyə, eləcə də ehtiyaclarınıza uyğun fərdi transformasiya yol xəritəsi hazırlamağa imkan verəcək",
-        EN: "Within the framework of the program, we will conduct a Digital Readiness Level Assessment to evaluate existing digital capabilities. This assessment process will help identify your company's strengths and areas for improvement, as well as develop a personalized transformation roadmap tailored to your needs.",
       },
       a9: {
         AZ: '"Sənaye 4.0 Hazırlıq" Proqramı, komandanızın əsas rəqəmsal bacarıqlarını formalaşdırmaq və gücləndirmək məqsədilə təlim seminarları, praktiki sessiyalar, eləcə də onlayn resursları əhatə edir. Təlim proqramına həm ümumi rəqəmsal savadlılıq, həm də bulud texnologiyaları, süni intellekt, avtomatlaşdırma və kibertəhlükəsizlik kimi ixtisaslaşmış sahələr üzrə bilik və bacarıqları inkişaf etdirməyə yönəlmiş xüsusi mövzular daxil edilmişdir. Bu yanaşma komandanızın rəqəmsal transformasiya prosesində fəal şəkildə iştirakını və davamlı inkişafını təmin etməyə xidmət edir.',
@@ -315,8 +308,6 @@ export const componentsTranslations = {
             "Implementation and adoption of relevant technologies",
             "Implementation-related expenses (e.g., equipment, software, and infrastructure upgrades)",
           ],
-          outro:
-            "Prior approval from C4IR is required if you wish to use the funding for any other purpose outside this scope.",
         },
       },
       a11: {
