@@ -19,7 +19,7 @@ export default function ApplyOne() {
     throw new Error("ApplyOne must be used within a FormContext.Provider");
   }
 
-  const { formData, setFormData } = context;
+  const { setFormData } = context;
   const [step, setStep] = useState(1);
 
   // Initialize local state with data from localStorage or context
@@ -336,26 +336,26 @@ export default function ApplyOne() {
                 className="w-full bg-transparent border border-gray-700 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300"
               />
             </div>
-<div className="space-y-2">
-  <label className="text-sm">Əlaqə nömrəsi</label>
+            <div className="space-y-2">
+              <label className="text-sm">Əlaqə nömrəsi</label>
 
-  <PhoneInput
-    defaultCountry="az"
-    value={localFormData.phone}
-    onChange={(phone: string) => {
-      setLocalFormData(p => ({ ...p, phone }));
-      localStorage.setItem("phone", phone);
-      setFormData(p => ({
-        ...p,
-        companyData: { ...p.companyData, contactPhone: phone },
-      }));
-    }}
+              <PhoneInput
+                defaultCountry="az"
+                value={localFormData.phone}
+                onChange={(phone: string) => {
+                  setLocalFormData(p => ({ ...p, phone }));
+                  localStorage.setItem("phone", phone);
+                  setFormData(p => ({
+                    ...p,
+                    companyData: { ...p.companyData, contactPhone: phone },
+                  }));
+                }}
 
-    /* Bu iki prop komponentin tanıdığı yeganə stil prop-larıdır  */
-    className="phone-dark w-full"          
-    inputClassName="phone-dark-input flex-1"
-  />
-</div>
+                /* Bu iki prop komponentin tanıdığı yeganə stil prop-larıdır  */
+                className="phone-dark w-full"
+                inputClassName="phone-dark-input flex-1"
+              />
+            </div>
 
 
           </div>

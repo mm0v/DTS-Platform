@@ -29,7 +29,7 @@ const ApplyThree = () => {
         console.error("Error parsing saved form data:", error)
       }
     }
-  }, [])
+  }, [setFormData])
 
   // Debug current value of digitalLevel on component mount
   useEffect(() => {
@@ -38,7 +38,7 @@ const ApplyThree = () => {
   }, [formData.digitalReadiness.digitalLevel])
 
   // Function to save data to localStorage
-  const saveToLocalStorage = (updatedData: any) => {
+  const saveToLocalStorage = (updatedData: typeof formData) => {
     localStorage.setItem("formData", JSON.stringify(updatedData))
   }
 

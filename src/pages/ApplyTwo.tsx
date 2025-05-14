@@ -60,7 +60,7 @@ export default function ApplyTwo() {
         console.error("Error parsing saved form data:", error)
       }
     }
-  }, [])
+  }, [setFormData])
 
   // Save data to localStorage immediately when any input changes
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
