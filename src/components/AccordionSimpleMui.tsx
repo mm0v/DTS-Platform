@@ -123,7 +123,7 @@ export default function AccordionExpandDefault() {
                     </Typography>
                 </AccordionDetails>
             </Accordion>
-            <Accordion className='mt-4 mb-4'>
+            {/* <Accordion className='mt-4 mb-4'>
                 <AccordionSummary
                     expandIcon={<ExpandMoreIcon />}
                     aria-controls="panel2-content"
@@ -137,7 +137,7 @@ export default function AccordionExpandDefault() {
                         {page.answers.a8[language]}
                     </Typography>
                 </AccordionDetails>
-            </Accordion>
+            </Accordion> */}
             <Accordion className='mt-4 mb-4'>
                 <AccordionSummary
                     expandIcon={<ExpandMoreIcon />}
@@ -176,7 +176,6 @@ export default function AccordionExpandDefault() {
                             <li>{page.answers.a10[language].items[3]}</li>
                             <br />
                         </ul>
-                        {page.answers.a10[language].outro}
                     </Typography>
                 </AccordionDetails>
             </Accordion>

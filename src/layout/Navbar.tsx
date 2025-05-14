@@ -131,7 +131,7 @@ const Navbar = () => {
 
                     <div className="flex items-center space-x-4 text-base">
                         <Link
-                            to="/compliance"
+                            to="/eligibility"
                             className="hover:text-blue-400 whitespace-nowrap focus:outline-none focus-visible:outline-none focus:ring-0"
                         >
                             {page.compliance[language]}
@@ -319,7 +319,7 @@ const Navbar = () => {
                                 </svg>
                             </Link>
                             <Link
-                                to="/compliance"
+                                to="/eligibility"
                                 className="py-3 border-b border-blue-800 flex items-center justify-between"
                                 onClick={toggleMenu}
                             >
