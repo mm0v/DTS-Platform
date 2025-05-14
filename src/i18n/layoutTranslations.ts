@@ -6,7 +6,7 @@ export const layoutTranslations = {
     },
     compliance: {
       AZ: "Uyğunluq və Prioritetləşdirmə",
-      EN: "Compliance & Prioritization",
+      EN: "Eligibility & Prioritization",
     },
     success: {
       AZ: "Uğurlarımız",

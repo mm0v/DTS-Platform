@@ -22,7 +22,7 @@ const App: React.FC = () => {
   // Define all valid paths
   const validPaths = useMemo<string[]>(() => [
     '/',
-    '/compliance',
+    '/eligibility',
     '/success',
     '/fag',
     '/contact',
@@ -47,7 +47,7 @@ const App: React.FC = () => {
       <Suspense fallback={<LoadingSpinner />}>
         <Routes>
           <Route path='/' element={<Home />} />
-          <Route path='/compliance' element={<Compliance_And_Prioritization />} />
+          <Route path='/eligibility' element={<Compliance_And_Prioritization />} />
           <Route path='/success' element={<Our_Success />} />
           <Route path='/fag' element={<FAG />} />
           <Route path='/contact' element={<Contact />} />
