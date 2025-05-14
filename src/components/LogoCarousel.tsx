@@ -222,15 +222,23 @@ const LogoCarousel = () => {
                                     href={logo.href}
                                     target="_blank"
                                     rel="noreferrer noopener"
-                                    className="transform hover:scale-110 transition-transform duration-300 flex justify-center"
+                                    className="transform hover:scale-110 transition-transform duration-300 flex justify-center items-center w-full h-full"
                                     onClick={(e) => isDragging && e.preventDefault()}
                                 >
-                                    <img
-                                        src={logo.src}
-                                        alt={logo.alt}
-                                        className="h-12 sm:h-16 md:h-20 p-1 md:p-2 object-contain filter hover:brightness-105"
-                                        draggable="false"
-                                    />
+                                    <div className="w-full h-16 md:h-20 flex items-center justify-center">
+                                        <img
+                                            src={logo.src}
+                                            alt={logo.alt}
+                                            className="max-h-full max-w-full object-contain filter hover:brightness-105"
+                                            style={{ width: 'auto', height: '100%' }}
+                                            draggable="false"
+                                            onError={(e) => {
+                                                const target = e.target as HTMLImageElement;
+                                                target.onerror = null;
+                                                console.error(`Failed to load image: ${logo.src}`);
+                                            }}
+                                        />
+                                    </div>
                                 </a>
                             </div>
                         ))}
