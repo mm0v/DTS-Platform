@@ -11,7 +11,7 @@ const Footer = () => {
         <footer className="text-white px-2 py-8 bg-gradient-to-r from-[rgba(26,67,129,1)] to-[rgba(5,14,27,1)]">
             <div className="container mx-auto">
                 {/* Top section with logos and navigation */}
-                <div className="flex flex-col md:flex-row justify-around items-center gap-6 md:gap-8">
+                <div className="flex flex-col md:flex-row justify-between pl-4 pr-4 items-center gap-6 md:gap-8">
                     {/* Left side with logos and text */}
                     <div className="flex sm:flex-row items-center justify-center sm:items-center">
                         <div className="flex items-center justify-center">
