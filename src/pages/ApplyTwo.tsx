@@ -6,10 +6,16 @@ import { useState, useContext, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import BackgroundVideo from "../components/BackgroundVideo"
 import { FormContext } from "../context/FormContext"
+import { useLanguage } from "../context/LanguageContext";
+import ApplySteps from "../components/ApplySteps";
 
 export default function ApplyTwo() {
   const navigate = useNavigate()
   const context = useContext(FormContext)
+  const { language, pagesTranslations } = useLanguage();
+  const page = pagesTranslations.apply2;
+  const buttons = pagesTranslations.applyBtns;
+
 
   if (!context) {
     throw new Error("ApplyTwo must be used within a FormContext.Provider")
@@ -148,38 +154,18 @@ export default function ApplyTwo() {
         <div className="absolute top-0 left-0 w-full h-full bg-black opacity-50 z-10"></div>
 
         {/* Main Content */}
-        <div className="relative z-20 w-full max-w-4xl mb-8 px-4">
-          <div className="relative w-full h-[1px] bg-blue-500">
-            {[1, 2, 3, 4, 5].map((num) => (
-              <div
-                key={num}
-                className={`absolute top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center text-sm ${
-                  num <= 2 ? "bg-blue-500" : "bg-blue-900"
-                }`}
-                style={{ left: `${(num - 1) * 25}%` }}
-              >
-                {num}
-              </div>
-            ))}
-          </div>
-
-          <div className="flex justify-between mt-4 text-xs text-gray-400">
-            <div className="text-center max-w-[100px]">Şirkət haqqında məlumat</div>
-            <div className="text-center max-w-[100px] text-blue-400">Mülkiyyət və hüquqi quruluş</div>
-            <div className="text-center max-w-[100px]">Rəqəmsal hazırlıq və transformasiya ehtiyacları</div>
-            <div className="text-center max-w-[100px]">Liderlik və öhdəliklər</div>
-            <div className="text-center max-w-[100px]">Tələb olunan sənədlər</div>
-          </div>
-        </div>
+        <ApplySteps step={2} />
 
         <div className="text-center mb-8 relative z-20">
-          <h1 className="text-2xl md:text-3xl font-medium">Mülkiyyət və hüquqi quruluş</h1>
+          <h1 className="text-2xl md:text-3xl font-medium">
+            {page.title[language]}
+          </h1>
         </div>
 
         <div className="w-full max-w-2xl space-y-6 relative z-20">
           {/* Şirkətin hüquqi növü */}
           <div className="space-y-2">
-            <label className="text-sm">Şirkətin hüquqi növü (MMC, ASC, Fərdi sahibkar və s.)</label>
+            <label className="text-sm">{page.companyType[language]}</label>
             <input
               type="text"
               name="companyType"
@@ -191,7 +177,7 @@ export default function ApplyTwo() {
 
           {/* Sənaye və biznes fəaliyyətləri */}
           {/* <div className="space-y-2">
-            <label className="text-sm">Sənaye və biznes əməliyyatları</label>
+            <label className="text-sm">{page.businessIndustry[language]}</label>
             <input
               type="text"
               name="businessIndustry"
@@ -201,7 +187,9 @@ export default function ApplyTwo() {
             />
           </div> */}
 
-          <label className="text-sm">Sənaye və biznes əməliyyatları</label>
+          <label className="text-sm">
+            {page.businessIndustry.label[language]}
+          </label>
           <select
             name="businessIndustry"
             value={localFormData.businessIndustry}
@@ -209,43 +197,46 @@ export default function ApplyTwo() {
             className="w-full bg-[#131021] border  border-gray-700 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300"
           >
             <option className="text-white" value="">
-              Seçin
+              {page.businessIndustry.placeholder[language]}
             </option>
-            <option className="text-white" value="Təmsil etdiyimiz sənayə sektoru">
-              Təmsil etdiyimiz sənayə sektoru
+            <option
+              className="text-white"
+              value="Təmsil etdiyimiz sənayə sektoru"
+            >
+              {page.businessIndustry.options.representedIndustry[language]}
             </option>
             <option className="text-white" value="Qida və içkilər">
-              Qida və içkilər
+              {page.businessIndustry.options.foodAndBeverages[language]}
             </option>
             <option className="text-white" value="Neft - qaz">
-              Neft - qaz
+              {page.businessIndustry.options.oilAndGas[language]}
             </option>
             <option className="text-white" value=" Kimya">
-              Kimya
+              {page.businessIndustry.options.chemical[language]}
             </option>
             <option className="text-white" value="Metallurgiya">
-              Metallurgiya
+              {page.businessIndustry.options.metallurgy[language]}
             </option>
             <option className="text-white" value="Maşın və avadanlıqların təmiri və quraşdırılması">
-              Maşın və avadanlıqların təmiri və quraşdırılması
+              {page.businessIndustry.options.machineRepairAndInstallation[language]}
             </option>
             <option className="text-white" value="Kauçuk və plastik məhsullar">
-              Kauçuk və plastik məhsullar
+              {page.businessIndustry.options.rubberAndPlasticProducts[language]}
             </option>
             <option className="text-white" value="Tekstil">
-              Tekstil
+              {page.businessIndustry.options.textile[language]}
             </option>
             <option className="text-white" value="Elektrik avadanlıqları">
-              Elektrik avadanlıqları
+              {page.businessIndustry.options.electricalEquipment[language]}
             </option>
             <option className="text-white" value="Digər">
-              Digər
+              {page.businessIndustry.options.other[language]}
             </option>
           </select>
 
           {/* Əsas məhsullar/xidmətlər */}
           <div className="space-y-2">
-            <label className="text-sm">Əsas məhsullar/xidmətlər</label>
+            <label className="text-sm">{page.mainProducts[language]}</label>
             <input
               type="text"
               name="mainProducts"
@@ -257,7 +248,7 @@ export default function ApplyTwo() {
 
           {/* İxrac fəaliyyəti ilə məşğul olmaq */}
           <div className="space-y-2">
-            <label className="text-sm">İxrac fəaliyyəti ilə məşğul olursunuz?</label>
+            <label className="text-sm">{page.exportActivity[language]}</label>
             <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-2">
                 <input
@@ -268,7 +259,7 @@ export default function ApplyTwo() {
                   checked={localFormData.exportActivity === "Bəli"}
                   className="text-blue-500"
                 />
-                <label className="text-sm">Bəli</label>
+                <label className="text-sm">{page.yes[language]}</label>
               </div>
               <div className="flex items-center space-x-2">
                 <input
@@ -279,14 +270,14 @@ export default function ApplyTwo() {
                   checked={localFormData.exportActivity === "Xeyr"}
                   className="text-blue-500"
                 />
-                <label className="text-sm">Xeyr</label>
+                <label className="text-sm">{page.no[language]}</label>
               </div>
             </div>
           </div>
 
           {/* Məhsulların ixrac olunduğu bazarlar */}
           <div className="space-y-2">
-            <label className="text-sm">Məhsullarınızın ixrac olunduğu bazarlar</label>
+            <label className="text-sm">{page.exportMarkets[language]}</label>
             <input
               type="text"
               name="exportMarkets"
@@ -298,7 +289,7 @@ export default function ApplyTwo() {
 
           {/* Təqdimedici sənəd */}
           <div className="space-y-2">
-            <label className="text-sm">Təqdimedici sənəd (.doc, .docx, .pdf)</label>
+            <label className="text-sm">{page.document[language]}</label>
             <input
               type="file"
               name="document"
@@ -314,13 +305,13 @@ export default function ApplyTwo() {
               className="w-[48%] bg-gray-600 cursor-pointer text-white py-3 rounded-lg transition duration-300"
               onClick={handleGoBack}
             >
-              Geri
+              {buttons.backBtn[language]}
             </button>
             <button
               className="w-[48%] bg-blue-600 cursor-pointer hover:bg-blue-700 text-white py-3 rounded-lg transition duration-300"
               onClick={handleGoNext}
             >
-              Növbəti
+              {buttons.nextBtn[language]}
             </button>
           </div>
         </div>
