@@ -50,9 +50,9 @@ export default function ControlledAccordions() {
                       <path
                         d="M14.172 27V23.1319C14.172 22.3282 14.573 21.6767 15.0675 21.6767H16.4296C16.9242 21.6767 17.3251 22.3282 17.3251 23.1319V27M1.1543 41.799H2.63199C3.47201 41.799 4.30292 42.0815 5.07251 42.6285L6.29456 43.4972C7.30842 44.2179 8.47315 44.1083 9.42905 43.2022C10.362 42.3177 11.4954 42.191 12.4941 42.8592L13.294 43.3947C14.4874 44.193 15.8293 44.1692 17.0117 43.3285L17.5392 42.9537C18.563 42.2257 19.737 42.3139 20.7151 43.1924C21.7296 44.1034 22.9525 44.1626 23.9984 43.3513L24.4322 43.0149C25.4131 42.2544 26.5621 42.3317 27.5008 43.2214C28.4397 44.1115 29.5887 44.1888 30.5696 43.4279L31.1475 42.9799C32.0999 42.2411 33.2158 42.3163 34.1273 43.1805C35.0866 44.0894 36.2678 44.1223 37.2454 43.2669L37.3956 43.1357C38.3579 42.2936 39.5072 42.2323 40.5014 42.9698L41.3636 43.6096C42.235 44.256 43.2476 44.1528 44.0628 43.3348L44.2493 43.1476C45.071 42.3226 46.1107 42.3342 46.9255 43.1766C47.7844 44.0649 48.8881 44.0257 49.7222 43.0769L50.0436 42.7115C50.5657 42.1175 51.1875 41.799 51.8248 41.799H52.8466M1.1543 49.7923H2.63199C3.47201 49.7923 4.30292 50.0748 5.07251 50.6218L6.29456 51.4905C7.30842 52.2112 8.47315 52.1016 9.42905 51.1955C10.362 50.311 11.4954 50.1843 12.4941 50.8525L13.294 51.388C14.4874 52.1863 15.8293 52.1625 17.0117 51.3222L17.5392 50.947C18.563 50.219 19.737 50.3075 20.7151 51.1857C21.7296 52.0967 22.9525 52.1559 23.9984 51.3446L24.4322 51.0082C25.4131 50.2477 26.5621 50.325 27.5008 51.2147C28.4397 52.1048 29.5887 52.1821 30.5696 51.4212L31.1475 50.9732C32.0999 50.2344 33.2158 50.3096 34.1273 51.1738C35.0866 52.0831 36.2678 52.1156 37.2454 51.2602L37.3956 51.129C38.3579 50.2869 39.5072 50.2256 40.5014 50.9631L41.3636 51.6029C42.235 52.2493 43.2476 52.1464 44.0628 51.3281L44.2493 51.1409C45.071 50.3163 46.1107 50.3275 46.9255 51.1699C47.7844 52.0582 48.8881 52.019 49.7222 51.0702L50.0436 50.7048C50.5657 50.1108 51.1875 49.7923 51.8248 49.7923H52.8466M10.2837 42.477L5.93314 31.8728M5.93314 31.8728V29.1422C5.93314 28.3385 6.33408 27.687 6.82865 27.687H46.3097C46.8042 27.687 47.205 28.3385 47.205 29.1422V31.8728M5.93314 31.8728H47.205M47.205 31.8728L43.5989 43.7793M28.2583 27.5939V9.92021H35.5277M35.5277 9.92021V1.36243H43.4845V9.92021M35.5277 9.92021H43.4845M35.5277 9.92021V19.1291V27.5939M43.4845 9.92021V27.5939M43.4849 19.1291H28.3154"
                         stroke="url(#paint0_linear_867_2661)"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
                       />
                       <defs>
                         <linearGradient
@@ -63,16 +63,16 @@ export default function ControlledAccordions() {
                           y2="45.6856"
                           gradientUnits="userSpaceOnUse"
                         >
-                          <stop stop-color="#377FD3" />
-                          <stop offset="0.1517" stop-color="#4978D6" />
-                          <stop offset="0.4551" stop-color="#7866DF" />
-                          <stop offset="0.6336" stop-color="#975BE4" />
-                          <stop offset="0.6909" stop-color="#9959DF" />
-                          <stop offset="0.7542" stop-color="#9F52D2" />
-                          <stop offset="0.8206" stop-color="#A946BC" />
-                          <stop offset="0.8889" stop-color="#B6369D" />
-                          <stop offset="0.9581" stop-color="#C82276" />
-                          <stop offset="1" stop-color="#D4145A" />
+                          <stop stopColor="#377FD3" />
+                          <stop offset="0.1517" stopColor="#4978D6" />
+                          <stop offset="0.4551" stopColor="#7866DF" />
+                          <stop offset="0.6336" stopColor="#975BE4" />
+                          <stop offset="0.6909" stopColor="#9959DF" />
+                          <stop offset="0.7542" stopColor="#9F52D2" />
+                          <stop offset="0.8206" stopColor="#A946BC" />
+                          <stop offset="0.8889" stopColor="#B6369D" />
+                          <stop offset="0.9581" stopColor="#C82276" />
+                          <stop offset="1" stopColor="#D4145A" />
                         </linearGradient>
                       </defs>
                     </svg>
@@ -123,7 +123,7 @@ export default function ControlledAccordions() {
                       viewBox="0 0 56 56"
                       fill="none"
                     >
-                      <g clip-path="url(#clip0_867_589)">
+                      <g clipPath="url(#clip0_867_589)">
                         <path
                           d="M34.6929 33.5563C34.6929 35.3316 33.9877 37.0342 32.7323 38.2895C31.477 39.5448 29.7744 40.25 27.9991 40.25C26.2238 40.25 24.5213 39.5448 23.2659 38.2895C22.0106 37.0342 21.3054 35.3316 21.3054 33.5563C21.3054 31.781 22.0106 30.0784 23.2659 28.8231C24.5213 27.5678 26.2238 26.8625 27.9991 26.8625C29.7744 26.8625 31.477 27.5678 32.7323 28.8231C33.9877 30.0784 34.6929 31.781 34.6929 33.5563ZM41.7541 54.0225H14.2441C14.2441 46.4188 20.3954 40.25 27.9991 40.25C35.6029 40.2588 41.7541 46.4188 41.7541 54.0225Z"
                           fill="url(#paint0_linear_867_589)"
@@ -162,16 +162,16 @@ export default function ControlledAccordions() {
                           y2="50.6548"
                           gradientUnits="userSpaceOnUse"
                         >
-                          <stop stop-color="#377FD3" />
-                          <stop offset="0.1517" stop-color="#4978D6" />
-                          <stop offset="0.4551" stop-color="#7866DF" />
-                          <stop offset="0.6336" stop-color="#975BE4" />
-                          <stop offset="0.6909" stop-color="#9959DF" />
-                          <stop offset="0.7542" stop-color="#9F52D2" />
-                          <stop offset="0.8206" stop-color="#A946BC" />
-                          <stop offset="0.8889" stop-color="#B6369D" />
-                          <stop offset="0.9581" stop-color="#C82276" />
-                          <stop offset="1" stop-color="#D4145A" />
+                          <stop stopColor="#377FD3" />
+                          <stop offset="0.1517" stopColor="#4978D6" />
+                          <stop offset="0.4551" stopColor="#7866DF" />
+                          <stop offset="0.6336" stopColor="#975BE4" />
+                          <stop offset="0.6909" stopColor="#9959DF" />
+                          <stop offset="0.7542" stopColor="#9F52D2" />
+                          <stop offset="0.8206" stopColor="#A946BC" />
+                          <stop offset="0.8889" stopColor="#B6369D" />
+                          <stop offset="0.9581" stopColor="#C82276" />
+                          <stop offset="1" stopColor="#D4145A" />
                         </linearGradient>
                         <linearGradient
                           id="paint1_linear_867_589"
@@ -181,16 +181,16 @@ export default function ControlledAccordions() {
                           y2="7.18573"
                           gradientUnits="userSpaceOnUse"
                         >
-                          <stop stop-color="#377FD3" />
-                          <stop offset="0.1517" stop-color="#4978D6" />
-                          <stop offset="0.4551" stop-color="#7866DF" />
-                          <stop offset="0.6336" stop-color="#975BE4" />
-                          <stop offset="0.6909" stop-color="#9959DF" />
-                          <stop offset="0.7542" stop-color="#9F52D2" />
-                          <stop offset="0.8206" stop-color="#A946BC" />
-                          <stop offset="0.8889" stop-color="#B6369D" />
-                          <stop offset="0.9581" stop-color="#C82276" />
-                          <stop offset="1" stop-color="#D4145A" />
+                          <stop stopColor="#377FD3" />
+                          <stop offset="0.1517" stopColor="#4978D6" />
+                          <stop offset="0.4551" stopColor="#7866DF" />
+                          <stop offset="0.6336" stopColor="#975BE4" />
+                          <stop offset="0.6909" stopColor="#9959DF" />
+                          <stop offset="0.7542" stopColor="#9F52D2" />
+                          <stop offset="0.8206" stopColor="#A946BC" />
+                          <stop offset="0.8889" stopColor="#B6369D" />
+                          <stop offset="0.9581" stopColor="#C82276" />
+                          <stop offset="1" stopColor="#D4145A" />
                         </linearGradient>
                         <linearGradient
                           id="paint2_linear_867_589"
@@ -200,16 +200,16 @@ export default function ControlledAccordions() {
                           y2="12.0004"
                           gradientUnits="userSpaceOnUse"
                         >
-                          <stop stop-color="#377FD3" />
-                          <stop offset="0.1517" stop-color="#4978D6" />
-                          <stop offset="0.4551" stop-color="#7866DF" />
-                          <stop offset="0.6336" stop-color="#975BE4" />
-                          <stop offset="0.6909" stop-color="#9959DF" />
-                          <stop offset="0.7542" stop-color="#9F52D2" />
-                          <stop offset="0.8206" stop-color="#A946BC" />
-                          <stop offset="0.8889" stop-color="#B6369D" />
-                          <stop offset="0.9581" stop-color="#C82276" />
-                          <stop offset="1" stop-color="#D4145A" />
+                          <stop stopColor="#377FD3" />
+                          <stop offset="0.1517" stopColor="#4978D6" />
+                          <stop offset="0.4551" stopColor="#7866DF" />
+                          <stop offset="0.6336" stopColor="#975BE4" />
+                          <stop offset="0.6909" stopColor="#9959DF" />
+                          <stop offset="0.7542" stopColor="#9F52D2" />
+                          <stop offset="0.8206" stopColor="#A946BC" />
+                          <stop offset="0.8889" stopColor="#B6369D" />
+                          <stop offset="0.9581" stopColor="#C82276" />
+                          <stop offset="1" stopColor="#D4145A" />
                         </linearGradient>
                         <linearGradient
                           id="paint3_linear_867_589"
@@ -219,16 +219,16 @@ export default function ControlledAccordions() {
                           y2="24.7151"
                           gradientUnits="userSpaceOnUse"
                         >
-                          <stop stop-color="#377FD3" />
-                          <stop offset="0.1517" stop-color="#4978D6" />
-                          <stop offset="0.4551" stop-color="#7866DF" />
-                          <stop offset="0.6336" stop-color="#975BE4" />
-                          <stop offset="0.6909" stop-color="#9959DF" />
-                          <stop offset="0.7542" stop-color="#9F52D2" />
-                          <stop offset="0.8206" stop-color="#A946BC" />
-                          <stop offset="0.8889" stop-color="#B6369D" />
-                          <stop offset="0.9581" stop-color="#C82276" />
-                          <stop offset="1" stop-color="#D4145A" />
+                          <stop stopColor="#377FD3" />
+                          <stop offset="0.1517" stopColor="#4978D6" />
+                          <stop offset="0.4551" stopColor="#7866DF" />
+                          <stop offset="0.6336" stopColor="#975BE4" />
+                          <stop offset="0.6909" stopColor="#9959DF" />
+                          <stop offset="0.7542" stopColor="#9F52D2" />
+                          <stop offset="0.8206" stopColor="#A946BC" />
+                          <stop offset="0.8889" stopColor="#B6369D" />
+                          <stop offset="0.9581" stopColor="#C82276" />
+                          <stop offset="1" stopColor="#D4145A" />
                         </linearGradient>
                         <linearGradient
                           id="paint4_linear_867_589"
@@ -238,16 +238,16 @@ export default function ControlledAccordions() {
                           y2="12.0029"
                           gradientUnits="userSpaceOnUse"
                         >
-                          <stop stop-color="#377FD3" />
-                          <stop offset="0.1517" stop-color="#4978D6" />
-                          <stop offset="0.4551" stop-color="#7866DF" />
-                          <stop offset="0.6336" stop-color="#975BE4" />
-                          <stop offset="0.6909" stop-color="#9959DF" />
-                          <stop offset="0.7542" stop-color="#9F52D2" />
-                          <stop offset="0.8206" stop-color="#A946BC" />
-                          <stop offset="0.8889" stop-color="#B6369D" />
-                          <stop offset="0.9581" stop-color="#C82276" />
-                          <stop offset="1" stop-color="#D4145A" />
+                          <stop stopColor="#377FD3" />
+                          <stop offset="0.1517" stopColor="#4978D6" />
+                          <stop offset="0.4551" stopColor="#7866DF" />
+                          <stop offset="0.6336" stopColor="#975BE4" />
+                          <stop offset="0.6909" stopColor="#9959DF" />
+                          <stop offset="0.7542" stopColor="#9F52D2" />
+                          <stop offset="0.8206" stopColor="#A946BC" />
+                          <stop offset="0.8889" stopColor="#B6369D" />
+                          <stop offset="0.9581" stopColor="#C82276" />
+                          <stop offset="1" stopColor="#D4145A" />
                         </linearGradient>
                         <linearGradient
                           id="paint5_linear_867_589"
@@ -257,16 +257,16 @@ export default function ControlledAccordions() {
                           y2="24.7151"
                           gradientUnits="userSpaceOnUse"
                         >
-                          <stop stop-color="#377FD3" />
-                          <stop offset="0.1517" stop-color="#4978D6" />
-                          <stop offset="0.4551" stop-color="#7866DF" />
-                          <stop offset="0.6336" stop-color="#975BE4" />
-                          <stop offset="0.6909" stop-color="#9959DF" />
-                          <stop offset="0.7542" stop-color="#9F52D2" />
-                          <stop offset="0.8206" stop-color="#A946BC" />
-                          <stop offset="0.8889" stop-color="#B6369D" />
-                          <stop offset="0.9581" stop-color="#C82276" />
-                          <stop offset="1" stop-color="#D4145A" />
+                          <stop stopColor="#377FD3" />
+                          <stop offset="0.1517" stopColor="#4978D6" />
+                          <stop offset="0.4551" stopColor="#7866DF" />
+                          <stop offset="0.6336" stopColor="#975BE4" />
+                          <stop offset="0.6909" stopColor="#9959DF" />
+                          <stop offset="0.7542" stopColor="#9F52D2" />
+                          <stop offset="0.8206" stopColor="#A946BC" />
+                          <stop offset="0.8889" stopColor="#B6369D" />
+                          <stop offset="0.9581" stopColor="#C82276" />
+                          <stop offset="1" stopColor="#D4145A" />
                         </linearGradient>
                         <clipPath id="clip0_867_589">
                           <rect width="56" height="56" fill="white" />
@@ -337,16 +337,16 @@ export default function ControlledAccordions() {
                           y2="19.2628"
                           gradientUnits="userSpaceOnUse"
                         >
-                          <stop stop-color="#377FD3" />
-                          <stop offset="0.1517" stop-color="#4978D6" />
-                          <stop offset="0.4551" stop-color="#7866DF" />
-                          <stop offset="0.6336" stop-color="#975BE4" />
-                          <stop offset="0.6909" stop-color="#9959DF" />
-                          <stop offset="0.7542" stop-color="#9F52D2" />
-                          <stop offset="0.8206" stop-color="#A946BC" />
-                          <stop offset="0.8889" stop-color="#B6369D" />
-                          <stop offset="0.9581" stop-color="#C82276" />
-                          <stop offset="1" stop-color="#D4145A" />
+                          <stop stopColor="#377FD3" />
+                          <stop offset="0.1517" stopColor="#4978D6" />
+                          <stop offset="0.4551" stopColor="#7866DF" />
+                          <stop offset="0.6336" stopColor="#975BE4" />
+                          <stop offset="0.6909" stopColor="#9959DF" />
+                          <stop offset="0.7542" stopColor="#9F52D2" />
+                          <stop offset="0.8206" stopColor="#A946BC" />
+                          <stop offset="0.8889" stopColor="#B6369D" />
+                          <stop offset="0.9581" stopColor="#C82276" />
+                          <stop offset="1" stopColor="#D4145A" />
                         </linearGradient>
                         <linearGradient
                           id="paint1_linear_867_1385"
@@ -356,16 +356,16 @@ export default function ControlledAccordions() {
                           y2="46.0298"
                           gradientUnits="userSpaceOnUse"
                         >
-                          <stop stop-color="#377FD3" />
-                          <stop offset="0.1517" stop-color="#4978D6" />
-                          <stop offset="0.4551" stop-color="#7866DF" />
-                          <stop offset="0.6336" stop-color="#975BE4" />
-                          <stop offset="0.6909" stop-color="#9959DF" />
-                          <stop offset="0.7542" stop-color="#9F52D2" />
-                          <stop offset="0.8206" stop-color="#A946BC" />
-                          <stop offset="0.8889" stop-color="#B6369D" />
-                          <stop offset="0.9581" stop-color="#C82276" />
-                          <stop offset="1" stop-color="#D4145A" />
+                          <stop stopColor="#377FD3" />
+                          <stop offset="0.1517" stopColor="#4978D6" />
+                          <stop offset="0.4551" stopColor="#7866DF" />
+                          <stop offset="0.6336" stopColor="#975BE4" />
+                          <stop offset="0.6909" stopColor="#9959DF" />
+                          <stop offset="0.7542" stopColor="#9F52D2" />
+                          <stop offset="0.8206" stopColor="#A946BC" />
+                          <stop offset="0.8889" stopColor="#B6369D" />
+                          <stop offset="0.9581" stopColor="#C82276" />
+                          <stop offset="1" stopColor="#D4145A" />
                         </linearGradient>
                       </defs>
                     </svg>
