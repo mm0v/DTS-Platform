@@ -5,6 +5,7 @@ import { Download } from "lucide-react";
 import BackgroundVideo from "../components/BackgroundVideo";
 import { FormContext } from "../context/FormContext";
 import { useLanguage } from "../context/LanguageContext";
+import ApplySteps from "../components/ApplySteps";
 interface FileState {
   companyRegistry: File | null
   financialReports: File | null
@@ -129,6 +130,7 @@ export default function ApplyFive() {
     <>
       <BackgroundVideo />
       <div className="min-h-screen bg-[url('/images/space-background.jpg')] bg-cover bg-center bg-no-repeat text-white flex flex-col items-center justify-center py-10">
+        <ApplySteps step={5} />
         {/* Modal */}
         {showModal && (
           <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
@@ -154,7 +156,7 @@ export default function ApplyFive() {
           </div>
         )}
         {/* Progress Bar */}
-        <div className="w-full max-w-4xl mb-8 px-4">
+        {/* <div className="w-full max-w-4xl mb-8 px-4">
           <div className="relative w-full h-[1px] bg-blue-500">
             {[1, 2, 3, 4, 5].map((num) => (
               <div
@@ -173,7 +175,7 @@ export default function ApplyFive() {
             <div className="text-center max-w-[100px] text-blue-400">Liderlik və öhdəliklər</div>
             <div className="text-center max-w-[100px]">Tələb olunan sənədlər</div>
           </div>
-        </div>
+        </div> */}
 
         {/* Form */}
         <div className="w-full max-w-4xl p-8 rounded-lg">
@@ -308,11 +310,10 @@ export default function ApplyFive() {
               <button
                 type="submit"
                 disabled={!allAgreementsChecked || isSubmitting}
-                className={`flex-1 py-3 rounded-lg transition-colors ${
-                  allAgreementsChecked && !isSubmitting
-                    ? "bg-blue-600 hover:bg-blue-700 text-white cursor-pointer"
-                    : "bg-blue-900/50 text-gray-400 cursor-not-allowed "
-                }`}
+                className={`flex-1 py-3 rounded-lg transition-colors ${allAgreementsChecked && !isSubmitting
+                  ? "bg-blue-600 hover:bg-blue-700 text-white cursor-pointer"
+                  : "bg-blue-900/50 text-gray-400 cursor-not-allowed "
+                  }`}
               >
                 {isSubmitting
                   ? page.buttons.submitting[language]
