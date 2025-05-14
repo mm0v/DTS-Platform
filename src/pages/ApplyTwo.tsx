@@ -4,7 +4,7 @@ import type React from "react"
 
 import { useState, useContext, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
-import { Upload } from "lucide-react"
+// import { Upload } from "lucide-react"
 import BackgroundVideo from "../components/BackgroundVideo"
 import { FormContext } from "../context/FormContext"
 import { useLanguage } from "../context/LanguageContext";
@@ -32,7 +32,7 @@ export default function ApplyTwo() {
     document: "",
   })
 
-  const [fileName, setFileName] = useState<string>("")
+  // const [fileName, setFileName] = useState<string>("")
 
   // Update local form data when context data changes
   useEffect(() => {
@@ -135,12 +135,12 @@ export default function ApplyTwo() {
   }
 
   // Handle file input change
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (file) {
-      setFileName(file.name)
-    }
-  }
+  // const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const file = e.target.files?.[0]
+  //   if (file) {
+  //     setFileName(file.name)
+  //   }
+  // }
 
   // Geri butonuna basıldığında Apply sayfasına git
   const handleGoBack = () => {
