@@ -5,7 +5,7 @@ import Navbar from './layout/Navbar';
 import Footer from './layout/Footer';
 import { LanguageProvider } from './context/LanguageContext';
 import LoadingSpinner from './components/LoadingSpinner'; // We'll create this component
-
+// test
 // Lazy load all page components
 const Home = lazy(() => import('./pages/Home'));
 const Compliance_And_Prioritization = lazy(() => import('./pages/Compliance_And_Prioritization'));
