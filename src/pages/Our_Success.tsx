@@ -50,7 +50,7 @@ const Our_Success = () => {
                   viewBox="0 0 269 102"
                   fill="none"
                 >
-                  <g clip-path="url(#clip0_937_374)">
+                  <g clipPath="url(#clip0_937_374)">
                     <path
                       fillRule="evenodd"
                       clipRule="evenodd"
