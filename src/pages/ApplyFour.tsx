@@ -96,7 +96,7 @@ export default function ApplyFour() {
     navigate("/apply/three");
   };
 
-  // Növbəti butonuna basıldığında ApplyFive sayfasına git
+  // Növbəti butonuna basıldığında ApplyFive səhifəsinə keçid
   const handleNext = () => {
     navigate("/apply/five");
   };

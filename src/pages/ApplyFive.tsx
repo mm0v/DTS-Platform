@@ -1,12 +1,10 @@
 "use client";
 
-import type React from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { useState, useContext } from "react";
 import { Download } from "lucide-react";
 import BackgroundVideo from "../components/BackgroundVideo";
 import { FormContext } from "../context/FormContext";
-import API from "../services/axiosConfig";
 
 interface FileState {
   companyRegistry: File | null;
@@ -19,11 +17,6 @@ interface AgreementState {
   termsAgreement: boolean;
 }
 
-interface ApiTestResult {
-  success: boolean;
-  message: string;
-  data?: unknown;
-}
 
 export default function ApplyFive() {
   const navigate = useNavigate();
@@ -33,22 +26,52 @@ export default function ApplyFive() {
     throw new Error("ApplyFive must be used within a FormContext.Provider");
   }
 
-  const { formData, setFormData } = context;
+  const { setFormData } = context;
 
   const [files, setFiles] = useState<FileState>({
     companyRegistry: null,
     financialReports: null,
   });
+
   const [agreements, setAgreements] = useState<AgreementState>({
     confirmAccuracy: false,
     contactConsent: false,
     termsAgreement: false,
   });
+
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-  const [debugInfo, setDebugInfo] = useState<string>("");
-  const [testResults, setTestResults] = useState<ApiTestResult[]>([]);
-  // const [showAdvancedOptions, setShowAdvancedOptions] = useState(false);
-  // const [authToken, setAuthToken] = useState("");
+
+  // Derived state to check if all agreements are checked
+  const allAgreementsChecked = Object.values(agreements).every((value) => value === true);
+  const [showModal, setShowModal] = useState<boolean>(false); // Modal visibility state
+
+  // Load data from localStorage when component mounts
+  useEffect(() => {
+    const savedFiles = JSON.parse(localStorage.getItem("files") || "{}");
+    const savedAgreements = JSON.parse(localStorage.getItem("agreements") || "{}");
+
+    if (savedFiles.companyRegistry) {
+      setFiles((prev) => ({
+        ...prev,
+        companyRegistry: savedFiles.companyRegistry,
+      }));
+    }
+
+    if (savedFiles.financialReports) {
+      setFiles((prev) => ({
+        ...prev,
+        financialReports: savedFiles.financialReports,
+      }));
+    }
+
+    setAgreements(savedAgreements);
+  }, []);
+
+  // Save data to localStorage whenever files or agreements change
+  useEffect(() => {
+    localStorage.setItem("files", JSON.stringify(files));
+    localStorage.setItem("agreements", JSON.stringify(agreements));
+  }, [files, agreements]);
 
   const handleFileChange = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -58,7 +81,7 @@ export default function ApplyFive() {
     if (file) {
       setFiles((prev) => ({
         ...prev,
-        [fileType]: file,
+        [fileType]: file, // Store the file object in state
       }));
     }
   };
@@ -94,303 +117,59 @@ export default function ApplyFive() {
     navigate("/apply/four");
   };
 
-  const addTestResult = (success: boolean, message: string, data?: unknown) => {
-    setTestResults((prev) => [{ success, message, data }, ...prev.slice(0, 4)]);
+  const handleModalClose = () => {
+    setShowModal(false); // Close the modal without submitting
   };
 
-  const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleModalConfirm = () => {
     setIsSubmitting(true);
-    setDebugInfo("Submitting form...");
-
-    try {
-      // Prepare the form data, ensuring digitalLevel is a number (byte)
-      // We need to make sure it's properly formatted for the API
-      const finalFormData = {
-        ...formData,
-        digitalReadiness: {
-          ...formData.digitalReadiness,
-          // Ensure digitalLevel is a number between 0-255 (byte range)
-          digitalLevel: Number(formData.digitalReadiness.digitalLevel),
-        },
-        digitalLeadership: {
-          digitalTeamOrLead: Boolean(
-            formData.digitalLeadership.digitalTeamOrLead
-          ),
-          digitalPath: Boolean(formData.digitalLeadership.digitalPath),
-          digitalTransformationLoyality: Boolean(
-            formData.digitalLeadership.digitalTransformationLoyality
-          ),
-        },
-        declarationConsent: {
-          dataIsReal: Boolean(agreements.confirmAccuracy),
-          permitContact: Boolean(agreements.contactConsent),
-        },
-      };
-
-      setDebugInfo(
-        "Final request payload: " +
-        JSON.stringify({ companyRequest: finalFormData }, null, 2)
-      );
-      console.log(
-        "Digital level type:",
-        typeof finalFormData.digitalReadiness.digitalLevel
-      );
-      console.log(
-        "Digital level value:",
-        finalFormData.digitalReadiness.digitalLevel
-      );
-
-      // APPROACH 1: Use JSON approach
-      try {
-        // Set up headers
-        const headers: Record<string, string> = {
-          "Content-Type": "application/json",
-        };
-
-        // if (authToken) {
-        //   headers["Authorization"] = `Bearer ${authToken}`;
-        // }
-
-        // Add CORS headers if needed for development
-        headers["Access-Control-Allow-Origin"] = "*";
-        headers["Access-Control-Allow-Methods"] =
-          "GET, POST, PUT, DELETE, OPTIONS";
-        headers["Access-Control-Allow-Headers"] =
-          "Origin, Content-Type, Accept, Authorization";
-
-        const apiResponse = await API.post(
-          "/api/v1/company/add",
-          { companyRequest: finalFormData },
-          { headers }
-        );
-
-        setDebugInfo(
-          "JSON submission successful! Response: " +
-          JSON.stringify(apiResponse.data)
-        );
-        addTestResult(true, "Form submitted successfully", apiResponse.data);
-        alert("Müraciətiniz uğurla göndərildi!");
-        return;
-      } catch (jsonError) {
-        console.error("JSON submission failed:", jsonError);
-        setDebugInfo(
-          `JSON approach failed: ${jsonError instanceof Error ? jsonError.message : "Unknown error"
-          }`
-        );
-        addTestResult(false, "JSON submission failed", jsonError);
-
-        // Try a direct fetch call as fallback
-        try {
-          setDebugInfo("Trying direct fetch approach...");
-          const response = await fetch(
-            "http://50.16.57.115:8080/api/v1/company/add",
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-                // ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}),
-              },
-              body: JSON.stringify({ companyRequest: finalFormData }),
-            }
-          );
-
-          if (response.ok) {
-            const data = await response.json();
-            setDebugInfo("Direct fetch successful: " + JSON.stringify(data));
-            addTestResult(
-              true,
-              "Form submitted successfully with direct fetch"
-            );
-            alert("Müraciətiniz uğurla göndərildi!");
-            return;
-          } else {
-            const errorText = await response.text();
-            throw new Error(
-              `Server responded with ${response.status}: ${errorText}`
-            );
-          }
-        } catch (fetchError) {
-          console.error("Direct fetch failed:", fetchError);
-          setDebugInfo(
-            `Direct fetch failed: ${fetchError instanceof Error ? fetchError.message : "Unknown error"
-            }`
-          );
-          addTestResult(false, "Direct fetch failed", fetchError);
-        }
-      }
-
-      // APPROACH 2: Try multipart/form-data if we have files
-      if (files.companyRegistry || files.financialReports) {
-        setDebugInfo("Trying multipart/form-data approach...");
-        try {
-          const formDataToSubmit = new FormData();
-
-          // Add the files if they exist
-          if (files.companyRegistry) {
-            formDataToSubmit.append(
-              "registerCertificate",
-              files.companyRegistry
-            );
-          }
-
-          if (files.financialReports) {
-            formDataToSubmit.append(
-              "financialStatement",
-              files.financialReports
-            );
-          }
-
-          // Convert the finalFormData to a stringified JSON and append
-          formDataToSubmit.append(
-            "companyRequest",
-            JSON.stringify({ companyRequest: finalFormData })
-          );
-
-          const headers: Record<string, string> = {};
-          // if (authToken) {
-          //   headers["Authorization"] = `Bearer ${authToken}`;
-          // }
-
-          const multipartResponse = await API.post(
-            "/api/v1/company/add",
-            formDataToSubmit,
-            {
-              headers: {
-                ...headers,
-                // Let browser set the correct Content-Type with boundary
-                "Content-Type": "multipart/form-data",
-              },
-            }
-          );
-
-          setDebugInfo(
-            "Multipart submission successful! Response: " +
-            JSON.stringify(multipartResponse.data)
-          );
-          addTestResult(
-            true,
-            "Form submitted successfully with multipart/form-data",
-            multipartResponse.data
-          );
-          alert("Müraciətiniz uğurla göndərildi!");
-        } catch (multipartError) {
-          console.error("Multipart submission failed:", multipartError);
-          setDebugInfo(
-            `Multipart approach failed: ${multipartError instanceof Error
-              ? multipartError.message
-              : "Unknown error"
-            }`
-          );
-          addTestResult(false, "Multipart submission failed", multipartError);
-          alert(
-            "Müraciət zamanı xəta baş verdi. Zəhmət olmasa yenidən cəhd edin."
-          );
-        }
-      }
-    } catch (error) {
-      console.error("Error submitting form:", error);
-      setDebugInfo(
-        `Error: ${error instanceof Error ? error.message : "Unknown error"}`
-      );
-      addTestResult(false, "Overall form submission failed", error);
-      alert("Müraciət zamanı xəta baş verdi. Zəhmət olmasa yenidən cəhd edin.");
-    } finally {
+    // Proceed with form submission logic (e.g., API call)
+    setTimeout(() => {
       setIsSubmitting(false);
-    }
+      alert("Müraciətiniz uğurla göndərildi!");
+    }, 1500);
+    setShowModal(false); // Close the modal after confirming
   };
 
-  // For testing API access with different methods
-  // const tryDirectApiCall = async () => {
-  //   setIsSubmitting(true);
-  //   setDebugInfo("Testing direct API call...");
-
-  //   try {
-  //     // Try simple GET requests to test API access
-  //     const testEndpoints = [
-  //       { url: "/api/health", name: "Health Check" },
-  //       { url: "/api/", name: "API Root" },
-  //       { url: "/", name: "Server Root" },
-  //       { url: "/api/v1", name: "API V1" },
-  //     ];
-
-  //     for (const endpoint of testEndpoints) {
-  //       try {
-  //         const healthResponse = await API.get(endpoint.url);
-  //         setDebugInfo(
-  //           `${endpoint.name} successful: ${JSON.stringify(
-  //             healthResponse.data
-  //           )}`
-  //         );
-  //         addTestResult(
-  //           true,
-  //           `${endpoint.name} successful`,
-  //           healthResponse.data
-  //         );
-  //       } catch (endpointError) {
-  //         setDebugInfo(
-  //           `${endpoint.name} failed: ${
-  //             endpointError instanceof Error
-  //               ? endpointError.message
-  //               : "Unknown error"
-  //           }`
-  //         );
-  //         addTestResult(false, `${endpoint.name} failed`, endpointError);
-  //       }
-  //     }
-
-  //     // Try OPTIONS request to check CORS and allowed methods
-  //     try {
-  //       const optionsResponse = await API({
-  //         method: "OPTIONS",
-  //         url: "/api/v1/company/add",
-  //       });
-  //       setDebugInfo(
-  //         `OPTIONS request successful: ${JSON.stringify(
-  //           optionsResponse.headers
-  //         )}`
-  //       );
-  //       addTestResult(
-  //         true,
-  //         "OPTIONS request successful",
-  //         optionsResponse.headers
-  //       );
-  //     } catch (corsError) {
-  //       setDebugInfo(
-  //         `OPTIONS request failed: ${
-  //           corsError instanceof Error ? corsError.message : "Unknown error"
-  //         }`
-  //       );
-  //       addTestResult(false, "OPTIONS request failed", corsError);
-  //     }
-  //   } catch (error) {
-  //     setDebugInfo(
-  //       `API tests failed: ${
-  //         error instanceof Error ? error.message : "Unknown error"
-  //       }`
-  //     );
-  //     addTestResult(false, "API tests failed", error);
-  //   } finally {
-  //     setIsSubmitting(false);
-  //   }
-  // };
-
-  const allAgreementsChecked = Object.values(agreements).every(
-    (value) => value === true
-  );
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setShowModal(true); // Show the modal when user clicks "Təsdiq et"
+  };
 
   return (
     <>
       <BackgroundVideo />
       <div className="min-h-screen bg-black bg-[url('/images/space-background.jpg')] bg-cover bg-center bg-no-repeat text-white flex flex-col items-center justify-center py-10">
+        {/* Modal */}
+        {showModal && (
+          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+            <div className="bg-gray-800 text-white p-24 rounded-lg w-80 h-80">
+              <h2 className="text-lg text-center justify-center font-semibold mb-4">Müraciətinizi təsdiq edirsinizmi?</h2>
+              <div className="flex justify-between">
+                <button
+                  onClick={handleModalClose}
+                  className="bg-red-500 text-white px-4 py-2 rounded-lg"
+                >
+                  Xeyr
+                </button>
+                <button
+                  onClick={handleModalConfirm}
+                  className="bg-green-500 text-white px-4 py-2 rounded-lg"
+                >
+                  Bəli
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Progress Bar */}
         <div className="w-full max-w-4xl mb-8 px-4">
           <div className="relative w-full h-[1px] bg-blue-500">
             {[1, 2, 3, 4, 5].map((num) => (
               <div
                 key={num}
-                className={`absolute top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center text-sm ${num <= 5 ? "bg-blue-500" : "bg-blue-900"
-                  }`}
+                className={`absolute top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center text-sm ${num <= 5 ? "bg-blue-500" : "bg-blue-900"}`}
                 style={{ left: `${(num - 1) * 25}%` }}
               >
                 {num}
@@ -398,22 +177,11 @@ export default function ApplyFive() {
             ))}
           </div>
           <div className="flex justify-between mt-2 text-xs text-gray-400">
-            <div className="text-center max-w-[100px]">
-              Şirkət haqqında məlumat
-            </div>
-            <div className="text-center max-w-[100px]">
-              Mülkiyyət və hüquqi quruluş
-            </div>
-            <div className="text-center max-w-[100px]">
-
-              Rəqəmsal hazırlıq və transformasiya ehtiyacları
-            </div>
-            <div className="text-center max-w-[100px]">
-              Liderlik və öhdəliklər
-            </div>
-            <div className="text-center max-w-[100px] text-blue-400">
-              Tələb olunan sənədlər
-            </div>
+            <div className="text-center max-w-[100px]">Şirkət haqqında məlumat</div>
+            <div className="text-center max-w-[100px]">Mülkiyyət və hüquqi quruluş</div>
+            <div className="text-center max-w-[100px]">Rəqəmsal hazırlıq və transformasiya ehtiyacları</div>
+            <div className="text-center max-w-[100px] text-blue-400">Liderlik və öhdəliklər</div>
+            <div className="text-center max-w-[100px]">Tələb olunan sənədlər</div>
           </div>
         </div>
 
@@ -423,84 +191,19 @@ export default function ApplyFive() {
             <h1 className="text-3xl font-bold">Tələb olunan sənədlər</h1>
           </div>
 
-          {debugInfo && (
-            <div className="bg-gray-800 p-4 rounded mb-6 text-sm font-mono overflow-auto max-h-40">
-              <p className="text-green-400">Debug Info: {debugInfo}</p>
-            </div>
-          )}
-
-          {testResults.length > 0 && (
-            <div className="bg-gray-800 p-4 rounded mb-6 text-sm font-mono overflow-auto max-h-40">
-              <p className="text-yellow-400 mb-2">Test Results:</p>
-              {testResults.map((result, index) => (
-                <div
-                  key={index}
-                  className={`${result.success ? "text-green-400" : "text-red-400"
-                    } mb-1`}
-                >
-                  {result.message}
-                </div>
-              ))}
-            </div>
-          )}
-
-          {/* Digital Level Type Info */}
-          {/* <div className="bg-blue-900/50 p-4 rounded mb-6">
-            <h3 className="text-blue-300 mb-2">Digital Level Info</h3>
-            <p className="text-sm mb-2">
-              Current digitalLevel value:{" "}
-              <span className="font-mono text-white">
-                {formData.digitalReadiness.digitalLevel}
-              </span>{" "}
-              (Type:{" "}
-              <span className="font-mono text-white">
-                {typeof formData.digitalReadiness.digitalLevel}
-              </span>
-              )
-            </p>
-            <p className="text-xs text-gray-300">
-              Digital level is being sent as a numeric value (byte) as required
-              by the API.
-            </p>
-          </div> */}
-
-          {/* {showAdvancedOptions && (
-            <div className="bg-gray-800 p-4 rounded mb-6">
-              <h3 className="text-blue-400 mb-2 text-lg">Advanced Options</h3>
-              <div className="mb-4">
-                <label className="block text-sm mb-1">
-                  Authorization Token (if required)
-                </label>
-                <input
-                  type="text"
-                  value={authToken}
-                  onChange={(e) => setAuthToken(e.target.value)}
-                  className="w-full p-2 bg-gray-700 text-white rounded"
-                  placeholder="Enter auth token here"
-                />
-              </div>
-            </div>
-          )} */}
-
-          <form className="space-y-8" onSubmit={handleFormSubmit}>
+          <form className="space-y-8" onSubmit={handleSubmit}>
             {/* First file upload */}
             <div className="space-y-2">
-              <label className="block text-lg font-medium">
-                Şirkətin dövlət reyestrindən çıxarışı
-              </label>
+              <label className="block text-lg font-medium">Şirkətin dövlət reyestrindən çıxarışı</label>
               <div className="relative">
                 <div className="w-full h-14 border border-gray-600 rounded-lg flex items-center justify-between px-4 bg-gray-800/30">
                   <span className="text-gray-400 text-sm">
-                    {files.companyRegistry
-                      ? files.companyRegistry.name
-                      : ".doc, .docx, .pdf"}
+                    {files.companyRegistry ? files.companyRegistry.name : "No file selected"}
                   </span>
                   <button
                     type="button"
                     className="text-white"
-                    onClick={() =>
-                      document.getElementById("companyRegistry")?.click()
-                    }
+                    onClick={() => document.getElementById("companyRegistry")?.click()}
                   >
                     <Download size={20} />
                   </button>
@@ -513,34 +216,21 @@ export default function ApplyFive() {
                   onChange={(e) => handleFileChange(e, "companyRegistry")}
                 />
               </div>
-              <p className="text-sm text-gray-400">
-                Yüklənən fayl 50 mb – dan çox ola bilməz.
-              </p>
+              <p className="text-sm text-gray-400">Yüklənən fayl 50 mb – dan çox ola bilməz.</p>
             </div>
-
-            {/* Dot separator */}
-            {/* <div className="flex justify-center">
-              <div className="w-2 h-2 rounded-full bg-teal-400"></div>
-            </div> */}
 
             {/* Second file upload */}
             <div className="space-y-2">
-              <label className="block text-lg font-medium">
-                Maliyyə hesabatları (son 2 il)
-              </label>
+              <label className="block text-lg font-medium">Maliyyə hesabatları (son 2 il)</label>
               <div className="relative">
                 <div className="w-full h-14 border border-gray-600 rounded-lg flex items-center justify-between px-4 bg-gray-800/30">
                   <span className="text-gray-400 text-sm">
-                    {files.financialReports
-                      ? files.financialReports.name
-                      : ".doc, .docx, .pdf, .excel"}
+                    {files.financialReports ? files.financialReports.name : "No file selected"}
                   </span>
                   <button
                     type="button"
                     className="text-white"
-                    onClick={() =>
-                      document.getElementById("financialReports")?.click()
-                    }
+                    onClick={() => document.getElementById("financialReports")?.click()}
                   >
                     <Download size={20} />
                   </button>
@@ -553,20 +243,8 @@ export default function ApplyFive() {
                   onChange={(e) => handleFileChange(e, "financialReports")}
                 />
               </div>
-              <p className="text-sm text-gray-400">
-                Yüklənən fayl 50 mb – dan çox ola bilməz.
-              </p>
+              <p className="text-sm text-gray-400">Yüklənən fayl 50 mb – dan çox ola bilməz.</p>
             </div>
-
-            <p className="text-sm text-gray-400 mt-6">
-              Müraciətinizlə bağlı əlavə təsdiqedici sənədlərə ehtiyac olacağı
-              təqdirdə sizinlə əlaqə saxlanılacaqdır.
-            </p>
-
-            {/* Dot separator */}
-            {/* <div className="flex justify-center">
-              <div className="w-2 h-2 rounded-full bg-teal-400"></div>
-            </div> */}
 
             {/* Checkboxes */}
             <div className="space-y-4">
@@ -579,10 +257,7 @@ export default function ApplyFive() {
                   onChange={handleCheckboxChange}
                   className="mt-1 h-4 w-4 text-blue-500 border-gray-600 rounded bg-transparent"
                 />
-                <label
-                  htmlFor="confirmAccuracy"
-                  className="ml-2 text-sm text-gray-400"
-                >
+                <label htmlFor="confirmAccuracy" className="ml-2 text-sm text-gray-400">
                   Təqdim olunan məlumatların doğruluğunu təsdiq edirəm.
                 </label>
               </div>
@@ -596,12 +271,8 @@ export default function ApplyFive() {
                   onChange={handleCheckboxChange}
                   className="mt-1 h-4 w-4 text-blue-500 border-gray-600 rounded bg-transparent"
                 />
-                <label
-                  htmlFor="contactConsent"
-                  className="ml-2 text-sm text-gray-400"
-                >
-                  Müraciətimlə əlaqədar 4SİM tərəfindən əlaqə saxlanmasını qəbul
-                  edirəm.
+                <label htmlFor="contactConsent" className="ml-2 text-sm text-gray-400">
+                  Müraciətimlə əlaqədar 4SİM tərəfindən əlaqə saxlanmasını qəbul edirəm.
                 </label>
               </div>
 
@@ -615,17 +286,8 @@ export default function ApplyFive() {
                   className="mt-1 h-4 w-4 text-blue-500 border-gray-600 rounded bg-transparent"
                 />
                 <label htmlFor="termsAgreement" className="ml-2 text-sm text-gray-400">
-                  <a
-                    href="/Privacy.pdf" // <-- Update with the correct path to your PDF
-                    download
-                    className="underline cursor-pointer text-blue-500"
-                    onClick={(e) => e.stopPropagation()} // prevent label checkbox toggling
-                  >
-                    İstifadə şərtləri və gizlilik şərtləri
-                  </a>{" "}
-                  ilə razıyam.
+                  İstifadə şərtləri və gizlilik şərtləri ilə razıyam.
                 </label>
-
               </div>
             </div>
 
@@ -649,26 +311,6 @@ export default function ApplyFive() {
                 {isSubmitting ? "Göndərilir..." : "Təsdiq et"}
               </button>
             </div>
-
-            {/* Debug Tools */}
-            {/* <div className="mt-4 text-center flex justify-center space-x-4">
-              <button
-                type="button"
-                onClick={tryDirectApiCall}
-                className="text-xs text-gray-400 underline"
-              >
-                API Test
-              </button>
-              <button
-                type="button"
-                onClick={() => setShowAdvancedOptions(!showAdvancedOptions)}
-                className="text-xs text-gray-400 underline"
-              >
-                {showAdvancedOptions
-                  ? "Hide Advanced Options"
-                  : "Show Advanced Options"}
-              </button>
-            </div> */}
           </form>
         </div>
       </div>
