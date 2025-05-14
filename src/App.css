@@ -131,42 +131,19 @@ button:focus-visible {
   box-shadow: none !important;
 }
 
-
-/* -------------- ümumi sarğı -------------- */
-.phone-dark {
-  /* Tailwind-lə yazmaq istəsən:  @apply flex bg-transparent 
-     border border-gray-500 rounded-lg focus-within:ring-2 
-     focus-within:ring-blue-500 transition duration-300; */
-  display: flex;
-  background: transparent;
-  border: 1px solid rgba(200, 200, 200, 0.35);
-  border-radius: 0.75rem;        /* rounded-lg */
-  transition: box-shadow 0.3s;
+/* CSS for PhoneInput button */
+.phone-input__button {
+  background-color: transparent !important;
+  border-right: 1px solid #4b4b4b; /* Add a subtle border */
 }
 
-.phone-dark:focus-within {
-  box-shadow: 0 0 0 2px #3b82f6; /* Tailwind ring-blue-500 */
+.phone-input__dropdown {
+  background-color: transparent !important;
+  border: 1px solid #4b4b4b;
 }
 
-/* -------------- daxili <input> -------------- */
-.phone-dark-input {
-  background: transparent !important;
-  color: #fff;
-  padding: 0.75rem;
-  outline: none;
+.phone-input__country-option:hover {
+  background-color: rgba(128, 128, 128, 0.1); /* Hover effect */
 }
 
-/* -------------- bayraq düyməsi -------------- */
-.phone-dark .rii__selectCountryButton {
-  background: transparent !important;
-  border-right: 1px solid rgba(200, 200, 200, 0.35);
-  padding: 0.75rem 0.75rem 0.75rem 0.75rem;
-}
 
-/* -------------- açılan ölkə siyahısı -------------- */
-.phone-dark .rii__countryDropdown {
-  background: rgba(0, 0, 0, 0.85) !important;   /* tünd + şəffaf */
-  backdrop-filter: blur(6px);                   /* video azca bulanıq olsun */
-  color: #fff;
-  border: 1px solid rgba(200, 200, 200, 0.25);
-}

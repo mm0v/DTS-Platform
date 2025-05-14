@@ -104,15 +104,14 @@ export default function ApplyFour() {
   return (
     <>
       <BackgroundVideo />
-      <div className="min-h-screen w-full bg-black bg-[url('/images/space-background.jpg')] bg-cover bg-center bg-no-repeat text-white flex flex-col items-center justify-center py-10">
+      <div className="min-h-screen w-full bg-[url('/images/space-background.jpg')] bg-cover bg-center bg-no-repeat text-white flex flex-col items-center justify-center py-0">
         {/* Progress Steps */}
-        <div className="w-full max-w-4xl mb-8 px-4">
+        <div className="w-full max-w-4xl mb-0 px-4">
           <div className="relative w-full h-[1px] bg-blue-500">
             {[1, 2, 3, 4, 5].map((num) => (
               <div
                 key={num}
-                className={`absolute top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center text-sm ${num <= 4 ? "bg-blue-500" : "bg-blue-900"
-                  }`}
+                className={`absolute top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center text-sm ${num <= 4 ? "bg-blue-500" : "bg-blue-900"}`}
                 style={{ left: `${(num - 1) * 25}%` }}
               >
                 {num}
@@ -138,11 +137,7 @@ export default function ApplyFour() {
           </div>
         </div>
 
-        <div className="text-center mb-8">
-          <h1 className="text-2xl md:text-3xl font-medium">
-            Liderlik və öhdəliklər
-          </h1>
-        </div>
+        <div className="text-center text-3xl font-semibold mb-6 py-5"> <h1>Liderlik və öhdəliklər</h1> </div>
 
         <div className="w-full max-w-2xl space-y-4">
           {/* Digital Transformation Leader */}
@@ -241,11 +236,7 @@ export default function ApplyFour() {
             </div>
           </div>
 
-          <div className="text-center mb-8">
-            <h1 className="text-2xl md:text-3xl font-medium">
-              Maliyyə ehtiyacları
-            </h1>
-          </div>
+          <div className="text-center text-3xl font-semibold mb-6 py-5"> <h1>Maliyyə ehtiyacları</h1> </div>
 
           {/* Financial Needs */}
           <div className="space-y-1">
@@ -298,7 +289,7 @@ export default function ApplyFour() {
           {/* Geri və Növbəti Butonları */}
           <div className="flex justify-between mt-6">
             <button
-              className="w-[48%] cursor-pointer bg-gray-600 text-white py-3 rounded transition duration-200"
+              className="w-[48%] cursor-pointer bg-blue-600 hover:bg-blue-700 text-white py-3 rounded transition duration-200"
               onClick={handleGoBack}
             >
               Geri

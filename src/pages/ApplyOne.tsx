@@ -4,12 +4,8 @@ import React, { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import BackgroundVideo from "../components/BackgroundVideo";
 import { FormContext } from "../context/FormContext";
-import 'react-international-phone/style.css';
-// NEW import
+import 'react-international-phone/style.css'; // Keep this import near other global CSS imports
 import { PhoneInput } from 'react-international-phone';
-import 'react-international-phone/style.css';   // keep near your other global CSS imports
-
-
 
 export default function ApplyOne() {
   const navigate = useNavigate();
@@ -168,7 +164,7 @@ export default function ApplyOne() {
 
           {/* Step descriptions */}
           <div className="flex justify-between mt-4 text-xs text-gray-400 space-y-2">
-            <div className="text-center max-w-[150px] text-blue-400">
+            <div className="text-center  max-w-[150px] text-blue-400">
               Şirkət haqqında məlumat
             </div>
             <div className="text-center max-w-[150px]">Mülkiyyət və hüquqi quruluş</div>
@@ -178,11 +174,7 @@ export default function ApplyOne() {
           </div>
         </div>
 
-        <div className="text-center mb-8 relative z-20">
-          <h1 className="text-2xl md:text-3xl font-medium">
-            Şirkət haqqında məlumat
-          </h1>
-        </div>
+      <div className="text-center text-3xl font-semibold mb-6 py-5"> <h1> Şirkət haqqında məlumat</h1> </div>
 
         <div className="w-full max-w-2xl space-y-6 relative z-20">
           {/* Company Name */}
@@ -228,57 +220,58 @@ export default function ApplyOne() {
           </div>
 
           {/* Company Size and Business Activity */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-2">
-              <label className="text-sm">
-                Şirkətin ölçüsü (Tam ştatlı işçilərin sayı)
-              </label>
-              <select
-                name="companySize"
-                value={localFormData.companySize}
-                onChange={handleInputChange}
-                className="w-full bg-transparent border border-gray-700 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300"
-              >
-                <option className="text-black" value="">
-                  Seçin
-                </option>
-                <option className="text-black" value="10">
-                  1-10
-                </option>
-                <option className="text-black" value="50">
-                  11-50
-                </option>
-                <option className="text-black" value="250">
-                  51-250
-                </option>
-                <option className="text-black" value="350">
-                  250+
-                </option>
-              </select>
-            </div>
-            <div className="space-y-2">
-              <label className="text-sm">İllik dövriyyə (AZN)</label>
-              <select
-                name="annualTurnover"
-                value={localFormData.annualTurnover}
-                onChange={handleInputChange}
-                className="w-full bg-transparent border border-gray-700 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300"
-              >
-                <option className="text-black" value="">
-                  Seçin
-                </option>
-                <option className="text-black" value="3">
-                  3m-ə qədər
-                </option>
-                <option className="text-black" value="30">
-                  3m - 30m
-                </option>
-                <option className="text-black" value="60">
-                  30m+
-                </option>
-              </select>
-            </div>
-          </div>
+<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+  <div className="space-y-2">
+    <label className="text-sm">
+      Şirkətin ölçüsü (Tam ştatlı işçilərin sayı)
+    </label>
+    <select
+      name="companySize"
+      value={localFormData.companySize}
+      onChange={handleInputChange}
+      className="w-full bg-[#131121] text-white border border-g rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#373176] transition duration-300 hover:bg-[#373176]"
+    >
+      <option className="text-white hover:bg-[#373176]" value="">
+        Seçin
+      </option>
+      <option className="text-white hover:bg-[#373176]" value="10">
+        1-10
+      </option>
+      <option className="text-white hover:bg-[#373176]" value="50">
+        11-50
+      </option>
+      <option className="text-white hover:bg-[#373176]" value="250">
+        51-250
+      </option>
+      <option className="text-white hover:bg-[#373176]" value="350">
+        250+
+      </option>
+    </select>
+  </div>
+  <div className="space-y-2">
+    <label className="text-sm">İllik dövriyyə (AZN)</label>
+    <select
+      name="annualTurnover"
+      value={localFormData.annualTurnover}
+      onChange={handleInputChange}
+      className="w-full bg-[#131121] text-white border border-gray-700 rounded-lg p-3 focus:ring-2 focus:ring-[#373176] transition duration-300 hover:bg-[#373176]"
+    >
+      <option className="text-white" value="">
+        Seçin
+      </option>
+      <option className="text-white" value="3">
+        3m-ə qədər
+      </option>
+      <option className="text-white" value="30">
+        3m - 30m
+      </option>
+      <option className="text-white" value="60">
+        30m+
+      </option>
+    </select>
+  </div>
+</div>
+
 
           {/* Address and Location */}
           <div className="space-y-2">
@@ -336,33 +329,29 @@ export default function ApplyOne() {
                 className="w-full bg-transparent border border-gray-700 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300"
               />
             </div>
-<div className="space-y-2">
-  <label className="text-sm">Əlaqə nömrəsi</label>
+            <div className="space-y-2">
+              <label className="text-sm">Əlaqə nömrəsi</label>
 
-  <PhoneInput
-    defaultCountry="az"
-    value={localFormData.phone}
-    onChange={(phone: string) => {
-      setLocalFormData(p => ({ ...p, phone }));
-      localStorage.setItem("phone", phone);
-      setFormData(p => ({
-        ...p,
-        companyData: { ...p.companyData, contactPhone: phone },
-      }));
-    }}
-
-    /* Bu iki prop komponentin tanıdığı yeganə stil prop-larıdır  */
-    className="phone-dark w-full"          
-    inputClassName="phone-dark-input flex-1"
-  />
-</div>
-
-
+              <PhoneInput
+                defaultCountry="az"
+                value={localFormData.phone}
+                onChange={(phone: string) => {
+                  setLocalFormData((p) => ({ ...p, phone }));
+                  localStorage.setItem("phone", phone);
+                  setFormData((p) => ({
+                    ...p,
+                    companyData: { ...p.companyData, contactPhone: phone },
+                  }));
+                }}
+                className="bg-transparent border border-gray-700 rounded-lg p-1.5 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300"
+                inputClassName="phone-dark-input flex-1"
+              />
+            </div>
           </div>
 
           {/* Next Button */}
           <button
-            className="w-full cursor-pointer bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg transition duration-300 mt-6"
+            className="w-full cursor-pointer bg-blue-600 hover:bg-[#1a4381] text-white py-3 rounded-lg transition duration-300 mt-6"
             onClick={handleNext}
           >
             Növbəti

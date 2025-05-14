@@ -155,7 +155,7 @@ const ApplyThree = () => {
   return (
     <>
       <BackgroundVideo />
-      <div className="min-h-screen bg-black bg-[url('/images/space-background.jpg')] bg-cover bg-center text-white flex flex-col items-center justify-center py-10">
+      <div className="min-h-screen  bg-[url('/images/space-background.jpg')] bg-cover bg-center text-white flex flex-col items-center justify-center py-10">
         <div className="w-full max-w-4xl mb-8 px-4">
           <div className="relative w-full h-[1px] bg-blue-500">
             {[1, 2, 3, 4, 5].map((num) => (
@@ -293,16 +293,16 @@ const ApplyThree = () => {
             </div>
           </form>
 
-          <div className="flex justify-between space-x-4 mt-8">
+            <div className="flex justify-between mt-6">
             <button
+              className="w-[48%] bg-blue-600 hover:bg-blue-700 cursor-pointer text-white py-3 rounded-lg transition duration-300"
               onClick={handleGoBack}
-              className="bg-blue-500 cursor-pointer hover:bg-blue-600 text-white py-2 px-4 rounded"
             >
               Geri
             </button>
             <button
+              className="w-[48%] bg-blue-600 cursor-pointer hover:bg-blue-700 text-white py-3 rounded-lg transition duration-300"
               onClick={handleGoNext}
-              className="bg-blue-500 cursor-pointer hover:bg-blue-600 text-white py-2 px-4 rounded"
             >
               Növbəti
             </button>
