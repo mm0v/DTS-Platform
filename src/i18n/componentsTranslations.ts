@@ -325,4 +325,26 @@ export const componentsTranslations = {
       },
     },
   },
+  applySteps: {
+    step1: {
+      AZ: "Şirkət haqqında məlumat",
+      EN: "Company Information",
+    },
+    step2: {
+      AZ: "Mülkiyyət və hüquqi quruluş",
+      EN: "Ownership and Legal Structure",
+    },
+    step3: {
+      AZ: "Rəqəmsal hazırlıq və transformasiya ehtiyacları",
+      EN: "Digital Readiness and Transformation Needs",
+    },
+    step4: {
+      AZ: "Liderlik və öhdəliklər",
+      EN: "Leadership and Commitments",
+    },
+    step5: {
+      AZ: "Tələb olunan sənədlər",
+      EN: "Required Documents",
+    },
+  },
 };

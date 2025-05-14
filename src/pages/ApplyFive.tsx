@@ -1,17 +1,14 @@
 "use client"
-
-import type React from "react"
-import { useState, useEffect, useContext } from "react"
-import { useNavigate } from "react-router-dom"
-import { Download, X } from "lucide-react"
-import BackgroundVideo from "../components/BackgroundVideo"
-import { FormContext } from "../context/FormContext"
-
+import React, { useState, useEffect, useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import { Download } from "lucide-react";
+import BackgroundVideo from "../components/BackgroundVideo";
+import { FormContext } from "../context/FormContext";
+import { useLanguage } from "../context/LanguageContext";
 interface FileState {
   companyRegistry: File | null
   financialReports: File | null
 }
-
 interface AgreementState {
   confirmAccuracy: boolean
   contactConsent: boolean
@@ -19,15 +16,15 @@ interface AgreementState {
 }
 
 export default function ApplyFive() {
-  const navigate = useNavigate()
-  const context = useContext(FormContext)
-
+  const navigate = useNavigate();
+  const context = useContext(FormContext);
+  const { language, pagesTranslations } = useLanguage();
+  const page = pagesTranslations.apply5;
   if (!context) {
     throw new Error("ApplyFive must be used within a FormContext.Provider")
   }
 
-  const { setFormData } = context
-
+  const { setFormData } = context;
   const [files, setFiles] = useState<FileState>({
     companyRegistry: null,
     financialReports: null,
@@ -39,18 +36,18 @@ export default function ApplyFive() {
     termsAgreement: false,
   })
 
-  const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
-  const [showModal, setShowModal] = useState<boolean>(false)
-  const [showSuccessPage, setShowSuccessPage] = useState<boolean>(false)
-
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   // Derived state to check if all agreements are checked
-  const allAgreementsChecked = Object.values(agreements).every((value) => value === true)
-
+  const allAgreementsChecked = Object.values(agreements).every(
+    (value) => value === true
+  );
+  const [showModal, setShowModal] = useState<boolean>(false); // Modal visibility state
   // Load data from localStorage when component mounts
   useEffect(() => {
-    const savedFiles = JSON.parse(localStorage.getItem("files") || "{}")
-    const savedAgreements = JSON.parse(localStorage.getItem("agreements") || "{}")
-
+    const savedFiles = JSON.parse(localStorage.getItem("files") || "{}");
+    const savedAgreements = JSON.parse(
+      localStorage.getItem("agreements") || "{}"
+    );
     if (savedFiles.companyRegistry) {
       setFiles((prev) => ({
         ...prev,
@@ -64,9 +61,8 @@ export default function ApplyFive() {
         financialReports: savedFiles.financialReports,
       }))
     }
-
-    setAgreements(savedAgreements)
-  }, [])
+    setAgreements(savedAgreements);
+  }, []);
 
   // Save data to localStorage whenever files or agreements change
   useEffect(() => {
@@ -82,15 +78,13 @@ export default function ApplyFive() {
         [fileType]: file, // Store the file object in state
       }))
     }
-  }
-
+  };
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, checked } = e.target
     setAgreements((prev) => ({
       ...prev,
       [name as keyof AgreementState]: checked,
-    }))
-
+    }));
     // Update the declarationConsent in formData
     if (name === "confirmAccuracy") {
       setFormData((prev) => ({
@@ -109,8 +103,7 @@ export default function ApplyFive() {
         },
       }))
     }
-  }
-
+  };
   const handleGoBack = () => {
     navigate("/apply/four")
   }
@@ -123,113 +116,50 @@ export default function ApplyFive() {
     setIsSubmitting(true)
     // Simulate form submission with a short delay
     setTimeout(() => {
-      setIsSubmitting(false)
-      setShowModal(false)
-      // Show success page instead of navigating
-      setShowSuccessPage(true)
-    }, 1500)
-  }
-
+      setIsSubmitting(false);
+      alert(page.alerts.success[language]);
+    }, 1500);
+    setShowModal(false); // Close the modal after confirming
+  };
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    setShowModal(true) // Show the modal when user clicks "Təsdiq et"
-  }
-
-  const handleSuccessClose = () => {
-    // Navigate to home or reset the form
-    navigate("/")
-  }
-
-  // If showing success page, render that instead of the form
-  if (showSuccessPage) {
-    return (
-      <>
-        <BackgroundVideo />
-        <div className="min-h-screen bg-[url('/images/space-background.jpg')] bg-cover bg-center bg-no-repeat text-white flex flex-col items-center justify-center">
-          <div className="max-w-md w-full p-8 relative">
-            <button
-              onClick={handleSuccessClose}
-              className="absolute top-0 right-0 text-red-500 hover:text-red-400"
-              aria-label="Close"
-            >
-              <X size={24} />
-            </button>
-
-            <div className="flex flex-col items-center text-center space-y-8">
-              <h1 className="text-3xl font-bold">Müraciətiniz üçün təşəkkür edirik!</h1>
-
-              <p className="text-lg">Müraciətinizin nəticəsi barəsində qısa zamanda sizinlə əlaqə saxlanılacaqdır.</p>
-
-              <div className="relative w-24 h-24 mt-4">
-                <div className="w-full h-full flex items-center justify-center">
-                  <div className="text-green-400">
-                    <svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path
-                        d="M20 50L40 70L80 30"
-                        stroke="currentColor"
-                        strokeWidth="8"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  </div>
-                </div>
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="w-2 h-2 rounded-full bg-green-400 animate-ping"></div>
-                </div>
-                <div className="absolute top-0 right-0">
-                  <div className="w-2 h-2 rounded-full bg-green-400 animate-ping delay-300"></div>
-                </div>
-                <div className="absolute bottom-0 left-0">
-                  <div className="w-2 h-2 rounded-full bg-green-400 animate-ping delay-700"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </>
-    )
-  }
-
+    e.preventDefault();
+    setShowModal(true); // Show the modal when user clicks "Təsdiq et"
+  };
   return (
     <>
       <BackgroundVideo />
       <div className="min-h-screen bg-[url('/images/space-background.jpg')] bg-cover bg-center bg-no-repeat text-white flex flex-col items-center justify-center py-10">
         {/* Modal */}
         {showModal && (
-         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60 z-50">
-  <div className="bg-gray-800 text-white p-10 rounded-xl w-96 max-w-sm">
-    <h2 className="text-xl text-center font-semibold mb-6">
-      Müraciətinizi təsdiq edirsinizmi?
-    </h2>
-    <div className="flex justify-between gap-4">
-      <button
-        onClick={handleModalClose}
-        className="flex-1 bg-red-600 hover:bg-red-700 text-white py-3 rounded-lg transition duration-300 text-lg font-medium"
-      >
-        Xeyr
-      </button>
-      <button
-        onClick={handleModalConfirm}
-        className="flex-1 bg-green-600 hover:bg-green-700 text-white py-3 rounded-lg transition duration-300 text-lg font-medium"
-      >
-        Bəli
-      </button>
-    </div>
-  </div>
-</div>
-
+          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+            <div className="bg-gray-800 text-white p-24 rounded-lg w-80 h-80">
+              <h2 className="text-lg text-center justify-center font-semibold mb-4">
+                {page.confirmModal.title[language]}
+              </h2>
+              <div className="flex justify-between">
+                <button
+                  onClick={handleModalClose}
+                  className="bg-red-500 text-white px-4 py-2 rounded-lg"
+                >
+                  {page.confirmModal.noBtn[language]}
+                </button>
+                <button
+                  onClick={handleModalConfirm}
+                  className="bg-green-500 text-white px-4 py-2 rounded-lg"
+                >
+                  {page.confirmModal.yesBtn[language]}
+                </button>
+              </div>
+            </div>
+          </div>
         )}
-
         {/* Progress Bar */}
         <div className="w-full max-w-4xl mb-8 px-4">
           <div className="relative w-full h-[1px] bg-blue-500">
             {[1, 2, 3, 4, 5].map((num) => (
               <div
                 key={num}
-                className={`absolute top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center text-sm ${
-                  num <= 5 ? "bg-blue-500" : "bg-blue-900"
-                }`}
+                className={`absolute top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center text-sm ${num <= 5 ? "bg-blue-500" : "bg-blue-900"}`}
                 style={{ left: `${(num - 1) * 25}%` }}
               >
                 {num}
@@ -247,18 +177,21 @@ export default function ApplyFive() {
 
         {/* Form */}
         <div className="w-full max-w-4xl p-8 rounded-lg">
-          <div className="text-center text-3xl font-semibold mb-6 py-5">
-            <h1>Tələb olunan sənədlər</h1>
+          <div className="text-center mb-10">
+            <h1 className="text-3xl font-bold">{page.title[language]}</h1>
           </div>
-
           <form className="space-y-8" onSubmit={handleSubmit}>
             {/* First file upload */}
             <div className="space-y-2">
-              <label className="block text-lg font-medium">Şirkətin dövlət reyestrindən çıxarışı</label>
+              <label className="block text-lg font-medium">
+                {page.companyRegistry[language]}
+              </label>
               <div className="relative">
                 <div className="w-full h-14 border border-gray-600 rounded-lg flex items-center justify-between px-4 bg-gray-800/30">
                   <span className="text-gray-400 text-sm">
-                    {files.companyRegistry ? files.companyRegistry.name : "No file selected"}
+                    {files.companyRegistry
+                      ? files.companyRegistry.name
+                      : "No file selected"}
                   </span>
                   <button
                     type="button"
@@ -276,16 +209,21 @@ export default function ApplyFive() {
                   onChange={(e) => handleFileChange(e, "companyRegistry")}
                 />
               </div>
-              <p className="text-sm text-gray-400">Yüklənən fayl 50 mb – dan çox ola bilməz.</p>
+              <p className="text-sm text-gray-400">
+                {page.fileFormatText[language]}
+              </p>
             </div>
-
             {/* Second file upload */}
             <div className="space-y-2">
-              <label className="block text-lg font-medium">Maliyyə hesabatları (son 2 il)</label>
+              <label className="block text-lg font-medium">
+                {page.financialReports[language]}
+              </label>
               <div className="relative">
                 <div className="w-full h-14 border border-gray-600 rounded-lg flex items-center justify-between px-4 bg-gray-800/30">
                   <span className="text-gray-400 text-sm">
-                    {files.financialReports ? files.financialReports.name : "No file selected"}
+                    {files.financialReports
+                      ? files.financialReports.name
+                      : "No file selected"}
                   </span>
                   <button
                     type="button"
@@ -303,9 +241,10 @@ export default function ApplyFive() {
                   onChange={(e) => handleFileChange(e, "financialReports")}
                 />
               </div>
-              <p className="text-sm text-gray-400">Yüklənən fayl 50 mb – dan çox ola bilməz.</p>
+              <p className="text-sm text-gray-400">
+                {page.fileFormatText[language]}
+              </p>
             </div>
-
             {/* Checkboxes */}
             <div className="space-y-4">
               <div className="flex items-start">
@@ -317,11 +256,13 @@ export default function ApplyFive() {
                   onChange={handleCheckboxChange}
                   className="mt-1 h-4 w-4 text-blue-500 border-gray-600 rounded bg-transparent"
                 />
-                <label htmlFor="confirmAccuracy" className="ml-2 text-sm text-gray-400">
-                  Təqdim olunan məlumatların doğruluğunu təsdiq edirəm.
+                <label
+                  htmlFor="confirmAccuracy"
+                  className="ml-2 text-sm text-gray-400"
+                >
+                  {page.checkboxes.confirmAccuracy[language]}
                 </label>
               </div>
-
               <div className="flex items-start">
                 <input
                   type="checkbox"
@@ -331,11 +272,13 @@ export default function ApplyFive() {
                   onChange={handleCheckboxChange}
                   className="mt-1 h-4 w-4 text-blue-500 border-gray-600 rounded bg-transparent"
                 />
-                <label htmlFor="contactConsent" className="ml-2 text-sm text-gray-400">
-                  Müraciətimlə əlaqədar 4SİM tərəfindən əlaqə saxlanmasını qəbul edirəm.
+                <label
+                  htmlFor="contactConsent"
+                  className="ml-2 text-sm text-gray-400"
+                >
+                  {page.checkboxes.contactConsent[language]}
                 </label>
               </div>
-
               <div className="flex items-start">
                 <input
                   type="checkbox"
@@ -345,12 +288,14 @@ export default function ApplyFive() {
                   onChange={handleCheckboxChange}
                   className="mt-1 h-4 w-4 text-blue-500 border-gray-600 rounded bg-transparent"
                 />
-                <label htmlFor="termsAgreement" className="ml-2 text-sm text-gray-400">
-                  İstifadə şərtləri və gizlilik şərtləri ilə razıyam.
+                <label
+                  htmlFor="termsAgreement"
+                  className="ml-2 text-sm text-gray-400"
+                >
+                  {page.checkboxes.termsAgreement[language]}
                 </label>
               </div>
             </div>
-
             {/* Buttons */}
             <div className="flex space-x-4 mt-10">
               <button
@@ -358,7 +303,7 @@ export default function ApplyFive() {
                 onClick={handleGoBack}
                 className="flex-1 cursor-pointer bg-blue-900 text-white py-3 rounded-lg hover:bg-blue-800 transition-colors"
               >
-                Geri
+                {pagesTranslations.applyBtns.backBtn[language]}
               </button>
               <button
                 type="submit"
@@ -369,7 +314,9 @@ export default function ApplyFive() {
                     : "bg-blue-900/50 text-gray-400 cursor-not-allowed "
                 }`}
               >
-                {isSubmitting ? "Göndərilir..." : "Təsdiq et"}
+                {isSubmitting
+                  ? page.buttons.submitting[language]
+                  : page.buttons.confirm[language]}
               </button>
             </div>
           </form>

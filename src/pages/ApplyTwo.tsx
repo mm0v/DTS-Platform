@@ -7,10 +7,16 @@ import { useNavigate } from "react-router-dom"
 import { Upload } from "lucide-react"
 import BackgroundVideo from "../components/BackgroundVideo"
 import { FormContext } from "../context/FormContext"
+import { useLanguage } from "../context/LanguageContext";
+import ApplySteps from "../components/ApplySteps";
 
 export default function ApplyTwo() {
   const navigate = useNavigate()
   const context = useContext(FormContext)
+  const { language, pagesTranslations } = useLanguage();
+  const page = pagesTranslations.apply2;
+  const buttons = pagesTranslations.applyBtns;
+
 
   if (!context) {
     throw new Error("ApplyTwo must be used within a FormContext.Provider")
@@ -63,7 +69,7 @@ export default function ApplyTwo() {
         console.error("Error parsing saved form data:", error)
       }
     }
-  }, [])
+  }, [setFormData])
 
   // Save data to localStorage immediately when any input changes
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -151,40 +157,18 @@ export default function ApplyTwo() {
       <BackgroundVideo />
       <div className="relative min-h-screen w-full bg-[url('/images/space-background.jpg')] bg-cover bg-center bg-no-repeat text-white flex flex-col items-center justify-center py-4 sm:py-6 md:py-10 px-2 sm:px-4">
         {/* Main Content */}
-        <div className="relative z-20 w-full max-w-4xl mb-4 sm:mb-6 md:mb-8 px-4">
-          <div className="relative w-full h-[1px] bg-blue-500">
-            {[1, 2, 3, 4, 5].map((num) => (
-              <div
-                key={num}
-                className={`absolute top-1/2 -translate-y-1/2 w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-xs sm:text-sm ${
-                  num <= 2 ? "bg-blue-500" : "bg-blue-900"
-                }`}
-                style={{ left: `${(num - 1) * 25}%` }}
-              >
-                {num}
-              </div>
-            ))}
-          </div>
+        <ApplySteps step={2} />
 
-          <div className="flex justify-between mt-2 text-[10px] xs:text-xs text-gray-400">
-            <div className="text-center max-w-[60px] sm:max-w-[100px]">Şirkət haqqında məlumat</div>
-            <div className="text-center max-w-[60px] sm:max-w-[100px] text-blue-400">Mülkiyyət və hüquqi quruluş</div>
-            <div className="text-center max-w-[60px] sm:max-w-[100px]">Rəqəmsal hazırlıq</div>
-            <div className="text-center max-w-[60px] sm:max-w-[100px]">Liderlik və öhdəliklər</div>
-            <div className="text-center max-w-[60px] sm:max-w-[100px]">Tələb olunan sənədlər</div>
-          </div>
-        </div>
-
-        <div className="text-center text-xl sm:text-2xl md:text-3xl font-semibold mb-4 sm:mb-6 py-2 sm:py-3 md:py-5">
-          <h1>Mülkiyyət və hüquqi quruluş</h1>
+        <div className="text-center mb-8 relative z-20">
+          <h1 className="text-2xl md:text-3xl font-medium">
+            {page.title[language]}
+          </h1>
         </div>
 
         <div className="w-full max-w-2xl space-y-4 sm:space-y-6 relative z-20 px-4 sm:px-6">
           {/* Şirkətin hüquqi növü */}
-          <div className="space-y-2 bg-gray-900/30 p-3 sm:p-4 rounded-lg">
-            <label className="block text-xs sm:text-sm md:text-base font-medium">
-              Şirkətin hüquqi növü (MMC, ASC, Fərdi sahibkar və s.)
-            </label>
+          <div className="space-y-2">
+            <label className="text-sm">{page.companyType[language]}</label>
             <input
               type="text"
               name="companyType"
@@ -195,53 +179,67 @@ export default function ApplyTwo() {
           </div>
 
           {/* Sənaye və biznes fəaliyyətləri */}
-          <div className="space-y-2 bg-gray-900/30 p-3 sm:p-4 rounded-lg">
-            <label className="block text-xs sm:text-sm md:text-base font-medium">Sənaye və biznes əməliyyatları</label>
-            <select
+          {/* <div className="space-y-2">
+            <label className="text-sm">{page.businessIndustry[language]}</label>
+            <input
+              type="text"
               name="businessIndustry"
               value={localFormData.businessIndustry}
               onChange={handleInputChange}
-              className="w-full bg-[#131021]/80 border border-gray-700 rounded-lg p-2 sm:p-3 text-xs sm:text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 transition duration-300"
+              className="w-full bg-transparent border border-gray-700 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300"
+            />
+          </div> */}
+
+          <label className="text-sm">
+            {page.businessIndustry.label[language]}
+          </label>
+          <select
+            name="businessIndustry"
+            value={localFormData.businessIndustry}
+            onChange={handleInputChange}
+            className="w-full bg-[#131021] border  border-gray-700 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300"
+          >
+            <option className="text-white" value="">
+              {page.businessIndustry.placeholder[language]}
+            </option>
+            <option
+              className="text-white"
+              value="Təmsil etdiyimiz sənayə sektoru"
             >
-              <option className="text-white" value="">
-                Seçin
-              </option>
-              <option className="text-white" value="Təmsil etdiyimiz sənayə sektoru">
-                Təmsil etdiyimiz sənayə sektoru
-              </option>
-              <option className="text-white" value="Qida və içkilər">
-                Qida və içkilər
-              </option>
-              <option className="text-white" value="Neft - qaz">
-                Neft - qaz
-              </option>
-              <option className="text-white" value=" Kimya">
-                Kimya
-              </option>
-              <option className="text-white" value="Metallurgiya">
-                Metallurgiya
-              </option>
-              <option className="text-white" value="Maşın və avadanlıqların təmiri və quraşdırılması">
-                Maşın və avadanlıqların təmiri və quraşdırılması
-              </option>
-              <option className="text-white" value="Kauçuk və plastik məhsullar">
-                Kauçuk və plastik məhsullar
-              </option>
-              <option className="text-white" value="Tekstil">
-                Tekstil
-              </option>
-              <option className="text-white" value="Elektrik avadanlıqları">
-                Elektrik avadanlıqları
-              </option>
-              <option className="text-white" value="Digər">
-                Digər
-              </option>
-            </select>
-          </div>
+              {page.businessIndustry.options.representedIndustry[language]}
+            </option>
+            <option className="text-white" value="Qida və içkilər">
+              {page.businessIndustry.options.foodAndBeverages[language]}
+            </option>
+            <option className="text-white" value="Neft - qaz">
+              {page.businessIndustry.options.oilAndGas[language]}
+            </option>
+            <option className="text-white" value=" Kimya">
+              {page.businessIndustry.options.chemical[language]}
+            </option>
+            <option className="text-white" value="Metallurgiya">
+              {page.businessIndustry.options.metallurgy[language]}
+            </option>
+            <option className="text-white" value="Maşın və avadanlıqların təmiri və quraşdırılması">
+              {page.businessIndustry.options.machineRepairAndInstallation[language]}
+            </option>
+            <option className="text-white" value="Kauçuk və plastik məhsullar">
+              {page.businessIndustry.options.rubberAndPlasticProducts[language]}
+            </option>
+            <option className="text-white" value="Tekstil">
+              {page.businessIndustry.options.textile[language]}
+            </option>
+            <option className="text-white" value="Elektrik avadanlıqları">
+              {page.businessIndustry.options.electricalEquipment[language]}
+            </option>
+            <option className="text-white" value="Digər">
+              {page.businessIndustry.options.other[language]}
+            </option>
+          </select>
 
           {/* Əsas məhsullar/xidmətlər */}
-          <div className="space-y-2 bg-gray-900/30 p-3 sm:p-4 rounded-lg">
-            <label className="block text-xs sm:text-sm md:text-base font-medium">Əsas məhsullar/xidmətlər</label>
+          <div className="space-y-2">
+            <label className="text-sm">{page.mainProducts[language]}</label>
             <input
               type="text"
               name="mainProducts"
@@ -252,11 +250,9 @@ export default function ApplyTwo() {
           </div>
 
           {/* İxrac fəaliyyəti ilə məşğul olmaq */}
-          <div className="space-y-2 bg-gray-900/30 p-3 sm:p-4 rounded-lg">
-            <label className="block text-xs sm:text-sm md:text-base font-medium">
-              İxrac fəaliyyəti ilə məşğul olursunuz?
-            </label>
-            <div className="flex items-center space-x-4 mt-2">
+          <div className="space-y-2">
+            <label className="text-sm">{page.exportActivity[language]}</label>
+            <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-2">
                 <input
                   type="radio"
@@ -266,7 +262,7 @@ export default function ApplyTwo() {
                   checked={localFormData.exportActivity === "Bəli"}
                   className="text-blue-500 w-3 h-3 sm:w-4 sm:h-4"
                 />
-                <label className="text-xs sm:text-sm">Bəli</label>
+                <label className="text-sm">{page.yes[language]}</label>
               </div>
               <div className="flex items-center space-x-2">
                 <input
@@ -277,16 +273,14 @@ export default function ApplyTwo() {
                   checked={localFormData.exportActivity === "Xeyr"}
                   className="text-blue-500 w-3 h-3 sm:w-4 sm:h-4"
                 />
-                <label className="text-xs sm:text-sm">Xeyr</label>
+                <label className="text-sm">{page.no[language]}</label>
               </div>
             </div>
           </div>
 
           {/* Məhsulların ixrac olunduğu bazarlar */}
-          <div className="space-y-2 bg-gray-900/30 p-3 sm:p-4 rounded-lg">
-            <label className="block text-xs sm:text-sm md:text-base font-medium">
-              Məhsullarınızın ixrac olunduğu bazarlar
-            </label>
+          <div className="space-y-2">
+            <label className="text-sm">{page.exportMarkets[language]}</label>
             <input
               type="text"
               name="exportMarkets"
@@ -297,33 +291,15 @@ export default function ApplyTwo() {
           </div>
 
           {/* Təqdimedici sənəd */}
-          <div className="space-y-2 bg-gray-900/30 p-3 sm:p-4 rounded-lg">
-            <label className="block text-xs sm:text-sm md:text-base font-medium">
-              Təqdimedici sənəd (.doc, .docx, .pdf)
-            </label>
-            <div className="relative">
-              <div className="w-full h-10 sm:h-12 border border-gray-700 rounded-lg flex items-center justify-between px-3 sm:px-4 bg-[#131021]/50">
-                <span className="text-gray-400 text-xs sm:text-sm truncate max-w-[70%]">
-                  {fileName || "Fayl seçilməyib"}
-                </span>
-                <button
-                  type="button"
-                  className="text-white"
-                  onClick={() => document.getElementById("documentUpload")?.click()}
-                >
-                  <Upload size={16} className="sm:w-5 sm:h-5" />
-                </button>
-              </div>
-              <input
-                id="documentUpload"
-                type="file"
-                name="document"
-                onChange={handleFileChange}
-                accept=".doc,.docx,.pdf"
-                className="hidden"
-              />
-            </div>
-            <p className="text-[10px] sm:text-xs text-gray-400">Yüklənən fayl 10 mb – dan çox ola bilməz.</p>
+          <div className="space-y-2">
+            <label className="text-sm">{page.document[language]}</label>
+            <input
+              type="file"
+              name="document"
+              onChange={handleInputChange}
+              accept=".doc,.docx,.pdf"
+              className="w-full bg-transparent border border-gray-700 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300"
+            />
           </div>
 
           {/* Geri və Növbəti Butonları */}
@@ -332,13 +308,13 @@ export default function ApplyTwo() {
               className="w-full cursor-pointer bg-blue-900 hover:bg-blue-800 text-white py-2 sm:py-3 rounded-lg transition duration-200 text-xs sm:text-sm"
               onClick={handleGoBack}
             >
-              Geri
+              {buttons.backBtn[language]}
             </button>
             <button
               className="w-full cursor-pointer bg-blue-600 hover:bg-blue-700 text-white py-2 sm:py-3 rounded-lg transition duration-200 text-xs sm:text-sm"
               onClick={handleGoNext}
             >
-              Növbəti
+              {buttons.nextBtn[language]}
             </button>
           </div>
         </div>

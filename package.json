@@ -23,7 +23,6 @@
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-international-phone": "^4.5.0",
-    "react-phone-number-input": "^3.4.12",
     "react-router-dom": "^7.6.0",
     "sass": "^1.87.0",
     "styled-components": "^6.1.17",
