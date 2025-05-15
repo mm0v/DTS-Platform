@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { Download } from "lucide-react";
@@ -7,6 +7,8 @@ import { FormContext } from "../context/FormContext";
 import { useLanguage } from "../context/LanguageContext";
 import ApplySteps from "../components/ApplySteps";
 import { motion, AnimatePresence } from "framer-motion";
+
+import { companyService } from "../services/companyService"; // yolunu düzəlt
 
 interface FileState {
   companyRegistry: File | null;
@@ -27,7 +29,8 @@ export default function ApplyFive() {
     throw new Error("ApplyFive must be used within a FormContext.Provider");
   }
 
-  const { setFormData } = context;
+  const { formData, setFormData } = context;
+
   const [files, setFiles] = useState<FileState>({
     companyRegistry: null,
     financialReports: null,
@@ -48,6 +51,7 @@ export default function ApplyFive() {
   const [showConfirmModal, setShowConfirmModal] = useState<boolean>(false);
   const [showThankYouModal, setShowThankYouModal] = useState<boolean>(false);
 
+  // LocalStorage-dan faylları və razılıqları yüklə (ehtiyat üçün)
   useEffect(() => {
     const savedFiles = JSON.parse(localStorage.getItem("files") || "{}");
     const savedAgreements = JSON.parse(localStorage.getItem("agreements") || "{}");
@@ -71,7 +75,10 @@ export default function ApplyFive() {
     localStorage.setItem("agreements", JSON.stringify(agreements));
   }, [files, agreements]);
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, fileType: keyof FileState) => {
+  const handleFileChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    fileType: keyof FileState
+  ) => {
     const file = e.target.files?.[0] || null;
     if (file) {
       setFiles((prev) => ({
@@ -117,23 +124,58 @@ export default function ApplyFive() {
 
   const handleThankYouModalClose = () => {
     setShowThankYouModal(false);
+    // İstəsən, burda redirect edə bilərsən, məsələn:
+    // navigate("/");
   };
 
-  // Yeni: təsdiqləmə modalının Bəli düyməsi funksiyası
-  const handleConfirmModalYes = () => {
+  const handleConfirmModalYes = async () => {
     setIsSubmitting(true);
 
-    // Simulate submission delay
-    setTimeout(() => {
-      setIsSubmitting(false);
+    try {
+      const dataToSend = {
+        companyData: {
+          companyName: formData.companyName,
+          companyRegisterNumber: formData.companyRegisterNumber,
+          createYear: formData.createYear,
+          workerCount: formData.workerCount,
+          annualTurnover: formData.annualTurnover,
+          address: formData.address,
+          cityAndRegion: formData.cityAndRegion,
+          website: formData.website,
+          contactName: formData.contactName,
+          contactEmail: formData.contactEmail,
+          contactPhone: formData.contactPhone,
+        },
+        declarationConsent: formData.declarationConsent,
+        digitalLeadership: formData.digitalLeadership,
+        digitalReadiness: formData.digitalReadiness,
+        financialNeeding: formData.financialNeeding,
+        propertyLaw: formData.propertyLaw,
+      };
+
+      // JSON məlumatı göndər (yalnız obyekt)
+      const dataToSubmit = {
+        companyRequest: dataToSend,
+        // Əgər fayllar göndərilməlidirsə, service və backend uyğunlaşdırılmalıdır
+      };
+
+      await companyService.submitCompanyData(dataToSubmit);
+
       setShowConfirmModal(false);
-      setShowThankYouModal(true); // Yeni təşəkkür modalını göstər
-    }, 1500);
+      setShowThankYouModal(true);
+    } catch (error) {
+      console.error("Submission error:", error);
+      alert(
+        "Müraciət göndərilərkən xəta baş verdi. Zəhmət olmasa, yenidən cəhd edin."
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setShowConfirmModal(true); // İlk təsdiq modalını aç
+    setShowConfirmModal(true);
   };
 
   return (
@@ -143,117 +185,120 @@ export default function ApplyFive() {
         <ApplySteps step={5} />
 
         {/* Təsdiq Modalı */}
-     
+        <AnimatePresence>
+          {showConfirmModal && (
+            <motion.div
+              className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-75 z-50"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            >
+              <motion.div
+                className="bg-[#121213] rounded-xl w-[440px] p-8 flex flex-col items-center justify-center relative shadow-lg space-y-6"
+                initial={{ scale: 0.85, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.85, opacity: 0 }}
+                transition={{ duration: 0.25 }}
+              >
+                <h2 className="text-white text-xl font-semibold text-center">
+                  Müraciətinizi təsdiq edirsinizmi?
+                </h2>
+                <button
+                  onClick={handleConfirmModalClose}
+                  className="absolute top-5 right-5 text-red-500 hover:text-red-600 transition-colors"
+                  aria-label="Close modal"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                </button>
+
+                <div className="flex space-x-8 w-full justify-center">
+                  <button
+                    onClick={handleConfirmModalClose}
+                    className="border border-red-500 text-red-500 py-3 px-10 rounded-lg hover:bg-red-50 transition font-medium"
+                    disabled={isSubmitting}
+                  >
+                    Xeyr
+                  </button>
+                  <button
+                    onClick={handleConfirmModalYes}
+                    className="bg-green-500 text-white py-3 px-10 rounded-lg hover:bg-green-600 transition font-medium"
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting ? "Göndərilir..." : "Bəli"}
+                  </button>
+                </div>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Təşəkkür Modalı */}
-      {/* Təsdiq Modalı */}
-<AnimatePresence>
-  {showConfirmModal && (
-    <motion.div
-      className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-75 z-50"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-    >
-      <motion.div
-        className="bg-[#121213] rounded-xl w-[440px] p-8 flex flex-col items-center justify-center relative shadow-lg space-y-6"
-        initial={{ scale: 0.85, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        exit={{ scale: 0.85, opacity: 0 }}
-        transition={{ duration: 0.25 }}
-      >
-        <h2 className="text-white text-xl font-semibold text-center">
-          Müraciətinizi təsdiq edirsinizmi?
-        </h2>
-        <button
-          onClick={handleConfirmModalClose}
-          className="absolute top-5 right-5 text-red-500 hover:text-red-600 transition-colors"
-          aria-label="Close modal"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-6 w-6"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth={2}
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </button>
+        <AnimatePresence>
+          {showThankYouModal && (
+            <motion.div
+              className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-75 z-50"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            >
+              <motion.div
+                className="bg-[#121213] rounded-xl w-[440px] p-8 flex flex-col items-center justify-center relative shadow-lg text-center space-y-6"
+                initial={{ scale: 0.85, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.85, opacity: 0 }}
+                transition={{ duration: 0.25 }}
+              >
+                <h2 className="text-white text-2xl font-bold">
+                  Müraciətiniz üçün təşəkkür edirik!
+                </h2>
+                <p className="text-white text-base max-w-[360px] mx-auto">
+                  Müraciətinizin nəticəsi barəsində qısa zamanda sizinlə əlaqə
+                  saxlanılacaqdır.
+                </p>
 
-        <div className="flex space-x-8 w-full justify-center">
-          <button
-            onClick={handleConfirmModalClose}
-            className="border border-red-500 text-red-500 py-3 px-10 rounded-lg hover:bg-red-50 transition font-medium"
-            disabled={isSubmitting}
-          >
-            Xeyr
-          </button>
-          <button
-            onClick={handleConfirmModalYes}
-            className="bg-green-500 text-white py-3 px-10 rounded-lg hover:bg-green-600 transition font-medium"
-            disabled={isSubmitting}
-          >
-            {isSubmitting ? "Göndərilir..." : "Bəli"}
-          </button>
-        </div>
-      </motion.div>
-    </motion.div>
-  )}
-</AnimatePresence>
+                <button
+                  onClick={handleThankYouModalClose}
+                  className="absolute top-5 right-5 text-red-500 hover:text-red-600 transition-colors"
+                  aria-label="Close modal"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                </button>
 
-{/* Təşəkkür Modalı */}
-<AnimatePresence>
-  {showThankYouModal && (
-    <motion.div
-      className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-75 z-50"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-    >
-      <motion.div
-        className="bg-[#121213] rounded-xl w-[440px] p-8 flex flex-col items-center justify-center relative shadow-lg text-center space-y-6"
-        initial={{ scale: 0.85, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        exit={{ scale: 0.85, opacity: 0 }}
-        transition={{ duration: 0.25 }}
-      >
-        <h2 className="text-white text-2xl font-bold">
-          Müraciətiniz üçün təşəkkür edirik!
-        </h2>
-        <p className="text-white text-base max-w-[360px] mx-auto">
-          Müraciətinizin nəticəsi barəsində qısa zamanda sizinlə əlaqə saxlanılacaqdır.
-        </p>
-
-        <button
-          onClick={handleThankYouModalClose}
-          className="absolute top-5 right-5 text-red-500 hover:text-red-600 transition-colors"
-          aria-label="Close modal"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-6 w-6"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth={2}
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </button>
-
-        <img
-          src="/img/click.svg"
-          alt="Confirmation checkmark"
-          className="w-20 h-20 mx-auto mt-2"
-        />
-      </motion.div>
-    </motion.div>
-  )}
-</AnimatePresence>
-
-
+                <img
+                  src="/img/click.svg"
+                  alt="Confirmation checkmark"
+                  className="w-20 h-20 mx-auto mt-2"
+                />
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Form bölməsi */}
         <div className="w-full max-w-4xl p-8 rounded-lg">
@@ -274,7 +319,9 @@ export default function ApplyFive() {
                   htmlFor="companyRegistry"
                   className="w-full h-14 border border-gray-600 rounded-lg flex items-center justify-between px-4 bg-gray-800/30 text-gray-400 text-sm cursor-pointer select-none"
                 >
-                  {files.companyRegistry ? files.companyRegistry.name : "No file selected"}
+                  {files.companyRegistry
+                    ? files.companyRegistry.name
+                    : "No file selected"}
                 </label>
                 <button
                   type="button"
@@ -308,7 +355,9 @@ export default function ApplyFive() {
                   htmlFor="financialReports"
                   className="w-full h-14 border border-gray-600 rounded-lg flex items-center justify-between px-4 bg-gray-800/30 text-gray-400 text-sm cursor-pointer select-none"
                 >
-                  {files.financialReports ? files.financialReports.name : "No file selected"}
+                  {files.financialReports
+                    ? files.financialReports.name
+                    : "No file selected"}
                 </label>
                 <button
                   type="button"
@@ -340,10 +389,7 @@ export default function ApplyFive() {
                   onChange={handleCheckboxChange}
                   className="mt-1 h-4 w-4 text-blue-500 border-gray-600 rounded bg-transparent"
                 />
-                <label
-                  htmlFor="confirmAccuracy"
-                  className="ml-2 text-sm text-gray-400"
-                >
+                <label htmlFor="confirmAccuracy" className="ml-2 text-sm text-gray-400">
                   {page.checkboxes.confirmAccuracy[language]}
                 </label>
               </div>
@@ -356,10 +402,7 @@ export default function ApplyFive() {
                   onChange={handleCheckboxChange}
                   className="mt-1 h-4 w-4 text-blue-500 border-gray-600 rounded bg-transparent"
                 />
-                <label
-                  htmlFor="contactConsent"
-                  className="ml-2 text-sm text-gray-400"
-                >
+                <label htmlFor="contactConsent" className="ml-2 text-sm text-gray-400">
                   {page.checkboxes.contactConsent[language]}
                 </label>
               </div>
@@ -372,10 +415,7 @@ export default function ApplyFive() {
                   onChange={handleCheckboxChange}
                   className="mt-1 h-4 w-4 text-blue-500 border-gray-600 rounded bg-transparent"
                 />
-                <label
-                  htmlFor="termsAgreement"
-                  className="ml-2 text-sm text-gray-400"
-                >
+                <label htmlFor="termsAgreement" className="ml-2 text-sm text-gray-400">
                   {page.checkboxes.termsAgreement[language]}
                 </label>
               </div>

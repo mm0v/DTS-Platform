@@ -5,6 +5,17 @@ type Byte = number; // 8-bit integer (0-255)
 
 export interface FormContextType {
   formData: {
+    companyRegisterNumber: any;
+    address: any;
+    cityAndRegion: any;
+    website: any;
+    contactName: any;
+    contactEmail: any;
+    contactPhone: any;
+    createYear: any;
+    annualTurnover: any;
+    companyName: any;
+    workerCount: any;
     companyData: {
       companyName: string;
       companyRegisterNumber: string;
