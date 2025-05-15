@@ -71,22 +71,22 @@ export default function ApplyOne() {
         [name === "vatNumber"
           ? "companyRegisterNumber"
           : name === "foundingDate"
-          ? "createYear"
-          : name === "companySize"
-          ? "workerCount"
-          : name === "annualTurnover"
-          ? "annualTurnover"
-          : name === "companyAddress"
-          ? "address"
-          : name === "location"
-          ? "cityAndRegion"
-          : name === "contactPerson"
-          ? "contactName"
-          : name === "email"
-          ? "contactEmail"
-          : name === "phone"
-          ? "contactPhone"
-          : "companyName"]: value,
+            ? "createYear"
+            : name === "companySize"
+              ? "workerCount"
+              : name === "annualTurnover"
+                ? "annualTurnover"
+                : name === "companyAddress"
+                  ? "address"
+                  : name === "location"
+                    ? "cityAndRegion"
+                    : name === "contactPerson"
+                      ? "contactName"
+                      : name === "email"
+                        ? "contactEmail"
+                        : name === "phone"
+                          ? "contactPhone"
+                          : "companyName"]: value,
       },
     }));
   };
@@ -164,7 +164,7 @@ export default function ApplyOne() {
         <ApplySteps step={1} />
 
         <div className="text-center mb-8 relative z-20">
-          <h1 className="text-2xl md:text-3xl font-medium">Şirkət haqqında məlumat</h1>
+          <h1 className="text-2xl md:text-3xl font-medium">{page.title[language]}</h1>
         </div>
 
         <div className="w-full max-w-2xl space-y-6 relative z-20">
@@ -176,119 +176,113 @@ export default function ApplyOne() {
               name="companyName"
               value={localFormData.companyName}
               onChange={handleInputChange}
-              className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${
-                errors.companyName ? "border-red-500 focus:ring-red-500" : "border-gray-700 focus:ring-blue-500"
-              }`}
+              className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${errors.companyName ? "border-red-500 focus:ring-red-500" : "border-gray-700 focus:ring-blue-500"
+                }`}
             />
             {errors.companyName && (
               <p className="text-red-500 text-sm">{errors.companyName}</p>
             )}
           </div>
 
-    <div className="flex gap-4">
-  {/* VAT Number */}
-  <div className="flex-1 space-y-2">
-    <label className="text-sm">{page.vatNumber[language]}</label>
-    <input
-      type="text"
-      name="vatNumber"
-      value={localFormData.vatNumber}
-      onChange={handleInputChange}
-      className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${
-        errors.vatNumber ? "border-red-500 focus:ring-red-500" : "border-gray-700 focus:ring-blue-500"
-      }`}
-    />
-    {errors.vatNumber && (
-      <p className="text-red-500 text-sm">{errors.vatNumber}</p>
-    )}
-  </div>
+          <div className="flex gap-4">
+            {/* VAT Number */}
+            <div className="flex-1 space-y-2">
+              <label className="text-sm">{page.vatNumber[language]}</label>
+              <input
+                type="text"
+                name="vatNumber"
+                value={localFormData.vatNumber}
+                onChange={handleInputChange}
+                className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${errors.vatNumber ? "border-red-500 focus:ring-red-500" : "border-gray-700 focus:ring-blue-500"
+                  }`}
+              />
+              {errors.vatNumber && (
+                <p className="text-red-500 text-sm">{errors.vatNumber}</p>
+              )}
+            </div>
 
-  {/* Founding Date */}
-  <div className="flex-1 space-y-2">
-    <label className="text-sm">{page.foundingDate[language]}</label>
-    <input
-      type="number"
-      name="foundingDate"
-      value={localFormData.foundingDate}
-      onChange={handleInputChange}
-      min="1900"
-      max={new Date().getFullYear()}
-      placeholder="YYYY"
-      className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${
-        errors.foundingDate ? "border-red-500 focus:ring-red-500" : "border-gray-700 focus:ring-blue-500"
-      }`}
-    />
-    {errors.foundingDate && (
-      <p className="text-red-500 text-sm">{errors.foundingDate}</p>
-    )}
-  </div>
-</div>
-    <div className="flex gap-4">
-       {/* Company Size */}
-  <div className="flex-1 space-y-2">
-            <label className="text-sm">Şirkətin ölçüsü (Tam ştatlı işçilərin sayı)</label>
-            <select
-              name="companySize"
-              value={localFormData.companySize}
-              onChange={handleInputChange}
-              className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${
-                errors.companySize ? "border-red-500 focus:ring-red-500" : "border-gray-700 focus:ring-blue-500"
-              }`}
-            >
-              <option className="text-black" value="">
-                Seçin
-              </option>
-              <option className="text-black" value="10">
-                1-10
-              </option>
-              <option className="text-black" value="50">
-                11-50
-              </option>
-              <option className="text-black" value="250">
-                51-250
-              </option>
-              <option className="text-black" value="350">
-                250+
-              </option>
-            </select>
-            {errors.companySize && (
-              <p className="text-red-500 text-sm">{errors.companySize}</p>
-            )}
+            {/* Founding Date */}
+            <div className="flex-1 space-y-2">
+              <label className="text-sm">{page.foundingDate[language]}</label>
+              <input
+                type="number"
+                name="foundingDate"
+                value={localFormData.foundingDate}
+                onChange={handleInputChange}
+                max={new Date().getFullYear()}
+                placeholder="YYYY"
+                className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${errors.foundingDate ? "border-red-500 focus:ring-red-500" : "border-gray-700 focus:ring-blue-500"
+                  }`}
+              />
+              {errors.foundingDate && (
+                <p className="text-red-500 text-sm">{errors.foundingDate}</p>
+              )}
+            </div>
+          </div>
+          <div className="flex gap-4">
+            {/* Company Size */}
+            <div className="flex-1 space-y-2">
+              <label className="text-sm"> {page.companySize[language]}</label>
+              <select
+                name="companySize"
+                value={localFormData.companySize}
+                onChange={handleInputChange}
+                className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${errors.companySize ? "border-red-500 focus:ring-red-500" : "border-gray-700 focus:ring-blue-500"
+                  }`}
+              >
+                <option className="text-black" value="">
+                  Seçin
+                </option>
+                <option className="text-black" value="10">
+                  1-10
+                </option>
+                <option className="text-black" value="50">
+                  11-50
+                </option>
+                <option className="text-black" value="250">
+                  51-250
+                </option>
+                <option className="text-black" value="350">
+                  250+
+                </option>
+              </select>
+              {errors.companySize && (
+                <p className="text-red-500 text-sm">{errors.companySize}</p>
+              )}
+            </div>
+
+            {/* Annual Turnover */}
+            <div className="flex-1 space-y-2">
+              <label className="text-sm">{page.annualTurnover[language]} </label>
+              <select
+                name="annualTurnover"
+                value={localFormData.annualTurnover}
+                onChange={handleInputChange}
+                className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${errors.annualTurnover ? "border-red-500 focus:ring-red-500" : "border-gray-700 focus:ring-blue-500"
+                  }`}
+              >
+                <option className="text-black" value="">
+                  Seçin
+                </option>
+                <option className="text-black" value="3">
+                  3m-ə qədər
+                </option>
+                <option className="text-black" value="30">
+                  3m - 30m
+                </option>
+                <option className="text-black" value="60">
+                  30m+
+                </option>
+              </select>
+              {errors.annualTurnover && (
+                <p className="text-red-500 text-sm">{errors.annualTurnover}</p>
+              )}
+            </div>
+
           </div>
 
-  {/* Annual Turnover */}
-          <div className="flex-1 space-y-2">
-            <label className="text-sm">İllik dövriyyə (AZN)</label>
-            <select
-              name="annualTurnover"
-              value={localFormData.annualTurnover}
-              onChange={handleInputChange}
-              className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${
-                errors.annualTurnover ? "border-red-500 focus:ring-red-500" : "border-gray-700 focus:ring-blue-500"
-              }`}
-            >
-              <option className="text-black" value="">
-                Seçin
-              </option>
-              <option className="text-black" value="3">
-                3m-ə qədər
-              </option>
-              <option className="text-black" value="30">
-                3m - 30m
-              </option>
-              <option className="text-black" value="60">
-                30m+
-              </option>
-            </select>
-            {errors.annualTurnover && (
-              <p className="text-red-500 text-sm">{errors.annualTurnover}</p>
-            )}
-          </div>
 
-    </div>
-         
-        
-        
+
           {/* Company Address */}
           <div className="space-y-2">
             <label className="text-sm">{page.companyAddress[language]}</label>
@@ -297,9 +291,8 @@ export default function ApplyOne() {
               name="companyAddress"
               value={localFormData.companyAddress}
               onChange={handleInputChange}
-              className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${
-                errors.companyAddress ? "border-red-500 focus:ring-red-500" : "border-gray-700 focus:ring-blue-500"
-              }`}
+              className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${errors.companyAddress ? "border-red-500 focus:ring-red-500" : "border-gray-700 focus:ring-blue-500"
+                }`}
             />
             {errors.companyAddress && (
               <p className="text-red-500 text-sm">{errors.companyAddress}</p>
@@ -314,9 +307,8 @@ export default function ApplyOne() {
               name="location"
               value={localFormData.location}
               onChange={handleInputChange}
-              className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${
-                errors.location ? "border-red-500 focus:ring-red-500" : "border-gray-700 focus:ring-blue-500"
-              }`}
+              className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${errors.location ? "border-red-500 focus:ring-red-500" : "border-gray-700 focus:ring-blue-500"
+                }`}
             />
             {errors.location && (
               <p className="text-red-500 text-sm">{errors.location}</p>
@@ -331,15 +323,14 @@ export default function ApplyOne() {
               name="website"
               value={localFormData.website}
               onChange={handleInputChange}
-              className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${
-                errors.website ? "border-red-500 focus:ring-red-500" : "border-gray-700 focus:ring-blue-500"
-              }`}
+              className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${errors.website ? "border-red-500 focus:ring-red-500" : "border-gray-700 focus:ring-blue-500"
+                }`}
             />
             {errors.website && (
               <p className="text-red-500 text-sm">{errors.website}</p>
             )}
           </div>
-           {/* Contact Person */}
+          {/* Contact Person */}
           <div className="flex-1 space-y-2">
             <label className="text-sm">{page.contactPerson[language]}</label>
             <input
@@ -347,57 +338,49 @@ export default function ApplyOne() {
               name="contactPerson"
               value={localFormData.contactPerson}
               onChange={handleInputChange}
-              className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${
-                errors.contactPerson ? "border-red-500 focus:ring-red-500" : "border-gray-700 focus:ring-blue-500"
-              }`}
+              className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${errors.contactPerson ? "border-red-500 focus:ring-red-500" : "border-gray-700 focus:ring-blue-500"
+                }`}
             />
             {errors.contactPerson && (
               <p className="text-red-500 text-sm">{errors.contactPerson}</p>
             )}
           </div>
 
-<div className="flex gap-4">
+          <div className="flex gap-4">
 
 
             {/* Email */}
-          <div className="flex-1 space-y-2">
-            <label className="text-sm">{page.email[language]}</label>
-            <input
-              type="email"
-              name="email"
-              value={localFormData.email}
-              onChange={handleInputChange}
-              className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${
-                errors.email ? "border-red-500 focus:ring-red-500" : "border-gray-700 focus:ring-blue-500"
-              }`}
-            />
-            {errors.email && (
-              <p className="text-red-500 text-sm">{errors.email}</p>
-            )}
-          </div>
+            <div className="flex-1 space-y-2">
+              <label className="text-sm">{page.email[language]}</label>
+              <input
+                type="email"
+                name="email"
+                value={localFormData.email}
+                onChange={handleInputChange}
+                className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${errors.email ? "border-red-500 focus:ring-red-500" : "border-gray-700 focus:ring-blue-500"
+                  }`}
+              />
+              {errors.email && (
+                <p className="text-red-500 text-sm">{errors.email}</p>
+              )}
+            </div>
 
             {/* Phone */}
-          <div className="flex-1 space-y-2">
-            <label className="text-sm">Əlaqə nömrəsi</label>
-            <PhoneInput
-              defaultCountry="az"
-              value={localFormData.phone}
-              onChange={handlePhoneChange}
-              className={`phone-dark w-full ${
-                errors.phone ? "border border-red-500 rounded" : ""
-              }`}
-              inputClassName="phone-dark-input flex-1"
-            />
-            {errors.phone && (
-              <p className="text-red-500 text-sm">{errors.phone}</p>
-            )}
+            <div className="flex-1 space-y-2">
+              <label className="text-sm">{page.phone[language]} </label>
+              <PhoneInput
+                defaultCountry="az"
+                value={localFormData.phone}
+                onChange={handlePhoneChange}
+                className={`w-full  ${errors.phone ? "border border-red-500 rounded" : ""
+                  }`}
+                inputClassName="phone-dark-input flex-1"
+              />
+              {errors.phone && (
+                <p className="text-red-500 text-sm">{errors.phone}</p>
+              )}
+            </div>
           </div>
-</div>
-         
-
-        
-
-        
 
           {/* Next Button */}
           <button
