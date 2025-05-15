@@ -259,6 +259,46 @@ export const pagesTranslations = {
       AZ: "Şirkət adı tələb olunur, zəhmət olmasa daxil edin.",
       EN: "Company name is required, please enter it.",
     },
+    vatNumberRequired: {
+      AZ: "Zəhmət olmasa Vergi nömrəsini daxil edin.",
+      EN: "Please enter the VAT number.",
+    },
+    foundingDateRequired: {
+      AZ: "Zəhmət olmasa yaradılma ilini daxil edin.",
+      EN: "Please enter the founding date.",
+    },
+    companySizeRequired: {
+      AZ: "Zəhmət olmasa şirkət ölçüsünü seçin.",
+      EN: "Please select the company size.",
+    },
+    annualTurnoverRequired: {
+      AZ: "Zəhmət olmasa illik dövriyyəni seçin.",
+      EN: "Please select the annual turnover.",
+    },
+    companyAddressRequired: {
+      AZ: "Zəhmət olmasa ünvanı daxil edin.",
+      EN: "Please enter the company address.",
+    },
+    locationRequired: {
+      AZ: "Zəhmət olmasa şəhər və regionu daxil edin.",
+      EN: "Please enter the city and region.",
+    },
+    websiteRequired: {
+      AZ: "Zəhmət olmasa sayt ünvanını daxil edin.",
+      EN: "Please enter the website address.",
+    },
+    contactPersonRequired: {
+      AZ: "Zəhmət olmasa əlaqə şəxsi daxil edin.",
+      EN: "Please enter the contact person.",
+    },
+    emailRequired: {
+      AZ: "Zəhmət olmasa email daxil edin.",
+      EN: "Please enter the email.",
+    },
+    phoneRequired: {
+      AZ: "Zəhmət olmasa əlaqə nömrəsini daxil edin.",
+      EN: "Please enter the phone number.",
+    },
   },
   apply2: {
     title: {
@@ -344,6 +384,42 @@ export const pagesTranslations = {
     document: {
       AZ: "Təqdimedici sənəd (.doc, .docx, .pdf)",
       EN: "Presentation document (.doc, .docx, .pdf)",
+    },
+    exportMarketsPlaceholder: {
+      AZ: "Ölkə seçin (maksimum 4)",
+      EN: "Select countries (maximum 4)",
+    },
+    exportMarketsAlert: {
+      AZ: "Sadəcə maksimum 4 ölkə seçə bilərsiniz!",
+      EN: "You can only select up to 4 countries!",
+    },
+    selectedFile: {
+      AZ: "Seçilmiş fayl",
+      EN: "Selected file",
+    },
+    fileLimitNote: {
+      AZ: "Yüklənən fayl 50 mb - dan çox ola bilməz.",
+      EN: "Uploaded file cannot exceed 50 MB.",
+    },
+    companyTypeRequired: {
+      AZ: "Bu sahə doldurulmalıdır.",
+      EN: "This field is required.",
+    },
+    businessIndustryRequired: {
+      AZ: "Bu sahə seçilməlidir.",
+      EN: "This field must be selected.",
+    },
+    mainProductsRequired: {
+      AZ: "Bu sahə doldurulmalıdır.",
+      EN: "This field is required.",
+    },
+    exportActivityRequired: {
+      AZ: "Zəhmət olmasa seçim edin.",
+      EN: "Please make a selection.",
+    },
+    exportMarketsRequired: {
+      AZ: "Minimum 1 ölkə seçilməlidir.",
+      EN: "At least one country must be selected.",
     },
   },
   apply3: {
@@ -431,6 +507,20 @@ export const pagesTranslations = {
         EN: "You can enter minimum 3 characters, maximum 500 characters.",
       },
     },
+    errorMessages: {
+      required: {
+        AZ: "Bu sahə mütləq doldurulmalıdır.",
+        EN: "This field is required.",
+      },
+      minLength: {
+        AZ: "Bu sahə mütləq doldurulmalıdır və ən azı 3 simvol olmalıdır.",
+        EN: "This field is required and must be at least 3 characters.",
+      },
+      formError: {
+        AZ: "Zəhmət olmasa bütün sahələri doldurun.",
+        EN: "Please fill in all fields.",
+      },
+    },
   },
   apply4: {
     title: {
@@ -471,6 +561,20 @@ export const pagesTranslations = {
       no: {
         AZ: "Xeyr",
         EN: "No",
+      },
+    },
+    errorMessages: {
+      requiredField: {
+        AZ: "Bu xananı doldurmaq məcburidir!",
+        EN: "This field is required!",
+      },
+      budgetRequired: {
+        AZ: "Maliyyə dəstəyi lazımdırsa, büdcə məbləğini qeyd edin!",
+        EN: "If financial support is needed, please specify the budget amount!",
+      },
+      formValidation: {
+        AZ: "Zəhmət olmasa bütün məcburi xanaları doldurun!",
+        EN: "Please fill in all required fields!",
       },
     },
   },
@@ -521,8 +625,8 @@ export const pagesTranslations = {
         EN: "Your application was submitted successfully!",
       },
       error: {
-        AZ: "Müraciət zamanı xəta baş verdi. Zəhmət olmasa yenidən cəhd edin.",
-        EN: "An error occurred during submission. Please try again.",
+        AZ: "Müraciət göndərilərkən xəta baş verdi. Zəhmət olmasa, yenidən cəhd edin.",
+        EN: "An error occurred while submitting the application. Please try again.",
       },
     },
     confirmModal: {
@@ -537,6 +641,16 @@ export const pagesTranslations = {
       yesBtn: {
         AZ: "Bəli",
         EN: "Yes",
+      },
+    },
+    thankYouModal: {
+      title: {
+        AZ: "Müraciətiniz üçün təşəkkür edirik!",
+        EN: "Thank you for your application!",
+      },
+      message: {
+        AZ: "Müraciətinizin nəticəsi barəsində qısa zamanda sizinlə əlaqə saxlanılacaqdır.",
+        EN: "You will be contacted shortly regarding the result of your application.",
       },
     },
   },

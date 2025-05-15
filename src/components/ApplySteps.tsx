@@ -16,16 +16,16 @@ const ApplySteps = ({ step }: ApplyStepsProps) => {
 
   /* Hər addımın route-u */
   const routes = [
-    "/apply",        // 1
-    "/apply/two",    // 2
-    "/apply/three",  // 3
-    "/apply/four",   // 4
-    "/apply/five",   // 5
+    "/apply", // 1
+    "/apply/two", // 2
+    "/apply/three", // 3
+    "/apply/four", // 4
+    "/apply/five", // 5
   ];
 
   /* Toast mesajı (istəsən translations-a ata bilərsən) */
   const showFillToast = () =>
-    toast.warning("Zəhmət olmasa əvvəlki xanaları doldurun 🚫", {
+    toast.warning(steps.fillFieldsWarning[language], {
       position: "top-center",
     });
 
@@ -35,9 +35,9 @@ const ApplySteps = ({ step }: ApplyStepsProps) => {
         {[...Array(5)].map((_, index) => {
           const num = index + 1;
 
-          const isCurrent  = num === step;
-          const isPast     = num < step;   // keçmiş addımlar – keçid açıq
-          const isFuture   = num > step;   // gələcək addımlar – blok
+          const isCurrent = num === step;
+          const isPast = num < step; // keçmiş addımlar – keçid açıq
+          const isFuture = num > step; // gələcək addımlar – blok
 
           /* Dairə görünüşü */
           const circle = (

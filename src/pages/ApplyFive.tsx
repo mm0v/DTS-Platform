@@ -54,7 +54,9 @@ export default function ApplyFive() {
   // LocalStorage-dan faylları və razılıqları yüklə (ehtiyat üçün)
   useEffect(() => {
     const savedFiles = JSON.parse(localStorage.getItem("files") || "{}");
-    const savedAgreements = JSON.parse(localStorage.getItem("agreements") || "{}");
+    const savedAgreements = JSON.parse(
+      localStorage.getItem("agreements") || "{}"
+    );
     if (savedFiles.companyRegistry) {
       setFiles((prev) => ({
         ...prev,
@@ -165,9 +167,7 @@ export default function ApplyFive() {
       setShowThankYouModal(true);
     } catch (error) {
       console.error("Submission error:", error);
-      alert(
-        "Müraciət göndərilərkən xəta baş verdi. Zəhmət olmasa, yenidən cəhd edin."
-      );
+      alert(page.alerts.error[language]);
     } finally {
       setIsSubmitting(false);
     }
@@ -201,7 +201,7 @@ export default function ApplyFive() {
                 transition={{ duration: 0.25 }}
               >
                 <h2 className="text-white text-xl font-semibold text-center">
-                  Müraciətinizi təsdiq edirsinizmi?
+                  {page.confirmModal.title[language]}
                 </h2>
                 <button
                   onClick={handleConfirmModalClose}
@@ -230,14 +230,16 @@ export default function ApplyFive() {
                     className="border border-red-500 text-red-500 py-3 px-10 rounded-lg hover:bg-red-50 transition font-medium"
                     disabled={isSubmitting}
                   >
-                    Xeyr
+                    {page.confirmModal.noBtn[language]}
                   </button>
                   <button
                     onClick={handleConfirmModalYes}
                     className="bg-green-500 text-white py-3 px-10 rounded-lg hover:bg-green-600 transition font-medium"
                     disabled={isSubmitting}
                   >
-                    {isSubmitting ? "Göndərilir..." : "Bəli"}
+                    {isSubmitting
+                      ? page.buttons.submitting[language]
+                      : page.confirmModal.yesBtn[language]}
                   </button>
                 </div>
               </motion.div>
@@ -262,11 +264,10 @@ export default function ApplyFive() {
                 transition={{ duration: 0.25 }}
               >
                 <h2 className="text-white text-2xl font-bold">
-                  Müraciətiniz üçün təşəkkür edirik!
+                  {page.thankYouModal.title[language]}
                 </h2>
                 <p className="text-white text-base max-w-[360px] mx-auto">
-                  Müraciətinizin nəticəsi barəsində qısa zamanda sizinlə əlaqə
-                  saxlanılacaqdır.
+                  {page.thankYouModal.message[language]}
                 </p>
 
                 <button
@@ -339,7 +340,9 @@ export default function ApplyFive() {
                   onChange={(e) => handleFileChange(e, "companyRegistry")}
                 />
               </div>
-              <p className="text-sm text-gray-400">{page.fileFormatText[language]}</p>
+              <p className="text-sm text-gray-400">
+                {page.fileFormatText[language]}
+              </p>
             </div>
 
             {/* Maliyyə hesabatları faylı */}
@@ -375,7 +378,9 @@ export default function ApplyFive() {
                   onChange={(e) => handleFileChange(e, "financialReports")}
                 />
               </div>
-              <p className="text-sm text-gray-400">{page.fileFormatText[language]}</p>
+              <p className="text-sm text-gray-400">
+                {page.fileFormatText[language]}
+              </p>
             </div>
 
             {/* Razılıq qutuları */}
@@ -389,7 +394,10 @@ export default function ApplyFive() {
                   onChange={handleCheckboxChange}
                   className="mt-1 h-4 w-4 text-blue-500 border-gray-600 rounded bg-transparent"
                 />
-                <label htmlFor="confirmAccuracy" className="ml-2 text-sm text-gray-400">
+                <label
+                  htmlFor="confirmAccuracy"
+                  className="ml-2 text-sm text-gray-400"
+                >
                   {page.checkboxes.confirmAccuracy[language]}
                 </label>
               </div>
@@ -402,7 +410,10 @@ export default function ApplyFive() {
                   onChange={handleCheckboxChange}
                   className="mt-1 h-4 w-4 text-blue-500 border-gray-600 rounded bg-transparent"
                 />
-                <label htmlFor="contactConsent" className="ml-2 text-sm text-gray-400">
+                <label
+                  htmlFor="contactConsent"
+                  className="ml-2 text-sm text-gray-400"
+                >
                   {page.checkboxes.contactConsent[language]}
                 </label>
               </div>
@@ -415,7 +426,10 @@ export default function ApplyFive() {
                   onChange={handleCheckboxChange}
                   className="mt-1 h-4 w-4 text-blue-500 border-gray-600 rounded bg-transparent"
                 />
-                <label htmlFor="termsAgreement" className="ml-2 text-sm text-gray-400">
+                <label
+                  htmlFor="termsAgreement"
+                  className="ml-2 text-sm text-gray-400"
+                >
                   {page.checkboxes.termsAgreement[language]}
                 </label>
               </div>

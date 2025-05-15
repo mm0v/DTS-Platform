@@ -1,37 +1,38 @@
-"use client"
+"use client";
 
-import React, { useState, useContext, useEffect } from "react"
-import { useNavigate } from "react-router-dom"
-import BackgroundVideo from "../components/BackgroundVideo"
-import { FormContext } from "../context/FormContext"
-import { useLanguage } from "../context/LanguageContext"
-import ApplySteps from "../components/ApplySteps"
+import React, { useState, useContext, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import BackgroundVideo from "../components/BackgroundVideo";
+import { FormContext } from "../context/FormContext";
+import { useLanguage } from "../context/LanguageContext";
+import ApplySteps from "../components/ApplySteps";
 
 export default function ApplyFour() {
-  const navigate = useNavigate()
-  const context = useContext(FormContext)
-  const { language, pagesTranslations } = useLanguage()
-  const page = pagesTranslations.apply4
-  const buttons = pagesTranslations.applyBtns
+  const navigate = useNavigate();
+  const context = useContext(FormContext);
+  const { language, pagesTranslations } = useLanguage();
+  const page = pagesTranslations.apply4;
+  const buttons = pagesTranslations.applyBtns;
 
   if (!context) {
-    throw new Error("ApplyFour must be used within a FormContext.Provider")
+    throw new Error("ApplyFour must be used within a FormContext.Provider");
   }
 
-  const { formData, setFormData } = context
-
-  
+  const { formData, setFormData } = context;
 
   // Lokal form state
   const [localFormData, setLocalFormData] = useState({
-    digitalTeamOrLead: formData.digitalLeadership.digitalTeamOrLead ? "Bəli" : "Xeyr",
+    digitalTeamOrLead: formData.digitalLeadership.digitalTeamOrLead
+      ? "Bəli"
+      : "Xeyr",
     digitalPath: formData.digitalLeadership.digitalPath ? "Bəli" : "Xeyr",
-    digitalTransformationLoyality: formData.digitalLeadership.digitalTransformationLoyality ? "Bəli" : "Xeyr",
+    digitalTransformationLoyality: formData.digitalLeadership
+      .digitalTransformationLoyality
+      ? "Bəli"
+      : "Xeyr",
     financialNeed: formData.financialNeeding.financialNeed ? "Bəli" : "Xeyr",
     neededBudget: formData.financialNeeding.neededBudget || "",
-  })
-
-  
+  });
 
   // Validation səhvləri
   const [errors, setErrors] = useState({
@@ -40,45 +41,50 @@ export default function ApplyFour() {
     digitalTransformationLoyality: false,
     financialNeed: false,
     neededBudget: false,
-  })
+  });
 
   // Validation mesajını göstərmək üçün state
-  const [showValidationMessage, setShowValidationMessage] = useState(false)
+  const [showValidationMessage, setShowValidationMessage] = useState(false);
 
   // LocalStorage-dan data yükləmək (varsa)
   useEffect(() => {
-    const savedData = JSON.parse(localStorage.getItem("formDataFour") || "{}")
+    const savedData = JSON.parse(localStorage.getItem("formDataFour") || "{}");
     if (savedData) {
       setLocalFormData((prev) => ({
         ...prev,
-        digitalTeamOrLead: savedData.digitalTeamOrLead || prev.digitalTeamOrLead,
+        digitalTeamOrLead:
+          savedData.digitalTeamOrLead || prev.digitalTeamOrLead,
         digitalPath: savedData.digitalPath || prev.digitalPath,
-        digitalTransformationLoyality: savedData.digitalTransformationLoyality || prev.digitalTransformationLoyality,
+        digitalTransformationLoyality:
+          savedData.digitalTransformationLoyality ||
+          prev.digitalTransformationLoyality,
         financialNeed: savedData.financialNeed || prev.financialNeed,
         neededBudget: savedData.neededBudget || prev.neededBudget,
-      }))
+      }));
     }
-  }, [])
+  }, []);
 
   // LocalStorage-a data yadda saxlamaq
   useEffect(() => {
-    localStorage.setItem("formDataFour", JSON.stringify(localFormData))
-  }, [localFormData])
+    localStorage.setItem("formDataFour", JSON.stringify(localFormData));
+  }, [localFormData]);
 
   // Input dəyişdikdə local state və global konteksti yenilə
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target;
     setLocalFormData((prev) => ({
       ...prev,
       [name]: value,
-    }))
+    }));
 
     setErrors((prev) => ({
       ...prev,
       [name]: false,
-    }))
+    }));
 
-    if (showValidationMessage) setShowValidationMessage(false)
+    if (showValidationMessage) setShowValidationMessage(false);
 
     // Global konteksti də yenilə
     if (
@@ -92,7 +98,7 @@ export default function ApplyFour() {
           ...prev.digitalLeadership,
           [name]: value === "Bəli",
         },
-      }))
+      }));
     } else if (name === "financialNeed") {
       setFormData((prev) => ({
         ...prev,
@@ -100,7 +106,7 @@ export default function ApplyFour() {
           ...prev.financialNeeding,
           financialNeed: value === "Bəli",
         },
-      }))
+      }));
     } else if (name === "neededBudget") {
       setFormData((prev) => ({
         ...prev,
@@ -108,40 +114,46 @@ export default function ApplyFour() {
           ...prev.financialNeeding,
           neededBudget: value,
         },
-      }))
+      }));
     }
-  }
+  };
 
   // Formu validasiya et
   const validateForm = () => {
     const newErrors = {
-      digitalTeamOrLead: !localFormData.digitalTeamOrLead || localFormData.digitalTeamOrLead === "",
-      digitalPath: !localFormData.digitalPath || localFormData.digitalPath === "",
+      digitalTeamOrLead:
+        !localFormData.digitalTeamOrLead ||
+        localFormData.digitalTeamOrLead === "",
+      digitalPath:
+        !localFormData.digitalPath || localFormData.digitalPath === "",
       digitalTransformationLoyality:
-        !localFormData.digitalTransformationLoyality || localFormData.digitalTransformationLoyality === "",
-      financialNeed: !localFormData.financialNeed || localFormData.financialNeed === "",
+        !localFormData.digitalTransformationLoyality ||
+        localFormData.digitalTransformationLoyality === "",
+      financialNeed:
+        !localFormData.financialNeed || localFormData.financialNeed === "",
       neededBudget:
         localFormData.financialNeed === "Bəli" &&
-        (!localFormData.neededBudget || localFormData.neededBudget.trim() === ""),
-    }
-    setErrors(newErrors)
+        (!localFormData.neededBudget ||
+          localFormData.neededBudget.trim() === ""),
+    };
+    setErrors(newErrors);
 
     // Əgər səhv varsa false qaytar, yoxsa true
-    return !Object.values(newErrors).some(Boolean)
-  }
+    return !Object.values(newErrors).some(Boolean);
+  };
 
   const handleGoBack = () => {
-    navigate("/apply/three")
-  }
+    navigate("/apply/three");
+  };
 
   const handleNext = () => {
     if (validateForm()) {
-      navigate("/apply/five")
+      navigate("/apply/five");
     } else {
-      setShowValidationMessage(true)
-      window.scrollTo({ top: 0, behavior: "smooth" })
+      setShowValidationMessage(true);
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
-  }
+  };
 
   return (
     <>
@@ -150,12 +162,14 @@ export default function ApplyFour() {
         <ApplySteps step={4} />
 
         <div className="text-center mb-8">
-          <h1 className="text-2xl md:text-3xl font-medium">Liderlik və öhdəliklər</h1>
+          <h1 className="text-2xl md:text-3xl font-medium">
+            {page.title[language]}
+          </h1>
         </div>
 
         {showValidationMessage && (
           <div className="w-full max-w-2xl mb-4 p-4 bg-red-500/20 border-2 border-red-500 rounded-md text-red-500 text-center font-medium">
-            Zəhmət olmasa bütün məcburi xanaları doldurun!
+            {page.errorMessages.formValidation[language]}
           </div>
         )}
 
@@ -164,7 +178,9 @@ export default function ApplyFour() {
           <div className="space-y-6">
             {/* Digital Team or Lead */}
             <div className="space-y-2">
-              <label className="text-sm md:text-base">{page.digitalTransformationLeader[language]}</label>
+              <label className="text-sm md:text-base">
+                {page.digitalTransformationLeader[language]}
+              </label>
               <div className="flex items-center space-x-8">
                 {["Bəli", "Xeyr"].map((option) => (
                   <label
@@ -199,22 +215,36 @@ export default function ApplyFour() {
                           stroke="currentColor"
                           strokeWidth={3}
                         >
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M5 13l4 4L19 7"
+                          />
                         </svg>
                       )}
                     </span>
-                    <span className="text-sm">{page.optionLabels[option === "Bəli" ? "yes" : "no"][language]}</span>
+                    <span className="text-sm">
+                      {
+                        page.optionLabels[option === "Bəli" ? "yes" : "no"][
+                          language
+                        ]
+                      }
+                    </span>
                   </label>
                 ))}
               </div>
               {errors.digitalTeamOrLead && (
-                <p className="text-red-500 font-medium text-sm mt-1">Bu xananı doldurmaq məcburidir!</p>
+                <p className="text-red-500 font-medium text-sm mt-1">
+                  {page.errorMessages.requiredField[language]}
+                </p>
               )}
             </div>
 
             {/* Digital Path */}
             <div className="space-y-2">
-              <label className="text-sm md:text-base">{page.hasStrategy[language]}</label>
+              <label className="text-sm md:text-base">
+                {page.hasStrategy[language]}
+              </label>
               <div className="flex items-center space-x-8">
                 {["Bəli", "Xeyr"].map((option) => (
                   <label
@@ -249,22 +279,36 @@ export default function ApplyFour() {
                           stroke="currentColor"
                           strokeWidth={3}
                         >
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M5 13l4 4L19 7"
+                          />
                         </svg>
                       )}
                     </span>
-                    <span className="text-sm">{page.optionLabels[option === "Bəli" ? "yes" : "no"][language]}</span>
+                    <span className="text-sm">
+                      {
+                        page.optionLabels[option === "Bəli" ? "yes" : "no"][
+                          language
+                        ]
+                      }
+                    </span>
                   </label>
                 ))}
               </div>
               {errors.digitalPath && (
-                <p className="text-red-500 font-medium text-sm mt-1">Bu xananı doldurmaq məcburidir!</p>
+                <p className="text-red-500 font-medium text-sm mt-1">
+                  {page.errorMessages.requiredField[language]}
+                </p>
               )}
             </div>
 
             {/* Digital Transformation Loyalty */}
             <div className="space-y-2">
-              <label className="text-sm md:text-base">{page.highLevelManagementSupport[language]}</label>
+              <label className="text-sm md:text-base">
+                {page.highLevelManagementSupport[language]}
+              </label>
               <div className="flex items-center space-x-8">
                 {["Bəli", "Xeyr"].map((option) => (
                   <label
@@ -277,7 +321,9 @@ export default function ApplyFour() {
                       type="radio"
                       name="digitalTransformationLoyality"
                       value={option}
-                      checked={localFormData.digitalTransformationLoyality === option}
+                      checked={
+                        localFormData.digitalTransformationLoyality === option
+                      }
                       onChange={handleInputChange}
                       className="hidden"
                     />
@@ -290,7 +336,8 @@ export default function ApplyFour() {
                           : "bg-white border-gray-400"
                       } hover:border-blue-600`}
                     >
-                      {localFormData.digitalTransformationLoyality === option && (
+                      {localFormData.digitalTransformationLoyality ===
+                        option && (
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           className="w-3.5 h-3.5 text-white"
@@ -299,29 +346,43 @@ export default function ApplyFour() {
                           stroke="currentColor"
                           strokeWidth={3}
                         >
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M5 13l4 4L19 7"
+                          />
                         </svg>
                       )}
                     </span>
-                    <span className="text-sm">{page.optionLabels[option === "Bəli" ? "yes" : "no"][language]}</span>
+                    <span className="text-sm">
+                      {
+                        page.optionLabels[option === "Bəli" ? "yes" : "no"][
+                          language
+                        ]
+                      }
+                    </span>
                   </label>
                 ))}
               </div>
               {errors.digitalTransformationLoyality && (
-                <p className="text-red-500 font-medium text-sm mt-1">Bu xananı doldurmaq məcburidir!</p>
+                <p className="text-red-500 font-medium text-sm mt-1">
+                  {page.errorMessages.requiredField[language]}
+                </p>
               )}
             </div>
           </div>
 
           {/* Financial Section */}
           <div className="pt-6 border-t border-gray-700/30">
-            <h2 className="text-xl md:text-2xl font-medium mb-6 text-center">Maliyyə ehtiyacları</h2>
-
-         
+            <h2 className="text-xl md:text-2xl font-medium mb-6 text-center">
+              {page.financialNeeds.title[language]}
+            </h2>
 
             {/* Financial Need */}
             <div className="space-y-2 mb-6">
-              <label className="text-sm md:text-base">{page.financialNeeds.question[language]}</label>
+              <label className="text-sm md:text-base">
+                {page.financialNeeds.question[language]}
+              </label>
               <div className="flex items-center space-x-8">
                 {["Bəli", "Xeyr"].map((option) => (
                   <label
@@ -356,58 +417,71 @@ export default function ApplyFour() {
                           stroke="currentColor"
                           strokeWidth={3}
                         >
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M5 13l4 4L19 7"
+                          />
                         </svg>
                       )}
                     </span>
-                    <span className="text-sm">{page.optionLabels[option === "Bəli" ? "yes" : "no"][language]}</span>
+                    <span className="text-sm">
+                      {
+                        page.optionLabels[option === "Bəli" ? "yes" : "no"][
+                          language
+                        ]
+                      }
+                    </span>
                   </label>
                 ))}
               </div>
               {errors.financialNeed && (
-                <p className="text-red-500 font-medium text-sm mt-1">Bu xananı doldurmaq məcburidir!</p>
+                <p className="text-red-500 font-medium text-sm mt-1">
+                  {page.errorMessages.requiredField[language]}
+                </p>
               )}
             </div>
-                {/* Transformation Budget */}
-<div className="mb-4">
-  <label
-    htmlFor="neededBudget"
-    className="block mb-1 text-sm md:text-base font-semibold text-gray-200"
-  >
-    {page.transformationBudget[language]}
-  </label>
-  <div className="relative">
-    <input
-      id="neededBudget"
-      type="number"
-      name="neededBudget"
-      value={localFormData.neededBudget}
-      onChange={handleInputChange}
-      placeholder="AZN"
-      min={0}
-      className={`w-full rounded border px-3 py-2 pr-12 bg-transparent text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition
+            {/* Transformation Budget */}
+            <div className="mb-4">
+              <label
+                htmlFor="neededBudget"
+                className="block mb-1 text-sm md:text-base font-semibold text-gray-200"
+              >
+                {page.transformationBudget[language]}
+              </label>
+              <div className="relative">
+                <input
+                  id="neededBudget"
+                  type="number"
+                  name="neededBudget"
+                  value={localFormData.neededBudget}
+                  onChange={handleInputChange}
+                  placeholder="AZN"
+                  min={0}
+                  className={`w-full rounded border px-3 py-2 pr-12 bg-transparent text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition
         ${
           errors.neededBudget
             ? "border-red-500 focus:ring-red-500"
             : "border-gray-600 focus:ring-blue-500"
         }`}
-    />
-    <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 select-none pointer-events-none">
-      AZN
-    </span>
-  </div>
-  {errors.neededBudget && (
-    <p className="mt-1 text-sm font-medium text-red-500">{errors.neededBudget}</p>
-  )}
-</div>
-
-
-
+                />
+                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 select-none pointer-events-none">
+                  AZN
+                </span>
+              </div>
+              {errors.neededBudget && (
+                <p className="mt-1 text-sm font-medium text-red-500">
+                  {errors.neededBudget}
+                </p>
+              )}
+            </div>
 
             {/* Needed Budget */}
             {localFormData.financialNeed === "Bəli" && (
               <div className="space-y-2">
-                <label className="text-sm md:text-base">{page.transformationBudget[language]}</label>
+                <label className="text-sm md:text-base">
+                  {page.transformationBudget[language]}
+                </label>
                 <div className="relative">
                   <input
                     type="number"
@@ -420,11 +494,13 @@ export default function ApplyFour() {
                     placeholder="AZN"
                     min={0}
                   />
-                  <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400">AZN</div>
+                  <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                    AZN
+                  </div>
                 </div>
                 {errors.neededBudget && (
                   <p className="text-red-500 font-medium text-sm mt-1">
-                    Maliyyə dəstəyi lazımdırsa, büdcə məbləğini qeyd edin!
+                    {page.errorMessages.budgetRequired[language]}
                   </p>
                 )}
               </div>
@@ -451,5 +527,5 @@ export default function ApplyFour() {
         </div>
       </div>
     </>
-  )
+  );
 }
