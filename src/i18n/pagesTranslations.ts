@@ -1,7 +1,7 @@
 export const pagesTranslations = {
   home: {
     title: {
-      AZ: '"Sənaye 4.0 Hazırlıq" Proqramı',
+      AZ: '“Sənaye 4.0 Hazırlıq" Proqramı',
       EN: '"Industry 4.0 Readiness" Program',
     },
     description: {
