@@ -160,7 +160,7 @@ const ApplyThree = () => {
   return (
     <>
       <BackgroundVideo />
-      <div className="min-h-screen bg-black bg-[url('/images/space-background.jpg')] bg-cover bg-center text-white flex flex-col items-center justify-center py-10">
+      <div className="min-h-screen  bg-[url('/images/space-background.jpg')] bg-cover bg-center text-white flex flex-col items-center justify-center py-10">
         <ApplySteps step={3} />
 
         <div className="w-full max-w-4xl mb-8 px-6">
@@ -176,124 +176,110 @@ const ApplyThree = () => {
             </p>
           </div> */}
 
-          <form className="space-y-6">
-            <div className="flex justify-between items-center space-x-4">
-              <label className="w-1/3">{page.digitalLevel[language]}</label>
-              <select
-                name="digitalLevel"
-                value={getDigitalLevelString()}
-                onChange={handleInputChange}
-                className="w-2/3 p-2 bg-gray-800 text-white rounded"
-              >
-                <option value="1">
-                  {page.digitalLevelOptions.level1[language]}
-                </option>
-                <option value="2">
-                  {page.digitalLevelOptions.level2[language]}
-                </option>
-                <option value="3">
-                  {page.digitalLevelOptions.level3[language]}
-                </option>
-              </select>
-            </div>
+        <form className="space-y-6">
+  <div>
+    <label className="block mb-2">{page.digitalLevel[language]}</label>
+    <select
+      name="digitalLevel"
+      value={getDigitalLevelString()}
+      onChange={handleInputChange}
+      className="w-full p-2 bg-gray-800 text-white rounded"
+    >
+      <option value="1">{page.digitalLevelOptions.level1[language]}</option>
+      <option value="2">{page.digitalLevelOptions.level2[language]}</option>
+      <option value="3">{page.digitalLevelOptions.level3[language]}</option>
+    </select>
+  </div>
 
-            <div className="flex justify-between items-center space-x-4">
-              <label className="w-1/3">{page.digitalTools[language]}</label>
-              <div className="w-2/3 relative">
-                <button
-                  type="button"
-                  onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                  className="w-full p-2 bg-gray-800 text-white rounded text-left flex justify-between items-center"
-                >
-                  <span>
-                    {formData.digitalReadiness.digitalTools.length > 0
-                      ? `${formData.digitalReadiness.digitalTools.length} ${page.digitalToolsOptions.selected[language]}`
-                      : page.placeholder[language]}
-                  </span>
-                  <span className="ml-2">▼</span>
-                </button>
-                {isDropdownOpen && (
-                  <div className="absolute z-10 w-full mt-1 bg-gray-800 rounded shadow-lg">
-                    {[
-                      { value: "crm", label: "CRM" },
-                      { value: "erp", label: "ERP" },
-                      {
-                        value: "accounting",
-                        label: page.digitalToolsOptions.accounting[language],
-                      },
-                      {
-                        value: "other",
-                        label: page.digitalToolsOptions.other[language],
-                      },
-                    ].map((tool) => (
-                      <label key={tool.value} className="flex items-center px-4 py-2 hover:bg-gray-700 cursor-pointer">
-                        <input
-                          type="checkbox"
-                          value={tool.value}
-                          checked={formData.digitalReadiness.digitalTools.includes(tool.value)}
-                          onChange={handleDigitalToolChange}
-                          className="form-checkbox text-blue-500 rounded"
-                        />
-                        <span className="ml-2">{tool.label}</span>
-                      </label>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <p className="text-xl">{page.keyChallenges.title[language]}</p>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {[
-                  "budget_shortage",
-                  "technical_expertise",
-                  "training_needs",
-                  "digital_strategy",
-                  "infrastructure_limits",
-                  "other",
-                ].map((challenge) => (
-                  <label key={challenge} className="inline-flex items-center">
-                    <input
-                      type="checkbox"
-                      value={challenge}
-                      checked={formData.digitalReadiness.keyChallenges.includes(challenge)}
-                      onChange={handleCheckboxChange}
-                      className="form-checkbox text-blue-500"
-                    />
-                    <span className="ml-2">
-                      {challenge === "budget_shortage" &&
-                        page.keyChallenges.budget_shortage[language]}
-                      {challenge === "technical_expertise" &&
-                        page.keyChallenges.technical_expertise[language]}
-                      {challenge === "training_needs" &&
-                        page.keyChallenges.training_needs[language]}
-                      {challenge === "digital_strategy" &&
-                        page.keyChallenges.digital_strategy[language]}
-                      {challenge === "infrastructure_limits" &&
-                        page.keyChallenges.infrastructure_limits[language]}
-                      {challenge === "other" &&
-                        page.keyChallenges.other[language]}
-                    </span>
-                  </label>
-                ))}
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <p className="text-xl">{page.companyPurpose.title[language]}</p>
-              <textarea
-                name="companyPurpose"
-                value={formData.digitalReadiness.companyPurpose}
-                onChange={handleInputChange}
-                className="w-full p-4 bg-gray-800 text-white rounded"
-                rows={4}
-                placeholder={page.companyPurpose.placeholder[language]}
-                maxLength={500}
-                minLength={3}
+  <div>
+    <label className="block mb-2">{page.digitalTools[language]}</label>
+    <div className="relative">
+      <button
+        type="button"
+        onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+        className="w-full p-2 bg-gray-800 text-white rounded text-left flex justify-between items-center"
+      >
+        <span>
+          {formData.digitalReadiness.digitalTools.length > 0
+            ? `${formData.digitalReadiness.digitalTools.length} ${page.digitalToolsOptions.selected[language]}`
+            : page.placeholder[language]}
+        </span>
+        <span className="ml-2">▼</span>
+      </button>
+      {isDropdownOpen && (
+        <div className="absolute z-10 w-full mt-1 bg-gray-800 rounded shadow-lg">
+          {[ 
+            { value: "crm", label: "CRM" },
+            { value: "erp", label: "ERP" },
+            { value: "accounting", label: page.digitalToolsOptions.accounting[language] },
+            { value: "other", label: page.digitalToolsOptions.other[language] },
+          ].map((tool) => (
+            <label
+              key={tool.value}
+              className="flex items-center px-4 py-2 hover:bg-gray-700 cursor-pointer"
+            >
+              <input
+                type="checkbox"
+                value={tool.value}
+                checked={formData.digitalReadiness.digitalTools.includes(tool.value)}
+                onChange={handleDigitalToolChange}
+                className="form-checkbox text-blue-500 rounded"
               />
-            </div>
-          </form>
+              <span className="ml-2">{tool.label}</span>
+            </label>
+          ))}
+        </div>
+      )}
+    </div>
+  </div>
+
+  <div>
+    <p className="text-xl mb-2">{page.keyChallenges.title[language]}</p>
+    <div className="grid grid-cols-1 gap-4">
+      {[
+        "budget_shortage",
+        "technical_expertise",
+        "training_needs",
+        "digital_strategy",
+        "infrastructure_limits",
+        "other",
+      ].map((challenge) => (
+        <label key={challenge} className="inline-flex items-center">
+          <input
+            type="checkbox"
+            value={challenge}
+            checked={formData.digitalReadiness.keyChallenges.includes(challenge)}
+            onChange={handleCheckboxChange}
+            className="form-checkbox text-blue-500"
+          />
+          <span className="ml-2">
+            {challenge === "budget_shortage" && page.keyChallenges.budget_shortage[language]}
+            {challenge === "technical_expertise" && page.keyChallenges.technical_expertise[language]}
+            {challenge === "training_needs" && page.keyChallenges.training_needs[language]}
+            {challenge === "digital_strategy" && page.keyChallenges.digital_strategy[language]}
+            {challenge === "infrastructure_limits" && page.keyChallenges.infrastructure_limits[language]}
+            {challenge === "other" && page.keyChallenges.other[language]}
+          </span>
+        </label>
+      ))}
+    </div>
+  </div>
+
+  <div>
+    <p className="text-xl mb-2">{page.companyPurpose.title[language]}</p>
+    <textarea
+      name="companyPurpose"
+      value={formData.digitalReadiness.companyPurpose}
+      onChange={handleInputChange}
+      className="w-full p-4 bg-gray-800 text-white rounded"
+      rows={4}
+      placeholder={page.companyPurpose.placeholder[language]}
+      maxLength={500}
+      minLength={3}
+    />
+  </div>
+</form>
+
 
             <div className="flex justify-between mt-6">
             <button

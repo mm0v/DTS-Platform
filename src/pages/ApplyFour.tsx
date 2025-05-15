@@ -119,182 +119,335 @@ export default function ApplyFour() {
           </h1>
         </div>
 
-        <div className="w-full max-w-2xl space-y-4">
-          {/* Digital Transformation Leader */}
-          <div className="space-y-1">
-            <label className="text-sm">
-              {page.digitalTransformationLeader[language]}
-            </label>
-            <div className="flex items-center space-x-4">
-              <div className="flex items-center space-x-2">
-                <input
-                  type="radio"
-                  name="digitalTeamOrLead"
-                  value="Bəli"
-                  checked={localFormData.digitalTeamOrLead === "Bəli"}
-                  onChange={handleInputChange}
-                  className="text-blue-500"
-                />
-                <label className="text-sm">
-                  {page.optionLabels.yes[language]}
-                </label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <input
-                  type="radio"
-                  name="digitalTeamOrLead"
-                  value="Xeyr"
-                  checked={localFormData.digitalTeamOrLead === "Xeyr"}
-                  onChange={handleInputChange}
-                  className="text-blue-500"
-                />
-                <label className="text-sm">
-                  {page.optionLabels.no[language]}
-                </label>
-              </div>
-            </div>
-          </div>
-
-          {/* Strategy and Roadmap */}
-          <div className="space-y-1">
-            <label className="text-sm">{page.hasStrategy[language]}</label>
-            <div className="flex items-center space-x-4">
-              <div className="flex items-center space-x-2">
-                <input
-                  type="radio"
-                  name="digitalPath"
-                  value="Bəli"
-                  checked={localFormData.digitalPath === "Bəli"}
-                  onChange={handleInputChange}
-                  className="text-blue-500"
-                />
-                <label className="text-sm">
-                  {page.optionLabels.yes[language]}
-                </label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <input
-                  type="radio"
-                  name="digitalPath"
-                  value="Xeyr"
-                  checked={localFormData.digitalPath === "Xeyr"}
-                  onChange={handleInputChange}
-                  className="text-blue-500"
-                />
-                <label className="text-sm">
-                  {page.optionLabels.no[language]}
-                </label>
-              </div>
-            </div>
-          </div>
-
-          {/* High-Level Management Support */}
-          <div className="space-y-1">
-            <label className="text-sm">
-              {page.highLevelManagementSupport[language]}
-            </label>
-            <div className="flex items-center space-x-4">
-              <div className="flex items-center space-x-2">
-                <input
-                  type="radio"
-                  name="digitalTransformationLoyality"
-                  value="Bəli"
-                  checked={localFormData.digitalTransformationLoyality === "Bəli"}
-                  onChange={handleInputChange}
-                  className="text-blue-500"
-                />
-                <label className="text-sm">
-                  {page.optionLabels.yes[language]}
-                </label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <input
-                  type="radio"
-                  name="digitalTransformationLoyality"
-                  value="Xeyr"
-                  checked={localFormData.digitalTransformationLoyality === "Xeyr"}
-                  onChange={handleInputChange}
-                  className="text-blue-500"
-                />
-                <label className="text-sm">
-                  {page.optionLabels.no[language]}
-                </label>
-              </div>
-            </div>
-          </div>
-
-          <div className="text-center mb-8">
-            <h1 className="text-2xl md:text-3xl font-medium">
-              {page.financialNeeds.title[language]}
-            </h1>
-          </div>
-
-          {/* Financial Needs */}
-          <div className="space-y-1">
-            <label className="text-sm">
-              {page.financialNeeds.question[language]}
-            </label>
-            <div className="flex items-center space-x-4">
-              <div className="flex items-center space-x-2">
-                <input
-                  type="radio"
-                  name="financialNeed"
-                  value="Bəli"
-                  checked={localFormData.financialNeed === "Bəli"}
-                  onChange={handleInputChange}
-                  className="text-blue-500"
-                />
-                <label className="text-sm">
-                  {page.optionLabels.yes[language]}
-                </label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <input
-                  type="radio"
-                  name="financialNeed"
-                  value="Xeyr"
-                  checked={localFormData.financialNeed === "Xeyr"}
-                  onChange={handleInputChange}
-                  className="text-blue-500"
-                />
-                <label className="text-sm">
-                  {page.optionLabels.no[language]}
-                </label>
-              </div>
-            </div>
-          </div>
-
-          {/* Transformation Budget */}
-          <div className="space-y-1">
-            <label className="text-sm">
-              {page.transformationBudget[language]}
-            </label>
-            <input
-              type="number"
-              name="neededBudget"
-              value={localFormData.neededBudget}
-              onChange={handleInputChange}
-              className="w-full bg-transparent border border-gray-700 rounded p-2 focus:outline-none focus:border-blue-500"
-              placeholder="AZN"
-            />
-          </div>
-
-          {/* Geri və Növbəti Butonları */}
-          <div className="flex justify-between mt-6">
-            <button
-              className="w-[48%] cursor-pointer bg-blue-600 hover:bg-blue-700 text-white py-3 rounded transition duration-200"
-              onClick={handleGoBack}
+       <div className="w-full max-w-2xl space-y-4 text-white">
+  {/* Digital Transformation Leader */}
+  <div className="space-y-1">
+    <label className="text-sm">{page.digitalTransformationLeader[language]}</label>
+    <div className="flex items-center space-x-8">
+      <label className="flex items-center cursor-pointer space-x-2">
+        <input
+          type="radio"
+          name="digitalTeamOrLead"
+          value="Bəli"
+          checked={localFormData.digitalTeamOrLead === "Bəli"}
+          onChange={handleInputChange}
+          className="hidden"
+        />
+        <span
+          className={`w-5 h-5 flex items-center justify-center rounded-sm border-2 transition-colors
+            ${
+              localFormData.digitalTeamOrLead === "Bəli"
+                ? "bg-blue-600 border-blue-600"
+                : "bg-white border-gray-400"
+            }
+            hover:border-blue-600`}
+        >
+          {localFormData.digitalTeamOrLead === "Bəli" && (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="w-3.5 h-3.5 text-white"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={3}
             >
-              {buttons.backBtn[language]}
-            </button>
-            <button
-              className="w-[48%] cursor-pointer bg-blue-600 hover:bg-blue-700 text-white py-3 rounded transition duration-200"
-              onClick={handleNext}
+              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+            </svg>
+          )}
+        </span>
+        <span className="text-sm">{page.optionLabels.yes[language]}</span>
+      </label>
+
+      <label className="flex items-center cursor-pointer space-x-2">
+        <input
+          type="radio"
+          name="digitalTeamOrLead"
+          value="Xeyr"
+          checked={localFormData.digitalTeamOrLead === "Xeyr"}
+          onChange={handleInputChange}
+          className="hidden"
+        />
+        <span
+          className={`w-5 h-5 flex items-center justify-center rounded-sm border-2 transition-colors
+            ${
+              localFormData.digitalTeamOrLead === "Xeyr"
+                ? "bg-blue-600 border-blue-600"
+                : "bg-white border-gray-400"
+            }
+            hover:border-blue-600`}
+        >
+          {localFormData.digitalTeamOrLead === "Xeyr" && (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="w-3.5 h-3.5 text-white"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={3}
             >
-              {buttons.nextBtn[language]}
-            </button>
-          </div>
-        </div>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+            </svg>
+          )}
+        </span>
+        <span className="text-sm">{page.optionLabels.no[language]}</span>
+      </label>
+    </div>
+  </div>
+
+  {/* Digər radio button blokları eyni ölçüdə və dizaynda */}
+  {/* Strategy and Roadmap */}
+  <div className="space-y-1">
+    <label className="text-sm">{page.hasStrategy[language]}</label>
+    <div className="flex items-center space-x-8">
+      <label className="flex items-center cursor-pointer space-x-2">
+        <input
+          type="radio"
+          name="digitalPath"
+          value="Bəli"
+          checked={localFormData.digitalPath === "Bəli"}
+          onChange={handleInputChange}
+          className="hidden"
+        />
+        <span
+          className={`w-5 h-5 flex items-center justify-center rounded-sm border-2 transition-colors
+            ${
+              localFormData.digitalPath === "Bəli"
+                ? "bg-blue-600 border-blue-600"
+                : "bg-white border-gray-400"
+            }
+            hover:border-blue-600`}
+        >
+          {localFormData.digitalPath === "Bəli" && (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="w-3.5 h-3.5 text-white"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={3}
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+            </svg>
+          )}
+        </span>
+        <span className="text-sm">{page.optionLabels.yes[language]}</span>
+      </label>
+
+      <label className="flex items-center cursor-pointer space-x-2">
+        <input
+          type="radio"
+          name="digitalPath"
+          value="Xeyr"
+          checked={localFormData.digitalPath === "Xeyr"}
+          onChange={handleInputChange}
+          className="hidden"
+        />
+        <span
+          className={`w-5 h-5 flex items-center justify-center rounded-sm border-2 transition-colors
+            ${
+              localFormData.digitalPath === "Xeyr"
+                ? "bg-blue-600 border-blue-600"
+                : "bg-white border-gray-400"
+            }
+            hover:border-blue-600`}
+        >
+          {localFormData.digitalPath === "Xeyr" && (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="w-3.5 h-3.5 text-white"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={3}
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+            </svg>
+          )}
+        </span>
+        <span className="text-sm">{page.optionLabels.no[language]}</span>
+      </label>
+    </div>
+  </div>
+
+  {/* Digər radio button blokları da eyni ölçüdə */}
+  {/* High-Level Management Support */}
+  <div className="space-y-1">
+    <label className="text-sm">{page.highLevelManagementSupport[language]}</label>
+    <div className="flex items-center space-x-8">
+      <label className="flex items-center cursor-pointer space-x-2">
+        <input
+          type="radio"
+          name="digitalTransformationLoyality"
+          value="Bəli"
+          checked={localFormData.digitalTransformationLoyality === "Bəli"}
+          onChange={handleInputChange}
+          className="hidden"
+        />
+        <span
+          className={`w-5 h-5 flex items-center justify-center rounded-sm border-2 transition-colors
+            ${
+              localFormData.digitalTransformationLoyality === "Bəli"
+                ? "bg-blue-600 border-blue-600"
+                : "bg-white border-gray-400"
+            }
+            hover:border-blue-600`}
+        >
+          {localFormData.digitalTransformationLoyality === "Bəli" && (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="w-3.5 h-3.5 text-white"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={3}
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+            </svg>
+          )}
+        </span>
+        <span className="text-sm">{page.optionLabels.yes[language]}</span>
+      </label>
+
+      <label className="flex items-center cursor-pointer space-x-2">
+        <input
+          type="radio"
+          name="digitalTransformationLoyality"
+          value="Xeyr"
+          checked={localFormData.digitalTransformationLoyality === "Xeyr"}
+          onChange={handleInputChange}
+          className="hidden"
+        />
+        <span
+          className={`w-5 h-5 flex items-center justify-center rounded-sm border-2 transition-colors
+            ${
+              localFormData.digitalTransformationLoyality === "Xeyr"
+                ? "bg-blue-600 border-blue-600"
+                : "bg-white border-gray-400"
+            }
+            hover:border-blue-600`}
+        >
+          {localFormData.digitalTransformationLoyality === "Xeyr" && (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="w-3.5 h-3.5 text-white"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={3}
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+            </svg>
+          )}
+        </span>
+        <span className="text-sm">{page.optionLabels.no[language]}</span>
+      </label>
+    </div>
+  </div>
+
+  {/* Financial Needs */}
+  <div className="space-y-1">
+    <label className="text-sm">{page.financialNeeds.question[language]}</label>
+    <div className="flex items-center space-x-8">
+      <label className="flex items-center cursor-pointer space-x-2">
+        <input
+          type="radio"
+          name="financialNeed"
+          value="Bəli"
+          checked={localFormData.financialNeed === "Bəli"}
+          onChange={handleInputChange}
+          className="hidden"
+        />
+        <span
+          className={`w-5 h-5 flex items-center justify-center rounded-sm border-2 transition-colors
+            ${
+              localFormData.financialNeed === "Bəli"
+                ? "bg-blue-600 border-blue-600"
+                : "bg-white border-gray-400"
+            }
+            hover:border-blue-600`}
+        >
+          {localFormData.financialNeed === "Bəli" && (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="w-3.5 h-3.5 text-white"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={3}
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+            </svg>
+          )}
+        </span>
+        <span className="text-sm">{page.optionLabels.yes[language]}</span>
+      </label>
+
+      <label className="flex items-center cursor-pointer space-x-2">
+        <input
+          type="radio"
+          name="financialNeed"
+          value="Xeyr"
+          checked={localFormData.financialNeed === "Xeyr"}
+          onChange={handleInputChange}
+          className="hidden"
+        />
+        <span
+          className={`w-5 h-5 flex items-center justify-center rounded-sm border-2 transition-colors
+            ${
+              localFormData.financialNeed === "Xeyr"
+                ? "bg-blue-600 border-blue-600"
+                : "bg-white border-gray-400"
+            }
+            hover:border-blue-600`}
+        >
+          {localFormData.financialNeed === "Xeyr" && (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="w-3.5 h-3.5 text-white"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={3}
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+            </svg>
+          )}
+        </span>
+        <span className="text-sm">{page.optionLabels.no[language]}</span>
+      </label>
+    </div>
+  </div>
+
+  {/* Transformation Budget */}
+  <div className="space-y-1">
+    <label className="text-sm">{page.transformationBudget[language]}</label>
+    <input
+      type="number"
+      name="neededBudget"
+      value={localFormData.neededBudget}
+      onChange={handleInputChange}
+      className="w-full bg-transparent border border-gray-700 rounded p-2 focus:outline-none focus:border-blue-500"
+      placeholder="AZN"
+    />
+  </div>
+
+  {/* Geri və Növbəti Butonları */}
+  <div className="flex justify-between mt-6">
+    <button
+      className="w-[48%] cursor-pointer bg-blue-600 hover:bg-blue-700 text-white py-3 rounded transition duration-200"
+      onClick={handleGoBack}
+    >
+      {buttons.backBtn[language]}
+    </button>
+    <button
+      className="w-[48%] cursor-pointer bg-blue-600 hover:bg-blue-700 text-white py-3 rounded transition duration-200"
+      onClick={handleNext}
+    >
+      {buttons.nextBtn[language]}
+    </button>
+  </div>
+</div>
+
       </div>
     </>
   );

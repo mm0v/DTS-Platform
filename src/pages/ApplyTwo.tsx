@@ -256,32 +256,61 @@ export default function ApplyTwo() {
 
           {/* Export Activity */}
           <div className="space-y-2">
-            <label className="text-sm">{page.exportActivity[language]}</label>
-            <div className="flex items-center space-x-4">
-              <div className="flex items-center space-x-2">
-                <input
-                  type="radio"
-                  name="exportActivity"
-                  value="Bəli"
-                  onChange={handleInputChange}
-                  checked={localFormData.exportActivity === "Bəli"}
-                  className="text-blue-500 w-3 h-3 sm:w-4 sm:h-4"
-                />
-                <label className="text-sm">{page.yes[language]}</label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <input
-                  type="radio"
-                  name="exportActivity"
-                  value="Xeyr"
-                  onChange={handleInputChange}
-                  checked={localFormData.exportActivity === "Xeyr"}
-                  className="text-blue-500 w-3 h-3 sm:w-4 sm:h-4"
-                />
-                <label className="text-sm">{page.no[language]}</label>
-              </div>
-            </div>
-          </div>
+  <label className="text-sm">{page.exportActivity[language]}</label>
+  <div className="flex items-center space-x-4">
+    <label className="flex items-center space-x-2 cursor-pointer">
+      <input
+        type="radio"
+        name="exportActivity"
+        value="Bəli"
+        onChange={handleInputChange}
+        checked={localFormData.exportActivity === "Bəli"}
+        className="hidden"
+      />
+      <span className="w-5 h-5 flex items-center justify-center border border-gray-400 rounded">
+        {localFormData.exportActivity === "Bəli" && (
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="w-4 h-4 text-blue-500"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={3}
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+          </svg>
+        )}
+      </span>
+      <span className="text-sm">{page.yes[language]}</span>
+    </label>
+
+    <label className="flex items-center space-x-2 cursor-pointer">
+      <input
+        type="radio"
+        name="exportActivity"
+        value="Xeyr"
+        onChange={handleInputChange}
+        checked={localFormData.exportActivity === "Xeyr"}
+        className="hidden"
+      />
+      <span className="w-5 h-5 flex items-center justify-center border border-gray-400 rounded">
+        {localFormData.exportActivity === "Xeyr" && (
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="w-4 h-4 text-blue-500"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={3}
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+          </svg>
+        )}
+      </span>
+      <span className="text-sm">{page.no[language]}</span>
+    </label>
+  </div>
+</div>
 
           {/* Export Markets Multi-Select */}
           <div className="space-y-2">
@@ -338,7 +367,7 @@ export default function ApplyTwo() {
 
           {/* Document upload */}
           <div className="space-y-2">
-            <label className="text-sm">{page.document[language]}</label>
+            <label className="text-sm ">{page.document[language]}</label>
             <input
               type="file"
               name="document"
@@ -348,7 +377,11 @@ export default function ApplyTwo() {
             />
             {localFormData.document && (
               <p className="text-xs text-gray-400 mt-1">Seçilmiş fayl: {localFormData.document}</p>
+              
             )}
+            <div>
+              <p className="text-sm text-gray-400">Yüklənən fayl 50 mb - dan çox ola bilməz. </p>
+            </div>
           </div>
 
           {/* Buttons */}

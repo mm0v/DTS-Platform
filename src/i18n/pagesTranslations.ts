@@ -468,8 +468,8 @@ export const pagesTranslations = {
   },
   apply5: {
     title: {
-      AZ: "Tələb olunan sənədlər",
-      EN: "Required Documents",
+      AZ: "Təsdiq olunan sənədlər",
+      EN: "Approved documents",
     },
     companyRegistry: {
       AZ: "Şirkətin dövlət reyestrindən çıxarışı",

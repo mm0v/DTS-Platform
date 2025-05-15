@@ -184,69 +184,77 @@ export default function ApplyFive() {
           </div>
           <form className="space-y-8" onSubmit={handleSubmit}>
             {/* First file upload */}
-            <div className="space-y-2">
-              <label className="block text-lg font-medium">
-                {page.companyRegistry[language]}
-              </label>
-              <div className="relative">
-                <div className="w-full h-14 border border-gray-600 rounded-lg flex items-center justify-between px-4 bg-gray-800/30">
-                  <span className="text-gray-400 text-sm">
-                    {files.companyRegistry
-                      ? files.companyRegistry.name
-                      : "No file selected"}
-                  </span>
-                  <button
-                    type="button"
-                    className="text-white"
-                    onClick={() => document.getElementById("companyRegistry")?.click()}
-                  >
-                    <Download size={20} />
-                  </button>
-                </div>
-                <input
-                  id="companyRegistry"
-                  type="file"
-                  className="hidden"
-                  accept=".doc,.docx,.pdf"
-                  onChange={(e) => handleFileChange(e, "companyRegistry")}
-                />
-              </div>
-              <p className="text-sm text-gray-400">
-                {page.fileFormatText[language]}
-              </p>
-            </div>
+           {/* First file upload */}
+<div className="space-y-2">
+  <label
+    htmlFor="companyRegistry"
+    className="block text-lg cursor-pointer font-medium"
+  >
+    {page.companyRegistry[language]}
+  </label>
+  <div className="relative">
+    {/* Bu label fayl inputunu açacaq */}
+    <label
+      htmlFor="companyRegistry"
+      className="w-full h-14 border border-gray-600 rounded-lg flex items-center justify-between px-4 bg-gray-800/30 text-gray-400 text-sm cursor-pointer select-none"
+    >
+      {files.companyRegistry ? files.companyRegistry.name : "No file selected"}
+    </label>
+    {/* İkon düyməsini ayrıca saxlayırıq, klikləmirik */}
+    <button
+      type="button"
+      className="text-white absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none"
+      tabIndex={-1}
+      aria-hidden="true"
+    >
+      <Download size={20} />
+    </button>
+    <input
+      id="companyRegistry"
+      type="file"
+      className="hidden"
+      accept=".doc,.docx,.pdf"
+      onChange={(e) => handleFileChange(e, "companyRegistry")}
+    />
+  </div>
+  <p className="text-sm text-gray-400">{page.fileFormatText[language]}</p>
+</div>
+
             {/* Second file upload */}
-            <div className="space-y-2">
-              <label className="block text-lg font-medium">
-                {page.financialReports[language]}
-              </label>
-              <div className="relative">
-                <div className="w-full h-14 border border-gray-600 rounded-lg flex items-center justify-between px-4 bg-gray-800/30">
-                  <span className="text-gray-400 text-sm">
-                    {files.financialReports
-                      ? files.financialReports.name
-                      : "No file selected"}
-                  </span>
-                  <button
-                    type="button"
-                    className="text-white"
-                    onClick={() => document.getElementById("financialReports")?.click()}
-                  >
-                    <Download size={20} />
-                  </button>
-                </div>
-                <input
-                  id="financialReports"
-                  type="file"
-                  className="hidden"
-                  accept=".doc,.docx,.pdf,.xls,.xlsx"
-                  onChange={(e) => handleFileChange(e, "financialReports")}
-                />
-              </div>
-              <p className="text-sm text-gray-400">
-                {page.fileFormatText[language]}
-              </p>
-            </div>
+          {/* Second file upload */}
+<div className="space-y-2">
+  <label
+    htmlFor="financialReports"
+    className="block text-lg cursor-pointer font-medium"
+  >
+    {page.financialReports[language]}
+  </label>
+  <div className="relative">
+    <label
+      htmlFor="financialReports"
+      className="w-full h-14 border border-gray-600 rounded-lg flex items-center justify-between px-4 bg-gray-800/30 text-gray-400 text-sm cursor-pointer select-none"
+    >
+      {files.financialReports ? files.financialReports.name : "No file selected"}
+    </label>
+    <button
+      type="button"
+      className="text-white absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none"
+      tabIndex={-1}
+      aria-hidden="true"
+    >
+      <Download size={20} />
+    </button>
+    <input
+      id="financialReports"
+      type="file"
+      className="hidden"
+      accept=".doc,.docx,.pdf,.xls,.xlsx"
+      onChange={(e) => handleFileChange(e, "financialReports")}
+    />
+  </div>
+  <p className="text-sm text-gray-400">{page.fileFormatText[language]}</p>
+</div>
+
             {/* Checkboxes */}
             <div className="space-y-4">
               <div className="flex items-start">
