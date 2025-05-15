@@ -5,6 +5,8 @@ import Navbar from './layout/Navbar';
 import Footer from './layout/Footer';
 import { LanguageProvider } from './context/LanguageContext';
 import LoadingSpinner from './components/LoadingSpinner'; // We'll create this component
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 // Lazy load all page components
 const Home = lazy(() => import('./pages/Home'));
 const Compliance_And_Prioritization = lazy(() => import('./pages/Compliance_And_Prioritization'));
@@ -44,6 +46,7 @@ const App: React.FC = () => {
     <LanguageProvider>
       {!isNotFound && <Navbar />}
       <Suspense fallback={<LoadingSpinner />}>
+      <ToastContainer theme="dark" />
         <Routes>
           <Route path='/' element={<Home />} />
           <Route path='/eligibility' element={<Compliance_And_Prioritization />} />
