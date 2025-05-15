@@ -220,8 +220,16 @@ export const pagesTranslations = {
       EN: "Annual turnover (AZN)",
     },
     annualTurnoverOption1: {
-      AZ: "3m-ə qədər",
-      EN: "Up to 3m",
+      AZ: "3M-ə qədər",
+      EN: "Up to 3M",
+    },
+    annualTurnoverOption2: {
+      AZ: "3M - 30M",
+      EN: "3M - 30M",
+    },
+    annualTurnoverOption3: {
+      AZ: "30M+",
+      EN: "30M+",
     },
     companyAddress: {
       AZ: "Şirkətin ünvanı",

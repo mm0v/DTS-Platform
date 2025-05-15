@@ -231,7 +231,7 @@ export default function ApplyOne() {
                   }`}
               >
                 <option className="text-black" value="">
-                  Seçin
+                  {page.placeholder[language]}
                 </option>
                 <option className="text-black" value="10">
                   1-10
@@ -262,16 +262,16 @@ export default function ApplyOne() {
                   }`}
               >
                 <option className="text-black" value="">
-                  Seçin
+                  {page.placeholder[language]}
                 </option>
                 <option className="text-black" value="3">
-                  3m-ə qədər
+                  {page.annualTurnoverOption1[language]}
                 </option>
                 <option className="text-black" value="30">
-                  3m - 30m
+                  {page.annualTurnoverOption2[language]}
                 </option>
                 <option className="text-black" value="60">
-                  30m+
+                  {page.annualTurnoverOption3[language]}
                 </option>
               </select>
               {errors.annualTurnover && (
