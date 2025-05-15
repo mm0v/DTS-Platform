@@ -6,7 +6,7 @@ import BackgroundVideo from "../components/BackgroundVideo"
 import { FormContext } from "../context/FormContext"
 import { useLanguage } from "../context/LanguageContext"
 import ApplySteps from "../components/ApplySteps"
-import Select from "react-select"
+import Select, { type MultiValue } from "react-select"
 import countryList from "react-select-country-list"
 
 // Tip tərifləri
@@ -46,8 +46,8 @@ export default function ApplyTwo() {
   const initialExportMarkets: string[] = Array.isArray(formData.propertyLaw.exportBazaar)
     ? formData.propertyLaw.exportBazaar
     : formData.propertyLaw.exportBazaar
-    ? [formData.propertyLaw.exportBazaar]
-    : []
+      ? [formData.propertyLaw.exportBazaar]
+      : []
 
   const [localFormData, setLocalFormData] = useState({
     companyType: formData.propertyLaw.companyLawType || "",
@@ -62,8 +62,8 @@ export default function ApplyTwo() {
     const updatedExportMarkets: string[] = Array.isArray(formData.propertyLaw.exportBazaar)
       ? formData.propertyLaw.exportBazaar
       : formData.propertyLaw.exportBazaar
-      ? [formData.propertyLaw.exportBazaar]
-      : []
+        ? [formData.propertyLaw.exportBazaar]
+        : []
 
     setLocalFormData({
       companyType: formData.propertyLaw.companyLawType || "",
@@ -85,8 +85,8 @@ export default function ApplyTwo() {
         const savedExportMarkets: string[] = Array.isArray(parsedData.propertyLaw?.exportBazaar)
           ? parsedData.propertyLaw.exportBazaar
           : parsedData.propertyLaw?.exportBazaar
-          ? [parsedData.propertyLaw.exportBazaar]
-          : []
+            ? [parsedData.propertyLaw.exportBazaar]
+            : []
 
         setLocalFormData({
           companyType: parsedData.propertyLaw?.companyLawType || "",
@@ -110,7 +110,7 @@ export default function ApplyTwo() {
       [name]: value,
     }))
 
-    let updatedFormData = { ...formData }
+    const updatedFormData = { ...formData }
 
     switch (name) {
       case "companyType":
@@ -136,7 +136,9 @@ export default function ApplyTwo() {
   }
 
   // Multi-select üçün handler
-  const handleCountryChange = (selectedOptions: any) => {
+  // import type { MultiValue } from "react-select"
+
+  const handleCountryChange = (selectedOptions: MultiValue<{ label: string; value: string }>) => {
     let countries: string[] = []
     if (Array.isArray(selectedOptions)) {
       countries = selectedOptions.map((option) => option.label)
@@ -256,61 +258,61 @@ export default function ApplyTwo() {
 
           {/* Export Activity */}
           <div className="space-y-2">
-  <label className="text-sm">{page.exportActivity[language]}</label>
-  <div className="flex items-center space-x-4">
-    <label className="flex items-center space-x-2 cursor-pointer">
-      <input
-        type="radio"
-        name="exportActivity"
-        value="Bəli"
-        onChange={handleInputChange}
-        checked={localFormData.exportActivity === "Bəli"}
-        className="hidden"
-      />
-      <span className="w-5 h-5 flex items-center justify-center border border-gray-400 rounded">
-        {localFormData.exportActivity === "Bəli" && (
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="w-4 h-4 text-blue-500"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth={3}
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-          </svg>
-        )}
-      </span>
-      <span className="text-sm">{page.yes[language]}</span>
-    </label>
+            <label className="text-sm">{page.exportActivity[language]}</label>
+            <div className="flex items-center space-x-4">
+              <label className="flex items-center space-x-2 cursor-pointer">
+                <input
+                  type="radio"
+                  name="exportActivity"
+                  value="Bəli"
+                  onChange={handleInputChange}
+                  checked={localFormData.exportActivity === "Bəli"}
+                  className="hidden"
+                />
+                <span className="w-5 h-5 flex items-center justify-center border border-gray-400 rounded">
+                  {localFormData.exportActivity === "Bəli" && (
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="w-4 h-4 text-blue-500"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={3}
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                    </svg>
+                  )}
+                </span>
+                <span className="text-sm">{page.yes[language]}</span>
+              </label>
 
-    <label className="flex items-center space-x-2 cursor-pointer">
-      <input
-        type="radio"
-        name="exportActivity"
-        value="Xeyr"
-        onChange={handleInputChange}
-        checked={localFormData.exportActivity === "Xeyr"}
-        className="hidden"
-      />
-      <span className="w-5 h-5 flex items-center justify-center border border-gray-400 rounded">
-        {localFormData.exportActivity === "Xeyr" && (
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="w-4 h-4 text-blue-500"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth={3}
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-          </svg>
-        )}
-      </span>
-      <span className="text-sm">{page.no[language]}</span>
-    </label>
-  </div>
-</div>
+              <label className="flex items-center space-x-2 cursor-pointer">
+                <input
+                  type="radio"
+                  name="exportActivity"
+                  value="Xeyr"
+                  onChange={handleInputChange}
+                  checked={localFormData.exportActivity === "Xeyr"}
+                  className="hidden"
+                />
+                <span className="w-5 h-5 flex items-center justify-center border border-gray-400 rounded">
+                  {localFormData.exportActivity === "Xeyr" && (
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="w-4 h-4 text-blue-500"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={3}
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                    </svg>
+                  )}
+                </span>
+                <span className="text-sm">{page.no[language]}</span>
+              </label>
+            </div>
+          </div>
 
           {/* Export Markets Multi-Select */}
           <div className="space-y-2">
@@ -377,7 +379,7 @@ export default function ApplyTwo() {
             />
             {localFormData.document && (
               <p className="text-xs text-gray-400 mt-1">Seçilmiş fayl: {localFormData.document}</p>
-              
+
             )}
             <div>
               <p className="text-sm text-gray-400">Yüklənən fayl 50 mb - dan çox ola bilməz. </p>
