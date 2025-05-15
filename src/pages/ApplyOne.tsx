@@ -367,14 +367,13 @@ export default function ApplyOne() {
 
             {/* Phone */}
             <div className="flex-1 space-y-2">
-              <label className="text-sm">{page.phone[language]} </label>
+              <label className="text-sm">{page.phone[language]}</label>
               <PhoneInput
+                inputClassName="phone-dark-input flex-1"
                 defaultCountry="az"
                 value={localFormData.phone}
                 onChange={handlePhoneChange}
-                className={`w-full  ${errors.phone ? "border border-red-500 rounded" : ""
-                  }`}
-                inputClassName="phone-dark-input flex-1"
+                className={`w-full ${errors.phone ? "border border-red-500 rounded" : ""}`}
               />
               {errors.phone && (
                 <p className="text-red-500 text-sm">{errors.phone}</p>

@@ -58,6 +58,15 @@ export default function ApplyTwo() {
     document: "",
   })
 
+  const [errors, setErrors] = useState<{
+    companyType?: string
+    businessIndustry?: string
+    mainProducts?: string
+    exportActivity?: string
+    exportMarkets?: string
+    document?: string
+  }>({})
+
   useEffect(() => {
     const updatedExportMarkets: string[] = Array.isArray(formData.propertyLaw.exportBazaar)
       ? formData.propertyLaw.exportBazaar
@@ -110,6 +119,12 @@ export default function ApplyTwo() {
       [name]: value,
     }))
 
+    // Update errors on input change to remove error once fixed
+    setErrors((prev) => ({
+      ...prev,
+      [name]: undefined,
+    }))
+
     const updatedFormData = { ...formData }
 
     switch (name) {
@@ -135,9 +150,6 @@ export default function ApplyTwo() {
     localStorage.setItem("formData", JSON.stringify(updatedFormData))
   }
 
-  // Multi-select üçün handler
-  // import type { MultiValue } from "react-select"
-
   const handleCountryChange = (selectedOptions: MultiValue<{ label: string; value: string }>) => {
     let countries: string[] = []
     if (Array.isArray(selectedOptions)) {
@@ -147,6 +159,12 @@ export default function ApplyTwo() {
     setLocalFormData((prev) => ({
       ...prev,
       exportMarkets: countries,
+    }))
+
+    // Remove error on valid change
+    setErrors((prev) => ({
+      ...prev,
+      exportMarkets: undefined,
     }))
 
     const updatedFormData = {
@@ -168,11 +186,60 @@ export default function ApplyTwo() {
         ...prev,
         document: file.name,
       }))
+
+      // Remove error if any
+      setErrors((prev) => ({
+        ...prev,
+        document: undefined,
+      }))
     }
   }
 
+  // Form validasiyası
+  const validateForm = () => {
+    const newErrors: typeof errors = {}
+
+    if (!localFormData.companyType.trim()) {
+      newErrors.companyType = "Bu sahə doldurulmalıdır."
+    }
+
+    if (!localFormData.businessIndustry.trim()) {
+      newErrors.businessIndustry = "Bu sahə seçilməlidir."
+    }
+
+    if (!localFormData.mainProducts.trim()) {
+      newErrors.mainProducts = "Bu sahə doldurulmalıdır."
+    }
+
+    if (localFormData.exportActivity !== "Bəli" && localFormData.exportActivity !== "Xeyr") {
+      newErrors.exportActivity = "Zəhmət olmasa seçim edin."
+    }
+
+    if (!localFormData.exportMarkets || localFormData.exportMarkets.length === 0) {
+      newErrors.exportMarkets = "Minimum 1 ölkə seçilməlidir."
+    }
+
+    // Əgər sən sənədin yüklənməsini mütləq etmək istəyirsənsə, burada əlavə et.
+    // Məsələn:
+    // if (!localFormData.document) {
+    //   newErrors.document = "Sənəd yüklənməlidir."
+    // }
+
+    setErrors(newErrors)
+
+    return Object.keys(newErrors).length === 0
+  }
+
   const handleGoBack = () => navigate("/apply")
-  const handleGoNext = () => navigate("/apply/three")
+  const handleGoNext = () => {
+    if (validateForm()) {
+      navigate("/apply/three")
+    } else {
+      // İstəyə bağlı: səhv olan ilk sahəyə scroll
+      const firstError = document.querySelector(".input-error")
+      firstError?.scrollIntoView({ behavior: "smooth" })
+    }
+  }
 
   const selectedOptions = options.filter((option) =>
     localFormData.exportMarkets.includes(option.label)
@@ -197,52 +264,70 @@ export default function ApplyTwo() {
               name="companyType"
               value={localFormData.companyType}
               onChange={handleInputChange}
-              className="w-full bg-transparent border border-gray-700 rounded-lg p-2 sm:p-3 text-xs sm:text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 transition duration-300"
+              className={`w-full bg-transparent rounded-lg p-2 sm:p-3 text-xs sm:text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 transition duration-300
+                ${errors.companyType ? "border border-red-500" : "border border-gray-700"}`}
+              aria-invalid={!!errors.companyType}
+              aria-describedby="companyType-error"
             />
+            {errors.companyType && (
+              <p id="companyType-error" className="text-red-500 text-xs mt-1 input-error">
+                {errors.companyType}
+              </p>
+            )}
           </div>
 
           {/* Business Industry */}
-          <label className="text-sm">{page.businessIndustry.label[language]}</label>
-          <select
-            name="businessIndustry"
-            value={localFormData.businessIndustry}
-            onChange={handleInputChange}
-            className="w-full bg-[#131021] border border-gray-700 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300"
-          >
-            <option className="text-white" value="">
-              {page.businessIndustry.placeholder[language]}
-            </option>
-            <option className="text-white" value="Təmsil etdiyimiz sənayə sektoru">
-              {page.businessIndustry.options.representedIndustry[language]}
-            </option>
-            <option className="text-white" value="Qida və içkilər">
-              {page.businessIndustry.options.foodAndBeverages[language]}
-            </option>
-            <option className="text-white" value="Neft - qaz">
-              {page.businessIndustry.options.oilAndGas[language]}
-            </option>
-            <option className="text-white" value="Kimya">
-              {page.businessIndustry.options.chemical[language]}
-            </option>
-            <option className="text-white" value="Metallurgiya">
-              {page.businessIndustry.options.metallurgy[language]}
-            </option>
-            <option className="text-white" value="Maşın və avadanlıqların təmiri və quraşdırılması">
-              {page.businessIndustry.options.machineRepairAndInstallation[language]}
-            </option>
-            <option className="text-white" value="Kauçuk və plastik məhsullar">
-              {page.businessIndustry.options.rubberAndPlasticProducts[language]}
-            </option>
-            <option className="text-white" value="Tekstil">
-              {page.businessIndustry.options.textile[language]}
-            </option>
-            <option className="text-white" value="Elektrik avadanlıqları">
-              {page.businessIndustry.options.electricalEquipment[language]}
-            </option>
-            <option className="text-white" value="Digər">
-              {page.businessIndustry.options.other[language]}
-            </option>
-          </select>
+          <div className="space-y-2">
+            <label className="text-sm">{page.businessIndustry.label[language]}</label>
+            <select
+              name="businessIndustry"
+              value={localFormData.businessIndustry}
+              onChange={handleInputChange}
+              className={`w-full bg-[#131021] rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300
+                ${errors.businessIndustry ? "border border-red-500" : "border border-gray-700"}`}
+              aria-invalid={!!errors.businessIndustry}
+              aria-describedby="businessIndustry-error"
+            >
+              <option className="text-white" value="">
+                {page.businessIndustry.placeholder[language]}
+              </option>
+              <option className="text-white" value="Təmsil etdiyimiz sənayə sektoru">
+                {page.businessIndustry.options.representedIndustry[language]}
+              </option>
+              <option className="text-white" value="Qida və içkilər">
+                {page.businessIndustry.options.foodAndBeverages[language]}
+              </option>
+              <option className="text-white" value="Neft - qaz">
+                {page.businessIndustry.options.oilAndGas[language]}
+              </option>
+              <option className="text-white" value="Kimya">
+                {page.businessIndustry.options.chemical[language]}
+              </option>
+              <option className="text-white" value="Metallurgiya">
+                {page.businessIndustry.options.metallurgy[language]}
+              </option>
+              <option className="text-white" value="Maşın və avadanlıqların təmiri və quraşdırılması">
+                {page.businessIndustry.options.machineRepairAndInstallation[language]}
+              </option>
+              <option className="text-white" value="Kauçuk və plastik məhsullar">
+                {page.businessIndustry.options.rubberAndPlasticProducts[language]}
+              </option>
+              <option className="text-white" value="Tekstil">
+                {page.businessIndustry.options.textile[language]}
+              </option>
+              <option className="text-white" value="Elektrik avadanlıqları">
+                {page.businessIndustry.options.electricalEquipment[language]}
+              </option>
+              <option className="text-white" value="Digər">
+                {page.businessIndustry.options.other[language]}
+              </option>
+            </select>
+            {errors.businessIndustry && (
+              <p id="businessIndustry-error" className="text-red-500 text-xs mt-1 input-error">
+                {errors.businessIndustry}
+              </p>
+            )}
+          </div>
 
           {/* Main Products */}
           <div className="space-y-2">
@@ -252,8 +337,16 @@ export default function ApplyTwo() {
               name="mainProducts"
               value={localFormData.mainProducts}
               onChange={handleInputChange}
-              className="w-full bg-transparent border border-gray-700 rounded-lg p-2 sm:p-3 text-xs sm:text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 transition duration-300"
+              className={`w-full bg-transparent rounded-lg p-2 sm:p-3 text-xs sm:text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 transition duration-300
+                ${errors.mainProducts ? "border border-red-500" : "border border-gray-700"}`}
+              aria-invalid={!!errors.mainProducts}
+              aria-describedby="mainProducts-error"
             />
+            {errors.mainProducts && (
+              <p id="mainProducts-error" className="text-red-500 text-xs mt-1 input-error">
+                {errors.mainProducts}
+              </p>
+            )}
           </div>
 
           {/* Export Activity */}
@@ -312,6 +405,9 @@ export default function ApplyTwo() {
                 <span className="text-sm">{page.no[language]}</span>
               </label>
             </div>
+            {errors.exportActivity && (
+              <p className="text-red-500 text-xs mt-1 input-error">{errors.exportActivity}</p>
+            )}
           </div>
 
           {/* Export Markets Multi-Select */}
@@ -327,7 +423,7 @@ export default function ApplyTwo() {
                 }
                 handleCountryChange(selected)
               }}
-              className="w-full"
+              className={`w-full ${errors.exportMarkets ? "border border-red-500 rounded" : ""}`}
               classNamePrefix="react-select"
               placeholder="Ölkə seçin (maksimum 4)"
               isClearable
@@ -342,7 +438,7 @@ export default function ApplyTwo() {
                 control: (provided) => ({
                   ...provided,
                   backgroundColor: "transparent",
-                  borderColor: "#4B5563",
+                  borderColor: errors.exportMarkets ? "red" : "#4B5563",
                 }),
                 singleValue: (provided) => ({
                   ...provided,
@@ -365,6 +461,9 @@ export default function ApplyTwo() {
                 }),
               }}
             />
+            {errors.exportMarkets && (
+              <p className="text-red-500 text-xs mt-1 input-error">{errors.exportMarkets}</p>
+            )}
           </div>
 
           {/* Document upload */}
@@ -379,7 +478,6 @@ export default function ApplyTwo() {
             />
             {localFormData.document && (
               <p className="text-xs text-gray-400 mt-1">Seçilmiş fayl: {localFormData.document}</p>
-
             )}
             <div>
               <p className="text-sm text-gray-400">Yüklənən fayl 50 mb - dan çox ola bilməz. </p>
@@ -387,7 +485,7 @@ export default function ApplyTwo() {
           </div>
 
           {/* Buttons */}
-          <div className="flex justify-between mt-6 sm:mt-8 gap-4">
+               <div className="flex justify-between mt-6 sm:mt-8 gap-4">
             <button
               type="button"
               onClick={handleGoBack}
@@ -403,8 +501,8 @@ export default function ApplyTwo() {
               {buttons.nextBtn[language]}
             </button>
           </div>
-        </div>
-      </div>
-    </>
-  )
-}
+                  </div>
+                </div>
+              </>
+            )
+          }
