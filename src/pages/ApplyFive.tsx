@@ -52,6 +52,20 @@ export default function ApplyFive() {
   const [showConfirmModal, setShowConfirmModal] = useState<boolean>(false);
   const [showThankYouModal, setShowThankYouModal] = useState<boolean>(false);
 
+  // download
+
+  const downloadPDF = (e: React.MouseEvent<HTMLLabelElement>) => {
+    e.preventDefault(); // Prevent default label behavior
+
+    // Create a link element to download the PDF
+    const link = document.createElement('a');
+    link.href = '/Privacy.pdf'; // Replace with your actual PDF path
+    link.download = 'Privacy.pdf'; // Name that will appear when downloading
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   // LocalStorage-dan faylları və razılıqları yüklə (ehtiyat üçün)
   useEffect(() => {
     const savedFiles = JSON.parse(localStorage.getItem("files") || "{}");
@@ -472,7 +486,8 @@ export default function ApplyFive() {
                 />
                 <label
                   htmlFor="termsAgreement"
-                  className="ml-2 text-sm text-gray-400"
+                  className="ml-2 text-sm text-gray-400 cursor-pointer underline underline-offset-8"
+                  onClick={downloadPDF}
                 >
                   {page.checkboxes.termsAgreement[language]}
                 </label>

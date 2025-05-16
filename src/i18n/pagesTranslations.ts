@@ -17,7 +17,7 @@ export const pagesTranslations = {
       EN: "Apply",
     },
     companiesTitle: {
-      AZ: "Proqrama uğurla başa vuran şirkətlər",
+      AZ: "Proqramı uğurla başa vuran şirkətlər",
       EN: "Companies that successfully completed the program",
     },
     missionTitle: {
@@ -138,15 +138,33 @@ export const pagesTranslations = {
         list: {
           AZ: [
             "İstehsalat",
-            "İnformasiya texnologiyaları və rabitə",
+            "İnformasiya texnologiyaları",
             "Səhiyyə",
+            "Daşınmaz əmlak",
             "Digər uyğun sahələr",
           ],
           EN: [
             "Manufacturing",
-            "Information technology and communications",
+            "Information technology",
             "Healthcare",
+            "Real estate",
             "Other eligible sectors",
+          ],
+        },
+        list2: {
+          AZ: [
+            "Mədənçilik",
+            "Nəqliyyat",
+            "Tikinti",
+            "Kənd təsərrüfatı",
+            "Təhsil",
+          ],
+          EN: [
+            "Mining ",
+            "Transportation",
+            "Construction",
+            "Agriculture ",
+            "Education ",
           ],
         },
       },
@@ -382,8 +400,8 @@ export const pagesTranslations = {
       EN: "Markets where your products are exported",
     },
     document: {
-      AZ: "Təqdimedici sənəd (.doc, .docx, .pdf)",
-      EN: "Presentation document (.doc, .docx, .pdf)",
+      AZ: "Təsdiqedici sənəd (.doc, .docx, .pdf)",
+      EN: "Verification document (.doc, .docx, .pdf)",
     },
     exportMarketsPlaceholder: {
       AZ: "Ölkə seçin (maksimum 4)",
@@ -617,8 +635,8 @@ export const pagesTranslations = {
         EN: "I accept to be contacted by 4SIM regarding my application.",
       },
       termsAgreement: {
-        AZ: "İstifadə şərtləri və gizlilik şərtləri ilə razıyam.",
-        EN: "I agree with the terms of use and privacy terms.",
+        AZ: "İstifadə şərtləri və gizlilik şərtləri ilə razıyam (yüklə)",
+        EN: "I agree with the terms of use and privacy terms (download)",
       },
     },
     buttons: {

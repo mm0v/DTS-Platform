@@ -81,12 +81,22 @@ const Compliance_And_Prioritization = () => {
                 <p className="font-medium text-[18px] leading-[28px] text-[#323232]">
                   {page.cards[2].description[language]}
                 </p>
-                <ul className="list-disc pl-5 text-[16px] leading-[20px] font-medium text-[#323232] mt-3">
-                  <li>{page.cards[2]?.list?.[language]?.[0]}</li>
-                  <li>{page.cards[2]?.list?.[language]?.[1]}</li>
-                  <li>{page.cards[2]?.list?.[language]?.[2]}</li>
-                  <li>{page.cards[2]?.list?.[language]?.[3]}</li>
-                </ul>
+                <div className="flex flex-col sm:flex-row gap-8">
+                  <div className="w-full sm:w-1/2">
+                    <ul className="list-disc pl-5 text-base leading-5 font-medium text-gray-800 mt-3 space-y-2">
+                      {page.cards[2]?.list?.[language]?.map((item, index) => (
+                        <li key={`list1-${index}`} className="">{item}</li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div className="w-full sm:w-1/2">
+                    <ul className="list-disc pl-5 text-base leading-5 font-medium text-gray-800 mt-3 space-y-2">
+                      {page.cards[2]?.list2?.[language]?.map((item, index) => (
+                        <li key={`list2-${index}`} className="">{item}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
