@@ -71,22 +71,22 @@ export default function ApplyOne() {
         [name === "vatNumber"
           ? "companyRegisterNumber"
           : name === "foundingDate"
-          ? "createYear"
-          : name === "companySize"
-          ? "workerCount"
-          : name === "annualTurnover"
-          ? "annualTurnover"
-          : name === "companyAddress"
-          ? "address"
-          : name === "location"
-          ? "cityAndRegion"
-          : name === "contactPerson"
-          ? "contactName"
-          : name === "email"
-          ? "contactEmail"
-          : name === "phone"
-          ? "contactPhone"
-          : "companyName"]: value,
+            ? "createYear"
+            : name === "companySize"
+              ? "workerCount"
+              : name === "annualTurnover"
+                ? "annualTurnover"
+                : name === "companyAddress"
+                  ? "address"
+                  : name === "location"
+                    ? "cityAndRegion"
+                    : name === "contactPerson"
+                      ? "contactName"
+                      : name === "email"
+                        ? "contactEmail"
+                        : name === "phone"
+                          ? "contactPhone"
+                          : "companyName"]: value,
       },
     }));
   };
@@ -220,11 +220,10 @@ export default function ApplyOne() {
               name="companyName"
               value={localFormData.companyName}
               onChange={handleInputChange}
-              className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${
-                errors.companyName
+              className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${errors.companyName
                   ? "border-red-500 focus:ring-red-500"
                   : "border-gray-700 focus:ring-blue-500"
-              }`}
+                }`}
             />
             {errors.companyName && (
               <p className="text-red-500 text-sm">{errors.companyName}</p>
@@ -240,11 +239,10 @@ export default function ApplyOne() {
                 name="vatNumber"
                 value={localFormData.vatNumber}
                 onChange={handleInputChange}
-                className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${
-                  errors.vatNumber
+                className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${errors.vatNumber
                     ? "border-red-500 focus:ring-red-500"
                     : "border-gray-700 focus:ring-blue-500"
-                }`}
+                  }`}
               />
               {errors.vatNumber && (
                 <p className="text-red-500 text-sm">{errors.vatNumber}</p>
@@ -261,11 +259,10 @@ export default function ApplyOne() {
                 onChange={handleInputChange}
                 max={new Date().getFullYear()}
                 placeholder="YYYY"
-                className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${
-                  errors.foundingDate
+                className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${errors.foundingDate
                     ? "border-red-500 focus:ring-red-500"
                     : "border-gray-700 focus:ring-blue-500"
-                }`}
+                  }`}
               />
               {errors.foundingDate && (
                 <p className="text-red-500 text-sm">{errors.foundingDate}</p>
@@ -280,25 +277,24 @@ export default function ApplyOne() {
                 name="companySize"
                 value={localFormData.companySize}
                 onChange={handleInputChange}
-                className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${
-                  errors.companySize
+                className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${errors.companySize
                     ? "border-red-500 focus:ring-red-500"
                     : "border-gray-700 focus:ring-blue-500"
-                }`}
+                  }`}
               >
-                <option className="text-black" value="">
+                <option className="text-white bg-[#070618]" value="">
                   {page.placeholder[language]}
                 </option>
-                <option className="text-black" value="10">
+                <option className="text-white bg-[#070618]" value="10">
                   1-10
                 </option>
-                <option className="text-black" value="50">
+                <option className="text-white bg-[#070618]" value="50">
                   11-50
                 </option>
-                <option className="text-black" value="250">
+                <option className="text-white bg-[#070618]" value="250">
                   51-250
                 </option>
-                <option className="text-black" value="350">
+                <option className="text-white bg-[#070618]" value="350">
                   250+
                 </option>
               </select>
@@ -316,22 +312,21 @@ export default function ApplyOne() {
                 name="annualTurnover"
                 value={localFormData.annualTurnover}
                 onChange={handleInputChange}
-                className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${
-                  errors.annualTurnover
+                className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${errors.annualTurnover
                     ? "border-red-500 focus:ring-red-500"
                     : "border-gray-700 focus:ring-blue-500"
-                }`}
+                  }`}
               >
-                <option className="text-black" value="">
+                <option className="text-white bg-[#070618]" value="">
                   {page.placeholder[language]}
                 </option>
-                <option className="text-black" value="3">
+                <option className="text-white bg-[#070618]" value="3">
                   {page.annualTurnoverOption1[language]}
                 </option>
-                <option className="text-black" value="30">
+                <option className="text-white bg-[#070618]" value="30">
                   {page.annualTurnoverOption2[language]}
                 </option>
-                <option className="text-black" value="60">
+                <option className="text-white bg-[#070618]" value="60">
                   {page.annualTurnoverOption3[language]}
                 </option>
               </select>
@@ -349,11 +344,10 @@ export default function ApplyOne() {
               name="companyAddress"
               value={localFormData.companyAddress}
               onChange={handleInputChange}
-              className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${
-                errors.companyAddress
+              className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${errors.companyAddress
                   ? "border-red-500 focus:ring-red-500"
                   : "border-gray-700 focus:ring-blue-500"
-              }`}
+                }`}
             />
             {errors.companyAddress && (
               <p className="text-red-500 text-sm">{errors.companyAddress}</p>
@@ -368,11 +362,10 @@ export default function ApplyOne() {
               name="location"
               value={localFormData.location}
               onChange={handleInputChange}
-              className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${
-                errors.location
+              className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${errors.location
                   ? "border-red-500 focus:ring-red-500"
                   : "border-gray-700 focus:ring-blue-500"
-              }`}
+                }`}
             />
             {errors.location && (
               <p className="text-red-500 text-sm">{errors.location}</p>
@@ -387,11 +380,10 @@ export default function ApplyOne() {
               name="website"
               value={localFormData.website}
               onChange={handleInputChange}
-              className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${
-                errors.website
+              className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${errors.website
                   ? "border-red-500 focus:ring-red-500"
                   : "border-gray-700 focus:ring-blue-500"
-              }`}
+                }`}
             />
             {errors.website && (
               <p className="text-red-500 text-sm">{errors.website}</p>
@@ -405,11 +397,10 @@ export default function ApplyOne() {
               name="contactPerson"
               value={localFormData.contactPerson}
               onChange={handleInputChange}
-              className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${
-                errors.contactPerson
+              className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${errors.contactPerson
                   ? "border-red-500 focus:ring-red-500"
                   : "border-gray-700 focus:ring-blue-500"
-              }`}
+                }`}
             />
             {errors.contactPerson && (
               <p className="text-red-500 text-sm">{errors.contactPerson}</p>
@@ -425,11 +416,10 @@ export default function ApplyOne() {
                 name="email"
                 value={localFormData.email}
                 onChange={handleInputChange}
-                className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${
-                  errors.email
+                className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${errors.email
                     ? "border-red-500 focus:ring-red-500"
                     : "border-gray-700 focus:ring-blue-500"
-                }`}
+                  }`}
               />
               {errors.email && (
                 <p className="text-red-500 text-sm">{errors.email}</p>
@@ -444,9 +434,8 @@ export default function ApplyOne() {
                 defaultCountry="az"
                 value={localFormData.phone}
                 onChange={handlePhoneChange}
-                className={`w-full ${
-                  errors.phone ? "border border-red-500 rounded" : ""
-                }`}
+                className={`w-full ${errors.phone ? "border border-red-500 rounded" : ""
+                  }`}
               />
               {errors.phone && (
                 <p className="text-red-500 text-sm">{errors.phone}</p>

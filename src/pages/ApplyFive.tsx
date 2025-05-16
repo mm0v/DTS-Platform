@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Download } from "lucide-react";
 import BackgroundVideo from "../components/BackgroundVideo";
 import { FormContext } from "../context/FormContext";
+import type { FormContextType } from "../context/FormContext";
 import { useLanguage } from "../context/LanguageContext";
 import ApplySteps from "../components/ApplySteps";
 import { motion, AnimatePresence } from "framer-motion";
@@ -29,7 +30,7 @@ export default function ApplyFive() {
     throw new Error("ApplyFive must be used within a FormContext.Provider");
   }
 
-  const { formData, setFormData } = context;
+  const { formData, setFormData } = context as FormContextType;
 
   const [files, setFiles] = useState<FileState>({
     companyRegistry: null,
@@ -97,21 +98,36 @@ export default function ApplyFive() {
       [name as keyof AgreementState]: checked,
     }));
 
+    // Make sure companyData exists and has declarationConsent
+    const updatedFormData = { ...formData };
+    if (!updatedFormData.companyData.declarationConsent) {
+      updatedFormData.companyData.declarationConsent = {
+        dataIsReal: false,
+        permitContact: false
+      };
+    }
+
     if (name === "confirmAccuracy") {
       setFormData((prev) => ({
         ...prev,
-        declarationConsent: {
-          ...prev.declarationConsent,
-          dataIsReal: checked,
-        },
+        companyData: {
+          ...prev.companyData,
+          declarationConsent: {
+            ...prev.companyData.declarationConsent,
+            dataIsReal: checked,
+          },
+        }
       }));
     } else if (name === "contactConsent") {
       setFormData((prev) => ({
         ...prev,
-        declarationConsent: {
-          ...prev.declarationConsent,
-          permitContact: checked,
-        },
+        companyData: {
+          ...prev.companyData,
+          declarationConsent: {
+            ...prev.companyData.declarationConsent,
+            permitContact: checked,
+          },
+        }
       }));
     }
   };
@@ -134,33 +150,59 @@ export default function ApplyFive() {
     setIsSubmitting(true);
 
     try {
+      // Handle the exportBazaar field - convert array to string if needed
+      const exportBazaar = formData.companyData.propertyLaw.exportBazaar;
+      const formattedExportBazaar = Array.isArray(exportBazaar)
+        ? exportBazaar.join(', ')
+        : exportBazaar;
+
+      // Correctly access properties from formData.companyData
       const dataToSend = {
         companyData: {
-          companyName: formData.companyName,
-          companyRegisterNumber: formData.companyRegisterNumber,
-          createYear: formData.createYear,
-          workerCount: formData.workerCount,
-          annualTurnover: formData.annualTurnover,
-          address: formData.address,
-          cityAndRegion: formData.cityAndRegion,
-          website: formData.website,
-          contactName: formData.contactName,
-          contactEmail: formData.contactEmail,
-          contactPhone: formData.contactPhone,
+          companyName: formData.companyData.companyName,
+          companyRegisterNumber: formData.companyData.companyRegisterNumber,
+          createYear: formData.companyData.createYear,
+          workerCount: formData.companyData.workerCount,
+          annualTurnover: formData.companyData.annualTurnover,
+          address: formData.companyData.address,
+          cityAndRegion: formData.companyData.cityAndRegion,
+          website: formData.companyData.website,
+          contactName: formData.companyData.contactName,
+          contactEmail: formData.companyData.contactEmail,
+          contactPhone: formData.companyData.contactPhone,
         },
-        declarationConsent: formData.declarationConsent,
-        digitalLeadership: formData.digitalLeadership,
-        digitalReadiness: formData.digitalReadiness,
-        financialNeeding: formData.financialNeeding,
-        propertyLaw: formData.propertyLaw,
+        declarationConsent: formData.companyData.declarationConsent,
+        digitalLeadership: formData.companyData.digitalLeadership,
+        digitalReadiness: {
+          ...formData.companyData.digitalReadiness,
+          // Ensure digital level is a number
+          digitalLevel: Number(formData.companyData.digitalReadiness.digitalLevel),
+        },
+        financialNeeding: formData.companyData.financialNeeding,
+        propertyLaw: {
+          ...formData.companyData.propertyLaw,
+          // Use the formatted exportBazaar
+          exportBazaar: formattedExportBazaar,
+        },
       };
 
       // JSON məlumatı göndər (yalnız obyekt)
       const dataToSubmit = {
         companyRequest: dataToSend,
-        // Əgər fayllar göndərilməlidirsə, service və backend uyğunlaşdırılmalıdır
       };
 
+      // Log files for debugging (can remove later)
+      if (files.companyRegistry || files.financialReports) {
+        console.log("Files are available but will not be submitted in this version:");
+        if (files.companyRegistry) console.log("- Company Registry File:", files.companyRegistry.name);
+        if (files.financialReports) console.log("- Financial Reports File:", files.financialReports.name);
+
+        // TODO: Implement file upload when API supports it
+        // For now, just notify the user that files will be sent separately
+        // alert(page.alerts.filesNotSubmitted ? page.alerts.filesNotSubmitted[language] : "Files have been saved but will need to be submitted separately.");
+      }
+
+      // Submit the JSON data
       await companyService.submitCompanyData(dataToSubmit);
 
       setShowConfirmModal(false);
@@ -181,7 +223,7 @@ export default function ApplyFive() {
   return (
     <>
       <BackgroundVideo />
-      <div className="min-h-screen bg-[url('/images/space-background.jpg')] bg-cover bg-center bg-no-repeat text-white flex flex-col items-center justify-center py-10">
+      <div className="min-h-screen bg-cover bg-center bg-no-repeat text-white flex flex-col items-center justify-center py-10">
         <ApplySteps step={5} />
 
         {/* Təsdiq Modalı */}
@@ -381,6 +423,8 @@ export default function ApplyFive() {
               <p className="text-sm text-gray-400">
                 {page.fileFormatText[language]}
               </p>
+
+              <p className="text-sm text-[#F9F9F9]">{page.applyNeedText[language]}</p>
             </div>
 
             {/* Razılıq qutuları */}
@@ -447,11 +491,10 @@ export default function ApplyFive() {
               <button
                 type="submit"
                 disabled={!allAgreementsChecked || isSubmitting}
-                className={`flex-1 py-3 rounded-lg transition-colors ${
-                  allAgreementsChecked && !isSubmitting
-                    ? "bg-blue-600 hover:bg-blue-700 text-white cursor-pointer"
-                    : "bg-blue-900/50 text-gray-400 cursor-not-allowed "
-                }`}
+                className={`flex-1 py-3 rounded-lg transition-colors ${allAgreementsChecked && !isSubmitting
+                  ? "bg-blue-600 hover:bg-blue-700 text-white cursor-pointer"
+                  : "bg-blue-900/50 text-gray-400 cursor-not-allowed "
+                  }`}
               >
                 {isSubmitting
                   ? page.buttons.submitting[language]

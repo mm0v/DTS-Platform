@@ -216,8 +216,8 @@ export const pagesTranslations = {
       EN: "Select",
     },
     annualTurnover: {
-      AZ: "İllik dövriyyə (AZN)",
-      EN: "Annual turnover (AZN)",
+      AZ: "İllik dövriyyə (AZN - Milyon)",
+      EN: "Annual turnover (AZN - Million)",
     },
     annualTurnoverOption1: {
       AZ: "3M-ə qədər",
@@ -433,7 +433,7 @@ export const pagesTranslations = {
     },
     digitalLevelOptions: {
       level1: {
-        AZ: "1 - Heç bir rəqəmsallət istifadı olunmayıb.",
+        AZ: "1 - Heç bir rəqəmsal istifadə olunmayıb.",
         EN: "1 - No digitalization was used",
       },
       level2: {
@@ -602,6 +602,10 @@ export const pagesTranslations = {
     fileFormatText: {
       AZ: "Yüklənən fayl 50 mb – dan çox ola bilməz.",
       EN: "The uploaded file cannot exceed 50 MB.",
+    },
+    applyNeedText: {
+      AZ: "Müraciətinizlə bağlı əlavə təsdiqedici sənədlərə ehtiyac olacağı təqdirdə sizlərlə əlaqə saxlanılacaqdır.",
+      EN: "You will be contacted if additional supporting documents are needed regarding your application.",
     },
     checkboxes: {
       confirmAccuracy: {
