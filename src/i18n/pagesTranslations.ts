@@ -433,16 +433,24 @@ export const pagesTranslations = {
     },
     digitalLevelOptions: {
       level1: {
-        AZ: "Başlanğıc",
-        EN: "Basic",
+        AZ: "1 - Heç bir rəqəmsallət istifadı olunmayıb.",
+        EN: "1 - No digitalization was used",
       },
       level2: {
-        AZ: "Orta",
-        EN: "Intermediate",
+        AZ: "2",
+        EN: "2",
       },
       level3: {
-        AZ: "İnkişaf etmiş",
-        EN: "Advanced",
+        AZ: "3",
+        EN: "3",
+      },
+      level4: {
+        AZ: "4",
+        EN: "4",
+      },
+      level5: {
+        AZ: "5 - Tamamilə rəqəmsal və avtomatlaşdırılmış proseslər",
+        EN: "5 - Fully digital and automated processes",
       },
     },
     digitalTools: {

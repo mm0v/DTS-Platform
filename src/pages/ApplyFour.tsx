@@ -4,6 +4,7 @@ import React, { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import BackgroundVideo from "../components/BackgroundVideo";
 import { FormContext } from "../context/FormContext";
+import type { FormContextType } from "../context/FormContext";
 import { useLanguage } from "../context/LanguageContext";
 import ApplySteps from "../components/ApplySteps";
 
@@ -18,20 +19,95 @@ export default function ApplyFour() {
     throw new Error("ApplyFour must be used within a FormContext.Provider");
   }
 
-  const { formData, setFormData } = context;
+  const { formData, setFormData } = context as FormContextType;
+
+  // Initialize digitalLeadership and financialNeeding if they don't exist
+  useEffect(() => {
+    const updatedFormData = { ...formData };
+    if (!updatedFormData.companyData) {
+      updatedFormData.companyData = {
+        companyName: "",
+        companyRegisterNumber: "",
+        createYear: null,
+        workerCount: "",
+        annualTurnover: "",
+        address: "",
+        cityAndRegion: "",
+        website: "",
+        contactName: "",
+        contactEmail: "",
+        contactPhone: "",
+        declarationConsent: {
+          dataIsReal: false,
+          permitContact: false,
+        },
+        digitalLeadership: {
+          digitalTeamOrLead: false,
+          digitalPath: false,
+          digitalTransformationLoyality: false
+        },
+        digitalReadiness: {
+          keyChallenges: [],
+          digitalLevel: 1,
+          digitalTools: [],
+          companyPurpose: "",
+        },
+        financialNeeding: {
+          financialNeed: false,
+          neededBudget: ""
+        },
+        propertyLaw: {
+          businessOperations: "",
+          companyLawType: "",
+          products: "",
+          exportActivity: false,
+          exportBazaar: ""
+        }
+      };
+    }
+
+    if (!updatedFormData.companyData.digitalLeadership) {
+      updatedFormData.companyData.digitalLeadership = {
+        digitalTeamOrLead: false,
+        digitalPath: false,
+        digitalTransformationLoyality: false
+      };
+    }
+
+    if (!updatedFormData.companyData.financialNeeding) {
+      updatedFormData.companyData.financialNeeding = {
+        financialNeed: false,
+        neededBudget: ""
+      };
+    }
+
+    setFormData(updatedFormData);
+  }, []);
+
+  // Create safe access objects
+  const safeDigitalLeadership = formData.companyData?.digitalLeadership || {
+    digitalTeamOrLead: false,
+    digitalPath: false,
+    digitalTransformationLoyality: false
+  };
+
+  const safeFinancialNeeding = formData.companyData?.financialNeeding || {
+    financialNeed: false,
+    neededBudget: ""
+  };
 
   // Lokal form state
   const [localFormData, setLocalFormData] = useState({
-    digitalTeamOrLead: formData.digitalLeadership.digitalTeamOrLead
+    digitalTeamOrLead: safeDigitalLeadership.digitalTeamOrLead
       ? "Bəli"
       : "Xeyr",
-    digitalPath: formData.digitalLeadership.digitalPath ? "Bəli" : "Xeyr",
-    digitalTransformationLoyality: formData.digitalLeadership
+    digitalPath: safeDigitalLeadership.digitalPath ? "Bəli" : "Xeyr",
+    digitalTransformationLoyality: safeDigitalLeadership
       .digitalTransformationLoyality
       ? "Bəli"
       : "Xeyr",
-    financialNeed: formData.financialNeeding.financialNeed ? "Bəli" : "Xeyr",
-    neededBudget: formData.financialNeeding.neededBudget || "",
+    financialNeed: safeFinancialNeeding.financialNeed ? "Bəli" : "Xeyr",
+    neededBudget: safeFinancialNeeding.neededBudget || "",
   });
 
   // Validation səhvləri
@@ -46,21 +122,115 @@ export default function ApplyFour() {
   // Validation mesajını göstərmək üçün state
   const [showValidationMessage, setShowValidationMessage] = useState(false);
 
+  // Update localFormData when formData changes
+  useEffect(() => {
+    setLocalFormData({
+      digitalTeamOrLead: safeDigitalLeadership.digitalTeamOrLead
+        ? "Bəli"
+        : "Xeyr",
+      digitalPath: safeDigitalLeadership.digitalPath ? "Bəli" : "Xeyr",
+      digitalTransformationLoyality: safeDigitalLeadership
+        .digitalTransformationLoyality
+        ? "Bəli"
+        : "Xeyr",
+      financialNeed: safeFinancialNeeding.financialNeed ? "Bəli" : "Xeyr",
+      neededBudget: safeFinancialNeeding.neededBudget || "",
+    });
+  }, [formData]);
+
   // LocalStorage-dan data yükləmək (varsa)
   useEffect(() => {
-    const savedData = JSON.parse(localStorage.getItem("formDataFour") || "{}");
-    if (savedData) {
-      setLocalFormData((prev) => ({
-        ...prev,
-        digitalTeamOrLead:
-          savedData.digitalTeamOrLead || prev.digitalTeamOrLead,
-        digitalPath: savedData.digitalPath || prev.digitalPath,
-        digitalTransformationLoyality:
-          savedData.digitalTransformationLoyality ||
-          prev.digitalTransformationLoyality,
-        financialNeed: savedData.financialNeed || prev.financialNeed,
-        neededBudget: savedData.neededBudget || prev.neededBudget,
-      }));
+    try {
+      const savedData = JSON.parse(localStorage.getItem("formDataFour") || "{}");
+      if (Object.keys(savedData).length > 0) {
+        setLocalFormData((prev) => ({
+          ...prev,
+          digitalTeamOrLead:
+            savedData.digitalTeamOrLead || prev.digitalTeamOrLead,
+          digitalPath: savedData.digitalPath || prev.digitalPath,
+          digitalTransformationLoyality:
+            savedData.digitalTransformationLoyality ||
+            prev.digitalTransformationLoyality,
+          financialNeed: savedData.financialNeed || prev.financialNeed,
+          neededBudget: savedData.neededBudget || prev.neededBudget,
+        }));
+
+        // Also update the form context
+        const updatedFormData = { ...formData };
+        if (!updatedFormData.companyData) {
+          updatedFormData.companyData = {
+            companyName: "",
+            companyRegisterNumber: "",
+            createYear: null,
+            workerCount: "",
+            annualTurnover: "",
+            address: "",
+            cityAndRegion: "",
+            website: "",
+            contactName: "",
+            contactEmail: "",
+            contactPhone: "",
+            declarationConsent: {
+              dataIsReal: false,
+              permitContact: false,
+            },
+            digitalLeadership: {
+              digitalTeamOrLead: false,
+              digitalPath: false,
+              digitalTransformationLoyality: false
+            },
+            digitalReadiness: {
+              keyChallenges: [],
+              digitalLevel: 1,
+              digitalTools: [],
+              companyPurpose: "",
+            },
+            financialNeeding: {
+              financialNeed: false,
+              neededBudget: ""
+            },
+            propertyLaw: {
+              businessOperations: "",
+              companyLawType: "",
+              products: "",
+              exportActivity: false,
+              exportBazaar: ""
+            }
+          };
+        }
+
+        if (!updatedFormData.companyData.digitalLeadership) {
+          updatedFormData.companyData.digitalLeadership = {
+            digitalTeamOrLead: false,
+            digitalPath: false,
+            digitalTransformationLoyality: false
+          };
+        }
+
+        if (!updatedFormData.companyData.financialNeeding) {
+          updatedFormData.companyData.financialNeeding = {
+            financialNeed: false,
+            neededBudget: ""
+          };
+        }
+
+        updatedFormData.companyData.digitalLeadership = {
+          ...updatedFormData.companyData.digitalLeadership,
+          digitalTeamOrLead: savedData.digitalTeamOrLead === "Bəli",
+          digitalPath: savedData.digitalPath === "Bəli",
+          digitalTransformationLoyality: savedData.digitalTransformationLoyality === "Bəli"
+        };
+
+        updatedFormData.companyData.financialNeeding = {
+          ...updatedFormData.companyData.financialNeeding,
+          financialNeed: savedData.financialNeed === "Bəli",
+          neededBudget: savedData.neededBudget || ""
+        };
+
+        setFormData(updatedFormData);
+      }
+    } catch (error) {
+      console.error("Error loading saved form data:", error);
     }
   }, []);
 
@@ -86,36 +256,98 @@ export default function ApplyFour() {
 
     if (showValidationMessage) setShowValidationMessage(false);
 
+    // Ensure companyData exists
+    const updatedFormData = { ...formData };
+    if (!updatedFormData.companyData) {
+      updatedFormData.companyData = {
+        companyName: "",
+        companyRegisterNumber: "",
+        createYear: null,
+        workerCount: "",
+        annualTurnover: "",
+        address: "",
+        cityAndRegion: "",
+        website: "",
+        contactName: "",
+        contactEmail: "",
+        contactPhone: "",
+        declarationConsent: {
+          dataIsReal: false,
+          permitContact: false,
+        },
+        digitalLeadership: {
+          digitalTeamOrLead: false,
+          digitalPath: false,
+          digitalTransformationLoyality: false
+        },
+        digitalReadiness: {
+          keyChallenges: [],
+          digitalLevel: 1,
+          digitalTools: [],
+          companyPurpose: "",
+        },
+        financialNeeding: {
+          financialNeed: false,
+          neededBudget: ""
+        },
+        propertyLaw: {
+          businessOperations: "",
+          companyLawType: "",
+          products: "",
+          exportActivity: false,
+          exportBazaar: ""
+        }
+      };
+    }
+
     // Global konteksti də yenilə
     if (
       name === "digitalTeamOrLead" ||
       name === "digitalPath" ||
       name === "digitalTransformationLoyality"
     ) {
-      setFormData((prev) => ({
-        ...prev,
-        digitalLeadership: {
-          ...prev.digitalLeadership,
-          [name]: value === "Bəli",
-        },
-      }));
+      // Ensure digitalLeadership exists
+      if (!updatedFormData.companyData.digitalLeadership) {
+        updatedFormData.companyData.digitalLeadership = {
+          digitalTeamOrLead: false,
+          digitalPath: false,
+          digitalTransformationLoyality: false
+        };
+      }
+
+      updatedFormData.companyData.digitalLeadership = {
+        ...updatedFormData.companyData.digitalLeadership,
+        [name]: value === "Bəli",
+      };
     } else if (name === "financialNeed") {
-      setFormData((prev) => ({
-        ...prev,
-        financialNeeding: {
-          ...prev.financialNeeding,
-          financialNeed: value === "Bəli",
-        },
-      }));
+      // Ensure financialNeeding exists
+      if (!updatedFormData.companyData.financialNeeding) {
+        updatedFormData.companyData.financialNeeding = {
+          financialNeed: false,
+          neededBudget: ""
+        };
+      }
+
+      updatedFormData.companyData.financialNeeding = {
+        ...updatedFormData.companyData.financialNeeding,
+        financialNeed: value === "Bəli",
+      };
     } else if (name === "neededBudget") {
-      setFormData((prev) => ({
-        ...prev,
-        financialNeeding: {
-          ...prev.financialNeeding,
-          neededBudget: value,
-        },
-      }));
+      // Ensure financialNeeding exists
+      if (!updatedFormData.companyData.financialNeeding) {
+        updatedFormData.companyData.financialNeeding = {
+          financialNeed: false,
+          neededBudget: ""
+        };
+      }
+
+      updatedFormData.companyData.financialNeeding = {
+        ...updatedFormData.companyData.financialNeeding,
+        neededBudget: value,
+      };
     }
+
+    setFormData(updatedFormData);
   };
 
   // Formu validasiya et
@@ -185,9 +417,8 @@ export default function ApplyFour() {
                 {["Bəli", "Xeyr"].map((option) => (
                   <label
                     key={option}
-                    className={`flex items-center cursor-pointer space-x-2 ${
-                      errors.digitalTeamOrLead ? "text-red-400" : ""
-                    }`}
+                    className={`flex items-center cursor-pointer space-x-2 ${errors.digitalTeamOrLead ? "text-red-400" : ""
+                      }`}
                   >
                     <input
                       type="radio"
@@ -198,13 +429,12 @@ export default function ApplyFour() {
                       className="hidden"
                     />
                     <span
-                      className={`w-5 h-5 flex items-center justify-center rounded-full border-2 transition-colors ${
-                        localFormData.digitalTeamOrLead === option
-                          ? "bg-blue-600 border-blue-600"
-                          : errors.digitalTeamOrLead
+                      className={`w-5 h-5 flex items-center justify-center rounded-full border-2 transition-colors ${localFormData.digitalTeamOrLead === option
+                        ? "bg-blue-600 border-blue-600"
+                        : errors.digitalTeamOrLead
                           ? "bg-white border-red-400"
                           : "bg-white border-gray-400"
-                      } hover:border-blue-600`}
+                        } hover:border-blue-600`}
                     >
                       {localFormData.digitalTeamOrLead === option && (
                         <svg
@@ -226,7 +456,7 @@ export default function ApplyFour() {
                     <span className="text-sm">
                       {
                         page.optionLabels[option === "Bəli" ? "yes" : "no"][
-                          language
+                        language
                         ]
                       }
                     </span>
@@ -249,9 +479,8 @@ export default function ApplyFour() {
                 {["Bəli", "Xeyr"].map((option) => (
                   <label
                     key={option}
-                    className={`flex items-center cursor-pointer space-x-2 ${
-                      errors.digitalPath ? "text-red-400" : ""
-                    }`}
+                    className={`flex items-center cursor-pointer space-x-2 ${errors.digitalPath ? "text-red-400" : ""
+                      }`}
                   >
                     <input
                       type="radio"
@@ -262,13 +491,12 @@ export default function ApplyFour() {
                       className="hidden"
                     />
                     <span
-                      className={`w-5 h-5 flex items-center justify-center rounded-full border-2 transition-colors ${
-                        localFormData.digitalPath === option
-                          ? "bg-blue-600 border-blue-600"
-                          : errors.digitalPath
+                      className={`w-5 h-5 flex items-center justify-center rounded-full border-2 transition-colors ${localFormData.digitalPath === option
+                        ? "bg-blue-600 border-blue-600"
+                        : errors.digitalPath
                           ? "bg-white border-red-400"
                           : "bg-white border-gray-400"
-                      } hover:border-blue-600`}
+                        } hover:border-blue-600`}
                     >
                       {localFormData.digitalPath === option && (
                         <svg
@@ -290,7 +518,7 @@ export default function ApplyFour() {
                     <span className="text-sm">
                       {
                         page.optionLabels[option === "Bəli" ? "yes" : "no"][
-                          language
+                        language
                         ]
                       }
                     </span>
@@ -313,9 +541,8 @@ export default function ApplyFour() {
                 {["Bəli", "Xeyr"].map((option) => (
                   <label
                     key={option}
-                    className={`flex items-center cursor-pointer space-x-2 ${
-                      errors.digitalTransformationLoyality ? "text-red-400" : ""
-                    }`}
+                    className={`flex items-center cursor-pointer space-x-2 ${errors.digitalTransformationLoyality ? "text-red-400" : ""
+                      }`}
                   >
                     <input
                       type="radio"
@@ -328,36 +555,35 @@ export default function ApplyFour() {
                       className="hidden"
                     />
                     <span
-                      className={`w-5 h-5 flex items-center justify-center rounded-full border-2 transition-colors ${
-                        localFormData.digitalTransformationLoyality === option
-                          ? "bg-blue-600 border-blue-600"
-                          : errors.digitalTransformationLoyality
+                      className={`w-5 h-5 flex items-center justify-center rounded-full border-2 transition-colors ${localFormData.digitalTransformationLoyality === option
+                        ? "bg-blue-600 border-blue-600"
+                        : errors.digitalTransformationLoyality
                           ? "bg-white border-red-400"
                           : "bg-white border-gray-400"
-                      } hover:border-blue-600`}
+                        } hover:border-blue-600`}
                     >
                       {localFormData.digitalTransformationLoyality ===
                         option && (
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="w-3.5 h-3.5 text-white"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                          strokeWidth={3}
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M5 13l4 4L19 7"
-                          />
-                        </svg>
-                      )}
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="w-3.5 h-3.5 text-white"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            strokeWidth={3}
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M5 13l4 4L19 7"
+                            />
+                          </svg>
+                        )}
                     </span>
                     <span className="text-sm">
                       {
                         page.optionLabels[option === "Bəli" ? "yes" : "no"][
-                          language
+                        language
                         ]
                       }
                     </span>
@@ -387,9 +613,8 @@ export default function ApplyFour() {
                 {["Bəli", "Xeyr"].map((option) => (
                   <label
                     key={option}
-                    className={`flex items-center cursor-pointer space-x-2 ${
-                      errors.financialNeed ? "text-red-400" : ""
-                    }`}
+                    className={`flex items-center cursor-pointer space-x-2 ${errors.financialNeed ? "text-red-400" : ""
+                      }`}
                   >
                     <input
                       type="radio"
@@ -400,13 +625,12 @@ export default function ApplyFour() {
                       className="hidden"
                     />
                     <span
-                      className={`w-5 h-5 flex items-center justify-center rounded-full border-2 transition-colors ${
-                        localFormData.financialNeed === option
-                          ? "bg-blue-600 border-blue-600"
-                          : errors.financialNeed
+                      className={`w-5 h-5 flex items-center justify-center rounded-full border-2 transition-colors ${localFormData.financialNeed === option
+                        ? "bg-blue-600 border-blue-600"
+                        : errors.financialNeed
                           ? "bg-white border-red-400"
                           : "bg-white border-gray-400"
-                      } hover:border-blue-600`}
+                        } hover:border-blue-600`}
                     >
                       {localFormData.financialNeed === option && (
                         <svg
@@ -428,7 +652,7 @@ export default function ApplyFour() {
                     <span className="text-sm">
                       {
                         page.optionLabels[option === "Bəli" ? "yes" : "no"][
-                          language
+                        language
                         ]
                       }
                     </span>
@@ -441,42 +665,8 @@ export default function ApplyFour() {
                 </p>
               )}
             </div>
-            {/* Transformation Budget */}
-            <div className="mb-4">
-              <label
-                htmlFor="neededBudget"
-                className="block mb-1 text-sm md:text-base font-semibold text-gray-200"
-              >
-                {page.transformationBudget[language]}
-              </label>
-              <div className="relative">
-                <input
-                  id="neededBudget"
-                  type="number"
-                  name="neededBudget"
-                  value={localFormData.neededBudget}
-                  onChange={handleInputChange}
-                  placeholder="AZN"
-                  min={0}
-                  className={`w-full rounded border px-3 py-2 pr-12 bg-transparent text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition
-        ${
-          errors.neededBudget
-            ? "border-red-500 focus:ring-red-500"
-            : "border-gray-600 focus:ring-blue-500"
-        }`}
-                />
-                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 select-none pointer-events-none">
-                  AZN
-                </span>
-              </div>
-              {errors.neededBudget && (
-                <p className="mt-1 text-sm font-medium text-red-500">
-                  {errors.neededBudget}
-                </p>
-              )}
-            </div>
 
-            {/* Needed Budget */}
+            {/* Needed Budget - Show when financialNeed is "Bəli" */}
             {localFormData.financialNeed === "Bəli" && (
               <div className="space-y-2">
                 <label className="text-sm md:text-base">
@@ -488,9 +678,8 @@ export default function ApplyFour() {
                     name="neededBudget"
                     value={localFormData.neededBudget}
                     onChange={handleInputChange}
-                    className={`w-full bg-transparent border ${
-                      errors.neededBudget ? "border-red-400" : "border-gray-700"
-                    } rounded p-3 focus:outline-none focus:border-blue-500`}
+                    className={`w-full bg-transparent border ${errors.neededBudget ? "border-red-400" : "border-gray-700"
+                      } rounded p-3 focus:outline-none focus:border-blue-500`}
                     placeholder="AZN"
                     min={0}
                   />

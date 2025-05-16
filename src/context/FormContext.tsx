@@ -1,3 +1,5 @@
+// Update your FormContext.tsx to include the new properties
+
 import { createContext } from "react";
 
 // Define Byte type if not already defined elsewhere
@@ -5,17 +7,6 @@ type Byte = number; // 8-bit integer (0-255)
 
 export interface FormContextType {
   formData: {
-    companyRegisterNumber: any;
-    address: any;
-    cityAndRegion: any;
-    website: any;
-    contactName: any;
-    contactEmail: any;
-    contactPhone: any;
-    createYear: any;
-    annualTurnover: any;
-    companyName: any;
-    workerCount: any;
     companyData: {
       companyName: string;
       companyRegisterNumber: string;
@@ -28,38 +19,41 @@ export interface FormContextType {
       contactName: string;
       contactEmail: string;
       contactPhone: string;
-    };
-    declarationConsent: {
-      dataIsReal: boolean;
-      permitContact: boolean;
-    };
-    digitalLeadership: {
-      digitalTeamOrLead: boolean;
-      digitalPath: boolean;
-      digitalTransformationLoyality: boolean;
-    };
-    digitalReadiness: {
-      keyChallenges: string[];
-      digitalLevel: Byte; // Changed from Byte to number for consistency
-      digitalTools: string[];
-      companyPurpose: string;
-    };
-    financialNeeding: {
-      financialNeed: boolean;
-      neededBudget: string;
-    };
-    propertyLaw: {
-      businessOperations: string;
-      companyLawType: string;
-      products: string;
-      exportActivity: boolean;
-      exportBazaar: string;
+      declarationConsent: {
+        dataIsReal: boolean;
+        permitContact: boolean;
+      };
+      digitalLeadership: {
+        digitalTeamOrLead: boolean;
+        digitalPath: boolean;
+        digitalTransformationLoyality: boolean;
+      };
+      digitalReadiness: {
+        keyChallenges: string[];
+        digitalLevel: Byte; // Number between 0-255
+        digitalTools: string[];
+        companyPurpose: string;
+      };
+      financialNeeding: {
+        financialNeed: boolean;
+        neededBudget: string;
+      };
+      propertyLaw: {
+        businessOperations: string;
+        companyLawType: string;
+        products: string;
+        exportActivity: boolean;
+        exportBazaar: string | string[];
+      };
     };
   };
   setFormData: React.Dispatch<
     React.SetStateAction<FormContextType["formData"]>
   >;
   handleSubmit: () => Promise<void>;
+  isSubmitting: boolean;
+  files: File[];
+  setFiles: (files: File[]) => void;
 }
 
 export const FormContext = createContext<FormContextType | undefined>(

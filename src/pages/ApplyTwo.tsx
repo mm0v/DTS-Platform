@@ -19,7 +19,7 @@ interface PropertyLaw {
 }
 
 interface FormData {
-  propertyLaw: PropertyLaw;
+  propertyLaw?: PropertyLaw;
   // başqa sahələriniz varsa onları əlavə edin
 }
 
@@ -40,22 +40,47 @@ export default function ApplyTwo() {
     setFormData: React.Dispatch<React.SetStateAction<FormData>>;
   };
 
+  // Create a safe propertyLaw object with default values
+  const safePropertyLaw: PropertyLaw = formData?.propertyLaw || {
+    exportBazaar: [],
+    businessOperations: "",
+    companyLawType: "",
+    products: "",
+    exportActivity: false
+  };
+
+  // Initialize formData.propertyLaw if it doesn't exist
+  useEffect(() => {
+    if (!formData.propertyLaw) {
+      setFormData((prevData) => ({
+        ...prevData,
+        propertyLaw: {
+          exportBazaar: [],
+          businessOperations: "",
+          companyLawType: "",
+          products: "",
+          exportActivity: false
+        }
+      }));
+    }
+  }, [formData, setFormData]);
+
   const options = countryList().getData();
 
-  // Başlanğıc exportMarkets massiv kimi olmalıdır
+  // Safely access exportBazaar using the safePropertyLaw object
   const initialExportMarkets: string[] = Array.isArray(
-    formData.propertyLaw.exportBazaar
+    safePropertyLaw.exportBazaar
   )
-    ? formData.propertyLaw.exportBazaar
-    : formData.propertyLaw.exportBazaar
-    ? [formData.propertyLaw.exportBazaar]
-    : [];
+    ? safePropertyLaw.exportBazaar
+    : safePropertyLaw.exportBazaar
+      ? [safePropertyLaw.exportBazaar]
+      : [];
 
   const [localFormData, setLocalFormData] = useState({
-    companyType: formData.propertyLaw.companyLawType || "",
-    businessIndustry: formData.propertyLaw.businessOperations || "",
-    mainProducts: formData.propertyLaw.products || "",
-    exportActivity: formData.propertyLaw.exportActivity ? "Bəli" : "Xeyr",
+    companyType: safePropertyLaw.companyLawType || "",
+    businessIndustry: safePropertyLaw.businessOperations || "",
+    mainProducts: safePropertyLaw.products || "",
+    exportActivity: safePropertyLaw.exportActivity ? "Bəli" : "Xeyr",
     exportMarkets: initialExportMarkets, // massiv
     document: "",
   });
@@ -70,23 +95,31 @@ export default function ApplyTwo() {
   }>({});
 
   useEffect(() => {
+    // Use safePropertyLaw for safe property access
     const updatedExportMarkets: string[] = Array.isArray(
-      formData.propertyLaw.exportBazaar
+      safePropertyLaw.exportBazaar
     )
-      ? formData.propertyLaw.exportBazaar
-      : formData.propertyLaw.exportBazaar
-      ? [formData.propertyLaw.exportBazaar]
-      : [];
+      ? safePropertyLaw.exportBazaar
+      : safePropertyLaw.exportBazaar
+        ? [safePropertyLaw.exportBazaar]
+        : [];
 
     setLocalFormData({
-      companyType: formData.propertyLaw.companyLawType || "",
-      businessIndustry: formData.propertyLaw.businessOperations || "",
-      mainProducts: formData.propertyLaw.products || "",
-      exportActivity: formData.propertyLaw.exportActivity ? "Bəli" : "Xeyr",
+      companyType: safePropertyLaw.companyLawType || "",
+      businessIndustry: safePropertyLaw.businessOperations || "",
+      mainProducts: safePropertyLaw.products || "",
+      exportActivity: safePropertyLaw.exportActivity ? "Bəli" : "Xeyr",
       exportMarkets: updatedExportMarkets,
       document: "",
     });
-  }, [formData]);
+  }, [
+    formData,
+    safePropertyLaw.companyLawType,
+    safePropertyLaw.businessOperations,
+    safePropertyLaw.products,
+    safePropertyLaw.exportActivity,
+    safePropertyLaw.exportBazaar
+  ]);
 
   useEffect(() => {
     const savedData = localStorage.getItem("formData");
@@ -95,13 +128,14 @@ export default function ApplyTwo() {
         const parsedData = JSON.parse(savedData) as FormData;
         setFormData(parsedData);
 
+        // Safely access properties with optional chaining
         const savedExportMarkets: string[] = Array.isArray(
           parsedData.propertyLaw?.exportBazaar
         )
           ? parsedData.propertyLaw.exportBazaar
           : parsedData.propertyLaw?.exportBazaar
-          ? [parsedData.propertyLaw.exportBazaar]
-          : [];
+            ? [parsedData.propertyLaw.exportBazaar]
+            : [];
 
         setLocalFormData({
           companyType: parsedData.propertyLaw?.companyLawType || "",
@@ -135,7 +169,17 @@ export default function ApplyTwo() {
       [name]: undefined,
     }));
 
+    // Make sure propertyLaw exists before updating its properties
     const updatedFormData = { ...formData };
+    if (!updatedFormData.propertyLaw) {
+      updatedFormData.propertyLaw = {
+        exportBazaar: [],
+        businessOperations: "",
+        companyLawType: "",
+        products: "",
+        exportActivity: false
+      };
+    }
 
     switch (name) {
       case "companyType":
@@ -179,13 +223,22 @@ export default function ApplyTwo() {
       exportMarkets: undefined,
     }));
 
-    const updatedFormData = {
-      ...formData,
-      propertyLaw: {
-        ...formData.propertyLaw,
+    // Make sure propertyLaw exists before updating
+    const updatedFormData = { ...formData };
+    if (!updatedFormData.propertyLaw) {
+      updatedFormData.propertyLaw = {
         exportBazaar: countries,
-      },
-    };
+        businessOperations: "",
+        companyLawType: "",
+        products: "",
+        exportActivity: false
+      };
+    } else {
+      updatedFormData.propertyLaw = {
+        ...updatedFormData.propertyLaw,
+        exportBazaar: countries,
+      };
+    }
 
     setFormData(updatedFormData);
     localStorage.setItem("formData", JSON.stringify(updatedFormData));
@@ -280,7 +333,15 @@ export default function ApplyTwo() {
 
       setErrors(translatedErrors);
     }
-  }, [language]);
+  }, [
+    language,
+    errors,
+    page.companyTypeRequired,
+    page.businessIndustryRequired,
+    page.mainProductsRequired,
+    page.exportActivityRequired,
+    page.exportMarketsRequired
+  ]);
 
   const handleGoBack = () => navigate("/apply");
   const handleGoNext = () => {
@@ -319,10 +380,9 @@ export default function ApplyTwo() {
               value={localFormData.companyType}
               onChange={handleInputChange}
               className={`w-full bg-transparent rounded-lg p-2 sm:p-3 text-xs sm:text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 transition duration-300
-                ${
-                  errors.companyType
-                    ? "border border-red-500"
-                    : "border border-gray-700"
+                ${errors.companyType
+                  ? "border border-red-500"
+                  : "border border-gray-700"
                 }`}
               aria-invalid={!!errors.companyType}
               aria-describedby="companyType-error"
@@ -347,10 +407,9 @@ export default function ApplyTwo() {
               value={localFormData.businessIndustry}
               onChange={handleInputChange}
               className={`w-full bg-[#131021] rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300
-                ${
-                  errors.businessIndustry
-                    ? "border border-red-500"
-                    : "border border-gray-700"
+                ${errors.businessIndustry
+                  ? "border border-red-500"
+                  : "border border-gray-700"
                 }`}
               aria-invalid={!!errors.businessIndustry}
               aria-describedby="businessIndustry-error"
@@ -382,7 +441,7 @@ export default function ApplyTwo() {
               >
                 {
                   page.businessIndustry.options.machineRepairAndInstallation[
-                    language
+                  language
                   ]
                 }
               </option>
@@ -392,7 +451,7 @@ export default function ApplyTwo() {
               >
                 {
                   page.businessIndustry.options.rubberAndPlasticProducts[
-                    language
+                  language
                   ]
                 }
               </option>
@@ -425,10 +484,9 @@ export default function ApplyTwo() {
               value={localFormData.mainProducts}
               onChange={handleInputChange}
               className={`w-full bg-transparent rounded-lg p-2 sm:p-3 text-xs sm:text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 transition duration-300
-                ${
-                  errors.mainProducts
-                    ? "border border-red-500"
-                    : "border border-gray-700"
+                ${errors.mainProducts
+                  ? "border border-red-500"
+                  : "border border-gray-700"
                 }`}
               aria-invalid={!!errors.mainProducts}
               aria-describedby="mainProducts-error"
@@ -527,9 +585,8 @@ export default function ApplyTwo() {
                 }
                 handleCountryChange(selected);
               }}
-              className={`w-full ${
-                errors.exportMarkets ? "border border-red-500 rounded" : ""
-              }`}
+              className={`w-full ${errors.exportMarkets ? "border border-red-500 rounded" : ""
+                }`}
               classNamePrefix="react-select"
               placeholder={page.exportMarketsPlaceholder[language]}
               isClearable

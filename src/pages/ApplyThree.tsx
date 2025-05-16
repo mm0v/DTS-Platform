@@ -5,6 +5,7 @@ import { useContext, useState, useEffect } from "react";
 import type { ChangeEvent } from "react";
 import BackgroundVideo from "../components/BackgroundVideo";
 import { FormContext } from "../context/FormContext";
+import type { FormContextType } from "../context/FormContext";
 import { useLanguage } from "../context/LanguageContext";
 import ApplySteps from "../components/ApplySteps";
 import { ChevronDown, ChevronUp } from "lucide-react";
@@ -21,7 +22,33 @@ const ApplyThree = () => {
     throw new Error("ApplyThree must be used within a FormContext.Provider");
   }
 
-  const { formData, setFormData } = context;
+  const { formData, setFormData } = context as FormContextType;
+
+  // Initialize digitalReadiness if it doesn't exist
+  useEffect(() => {
+    if (!formData.companyData.digitalReadiness) {
+      setFormData((prevData) => ({
+        ...prevData,
+        companyData: {
+          ...prevData.companyData,
+          digitalReadiness: {
+            keyChallenges: [],
+            digitalLevel: 0,
+            digitalTools: [],
+            companyPurpose: "",
+          }
+        }
+      }));
+    }
+  }, [formData, setFormData]);
+
+  // Create safe access to digitalReadiness
+  const safeDigitalReadiness = formData.companyData.digitalReadiness || {
+    keyChallenges: [],
+    digitalLevel: 0,
+    digitalTools: [],
+    companyPurpose: "",
+  };
 
   // Validasiya üçün error state
   const [errors, setErrors] = useState<{
@@ -53,10 +80,9 @@ const ApplyThree = () => {
   // Formu validasiya edən funksiya
   const validateForm = () => {
     const newErrors = {
-      digitalLevel: formData.digitalReadiness.digitalLevel === 0,
-      digitalTools: formData.digitalReadiness.digitalTools.length === 0,
-      companyPurpose:
-        formData.digitalReadiness.companyPurpose.trim().length < 3,
+      digitalLevel: safeDigitalReadiness.digitalLevel === 0,
+      digitalTools: safeDigitalReadiness.digitalTools.length === 0,
+      companyPurpose: safeDigitalReadiness.companyPurpose.trim().length < 3,
     };
     setErrors(newErrors);
     return !Object.values(newErrors).some(Boolean);
@@ -76,22 +102,30 @@ const ApplyThree = () => {
         "1": 1,
         "2": 2,
         "3": 3,
+        "4": 4,
+        "5": 5,
       };
       const numericValue = digitalLevelMap[value] || 0;
 
       updatedFormData = {
         ...updatedFormData,
-        digitalReadiness: {
-          ...updatedFormData.digitalReadiness,
-          digitalLevel: numericValue,
+        companyData: {
+          ...updatedFormData.companyData,
+          digitalReadiness: {
+            ...safeDigitalReadiness,
+            digitalLevel: numericValue,
+          },
         },
       };
     } else {
       updatedFormData = {
         ...updatedFormData,
-        digitalReadiness: {
-          ...updatedFormData.digitalReadiness,
-          [name]: value,
+        companyData: {
+          ...updatedFormData.companyData,
+          digitalReadiness: {
+            ...safeDigitalReadiness,
+            [name]: value,
+          },
         },
       };
     }
@@ -104,10 +138,10 @@ const ApplyThree = () => {
       ...prev,
       [name]:
         name === "digitalLevel"
-          ? updatedFormData.digitalReadiness.digitalLevel === 0
+          ? updatedFormData.companyData.digitalReadiness?.digitalLevel === 0
           : value.trim().length < 3 && name === "companyPurpose"
-          ? true
-          : false,
+            ? true
+            : false,
     }));
 
     // Ümumi error mesajını sil
@@ -119,14 +153,17 @@ const ApplyThree = () => {
     const { value, checked } = e.target;
 
     const updatedDigitalTools = checked
-      ? [...formData.digitalReadiness.digitalTools, value]
-      : formData.digitalReadiness.digitalTools.filter((tool) => tool !== value);
+      ? [...safeDigitalReadiness.digitalTools, value]
+      : safeDigitalReadiness.digitalTools.filter((tool) => tool !== value);
 
     const updatedFormData = {
       ...formData,
-      digitalReadiness: {
-        ...formData.digitalReadiness,
-        digitalTools: updatedDigitalTools,
+      companyData: {
+        ...formData.companyData,
+        digitalReadiness: {
+          ...safeDigitalReadiness,
+          digitalTools: updatedDigitalTools,
+        },
       },
     };
 
@@ -163,13 +200,17 @@ const ApplyThree = () => {
   }, [language, errors, page.errorMessages.formError]);
 
   const getDigitalLevelString = (): string => {
-    switch (formData.digitalReadiness.digitalLevel) {
+    switch (safeDigitalReadiness.digitalLevel) {
       case 1:
         return "1";
       case 2:
         return "2";
       case 3:
         return "3";
+      case 4:
+        return "4";
+      case 5:
+        return "5";
       default:
         return "";
     }
@@ -197,10 +238,9 @@ const ApplyThree = () => {
                   value={getDigitalLevelString()}
                   onChange={handleInputChange}
                   className={`w-full p-2 bg-gray-800 text-white rounded
-                    ${
-                      errors.digitalLevel
-                        ? "border-2 border-red-500"
-                        : "border border-gray-700"
+                    ${errors.digitalLevel
+                      ? "border-2 border-red-500"
+                      : "border border-gray-700"
                     }`}
                 >
                   <option value="">
@@ -214,6 +254,12 @@ const ApplyThree = () => {
                   </option>
                   <option value="3">
                     {page.digitalLevelOptions.level3[language]}
+                  </option>
+                  <option value="4">
+                    {page.digitalLevelOptions.level4 ? page.digitalLevelOptions.level4[language] : page.digitalLevelOptions.level3[language]}
+                  </option>
+                  <option value="5">
+                    {page.digitalLevelOptions.level5[language]}
                   </option>
                 </select>
                 {errors.digitalLevel && (
@@ -231,15 +277,14 @@ const ApplyThree = () => {
                   type="button"
                   onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                   className={`w-full p-2 bg-gray-800 text-white rounded text-left flex justify-between items-center
-                    ${
-                      errors.digitalTools
-                        ? "border-2 border-red-500"
-                        : "border border-gray-700"
+                    ${errors.digitalTools
+                      ? "border-2 border-red-500"
+                      : "border border-gray-700"
                     }`}
                 >
                   <span>
-                    {formData.digitalReadiness.digitalTools.length > 0
-                      ? `${formData.digitalReadiness.digitalTools.length} ${page.digitalToolsOptions.selected[language]}`
+                    {safeDigitalReadiness.digitalTools.length > 0
+                      ? `${safeDigitalReadiness.digitalTools.length} ${page.digitalToolsOptions.selected[language]}`
                       : page.placeholder[language]}
                   </span>
                   <span className="ml-2">
@@ -271,7 +316,7 @@ const ApplyThree = () => {
                         <input
                           type="checkbox"
                           value={tool.value}
-                          checked={formData.digitalReadiness.digitalTools.includes(
+                          checked={safeDigitalReadiness.digitalTools.includes(
                             tool.value
                           )}
                           onChange={handleDigitalToolChange}
@@ -307,21 +352,24 @@ const ApplyThree = () => {
                     <input
                       type="checkbox"
                       value={challenge}
-                      checked={formData.digitalReadiness.keyChallenges.includes(
+                      checked={safeDigitalReadiness.keyChallenges.includes(
                         challenge
                       )}
                       onChange={(e) => {
                         const { value, checked } = e.target;
-                        let updatedKeyChallenges = checked
-                          ? [...formData.digitalReadiness.keyChallenges, value]
-                          : formData.digitalReadiness.keyChallenges.filter(
-                              (c) => c !== value
-                            );
+                        const updatedKeyChallenges = checked
+                          ? [...safeDigitalReadiness.keyChallenges, value]
+                          : safeDigitalReadiness.keyChallenges.filter(
+                            (c) => c !== value
+                          );
                         const updatedFormData = {
                           ...formData,
-                          digitalReadiness: {
-                            ...formData.digitalReadiness,
-                            keyChallenges: updatedKeyChallenges,
+                          companyData: {
+                            ...formData.companyData,
+                            digitalReadiness: {
+                              ...safeDigitalReadiness,
+                              keyChallenges: updatedKeyChallenges,
+                            },
                           },
                         };
                         setFormData(updatedFormData);
@@ -357,13 +405,12 @@ const ApplyThree = () => {
               </p>
               <textarea
                 name="companyPurpose"
-                value={formData.digitalReadiness.companyPurpose}
+                value={safeDigitalReadiness.companyPurpose}
                 onChange={handleInputChange}
                 className={`w-full p-4 bg-gray-800 text-white rounded
-                  ${
-                    errors.companyPurpose
-                      ? "border-2 border-red-500"
-                      : "border border-gray-700"
+                  ${errors.companyPurpose
+                    ? "border-2 border-red-500"
+                    : "border border-gray-700"
                   }`}
                 rows={4}
                 placeholder={page.companyPurpose.placeholder[language]}
