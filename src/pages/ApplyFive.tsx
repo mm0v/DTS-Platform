@@ -1,99 +1,109 @@
-"use client";
-import React, { useState, useEffect, useContext } from "react";
-import { useNavigate } from "react-router-dom";
-import { Download } from "lucide-react";
-import BackgroundVideo from "../components/BackgroundVideo";
-import { FormContext } from "../context/FormContext";
-import { useLanguage } from "../context/LanguageContext";
-import ApplySteps from "../components/ApplySteps";
-import { motion, AnimatePresence } from "framer-motion";
-
-import { companyService } from "../services/companyService"; // yolunu düzəlt
+"use client"
+import type React from "react"
+import { useState, useEffect, useContext } from "react"
+import { useNavigate } from "react-router-dom"
+import { Download } from "lucide-react"
+import BackgroundVideo from "../components/BackgroundVideo"
+import { FormContext } from "../context/FormContext"
+import { useLanguage } from "../context/LanguageContext"
+import ApplySteps from "../components/ApplySteps"
+import { motion, AnimatePresence } from "framer-motion"
 
 interface FileState {
-  companyRegistry: File | null;
-  financialReports: File | null;
+  companyRegistry: File | null
+  financialReports: File | null
 }
 interface AgreementState {
-  confirmAccuracy: boolean;
-  contactConsent: boolean;
-  termsAgreement: boolean;
+  confirmAccuracy: boolean
+  contactConsent: boolean
+  termsAgreement: boolean
 }
 
 export default function ApplyFive() {
-  const navigate = useNavigate();
-  const context = useContext(FormContext);
-  const { language, pagesTranslations } = useLanguage();
-  const page = pagesTranslations.apply5;
+  const navigate = useNavigate()
+  const context = useContext(FormContext)
+  const { language, pagesTranslations } = useLanguage()
+  const page = pagesTranslations.apply5
   if (!context) {
-    throw new Error("ApplyFive must be used within a FormContext.Provider");
+    throw new Error("ApplyFive must be used within a FormContext.Provider")
   }
 
-  const { formData, setFormData } = context;
-
+  const { setFormData, handleSubmit, isSubmitting, submitError, submitSuccess } = context
   const [files, setFiles] = useState<FileState>({
     companyRegistry: null,
     financialReports: null,
-  });
+  })
 
   const [agreements, setAgreements] = useState<AgreementState>({
     confirmAccuracy: false,
     contactConsent: false,
     termsAgreement: false,
-  });
+  })
 
-  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-  const allAgreementsChecked = Object.values(agreements).every(
-    (value) => value === true
-  );
+  const [showConfirmModal, setShowConfirmModal] = useState<boolean>(false)
+  const [showThankYouModal, setShowThankYouModal] = useState<boolean>(false)
+  const [submissionError, setSubmissionError] = useState<string | null>(null)
+  const [retryCount, setRetryCount] = useState(0)
 
-  // Modal visibility states
-  const [showConfirmModal, setShowConfirmModal] = useState<boolean>(false);
-  const [showThankYouModal, setShowThankYouModal] = useState<boolean>(false);
-
-  // LocalStorage-dan faylları və razılıqları yüklə (ehtiyat üçün)
-  useEffect(() => {
-    const savedFiles = JSON.parse(localStorage.getItem("files") || "{}");
-    const savedAgreements = JSON.parse(localStorage.getItem("agreements") || "{}");
-    if (savedFiles.companyRegistry) {
-      setFiles((prev) => ({
-        ...prev,
-        companyRegistry: savedFiles.companyRegistry,
-      }));
-    }
-    if (savedFiles.financialReports) {
-      setFiles((prev) => ({
-        ...prev,
-        financialReports: savedFiles.financialReports,
-      }));
-    }
-    setAgreements(savedAgreements);
-  }, []);
+  const allAgreementsChecked = Object.values(agreements).every((value) => value === true)
 
   useEffect(() => {
-    localStorage.setItem("files", JSON.stringify(files));
-    localStorage.setItem("agreements", JSON.stringify(agreements));
-  }, [files, agreements]);
+    // Load saved files and agreements from localStorage
+    try {
+      const savedAgreements = JSON.parse(localStorage.getItem("agreements") || "{}")
+      setAgreements(savedAgreements)
+    } catch (error) {
+      console.error("Error loading saved agreements:", error)
+    }
+  }, [])
 
-  const handleFileChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    fileType: keyof FileState
-  ) => {
-    const file = e.target.files?.[0] || null;
-    if (file) {
+  useEffect(() => {
+    // Save agreements to localStorage when they change
+    localStorage.setItem("agreements", JSON.stringify(agreements))
+  }, [agreements])
+
+  useEffect(() => {
+    // Show thank you modal if submission was successful
+    if (submitSuccess) {
+      setShowConfirmModal(false)
+      setShowThankYouModal(true)
+    }
+  }, [submitSuccess])
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, fileType: keyof FileState) => {
+    const fileList = e.target.files
+    if (fileList && fileList.length > 0) {
+      const file = fileList[0]
+
+      // Update state with the file
       setFiles((prev) => ({
         ...prev,
         [fileType]: file,
-      }));
+      }))
+
+      // Store file reference in localStorage
+      // Note: Files can't be directly stored in localStorage, so we're just storing metadata
+      try {
+        const filesMetadata = JSON.parse(localStorage.getItem("files") || "{}")
+        filesMetadata[fileType] = {
+          name: file.name,
+          size: file.size,
+          type: file.type,
+          lastModified: file.lastModified,
+        }
+        localStorage.setItem("files", JSON.stringify(filesMetadata))
+      } catch (error) {
+        console.error("Error storing file metadata:", error)
+      }
     }
-  };
+  }
 
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, checked } = e.target;
+    const { name, checked } = e.target
     setAgreements((prev) => ({
       ...prev,
       [name as keyof AgreementState]: checked,
-    }));
+    }))
 
     if (name === "confirmAccuracy") {
       setFormData((prev) => ({
@@ -102,7 +112,7 @@ export default function ApplyFive() {
           ...prev.declarationConsent,
           dataIsReal: checked,
         },
-      }));
+      }))
     } else if (name === "contactConsent") {
       setFormData((prev) => ({
         ...prev,
@@ -110,73 +120,49 @@ export default function ApplyFive() {
           ...prev.declarationConsent,
           permitContact: checked,
         },
-      }));
+      }))
     }
-  };
+  }
 
   const handleGoBack = () => {
-    navigate("/apply/four");
-  };
+    navigate("/apply/four")
+  }
 
   const handleConfirmModalClose = () => {
-    setShowConfirmModal(false);
-  };
+    setShowConfirmModal(false)
+    setSubmissionError(null)
+  }
 
   const handleThankYouModalClose = () => {
-    setShowThankYouModal(false);
-    // İstəsən, burda redirect edə bilərsən, məsələn:
-    // navigate("/");
-  };
+    setShowThankYouModal(false)
+    // Optionally navigate to a different page after closing thank you modal
+    navigate("/")
+  }
 
   const handleConfirmModalYes = async () => {
-    setIsSubmitting(true);
-
     try {
-      const dataToSend = {
-        companyData: {
-          companyName: formData.companyName,
-          companyRegisterNumber: formData.companyRegisterNumber,
-          createYear: formData.createYear,
-          workerCount: formData.workerCount,
-          annualTurnover: formData.annualTurnover,
-          address: formData.address,
-          cityAndRegion: formData.cityAndRegion,
-          website: formData.website,
-          contactName: formData.contactName,
-          contactEmail: formData.contactEmail,
-          contactPhone: formData.contactPhone,
-        },
-        declarationConsent: formData.declarationConsent,
-        digitalLeadership: formData.digitalLeadership,
-        digitalReadiness: formData.digitalReadiness,
-        financialNeeding: formData.financialNeeding,
-        propertyLaw: formData.propertyLaw,
-      };
-
-      // JSON məlumatı göndər (yalnız obyekt)
-      const dataToSubmit = {
-        companyRequest: dataToSend,
-        // Əgər fayllar göndərilməlidirsə, service və backend uyğunlaşdırılmalıdır
-      };
-
-      await companyService.submitCompanyData(dataToSubmit);
-
-      setShowConfirmModal(false);
-      setShowThankYouModal(true);
+      setSubmissionError(null)
+      await handleSubmit()
+      // The thank you modal will be shown via the useEffect that watches submitSuccess
     } catch (error) {
-      console.error("Submission error:", error);
-      alert(
-        "Müraciət göndərilərkən xəta baş verdi. Zəhmət olmasa, yenidən cəhd edin."
-      );
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+      console.error("Submission failed:", error)
+      setSubmissionError(submitError || "Məlumatların göndərilməsi zamanı xəta baş verdi")
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setShowConfirmModal(true);
-  };
+      // Increment retry count
+      setRetryCount((prev) => prev + 1)
+    }
+  }
+
+  const handleRetry = () => {
+    handleConfirmModalYes()
+  }
+
+  const handleSubmitForm = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    setShowConfirmModal(true)
+    setSubmissionError(null)
+    setRetryCount(0)
+  }
 
   return (
     <>
@@ -184,7 +170,7 @@ export default function ApplyFive() {
       <div className="min-h-screen bg-[url('/images/space-background.jpg')] bg-cover bg-center bg-no-repeat text-white flex flex-col items-center justify-center py-10">
         <ApplySteps step={5} />
 
-        {/* Təsdiq Modalı */}
+        {/* Confirmation Modal */}
         <AnimatePresence>
           {showConfirmModal && (
             <motion.div
@@ -200,9 +186,7 @@ export default function ApplyFive() {
                 exit={{ scale: 0.85, opacity: 0 }}
                 transition={{ duration: 0.25 }}
               >
-                <h2 className="text-white text-xl font-semibold text-center">
-                  Müraciətinizi təsdiq edirsinizmi?
-                </h2>
+                <h2 className="text-white text-xl font-semibold text-center">Müraciətinizi təsdiq edirsinizmi?</h2>
                 <button
                   onClick={handleConfirmModalClose}
                   className="absolute top-5 right-5 text-red-500 hover:text-red-600 transition-colors"
@@ -216,13 +200,34 @@ export default function ApplyFive() {
                     stroke="currentColor"
                     strokeWidth={2}
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M6 18L18 6M6 6l12 12"
-                    />
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                   </svg>
                 </button>
+
+                {submissionError && (
+                  <div className="bg-red-500/20 border border-red-500 text-red-500 p-4 rounded-md text-sm mb-4 w-full">
+                    <p className="font-medium mb-2">Xəta:</p>
+                    <p>{submissionError}</p>
+
+                    {retryCount < 3 && (
+                      <button
+                        onClick={handleRetry}
+                        className="mt-3 bg-red-500 text-white py-2 px-4 rounded-md text-sm hover:bg-red-600 transition-colors w-full"
+                      >
+                        Yenidən cəhd edin ({retryCount}/3)
+                      </button>
+                    )}
+
+                    {retryCount >= 3 && (
+                      <div className="mt-3 text-amber-400 text-xs">
+                        <p>
+                          Maksimum cəhd sayı aşıldı. Zəhmət olmasa daha sonra yenidən cəhd edin və ya texniki dəstəklə
+                          əlaqə saxlayın.
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                )}
 
                 <div className="flex space-x-8 w-full justify-center">
                   <button
@@ -235,9 +240,35 @@ export default function ApplyFive() {
                   <button
                     onClick={handleConfirmModalYes}
                     className="bg-green-500 text-white py-3 px-10 rounded-lg hover:bg-green-600 transition font-medium"
-                    disabled={isSubmitting}
+                    disabled={isSubmitting || retryCount >= 3}
                   >
-                    {isSubmitting ? "Göndərilir..." : "Bəli"}
+                    {isSubmitting ? (
+                      <span className="flex items-center">
+                        <svg
+                          className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                        >
+                          <circle
+                            className="opacity-25"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            strokeWidth="4"
+                          ></circle>
+                          <path
+                            className="opacity-75"
+                            fill="currentColor"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                          ></path>
+                        </svg>
+                        Göndərilir...
+                      </span>
+                    ) : (
+                      "Bəli"
+                    )}
                   </button>
                 </div>
               </motion.div>
@@ -245,7 +276,7 @@ export default function ApplyFive() {
           )}
         </AnimatePresence>
 
-        {/* Təşəkkür Modalı */}
+        {/* Thank You Modal */}
         <AnimatePresence>
           {showThankYouModal && (
             <motion.div
@@ -261,12 +292,9 @@ export default function ApplyFive() {
                 exit={{ scale: 0.85, opacity: 0 }}
                 transition={{ duration: 0.25 }}
               >
-                <h2 className="text-white text-2xl font-bold">
-                  Müraciətiniz üçün təşəkkür edirik!
-                </h2>
+                <h2 className="text-white text-2xl font-bold">Müraciətiniz üçün təşəkkür edirik!</h2>
                 <p className="text-white text-base max-w-[360px] mx-auto">
-                  Müraciətinizin nəticəsi barəsində qısa zamanda sizinlə əlaqə
-                  saxlanılacaqdır.
+                  Müraciətinizin nəticəsi barəsində qısa zamanda sizinlə əlaqə saxlanılacaqdır.
                 </p>
 
                 <button
@@ -282,36 +310,32 @@ export default function ApplyFive() {
                     stroke="currentColor"
                     strokeWidth={2}
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M6 18L18 6M6 6l12 12"
-                    />
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                   </svg>
                 </button>
 
-                <img
-                  src="/img/click.svg"
-                  alt="Confirmation checkmark"
-                  className="w-20 h-20 mx-auto mt-2"
-                />
+                <img src="/img/click.svg" alt="Confirmation checkmark" className="w-20 h-20 mx-auto mt-2" />
+
+                <button
+                  onClick={handleThankYouModalClose}
+                  className="bg-blue-600 text-white py-3 px-8 rounded-lg hover:bg-blue-700 transition font-medium"
+                >
+                  Ana səhifəyə qayıt
+                </button>
               </motion.div>
             </motion.div>
           )}
         </AnimatePresence>
 
-        {/* Form bölməsi */}
+        {/* Form section */}
         <div className="w-full max-w-4xl p-8 rounded-lg">
           <div className="text-center mb-10">
             <h1 className="text-3xl font-bold">{page.title[language]}</h1>
           </div>
-          <form className="space-y-8" onSubmit={handleSubmit}>
-            {/* Şirkətin dövlət reyestri faylı */}
+          <form className="space-y-8" onSubmit={handleSubmitForm}>
+            {/* Company registry file */}
             <div className="space-y-2">
-              <label
-                htmlFor="companyRegistry"
-                className="block text-lg cursor-pointer font-medium"
-              >
+              <label htmlFor="companyRegistry" className="block text-lg cursor-pointer font-medium">
                 {page.companyRegistry[language]}
               </label>
               <div className="relative">
@@ -319,9 +343,7 @@ export default function ApplyFive() {
                   htmlFor="companyRegistry"
                   className="w-full h-14 border border-gray-600 rounded-lg flex items-center justify-between px-4 bg-gray-800/30 text-gray-400 text-sm cursor-pointer select-none"
                 >
-                  {files.companyRegistry
-                    ? files.companyRegistry.name
-                    : "No file selected"}
+                  {files.companyRegistry ? files.companyRegistry.name : "No file selected"}
                 </label>
                 <button
                   type="button"
@@ -342,12 +364,9 @@ export default function ApplyFive() {
               <p className="text-sm text-gray-400">{page.fileFormatText[language]}</p>
             </div>
 
-            {/* Maliyyə hesabatları faylı */}
+            {/* Financial reports file */}
             <div className="space-y-2">
-              <label
-                htmlFor="financialReports"
-                className="block text-lg cursor-pointer font-medium"
-              >
+              <label htmlFor="financialReports" className="block text-lg cursor-pointer font-medium">
                 {page.financialReports[language]}
               </label>
               <div className="relative">
@@ -355,9 +374,7 @@ export default function ApplyFive() {
                   htmlFor="financialReports"
                   className="w-full h-14 border border-gray-600 rounded-lg flex items-center justify-between px-4 bg-gray-800/30 text-gray-400 text-sm cursor-pointer select-none"
                 >
-                  {files.financialReports
-                    ? files.financialReports.name
-                    : "No file selected"}
+                  {files.financialReports ? files.financialReports.name : "No file selected"}
                 </label>
                 <button
                   type="button"
@@ -378,7 +395,7 @@ export default function ApplyFive() {
               <p className="text-sm text-gray-400">{page.fileFormatText[language]}</p>
             </div>
 
-            {/* Razılıq qutuları */}
+            {/* Agreement checkboxes */}
             <div className="space-y-4">
               <div className="flex items-start">
                 <input
@@ -421,7 +438,7 @@ export default function ApplyFive() {
               </div>
             </div>
 
-            {/* Düymələr */}
+            {/* Buttons */}
             <div className="flex space-x-4 mt-10">
               <button
                 type="button"
@@ -439,14 +456,12 @@ export default function ApplyFive() {
                     : "bg-blue-900/50 text-gray-400 cursor-not-allowed "
                 }`}
               >
-                {isSubmitting
-                  ? page.buttons.submitting[language]
-                  : page.buttons.confirm[language]}
+                {isSubmitting ? page.buttons.submitting[language] : page.buttons.confirm[language]}
               </button>
             </div>
           </form>
         </div>
       </div>
     </>
-  );
+  )
 }
