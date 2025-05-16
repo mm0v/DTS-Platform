@@ -44,7 +44,7 @@ export default function ApplyFour() {
         digitalLeadership: {
           digitalTeamOrLead: false,
           digitalPath: false,
-          digitalTransformationLoyality: false
+          digitalTransformationLoyality: false,
         },
         digitalReadiness: {
           keyChallenges: [],
@@ -54,15 +54,15 @@ export default function ApplyFour() {
         },
         financialNeeding: {
           financialNeed: false,
-          neededBudget: ""
+          neededBudget: "",
         },
         propertyLaw: {
           businessOperations: "",
           companyLawType: "",
           products: "",
           exportActivity: false,
-          exportBazaar: ""
-        }
+          exportBazaar: "",
+        },
       };
     }
 
@@ -70,14 +70,14 @@ export default function ApplyFour() {
       updatedFormData.companyData.digitalLeadership = {
         digitalTeamOrLead: false,
         digitalPath: false,
-        digitalTransformationLoyality: false
+        digitalTransformationLoyality: false,
       };
     }
 
     if (!updatedFormData.companyData.financialNeeding) {
       updatedFormData.companyData.financialNeeding = {
         financialNeed: false,
-        neededBudget: ""
+        neededBudget: "",
       };
     }
 
@@ -88,12 +88,12 @@ export default function ApplyFour() {
   const safeDigitalLeadership = formData.companyData?.digitalLeadership || {
     digitalTeamOrLead: false,
     digitalPath: false,
-    digitalTransformationLoyality: false
+    digitalTransformationLoyality: false,
   };
 
   const safeFinancialNeeding = formData.companyData?.financialNeeding || {
     financialNeed: false,
-    neededBudget: ""
+    neededBudget: "",
   };
 
   // Lokal form state
@@ -102,10 +102,8 @@ export default function ApplyFour() {
       ? "Bəli"
       : "Xeyr",
     digitalPath: safeDigitalLeadership.digitalPath ? "Bəli" : "Xeyr",
-    digitalTransformationLoyality: safeDigitalLeadership
-      .digitalTransformationLoyality
-      ? "Bəli"
-      : "Xeyr",
+    digitalTransformationLoyality:
+      safeDigitalLeadership.digitalTransformationLoyality ? "Bəli" : "Xeyr",
     financialNeed: safeFinancialNeeding.financialNeed ? "Bəli" : "Xeyr",
     neededBudget: safeFinancialNeeding.neededBudget || "",
   });
@@ -129,10 +127,8 @@ export default function ApplyFour() {
         ? "Bəli"
         : "Xeyr",
       digitalPath: safeDigitalLeadership.digitalPath ? "Bəli" : "Xeyr",
-      digitalTransformationLoyality: safeDigitalLeadership
-        .digitalTransformationLoyality
-        ? "Bəli"
-        : "Xeyr",
+      digitalTransformationLoyality:
+        safeDigitalLeadership.digitalTransformationLoyality ? "Bəli" : "Xeyr",
       financialNeed: safeFinancialNeeding.financialNeed ? "Bəli" : "Xeyr",
       neededBudget: safeFinancialNeeding.neededBudget || "",
     });
@@ -141,7 +137,9 @@ export default function ApplyFour() {
   // LocalStorage-dan data yükləmək (varsa)
   useEffect(() => {
     try {
-      const savedData = JSON.parse(localStorage.getItem("formDataFour") || "{}");
+      const savedData = JSON.parse(
+        localStorage.getItem("formDataFour") || "{}"
+      );
       if (Object.keys(savedData).length > 0) {
         setLocalFormData((prev) => ({
           ...prev,
@@ -177,7 +175,7 @@ export default function ApplyFour() {
             digitalLeadership: {
               digitalTeamOrLead: false,
               digitalPath: false,
-              digitalTransformationLoyality: false
+              digitalTransformationLoyality: false,
             },
             digitalReadiness: {
               keyChallenges: [],
@@ -187,15 +185,15 @@ export default function ApplyFour() {
             },
             financialNeeding: {
               financialNeed: false,
-              neededBudget: ""
+              neededBudget: "",
             },
             propertyLaw: {
               businessOperations: "",
               companyLawType: "",
               products: "",
               exportActivity: false,
-              exportBazaar: ""
-            }
+              exportBazaar: "",
+            },
           };
         }
 
@@ -203,14 +201,14 @@ export default function ApplyFour() {
           updatedFormData.companyData.digitalLeadership = {
             digitalTeamOrLead: false,
             digitalPath: false,
-            digitalTransformationLoyality: false
+            digitalTransformationLoyality: false,
           };
         }
 
         if (!updatedFormData.companyData.financialNeeding) {
           updatedFormData.companyData.financialNeeding = {
             financialNeed: false,
-            neededBudget: ""
+            neededBudget: "",
           };
         }
 
@@ -218,13 +216,14 @@ export default function ApplyFour() {
           ...updatedFormData.companyData.digitalLeadership,
           digitalTeamOrLead: savedData.digitalTeamOrLead === "Bəli",
           digitalPath: savedData.digitalPath === "Bəli",
-          digitalTransformationLoyality: savedData.digitalTransformationLoyality === "Bəli"
+          digitalTransformationLoyality:
+            savedData.digitalTransformationLoyality === "Bəli",
         };
 
         updatedFormData.companyData.financialNeeding = {
           ...updatedFormData.companyData.financialNeeding,
           financialNeed: savedData.financialNeed === "Bəli",
-          neededBudget: savedData.neededBudget || ""
+          neededBudget: savedData.neededBudget || "",
         };
 
         setFormData(updatedFormData);
@@ -278,7 +277,7 @@ export default function ApplyFour() {
         digitalLeadership: {
           digitalTeamOrLead: false,
           digitalPath: false,
-          digitalTransformationLoyality: false
+          digitalTransformationLoyality: false,
         },
         digitalReadiness: {
           keyChallenges: [],
@@ -288,15 +287,15 @@ export default function ApplyFour() {
         },
         financialNeeding: {
           financialNeed: false,
-          neededBudget: ""
+          neededBudget: "",
         },
         propertyLaw: {
           businessOperations: "",
           companyLawType: "",
           products: "",
           exportActivity: false,
-          exportBazaar: ""
-        }
+          exportBazaar: "",
+        },
       };
     }
 
@@ -311,7 +310,7 @@ export default function ApplyFour() {
         updatedFormData.companyData.digitalLeadership = {
           digitalTeamOrLead: false,
           digitalPath: false,
-          digitalTransformationLoyality: false
+          digitalTransformationLoyality: false,
         };
       }
 
@@ -324,7 +323,7 @@ export default function ApplyFour() {
       if (!updatedFormData.companyData.financialNeeding) {
         updatedFormData.companyData.financialNeeding = {
           financialNeed: false,
-          neededBudget: ""
+          neededBudget: "",
         };
       }
 
@@ -337,7 +336,7 @@ export default function ApplyFour() {
       if (!updatedFormData.companyData.financialNeeding) {
         updatedFormData.companyData.financialNeeding = {
           financialNeed: false,
-          neededBudget: ""
+          neededBudget: "",
         };
       }
 
@@ -413,12 +412,11 @@ export default function ApplyFour() {
               <label className="text-sm md:text-base">
                 {page.digitalTransformationLeader[language]}
               </label>
-              <div className="flex items-center space-x-8">
+              <div className="flex items-center space-x-4">
                 {["Bəli", "Xeyr"].map((option) => (
                   <label
                     key={option}
-                    className={`flex items-center cursor-pointer space-x-2 ${errors.digitalTeamOrLead ? "text-red-400" : ""
-                      }`}
+                    className={`flex items-center space-x-2 cursor-pointer`}
                   >
                     <input
                       type="radio"
@@ -428,18 +426,11 @@ export default function ApplyFour() {
                       onChange={handleInputChange}
                       className="hidden"
                     />
-                    <span
-                      className={`w-5 h-5 flex items-center justify-center rounded-full border-2 transition-colors ${localFormData.digitalTeamOrLead === option
-                        ? "bg-blue-600 border-blue-600"
-                        : errors.digitalTeamOrLead
-                          ? "bg-white border-red-400"
-                          : "bg-white border-gray-400"
-                        } hover:border-blue-600`}
-                    >
+                    <span className="w-5 h-5 flex items-center justify-center border border-gray-400 rounded">
                       {localFormData.digitalTeamOrLead === option && (
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
-                          className="w-3.5 h-3.5 text-white"
+                          className="w-4 h-4 text-blue-500"
                           fill="none"
                           viewBox="0 0 24 24"
                           stroke="currentColor"
@@ -456,7 +447,7 @@ export default function ApplyFour() {
                     <span className="text-sm">
                       {
                         page.optionLabels[option === "Bəli" ? "yes" : "no"][
-                        language
+                          language
                         ]
                       }
                     </span>
@@ -475,12 +466,13 @@ export default function ApplyFour() {
               <label className="text-sm md:text-base">
                 {page.hasStrategy[language]}
               </label>
-              <div className="flex items-center space-x-8">
+              <div className="flex items-center space-x-4">
                 {["Bəli", "Xeyr"].map((option) => (
                   <label
                     key={option}
-                    className={`flex items-center cursor-pointer space-x-2 ${errors.digitalPath ? "text-red-400" : ""
-                      }`}
+                    className={`flex items-center cursor-pointer space-x-2 ${
+                      errors.digitalPath ? "text-red-400" : ""
+                    }`}
                   >
                     <input
                       type="radio"
@@ -490,18 +482,11 @@ export default function ApplyFour() {
                       onChange={handleInputChange}
                       className="hidden"
                     />
-                    <span
-                      className={`w-5 h-5 flex items-center justify-center rounded-full border-2 transition-colors ${localFormData.digitalPath === option
-                        ? "bg-blue-600 border-blue-600"
-                        : errors.digitalPath
-                          ? "bg-white border-red-400"
-                          : "bg-white border-gray-400"
-                        } hover:border-blue-600`}
-                    >
+                    <span className="w-5 h-5 flex items-center justify-center border border-gray-400 rounded">
                       {localFormData.digitalPath === option && (
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
-                          className="w-3.5 h-3.5 text-white"
+                          className="w-4 h-4 text-blue-500"
                           fill="none"
                           viewBox="0 0 24 24"
                           stroke="currentColor"
@@ -518,13 +503,14 @@ export default function ApplyFour() {
                     <span className="text-sm">
                       {
                         page.optionLabels[option === "Bəli" ? "yes" : "no"][
-                        language
+                          language
                         ]
                       }
                     </span>
                   </label>
                 ))}
               </div>
+
               {errors.digitalPath && (
                 <p className="text-red-500 font-medium text-sm mt-1">
                   {page.errorMessages.requiredField[language]}
@@ -537,12 +523,13 @@ export default function ApplyFour() {
               <label className="text-sm md:text-base">
                 {page.highLevelManagementSupport[language]}
               </label>
-              <div className="flex items-center space-x-8">
+              <div className="flex items-center space-x-4">
                 {["Bəli", "Xeyr"].map((option) => (
                   <label
                     key={option}
-                    className={`flex items-center cursor-pointer space-x-2 ${errors.digitalTransformationLoyality ? "text-red-400" : ""
-                      }`}
+                    className={`flex items-center cursor-pointer space-x-2 ${
+                      errors.digitalTransformationLoyality ? "text-red-400" : ""
+                    }`}
                   >
                     <input
                       type="radio"
@@ -554,42 +541,36 @@ export default function ApplyFour() {
                       onChange={handleInputChange}
                       className="hidden"
                     />
-                    <span
-                      className={`w-5 h-5 flex items-center justify-center rounded-full border-2 transition-colors ${localFormData.digitalTransformationLoyality === option
-                        ? "bg-blue-600 border-blue-600"
-                        : errors.digitalTransformationLoyality
-                          ? "bg-white border-red-400"
-                          : "bg-white border-gray-400"
-                        } hover:border-blue-600`}
-                    >
+                    <span className="w-5 h-5 flex items-center justify-center border border-gray-400 rounded">
                       {localFormData.digitalTransformationLoyality ===
                         option && (
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="w-3.5 h-3.5 text-white"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                            strokeWidth={3}
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              d="M5 13l4 4L19 7"
-                            />
-                          </svg>
-                        )}
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="w-4 h-4 text-blue-500"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                          strokeWidth={3}
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M5 13l4 4L19 7"
+                          />
+                        </svg>
+                      )}
                     </span>
                     <span className="text-sm">
                       {
                         page.optionLabels[option === "Bəli" ? "yes" : "no"][
-                        language
+                          language
                         ]
                       }
                     </span>
                   </label>
                 ))}
               </div>
+
               {errors.digitalTransformationLoyality && (
                 <p className="text-red-500 font-medium text-sm mt-1">
                   {page.errorMessages.requiredField[language]}
@@ -609,12 +590,13 @@ export default function ApplyFour() {
               <label className="text-sm md:text-base">
                 {page.financialNeeds.question[language]}
               </label>
-              <div className="flex items-center space-x-8">
+              <div className="flex items-center space-x-4">
                 {["Bəli", "Xeyr"].map((option) => (
                   <label
                     key={option}
-                    className={`flex items-center cursor-pointer space-x-2 ${errors.financialNeed ? "text-red-400" : ""
-                      }`}
+                    className={`flex items-center cursor-pointer space-x-2 ${
+                      errors.financialNeed ? "text-red-400" : ""
+                    }`}
                   >
                     <input
                       type="radio"
@@ -624,18 +606,11 @@ export default function ApplyFour() {
                       onChange={handleInputChange}
                       className="hidden"
                     />
-                    <span
-                      className={`w-5 h-5 flex items-center justify-center rounded-full border-2 transition-colors ${localFormData.financialNeed === option
-                        ? "bg-blue-600 border-blue-600"
-                        : errors.financialNeed
-                          ? "bg-white border-red-400"
-                          : "bg-white border-gray-400"
-                        } hover:border-blue-600`}
-                    >
+                    <span className="w-5 h-5 flex items-center justify-center border border-gray-400 rounded">
                       {localFormData.financialNeed === option && (
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
-                          className="w-3.5 h-3.5 text-white"
+                          className="w-4 h-4 text-blue-500"
                           fill="none"
                           viewBox="0 0 24 24"
                           stroke="currentColor"
@@ -652,13 +627,14 @@ export default function ApplyFour() {
                     <span className="text-sm">
                       {
                         page.optionLabels[option === "Bəli" ? "yes" : "no"][
-                        language
+                          language
                         ]
                       }
                     </span>
                   </label>
                 ))}
               </div>
+
               {errors.financialNeed && (
                 <p className="text-red-500 font-medium text-sm mt-1">
                   {page.errorMessages.requiredField[language]}
@@ -678,8 +654,9 @@ export default function ApplyFour() {
                     name="neededBudget"
                     value={localFormData.neededBudget}
                     onChange={handleInputChange}
-                    className={`w-full bg-transparent border ${errors.neededBudget ? "border-red-400" : "border-gray-700"
-                      } rounded p-3 focus:outline-none focus:border-blue-500`}
+                    className={`w-full bg-transparent border ${
+                      errors.neededBudget ? "border-red-400" : "border-gray-700"
+                    } rounded p-3 focus:outline-none focus:border-blue-500`}
                     placeholder="AZN"
                     min={0}
                   />
