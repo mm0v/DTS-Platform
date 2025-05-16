@@ -1,53 +1,55 @@
-"use client"
+"use client";
 
-import React, { useState, useContext, useEffect } from "react"
-import { useNavigate } from "react-router-dom"
-import BackgroundVideo from "../components/BackgroundVideo"
-import { FormContext } from "../context/FormContext"
-import { useLanguage } from "../context/LanguageContext"
-import ApplySteps from "../components/ApplySteps"
-import Select, { type MultiValue } from "react-select"
-import countryList from "react-select-country-list"
+import React, { useState, useContext, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import BackgroundVideo from "../components/BackgroundVideo";
+import { FormContext } from "../context/FormContext";
+import { useLanguage } from "../context/LanguageContext";
+import ApplySteps from "../components/ApplySteps";
+import Select, { type MultiValue } from "react-select";
+import countryList from "react-select-country-list";
 
 // Tip tərifləri
 interface PropertyLaw {
-  exportBazaar: string[]
-  businessOperations: string
-  companyLawType: string
-  products: string
-  exportActivity: boolean
+  exportBazaar: string[];
+  businessOperations: string;
+  companyLawType: string;
+  products: string;
+  exportActivity: boolean;
 }
 
 interface FormData {
-  propertyLaw: PropertyLaw
+  propertyLaw: PropertyLaw;
   // başqa sahələriniz varsa onları əlavə edin
 }
 
 export default function ApplyTwo() {
-  const navigate = useNavigate()
-  const context = useContext(FormContext)
-  const { language, pagesTranslations } = useLanguage()
-  const page = pagesTranslations.apply2
-  const buttons = pagesTranslations.applyBtns
+  const navigate = useNavigate();
+  const context = useContext(FormContext);
+  const { language, pagesTranslations } = useLanguage();
+  const page = pagesTranslations.apply2;
+  const buttons = pagesTranslations.applyBtns;
 
   if (!context) {
-    throw new Error("ApplyTwo must be used within a FormContext.Provider")
+    throw new Error("ApplyTwo must be used within a FormContext.Provider");
   }
 
   // formData tipini PropertyLaw tipinə uyğun təyin edirik
   const { formData, setFormData } = context as unknown as {
-    formData: FormData
-    setFormData: React.Dispatch<React.SetStateAction<FormData>>
-  }
+    formData: FormData;
+    setFormData: React.Dispatch<React.SetStateAction<FormData>>;
+  };
 
-  const options = countryList().getData()
+  const options = countryList().getData();
 
   // Başlanğıc exportMarkets massiv kimi olmalıdır
-  const initialExportMarkets: string[] = Array.isArray(formData.propertyLaw.exportBazaar)
+  const initialExportMarkets: string[] = Array.isArray(
+    formData.propertyLaw.exportBazaar
+  )
     ? formData.propertyLaw.exportBazaar
     : formData.propertyLaw.exportBazaar
-      ? [formData.propertyLaw.exportBazaar]
-      : []
+    ? [formData.propertyLaw.exportBazaar]
+    : [];
 
   const [localFormData, setLocalFormData] = useState({
     companyType: formData.propertyLaw.companyLawType || "",
@@ -56,23 +58,25 @@ export default function ApplyTwo() {
     exportActivity: formData.propertyLaw.exportActivity ? "Bəli" : "Xeyr",
     exportMarkets: initialExportMarkets, // massiv
     document: "",
-  })
+  });
 
   const [errors, setErrors] = useState<{
-    companyType?: string
-    businessIndustry?: string
-    mainProducts?: string
-    exportActivity?: string
-    exportMarkets?: string
-    document?: string
-  }>({})
+    companyType?: string;
+    businessIndustry?: string;
+    mainProducts?: string;
+    exportActivity?: string;
+    exportMarkets?: string;
+    document?: string;
+  }>({});
 
   useEffect(() => {
-    const updatedExportMarkets: string[] = Array.isArray(formData.propertyLaw.exportBazaar)
+    const updatedExportMarkets: string[] = Array.isArray(
+      formData.propertyLaw.exportBazaar
+    )
       ? formData.propertyLaw.exportBazaar
       : formData.propertyLaw.exportBazaar
-        ? [formData.propertyLaw.exportBazaar]
-        : []
+      ? [formData.propertyLaw.exportBazaar]
+      : [];
 
     setLocalFormData({
       companyType: formData.propertyLaw.companyLawType || "",
@@ -81,91 +85,99 @@ export default function ApplyTwo() {
       exportActivity: formData.propertyLaw.exportActivity ? "Bəli" : "Xeyr",
       exportMarkets: updatedExportMarkets,
       document: "",
-    })
-  }, [formData])
+    });
+  }, [formData]);
 
   useEffect(() => {
-    const savedData = localStorage.getItem("formData")
+    const savedData = localStorage.getItem("formData");
     if (savedData) {
       try {
-        const parsedData = JSON.parse(savedData) as FormData
-        setFormData(parsedData)
+        const parsedData = JSON.parse(savedData) as FormData;
+        setFormData(parsedData);
 
-        const savedExportMarkets: string[] = Array.isArray(parsedData.propertyLaw?.exportBazaar)
+        const savedExportMarkets: string[] = Array.isArray(
+          parsedData.propertyLaw?.exportBazaar
+        )
           ? parsedData.propertyLaw.exportBazaar
           : parsedData.propertyLaw?.exportBazaar
-            ? [parsedData.propertyLaw.exportBazaar]
-            : []
+          ? [parsedData.propertyLaw.exportBazaar]
+          : [];
 
         setLocalFormData({
           companyType: parsedData.propertyLaw?.companyLawType || "",
           businessIndustry: parsedData.propertyLaw?.businessOperations || "",
           mainProducts: parsedData.propertyLaw?.products || "",
-          exportActivity: parsedData.propertyLaw?.exportActivity ? "Bəli" : "Xeyr",
+          exportActivity: parsedData.propertyLaw?.exportActivity
+            ? "Bəli"
+            : "Xeyr",
           exportMarkets: savedExportMarkets,
           document: "",
-        })
+        });
       } catch (error) {
-        console.error("Error parsing saved form data:", error)
+        console.error("Error parsing saved form data:", error);
       }
     }
-  }, [setFormData])
+  }, [setFormData]);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target;
 
     setLocalFormData((prev) => ({
       ...prev,
       [name]: value,
-    }))
+    }));
 
     // Update errors on input change to remove error once fixed
     setErrors((prev) => ({
       ...prev,
       [name]: undefined,
-    }))
+    }));
 
-    const updatedFormData = { ...formData }
+    const updatedFormData = { ...formData };
 
     switch (name) {
       case "companyType":
-        updatedFormData.propertyLaw.companyLawType = value
-        break
+        updatedFormData.propertyLaw.companyLawType = value;
+        break;
       case "businessIndustry":
-        updatedFormData.propertyLaw.businessOperations = value
-        break
+        updatedFormData.propertyLaw.businessOperations = value;
+        break;
       case "mainProducts":
-        updatedFormData.propertyLaw.products = value
-        break
+        updatedFormData.propertyLaw.products = value;
+        break;
       case "exportActivity":
-        updatedFormData.propertyLaw.exportActivity = value === "Bəli"
-        break
+        updatedFormData.propertyLaw.exportActivity = value === "Bəli";
+        break;
       case "document":
-        break
+        break;
       default:
-        break
+        break;
     }
 
-    setFormData(updatedFormData)
-    localStorage.setItem("formData", JSON.stringify(updatedFormData))
-  }
+    setFormData(updatedFormData);
+    localStorage.setItem("formData", JSON.stringify(updatedFormData));
+  };
 
-  const handleCountryChange = (selectedOptions: MultiValue<{ label: string; value: string }>) => {
-    let countries: string[] = []
+  const handleCountryChange = (
+    selectedOptions: MultiValue<{ label: string; value: string }>
+  ) => {
+    let countries: string[] = [];
     if (Array.isArray(selectedOptions)) {
-      countries = selectedOptions.map((option) => option.label)
+      countries = selectedOptions.map((option) => option.label);
     }
 
     setLocalFormData((prev) => ({
       ...prev,
       exportMarkets: countries,
-    }))
+    }));
 
     // Remove error on valid change
     setErrors((prev) => ({
       ...prev,
       exportMarkets: undefined,
-    }))
+    }));
 
     const updatedFormData = {
       ...formData,
@@ -173,50 +185,56 @@ export default function ApplyTwo() {
         ...formData.propertyLaw,
         exportBazaar: countries,
       },
-    }
+    };
 
-    setFormData(updatedFormData)
-    localStorage.setItem("formData", JSON.stringify(updatedFormData))
-  }
+    setFormData(updatedFormData);
+    localStorage.setItem("formData", JSON.stringify(updatedFormData));
+  };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
+    const file = e.target.files?.[0];
     if (file) {
       setLocalFormData((prev) => ({
         ...prev,
         document: file.name,
-      }))
+      }));
 
       // Remove error if any
       setErrors((prev) => ({
         ...prev,
         document: undefined,
-      }))
+      }));
     }
-  }
+  };
 
   // Form validasiyası
   const validateForm = () => {
-    const newErrors: typeof errors = {}
+    const newErrors: typeof errors = {};
 
     if (!localFormData.companyType.trim()) {
-      newErrors.companyType = "Bu sahə doldurulmalıdır."
+      newErrors.companyType = page.companyTypeRequired[language];
     }
 
     if (!localFormData.businessIndustry.trim()) {
-      newErrors.businessIndustry = "Bu sahə seçilməlidir."
+      newErrors.businessIndustry = page.businessIndustryRequired[language];
     }
 
     if (!localFormData.mainProducts.trim()) {
-      newErrors.mainProducts = "Bu sahə doldurulmalıdır."
+      newErrors.mainProducts = page.mainProductsRequired[language];
     }
 
-    if (localFormData.exportActivity !== "Bəli" && localFormData.exportActivity !== "Xeyr") {
-      newErrors.exportActivity = "Zəhmət olmasa seçim edin."
+    if (
+      localFormData.exportActivity !== "Bəli" &&
+      localFormData.exportActivity !== "Xeyr"
+    ) {
+      newErrors.exportActivity = page.exportActivityRequired[language];
     }
 
-    if (!localFormData.exportMarkets || localFormData.exportMarkets.length === 0) {
-      newErrors.exportMarkets = "Minimum 1 ölkə seçilməlidir."
+    if (
+      !localFormData.exportMarkets ||
+      localFormData.exportMarkets.length === 0
+    ) {
+      newErrors.exportMarkets = page.exportMarketsRequired[language];
     }
 
     // Əgər sən sənədin yüklənməsini mütləq etmək istəyirsənsə, burada əlavə et.
@@ -225,25 +243,59 @@ export default function ApplyTwo() {
     //   newErrors.document = "Sənəd yüklənməlidir."
     // }
 
-    setErrors(newErrors)
+    setErrors(newErrors);
 
-    return Object.keys(newErrors).length === 0
-  }
+    return Object.keys(newErrors).length === 0;
+  };
 
-  const handleGoBack = () => navigate("/apply")
+  useEffect(() => {
+    if (Object.keys(errors).length > 0) {
+      const translatedErrors: typeof errors = {};
+
+      if (errors.companyType) {
+        translatedErrors.companyType = page.companyTypeRequired[language];
+      }
+
+      if (errors.businessIndustry) {
+        translatedErrors.businessIndustry =
+          page.businessIndustryRequired[language];
+      }
+
+      if (errors.mainProducts) {
+        translatedErrors.mainProducts = page.mainProductsRequired[language];
+      }
+
+      if (errors.exportActivity) {
+        translatedErrors.exportActivity = page.exportActivityRequired[language];
+      }
+
+      if (errors.exportMarkets) {
+        translatedErrors.exportMarkets = page.exportMarketsRequired[language];
+      }
+
+      // Optional for document if you're validating it
+      // if (errors.document) {
+      //   translatedErrors.document = page.documentRequired[language];
+      // }
+
+      setErrors(translatedErrors);
+    }
+  }, [language]);
+
+  const handleGoBack = () => navigate("/apply");
   const handleGoNext = () => {
     if (validateForm()) {
-      navigate("/apply/three")
+      navigate("/apply/three");
     } else {
       // İstəyə bağlı: səhv olan ilk sahəyə scroll
-      const firstError = document.querySelector(".input-error")
-      firstError?.scrollIntoView({ behavior: "smooth" })
+      const firstError = document.querySelector(".input-error");
+      firstError?.scrollIntoView({ behavior: "smooth" });
     }
-  }
+  };
 
   const selectedOptions = options.filter((option) =>
     localFormData.exportMarkets.includes(option.label)
-  )
+  );
 
   return (
     <>
@@ -252,7 +304,9 @@ export default function ApplyTwo() {
         <ApplySteps step={2} />
 
         <div className="text-center mb-8 relative z-20">
-          <h1 className="text-2xl md:text-3xl font-medium">{page.title[language]}</h1>
+          <h1 className="text-2xl md:text-3xl font-medium">
+            {page.title[language]}
+          </h1>
         </div>
 
         <div className="w-full max-w-2xl space-y-4 sm:space-y-6 relative z-20 px-4 sm:px-6">
@@ -265,12 +319,19 @@ export default function ApplyTwo() {
               value={localFormData.companyType}
               onChange={handleInputChange}
               className={`w-full bg-transparent rounded-lg p-2 sm:p-3 text-xs sm:text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 transition duration-300
-                ${errors.companyType ? "border border-red-500" : "border border-gray-700"}`}
+                ${
+                  errors.companyType
+                    ? "border border-red-500"
+                    : "border border-gray-700"
+                }`}
               aria-invalid={!!errors.companyType}
               aria-describedby="companyType-error"
             />
             {errors.companyType && (
-              <p id="companyType-error" className="text-red-500 text-xs mt-1 input-error">
+              <p
+                id="companyType-error"
+                className="text-red-500 text-xs mt-1 input-error"
+              >
                 {errors.companyType}
               </p>
             )}
@@ -278,20 +339,29 @@ export default function ApplyTwo() {
 
           {/* Business Industry */}
           <div className="space-y-2">
-            <label className="text-sm">{page.businessIndustry.label[language]}</label>
+            <label className="text-sm">
+              {page.businessIndustry.label[language]}
+            </label>
             <select
               name="businessIndustry"
               value={localFormData.businessIndustry}
               onChange={handleInputChange}
               className={`w-full bg-[#131021] rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300
-                ${errors.businessIndustry ? "border border-red-500" : "border border-gray-700"}`}
+                ${
+                  errors.businessIndustry
+                    ? "border border-red-500"
+                    : "border border-gray-700"
+                }`}
               aria-invalid={!!errors.businessIndustry}
               aria-describedby="businessIndustry-error"
             >
               <option className="text-white" value="">
                 {page.businessIndustry.placeholder[language]}
               </option>
-              <option className="text-white" value="Təmsil etdiyimiz sənayə sektoru">
+              <option
+                className="text-white"
+                value="Təmsil etdiyimiz sənayə sektoru"
+              >
                 {page.businessIndustry.options.representedIndustry[language]}
               </option>
               <option className="text-white" value="Qida və içkilər">
@@ -306,11 +376,25 @@ export default function ApplyTwo() {
               <option className="text-white" value="Metallurgiya">
                 {page.businessIndustry.options.metallurgy[language]}
               </option>
-              <option className="text-white" value="Maşın və avadanlıqların təmiri və quraşdırılması">
-                {page.businessIndustry.options.machineRepairAndInstallation[language]}
+              <option
+                className="text-white"
+                value="Maşın və avadanlıqların təmiri və quraşdırılması"
+              >
+                {
+                  page.businessIndustry.options.machineRepairAndInstallation[
+                    language
+                  ]
+                }
               </option>
-              <option className="text-white" value="Kauçuk və plastik məhsullar">
-                {page.businessIndustry.options.rubberAndPlasticProducts[language]}
+              <option
+                className="text-white"
+                value="Kauçuk və plastik məhsullar"
+              >
+                {
+                  page.businessIndustry.options.rubberAndPlasticProducts[
+                    language
+                  ]
+                }
               </option>
               <option className="text-white" value="Tekstil">
                 {page.businessIndustry.options.textile[language]}
@@ -323,7 +407,10 @@ export default function ApplyTwo() {
               </option>
             </select>
             {errors.businessIndustry && (
-              <p id="businessIndustry-error" className="text-red-500 text-xs mt-1 input-error">
+              <p
+                id="businessIndustry-error"
+                className="text-red-500 text-xs mt-1 input-error"
+              >
                 {errors.businessIndustry}
               </p>
             )}
@@ -338,12 +425,19 @@ export default function ApplyTwo() {
               value={localFormData.mainProducts}
               onChange={handleInputChange}
               className={`w-full bg-transparent rounded-lg p-2 sm:p-3 text-xs sm:text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 transition duration-300
-                ${errors.mainProducts ? "border border-red-500" : "border border-gray-700"}`}
+                ${
+                  errors.mainProducts
+                    ? "border border-red-500"
+                    : "border border-gray-700"
+                }`}
               aria-invalid={!!errors.mainProducts}
               aria-describedby="mainProducts-error"
             />
             {errors.mainProducts && (
-              <p id="mainProducts-error" className="text-red-500 text-xs mt-1 input-error">
+              <p
+                id="mainProducts-error"
+                className="text-red-500 text-xs mt-1 input-error"
+              >
                 {errors.mainProducts}
               </p>
             )}
@@ -372,7 +466,11 @@ export default function ApplyTwo() {
                       stroke="currentColor"
                       strokeWidth={3}
                     >
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M5 13l4 4L19 7"
+                      />
                     </svg>
                   )}
                 </span>
@@ -398,7 +496,11 @@ export default function ApplyTwo() {
                       stroke="currentColor"
                       strokeWidth={3}
                     >
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M5 13l4 4L19 7"
+                      />
                     </svg>
                   )}
                 </span>
@@ -406,7 +508,9 @@ export default function ApplyTwo() {
               </label>
             </div>
             {errors.exportActivity && (
-              <p className="text-red-500 text-xs mt-1 input-error">{errors.exportActivity}</p>
+              <p className="text-red-500 text-xs mt-1 input-error">
+                {errors.exportActivity}
+              </p>
             )}
           </div>
 
@@ -418,14 +522,16 @@ export default function ApplyTwo() {
               value={selectedOptions}
               onChange={(selected) => {
                 if (selected && selected.length > 4) {
-                  alert("Sadəcə maksimum 4 ölkə seçə bilərsiniz!")
-                  return
+                  alert(page.exportMarketsAlert[language]);
+                  return;
                 }
-                handleCountryChange(selected)
+                handleCountryChange(selected);
               }}
-              className={`w-full ${errors.exportMarkets ? "border border-red-500 rounded" : ""}`}
+              className={`w-full ${
+                errors.exportMarkets ? "border border-red-500 rounded" : ""
+              }`}
               classNamePrefix="react-select"
-              placeholder="Ölkə seçin (maksimum 4)"
+              placeholder={page.exportMarketsPlaceholder[language]}
               isClearable
               isMulti
               closeMenuOnSelect={false}
@@ -462,7 +568,9 @@ export default function ApplyTwo() {
               }}
             />
             {errors.exportMarkets && (
-              <p className="text-red-500 text-xs mt-1 input-error">{errors.exportMarkets}</p>
+              <p className="text-red-500 text-xs mt-1 input-error">
+                {errors.exportMarkets}
+              </p>
             )}
           </div>
 
@@ -477,15 +585,19 @@ export default function ApplyTwo() {
               className="w-full bg-transparent border border-gray-700 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300"
             />
             {localFormData.document && (
-              <p className="text-xs text-gray-400 mt-1">Seçilmiş fayl: {localFormData.document}</p>
+              <p className="text-xs text-gray-400 mt-1">
+                {page.selectedFile[language]} {localFormData.document}
+              </p>
             )}
             <div>
-              <p className="text-sm text-gray-400">Yüklənən fayl 50 mb - dan çox ola bilməz. </p>
+              <p className="text-sm text-gray-400">
+                {page.fileLimitNote[language]}{" "}
+              </p>
             </div>
           </div>
 
           {/* Buttons */}
-               <div className="flex justify-between mt-6 sm:mt-8 gap-4">
+          <div className="flex justify-between mt-6 sm:mt-8 gap-4">
             <button
               type="button"
               onClick={handleGoBack}
@@ -501,8 +613,8 @@ export default function ApplyTwo() {
               {buttons.nextBtn[language]}
             </button>
           </div>
-                  </div>
-                </div>
-              </>
-            )
-          }
+        </div>
+      </div>
+    </>
+  );
+}
