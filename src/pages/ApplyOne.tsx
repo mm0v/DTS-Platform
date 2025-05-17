@@ -4,8 +4,8 @@ import React, { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import BackgroundVideo from "../components/BackgroundVideo";
 import { FormContext } from "../context/FormContext";
-import 'react-international-phone/style.css';
-import { PhoneInput } from 'react-international-phone';
+import "react-international-phone/style.css";
+import { PhoneInput } from "react-international-phone";
 import { useLanguage } from "../context/LanguageContext";
 import ApplySteps from "../components/ApplySteps";
 
@@ -103,49 +103,49 @@ export default function ApplyOne() {
 
   const handleNext = () => {
     const newErrors: Record<string, string> = {};
-
+    let companyNameEmpty = false;
     if (!localFormData.companyName.trim()) {
+      companyNameEmpty = true;
       newErrors.companyName = page.companyNameRequired[language];
     }
+
     if (!localFormData.vatNumber.trim()) {
-      newErrors.vatNumber = page.companyNameRequired
+      newErrors.vatNumber = companyNameEmpty
         ? page.companyNameRequired[language]
-        : "Zəhmət olmasa Vergi nömrəsini daxil edin.";
+        : page.vatNumberRequired[language];
     }
     if (!localFormData.foundingDate.trim()) {
-      newErrors.foundingDate = "Zəhmət olmasa yaradılma ilini daxil edin.";
+      newErrors.foundingDate = page.foundingDateRequired[language];
     }
     if (!localFormData.companySize.trim()) {
-      newErrors.companySize = page.companyNameRequired
+      newErrors.companySize = companyNameEmpty
         ? page.companyNameRequired[language]
-        : "Zəhmət olmasa şirkət ölçüsünü seçin.";
+        : page.companySizeRequired[language];
     }
     if (!localFormData.annualTurnover.trim()) {
-      newErrors.annualTurnover =
-        "Zəhmət olmasa illik dövriyyəni seçin.";
+      newErrors.annualTurnover = page.annualTurnoverRequired[language];
     }
     if (!localFormData.companyAddress.trim()) {
-      newErrors.companyAddress = page.companyNameRequired
+      newErrors.companyAddress = companyNameEmpty
         ? page.companyNameRequired[language]
-        : "Zəhmət olmasa ünvanı daxil edin.";
+        : page.companyAddressRequired[language];
     }
     if (!localFormData.location.trim()) {
-      newErrors.location =
-        "Zəhmət olmasa şəhər və regionu daxil edin.";
+      newErrors.location = page.locationRequired[language];
     }
     if (!localFormData.website.trim()) {
-      newErrors.website = "Zəhmət olmasa sayt ünvanını daxil edin.";
+      newErrors.website = page.websiteRequired[language];
     }
     if (!localFormData.contactPerson.trim()) {
-      newErrors.contactPerson = page.companyNameRequired
+      newErrors.contactPerson = companyNameEmpty
         ? page.companyNameRequired[language]
-        : "Zəhmət olmasa əlaqə şəxsi daxil edin.";
+        : page.contactPersonRequired[language];
     }
     if (!localFormData.email.trim()) {
-      newErrors.email = "Zəhmət olmasa email daxil edin.";
+      newErrors.email = page.emailRequired[language];
     }
     if (!localFormData.phone.trim()) {
-      newErrors.phone = "Zəhmət olmasa əlaqə nömrəsini daxil edin.";
+      newErrors.phone = page.phoneRequired[language];
     }
 
     if (Object.keys(newErrors).length > 0) {
@@ -157,6 +157,48 @@ export default function ApplyOne() {
     navigate("/apply/two");
   };
 
+  useEffect(() => {
+    if (Object.keys(errors).length === 0) return;
+
+    const updatedErrors: Record<string, string> = {};
+
+    if (errors.companyName) {
+      updatedErrors.companyName = page.companyNameRequired[language];
+    }
+    if (errors.vatNumber) {
+      updatedErrors.vatNumber = page.vatNumberRequired[language];
+    }
+    if (errors.foundingDate) {
+      updatedErrors.foundingDate = page.foundingDateRequired[language];
+    }
+    if (errors.companySize) {
+      updatedErrors.companySize = page.companySizeRequired[language];
+    }
+    if (errors.annualTurnover) {
+      updatedErrors.annualTurnover = page.annualTurnoverRequired[language];
+    }
+    if (errors.companyAddress) {
+      updatedErrors.companyAddress = page.companyAddressRequired[language];
+    }
+    if (errors.location) {
+      updatedErrors.location = page.locationRequired[language];
+    }
+    if (errors.website) {
+      updatedErrors.website = page.websiteRequired[language];
+    }
+    if (errors.contactPerson) {
+      updatedErrors.contactPerson = page.contactPersonRequired[language];
+    }
+    if (errors.email) {
+      updatedErrors.email = page.emailRequired[language];
+    }
+    if (errors.phone) {
+      updatedErrors.phone = page.phoneRequired[language];
+    }
+
+    setErrors(updatedErrors);
+  }, [language]);
+
   return (
     <>
       <BackgroundVideo />
@@ -164,7 +206,9 @@ export default function ApplyOne() {
         <ApplySteps step={1} />
 
         <div className="text-center mb-8 relative z-20">
-          <h1 className="text-2xl md:text-3xl font-medium">{page.title[language]}</h1>
+          <h1 className="text-2xl md:text-3xl font-medium">
+            {page.title[language]}
+          </h1>
         </div>
 
         <div className="w-full max-w-2xl space-y-6 relative z-20">
@@ -176,7 +220,9 @@ export default function ApplyOne() {
               name="companyName"
               value={localFormData.companyName}
               onChange={handleInputChange}
-              className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${errors.companyName ? "border-red-500 focus:ring-red-500" : "border-gray-700 focus:ring-blue-500"
+              className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${errors.companyName
+                  ? "border-red-500 focus:ring-red-500"
+                  : "border-gray-700 focus:ring-blue-500"
                 }`}
             />
             {errors.companyName && (
@@ -193,7 +239,9 @@ export default function ApplyOne() {
                 name="vatNumber"
                 value={localFormData.vatNumber}
                 onChange={handleInputChange}
-                className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${errors.vatNumber ? "border-red-500 focus:ring-red-500" : "border-gray-700 focus:ring-blue-500"
+                className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${errors.vatNumber
+                    ? "border-red-500 focus:ring-red-500"
+                    : "border-gray-700 focus:ring-blue-500"
                   }`}
               />
               {errors.vatNumber && (
@@ -211,7 +259,9 @@ export default function ApplyOne() {
                 onChange={handleInputChange}
                 max={new Date().getFullYear()}
                 placeholder="YYYY"
-                className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${errors.foundingDate ? "border-red-500 focus:ring-red-500" : "border-gray-700 focus:ring-blue-500"
+                className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${errors.foundingDate
+                    ? "border-red-500 focus:ring-red-500"
+                    : "border-gray-700 focus:ring-blue-500"
                   }`}
               />
               {errors.foundingDate && (
@@ -227,22 +277,24 @@ export default function ApplyOne() {
                 name="companySize"
                 value={localFormData.companySize}
                 onChange={handleInputChange}
-                className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${errors.companySize ? "border-red-500 focus:ring-red-500" : "border-gray-700 focus:ring-blue-500"
+                className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${errors.companySize
+                    ? "border-red-500 focus:ring-red-500"
+                    : "border-gray-700 focus:ring-blue-500"
                   }`}
               >
-                <option className="text-black" value="">
+                <option className="text-white bg-[#070618]" value="">
                   {page.placeholder[language]}
                 </option>
-                <option className="text-black" value="10">
+                <option className="text-white bg-[#070618]" value="10">
                   1-10
                 </option>
-                <option className="text-black" value="50">
+                <option className="text-white bg-[#070618]" value="50">
                   11-50
                 </option>
-                <option className="text-black" value="250">
+                <option className="text-white bg-[#070618]" value="250">
                   51-250
                 </option>
-                <option className="text-black" value="350">
+                <option className="text-white bg-[#070618]" value="350">
                   250+
                 </option>
               </select>
@@ -253,24 +305,28 @@ export default function ApplyOne() {
 
             {/* Annual Turnover */}
             <div className="flex-1 space-y-2">
-              <label className="text-sm">{page.annualTurnover[language]} </label>
+              <label className="text-sm">
+                {page.annualTurnover[language]}{" "}
+              </label>
               <select
                 name="annualTurnover"
                 value={localFormData.annualTurnover}
                 onChange={handleInputChange}
-                className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${errors.annualTurnover ? "border-red-500 focus:ring-red-500" : "border-gray-700 focus:ring-blue-500"
+                className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${errors.annualTurnover
+                    ? "border-red-500 focus:ring-red-500"
+                    : "border-gray-700 focus:ring-blue-500"
                   }`}
               >
-                <option className="text-black" value="">
+                <option className="text-white bg-[#070618]" value="">
                   {page.placeholder[language]}
                 </option>
-                <option className="text-black" value="3">
+                <option className="text-white bg-[#070618]" value="3">
                   {page.annualTurnoverOption1[language]}
                 </option>
-                <option className="text-black" value="30">
+                <option className="text-white bg-[#070618]" value="30">
                   {page.annualTurnoverOption2[language]}
                 </option>
-                <option className="text-black" value="60">
+                <option className="text-white bg-[#070618]" value="60">
                   {page.annualTurnoverOption3[language]}
                 </option>
               </select>
@@ -278,10 +334,7 @@ export default function ApplyOne() {
                 <p className="text-red-500 text-sm">{errors.annualTurnover}</p>
               )}
             </div>
-
           </div>
-
-
 
           {/* Company Address */}
           <div className="space-y-2">
@@ -291,7 +344,9 @@ export default function ApplyOne() {
               name="companyAddress"
               value={localFormData.companyAddress}
               onChange={handleInputChange}
-              className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${errors.companyAddress ? "border-red-500 focus:ring-red-500" : "border-gray-700 focus:ring-blue-500"
+              className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${errors.companyAddress
+                  ? "border-red-500 focus:ring-red-500"
+                  : "border-gray-700 focus:ring-blue-500"
                 }`}
             />
             {errors.companyAddress && (
@@ -307,7 +362,9 @@ export default function ApplyOne() {
               name="location"
               value={localFormData.location}
               onChange={handleInputChange}
-              className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${errors.location ? "border-red-500 focus:ring-red-500" : "border-gray-700 focus:ring-blue-500"
+              className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${errors.location
+                  ? "border-red-500 focus:ring-red-500"
+                  : "border-gray-700 focus:ring-blue-500"
                 }`}
             />
             {errors.location && (
@@ -323,7 +380,9 @@ export default function ApplyOne() {
               name="website"
               value={localFormData.website}
               onChange={handleInputChange}
-              className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${errors.website ? "border-red-500 focus:ring-red-500" : "border-gray-700 focus:ring-blue-500"
+              className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${errors.website
+                  ? "border-red-500 focus:ring-red-500"
+                  : "border-gray-700 focus:ring-blue-500"
                 }`}
             />
             {errors.website && (
@@ -338,7 +397,9 @@ export default function ApplyOne() {
               name="contactPerson"
               value={localFormData.contactPerson}
               onChange={handleInputChange}
-              className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${errors.contactPerson ? "border-red-500 focus:ring-red-500" : "border-gray-700 focus:ring-blue-500"
+              className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${errors.contactPerson
+                  ? "border-red-500 focus:ring-red-500"
+                  : "border-gray-700 focus:ring-blue-500"
                 }`}
             />
             {errors.contactPerson && (
@@ -347,8 +408,6 @@ export default function ApplyOne() {
           </div>
 
           <div className="flex gap-4">
-
-
             {/* Email */}
             <div className="flex-1 space-y-2">
               <label className="text-sm">{page.email[language]}</label>
@@ -357,7 +416,9 @@ export default function ApplyOne() {
                 name="email"
                 value={localFormData.email}
                 onChange={handleInputChange}
-                className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${errors.email ? "border-red-500 focus:ring-red-500" : "border-gray-700 focus:ring-blue-500"
+                className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${errors.email
+                    ? "border-red-500 focus:ring-red-500"
+                    : "border-gray-700 focus:ring-blue-500"
                   }`}
               />
               {errors.email && (
@@ -373,7 +434,8 @@ export default function ApplyOne() {
                 defaultCountry="az"
                 value={localFormData.phone}
                 onChange={handlePhoneChange}
-                className={`w-full ${errors.phone ? "border border-red-500 rounded" : ""}`}
+                className={`w-full ${errors.phone ? "border border-red-500 rounded" : ""
+                  }`}
               />
               {errors.phone && (
                 <p className="text-red-500 text-sm">{errors.phone}</p>

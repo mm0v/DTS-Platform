@@ -17,7 +17,7 @@ export const pagesTranslations = {
       EN: "Apply",
     },
     companiesTitle: {
-      AZ: "Proqrama uğurla başa vuran şirkətlər",
+      AZ: "Proqramı uğurla başa vuran şirkətlər",
       EN: "Companies that successfully completed the program",
     },
     missionTitle: {
@@ -138,15 +138,33 @@ export const pagesTranslations = {
         list: {
           AZ: [
             "İstehsalat",
-            "İnformasiya texnologiyaları və rabitə",
+            "İnformasiya texnologiyaları",
             "Səhiyyə",
+            "Daşınmaz əmlak",
             "Digər uyğun sahələr",
           ],
           EN: [
             "Manufacturing",
-            "Information technology and communications",
+            "Information technology",
             "Healthcare",
+            "Real estate",
             "Other eligible sectors",
+          ],
+        },
+        list2: {
+          AZ: [
+            "Mədənçilik",
+            "Nəqliyyat",
+            "Tikinti",
+            "Kənd təsərrüfatı",
+            "Təhsil",
+          ],
+          EN: [
+            "Mining ",
+            "Transportation",
+            "Construction",
+            "Agriculture ",
+            "Education ",
           ],
         },
       },
@@ -216,8 +234,8 @@ export const pagesTranslations = {
       EN: "Select",
     },
     annualTurnover: {
-      AZ: "İllik dövriyyə (AZN)",
-      EN: "Annual turnover (AZN)",
+      AZ: "İllik dövriyyə (AZN - Milyon)",
+      EN: "Annual turnover (AZN - Million)",
     },
     annualTurnoverOption1: {
       AZ: "3M-ə qədər",
@@ -258,6 +276,46 @@ export const pagesTranslations = {
     companyNameRequired: {
       AZ: "Şirkət adı tələb olunur, zəhmət olmasa daxil edin.",
       EN: "Company name is required, please enter it.",
+    },
+    vatNumberRequired: {
+      AZ: "Zəhmət olmasa Vergi nömrəsini daxil edin.",
+      EN: "Please enter the VAT number.",
+    },
+    foundingDateRequired: {
+      AZ: "Zəhmət olmasa yaradılma ilini daxil edin.",
+      EN: "Please enter the founding date.",
+    },
+    companySizeRequired: {
+      AZ: "Zəhmət olmasa şirkət ölçüsünü seçin.",
+      EN: "Please select the company size.",
+    },
+    annualTurnoverRequired: {
+      AZ: "Zəhmət olmasa illik dövriyyəni seçin.",
+      EN: "Please select the annual turnover.",
+    },
+    companyAddressRequired: {
+      AZ: "Zəhmət olmasa ünvanı daxil edin.",
+      EN: "Please enter the company address.",
+    },
+    locationRequired: {
+      AZ: "Zəhmət olmasa şəhər və regionu daxil edin.",
+      EN: "Please enter the city and region.",
+    },
+    websiteRequired: {
+      AZ: "Zəhmət olmasa sayt ünvanını daxil edin.",
+      EN: "Please enter the website address.",
+    },
+    contactPersonRequired: {
+      AZ: "Zəhmət olmasa əlaqə şəxsi daxil edin.",
+      EN: "Please enter the contact person.",
+    },
+    emailRequired: {
+      AZ: "Zəhmət olmasa email daxil edin.",
+      EN: "Please enter the email.",
+    },
+    phoneRequired: {
+      AZ: "Zəhmət olmasa əlaqə nömrəsini daxil edin.",
+      EN: "Please enter the phone number.",
     },
   },
   apply2: {
@@ -342,8 +400,44 @@ export const pagesTranslations = {
       EN: "Markets where your products are exported",
     },
     document: {
-      AZ: "Təqdimedici sənəd (.doc, .docx, .pdf)",
-      EN: "Presentation document (.doc, .docx, .pdf)",
+      AZ: "Təsdiqedici sənəd (.doc, .docx, .pdf)",
+      EN: "Verification document (.doc, .docx, .pdf)",
+    },
+    exportMarketsPlaceholder: {
+      AZ: "Ölkə seçin (maksimum 4)",
+      EN: "Select countries (maximum 4)",
+    },
+    exportMarketsAlert: {
+      AZ: "Sadəcə maksimum 4 ölkə seçə bilərsiniz!",
+      EN: "You can only select up to 4 countries!",
+    },
+    selectedFile: {
+      AZ: "Seçilmiş fayl",
+      EN: "Selected file",
+    },
+    fileLimitNote: {
+      AZ: "Yüklənən fayl 50 mb - dan çox ola bilməz.",
+      EN: "Uploaded file cannot exceed 50 MB.",
+    },
+    companyTypeRequired: {
+      AZ: "Bu sahə doldurulmalıdır.",
+      EN: "This field is required.",
+    },
+    businessIndustryRequired: {
+      AZ: "Bu sahə seçilməlidir.",
+      EN: "This field must be selected.",
+    },
+    mainProductsRequired: {
+      AZ: "Bu sahə doldurulmalıdır.",
+      EN: "This field is required.",
+    },
+    exportActivityRequired: {
+      AZ: "Zəhmət olmasa seçim edin.",
+      EN: "Please make a selection.",
+    },
+    exportMarketsRequired: {
+      AZ: "Minimum 1 ölkə seçilməlidir.",
+      EN: "At least one country must be selected.",
     },
   },
   apply3: {
@@ -357,16 +451,24 @@ export const pagesTranslations = {
     },
     digitalLevelOptions: {
       level1: {
-        AZ: "Başlanğıc",
-        EN: "Basic",
+        AZ: "1 - Heç bir rəqəmsal istifadə olunmayıb.",
+        EN: "1 - No digitalization was used",
       },
       level2: {
-        AZ: "Orta",
-        EN: "Intermediate",
+        AZ: "2",
+        EN: "2",
       },
       level3: {
-        AZ: "İnkişaf etmiş",
-        EN: "Advanced",
+        AZ: "3",
+        EN: "3",
+      },
+      level4: {
+        AZ: "4",
+        EN: "4",
+      },
+      level5: {
+        AZ: "5 - Tamamilə rəqəmsal və avtomatlaşdırılmış proseslər",
+        EN: "5 - Fully digital and automated processes",
       },
     },
     digitalTools: {
@@ -431,6 +533,20 @@ export const pagesTranslations = {
         EN: "You can enter minimum 3 characters, maximum 500 characters.",
       },
     },
+    errorMessages: {
+      required: {
+        AZ: "Bu sahə mütləq doldurulmalıdır.",
+        EN: "This field is required.",
+      },
+      minLength: {
+        AZ: "Bu sahə mütləq doldurulmalıdır və ən azı 3 simvol olmalıdır.",
+        EN: "This field is required and must be at least 3 characters.",
+      },
+      formError: {
+        AZ: "Zəhmət olmasa bütün sahələri doldurun.",
+        EN: "Please fill in all fields.",
+      },
+    },
   },
   apply4: {
     title: {
@@ -473,6 +589,20 @@ export const pagesTranslations = {
         EN: "No",
       },
     },
+    errorMessages: {
+      requiredField: {
+        AZ: "Bu xananı doldurmaq məcburidir!",
+        EN: "This field is required!",
+      },
+      budgetRequired: {
+        AZ: "Maliyyə dəstəyi lazımdırsa, büdcə məbləğini qeyd edin!",
+        EN: "If financial support is needed, please specify the budget amount!",
+      },
+      formValidation: {
+        AZ: "Zəhmət olmasa bütün məcburi xanaları doldurun!",
+        EN: "Please fill in all required fields!",
+      },
+    },
   },
   apply5: {
     title: {
@@ -491,6 +621,10 @@ export const pagesTranslations = {
       AZ: "Yüklənən fayl 50 mb – dan çox ola bilməz.",
       EN: "The uploaded file cannot exceed 50 MB.",
     },
+    applyNeedText: {
+      AZ: "Müraciətinizlə bağlı əlavə təsdiqedici sənədlərə ehtiyac olacağı təqdirdə sizlərlə əlaqə saxlanılacaqdır.",
+      EN: "You will be contacted if additional supporting documents are needed regarding your application.",
+    },
     checkboxes: {
       confirmAccuracy: {
         AZ: "Təqdim olunan məlumatların doğruluğunu təsdiq edirəm.",
@@ -501,8 +635,8 @@ export const pagesTranslations = {
         EN: "I accept to be contacted by 4SIM regarding my application.",
       },
       termsAgreement: {
-        AZ: "İstifadə şərtləri və gizlilik şərtləri ilə razıyam.",
-        EN: "I agree with the terms of use and privacy terms.",
+        AZ: "İstifadə şərtləri və gizlilik şərtləri ilə razıyam (yüklə)",
+        EN: "I agree with the terms of use and privacy terms (download)",
       },
     },
     buttons: {
@@ -521,8 +655,8 @@ export const pagesTranslations = {
         EN: "Your application was submitted successfully!",
       },
       error: {
-        AZ: "Müraciət zamanı xəta baş verdi. Zəhmət olmasa yenidən cəhd edin.",
-        EN: "An error occurred during submission. Please try again.",
+        AZ: "Müraciət göndərilərkən xəta baş verdi. Zəhmət olmasa, yenidən cəhd edin.",
+        EN: "An error occurred while submitting the application. Please try again.",
       },
     },
     confirmModal: {
@@ -537,6 +671,16 @@ export const pagesTranslations = {
       yesBtn: {
         AZ: "Bəli",
         EN: "Yes",
+      },
+    },
+    thankYouModal: {
+      title: {
+        AZ: "Müraciətiniz üçün təşəkkür edirik!",
+        EN: "Thank you for your application!",
+      },
+      message: {
+        AZ: "Müraciətinizin nəticəsi barəsində qısa zamanda sizinlə əlaqə saxlanılacaqdır.",
+        EN: "You will be contacted shortly regarding the result of your application.",
       },
     },
   },

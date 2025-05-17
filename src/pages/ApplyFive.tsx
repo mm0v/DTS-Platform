@@ -1,3 +1,15 @@
+"use client";
+import React, { useState, useEffect, useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import { Download } from "lucide-react";
+import BackgroundVideo from "../components/BackgroundVideo";
+import { FormContext } from "../context/FormContext";
+import type { FormContextType } from "../context/FormContext";
+import { useLanguage } from "../context/LanguageContext";
+import ApplySteps from "../components/ApplySteps";
+import { motion, AnimatePresence } from "framer-motion";
+
+import { companyService } from "../services/companyService"; // yolunu düzəlt
 "use client"
 import type React from "react"
 import { useState, useEffect, useContext } from "react"
@@ -28,7 +40,7 @@ export default function ApplyFive() {
     throw new Error("ApplyFive must be used within a FormContext.Provider")
   }
 
-  const { setFormData, handleSubmit, isSubmitting, submitError, submitSuccess } = context
+  const { setFormData, handleSubmit, isSubmitting, submitError, submitSuccess } = context as FormContextType
   const [files, setFiles] = useState<FileState>({
     companyRegistry: null,
     financialReports: null,
@@ -40,6 +52,30 @@ export default function ApplyFive() {
     termsAgreement: false,
   })
 
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const allAgreementsChecked = Object.values(agreements).every(
+    (value) => value === true
+  );
+
+  // Modal visibility states
+  const [showConfirmModal, setShowConfirmModal] = useState<boolean>(false);
+  const [showThankYouModal, setShowThankYouModal] = useState<boolean>(false);
+
+  // download
+
+  const downloadPDF = (e: React.MouseEvent<HTMLLabelElement>) => {
+    e.preventDefault(); // Prevent default label behavior
+
+    // Create a link element to download the PDF
+    const link = document.createElement('a');
+    link.href = '/Privacy.pdf'; // Replace with your actual PDF path
+    link.download = 'Privacy.pdf'; // Name that will appear when downloading
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  // LocalStorage-dan faylları və razılıqları yüklə (ehtiyat üçün)
   const [showConfirmModal, setShowConfirmModal] = useState<boolean>(false)
   const [showThankYouModal, setShowThankYouModal] = useState<boolean>(false)
   const [submissionError, setSubmissionError] = useState<string | null>(null)
@@ -61,6 +97,24 @@ export default function ApplyFive() {
     // Save agreements to localStorage when they change
     localStorage.setItem("agreements", JSON.stringify(agreements))
   }, [agreements])
+    const savedFiles = JSON.parse(localStorage.getItem("files") || "{}");
+    const savedAgreements = JSON.parse(
+      localStorage.getItem("agreements") || "{}"
+    );
+    if (savedFiles.companyRegistry) {
+      setFiles((prev) => ({
+        ...prev,
+        companyRegistry: savedFiles.companyRegistry,
+      }));
+    }
+    if (savedFiles.financialReports) {
+      setFiles((prev) => ({
+        ...prev,
+        financialReports: savedFiles.financialReports,
+      }));
+    }
+    setAgreements(savedAgreements);
+  }, []);
 
   useEffect(() => {
     // Show thank you modal if submission was successful
@@ -104,14 +158,27 @@ export default function ApplyFive() {
       ...prev,
       [name as keyof AgreementState]: checked,
     }))
+    }));
+
+    // Make sure companyData exists and has declarationConsent
+    const updatedFormData = { ...formData };
+    if (!updatedFormData.companyData.declarationConsent) {
+      updatedFormData.companyData.declarationConsent = {
+        dataIsReal: false,
+        permitContact: false
+      };
+    }
 
     if (name === "confirmAccuracy") {
       setFormData((prev) => ({
         ...prev,
-        declarationConsent: {
-          ...prev.declarationConsent,
-          dataIsReal: checked,
-        },
+        companyData: {
+          ...prev.companyData,
+          declarationConsent: {
+            ...prev.companyData.declarationConsent,
+            dataIsReal: checked,
+          },
+        }
       }))
     } else if (name === "contactConsent") {
       setFormData((prev) => ({
@@ -121,6 +188,14 @@ export default function ApplyFive() {
           permitContact: checked,
         },
       }))
+        companyData: {
+          ...prev.companyData,
+          declarationConsent: {
+            ...prev.companyData.declarationConsent,
+            permitContact: checked,
+          },
+        }
+      }));
     }
   }
 
@@ -144,7 +219,78 @@ export default function ApplyFive() {
       setSubmissionError(null)
       await handleSubmit()
       // The thank you modal will be shown via the useEffect that watches submitSuccess
+    setIsSubmitting(true);
+
+    try {
+      // Handle the exportBazaar field - convert array to string if needed
+      const exportBazaar = formData.companyData.propertyLaw.exportBazaar;
+      const formattedExportBazaar = Array.isArray(exportBazaar)
+        ? exportBazaar.join(', ')
+        : exportBazaar;
+
+      // Correctly access properties from formData.companyData
+      const dataToSend = {
+        companyData: {
+          companyName: formData.companyData.companyName,
+          companyRegisterNumber: formData.companyData.companyRegisterNumber,
+          createYear: formData.companyData.createYear,
+          workerCount: formData.companyData.workerCount,
+          annualTurnover: formData.companyData.annualTurnover,
+          address: formData.companyData.address,
+          cityAndRegion: formData.companyData.cityAndRegion,
+          website: formData.companyData.website,
+          contactName: formData.companyData.contactName,
+          contactEmail: formData.companyData.contactEmail,
+          contactPhone: formData.companyData.contactPhone,
+        },
+        declarationConsent: formData.companyData.declarationConsent,
+        digitalLeadership: formData.companyData.digitalLeadership,
+        digitalReadiness: {
+          ...formData.companyData.digitalReadiness,
+          // Ensure digital level is a number
+          digitalLevel: Number(formData.companyData.digitalReadiness.digitalLevel),
+        },
+        financialNeeding: formData.companyData.financialNeeding,
+        propertyLaw: {
+          ...formData.companyData.propertyLaw,
+          // Use the formatted exportBazaar
+          exportBazaar: formattedExportBazaar,
+        },
+      };
+
+      // JSON məlumatı göndər (yalnız obyekt)
+      const dataToSubmit = {
+        companyRequest: dataToSend,
+      };
+
+      // Log files for debugging (can remove later)
+      if (files.companyRegistry || files.financialReports) {
+        console.log("Files are available but will not be submitted in this version:");
+        if (files.companyRegistry) console.log("- Company Registry File:", files.companyRegistry.name);
+        if (files.financialReports) console.log("- Financial Reports File:", files.financialReports.name);
+
+        // TODO: Implement file upload when API supports it
+        // For now, just notify the user that files will be sent separately
+        // alert(page.alerts.filesNotSubmitted ? page.alerts.filesNotSubmitted[language] : "Files have been saved but will need to be submitted separately.");
+      }
+
+      // Submit the JSON data
+      await companyService.submitCompanyData(dataToSubmit);
+
+      setShowConfirmModal(false);
+      setShowThankYouModal(true);
     } catch (error) {
+      console.error("Submission error:", error);
+      alert(page.alerts.error[language]);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setShowConfirmModal(true);
+  };
       console.error("Submission failed:", error)
       setSubmissionError(submitError || "Məlumatların göndərilməsi zamanı xəta baş verdi")
 
@@ -167,7 +313,7 @@ export default function ApplyFive() {
   return (
     <>
       <BackgroundVideo />
-      <div className="min-h-screen bg-[url('/images/space-background.jpg')] bg-cover bg-center bg-no-repeat text-white flex flex-col items-center justify-center py-10">
+      <div className="min-h-screen bg-cover bg-center bg-no-repeat text-white flex flex-col items-center justify-center py-10">
         <ApplySteps step={5} />
 
         {/* Confirmation Modal */}
@@ -186,7 +332,7 @@ export default function ApplyFive() {
                 exit={{ scale: 0.85, opacity: 0 }}
                 transition={{ duration: 0.25 }}
               >
-                <h2 className="text-white text-xl font-semibold text-center">Müraciətinizi təsdiq edirsinizmi?</h2>
+                <h2 className="text-white text-xl font-semibold text-center">{page.confirmModal.title[language]}</h2>
                 <button
                   onClick={handleConfirmModalClose}
                   className="absolute top-5 right-5 text-red-500 hover:text-red-600 transition-colors"
@@ -235,13 +381,16 @@ export default function ApplyFive() {
                     className="border border-red-500 text-red-500 py-3 px-10 rounded-lg hover:bg-red-50 transition font-medium"
                     disabled={isSubmitting}
                   >
-                    Xeyr
+                    {page.confirmModal.noBtn[language]}
                   </button>
                   <button
                     onClick={handleConfirmModalYes}
                     className="bg-green-500 text-white py-3 px-10 rounded-lg hover:bg-green-600 transition font-medium"
                     disabled={isSubmitting || retryCount >= 3}
                   >
+                    {isSubmitting
+                      ? page.buttons.submitting[language]
+                      : page.confirmModal.yesBtn[language]}
                     {isSubmitting ? (
                       <span className="flex items-center">
                         <svg
@@ -293,7 +442,11 @@ export default function ApplyFive() {
                 transition={{ duration: 0.25 }}
               >
                 <h2 className="text-white text-2xl font-bold">Müraciətiniz üçün təşəkkür edirik!</h2>
+                <h2 className="text-white text-2xl font-bold">
+                  {page.thankYouModal.title[language]}
+                </h2>
                 <p className="text-white text-base max-w-[360px] mx-auto">
+                  {page.thankYouModal.message[language]}
                   Müraciətinizin nəticəsi barəsində qısa zamanda sizinlə əlaqə saxlanılacaqdır.
                 </p>
 
@@ -361,7 +514,9 @@ export default function ApplyFive() {
                   onChange={(e) => handleFileChange(e, "companyRegistry")}
                 />
               </div>
-              <p className="text-sm text-gray-400">{page.fileFormatText[language]}</p>
+              <p className="text-sm text-gray-400">
+                {page.fileFormatText[language]}
+              </p>
             </div>
 
             {/* Financial reports file */}
@@ -392,7 +547,11 @@ export default function ApplyFive() {
                   onChange={(e) => handleFileChange(e, "financialReports")}
                 />
               </div>
-              <p className="text-sm text-gray-400">{page.fileFormatText[language]}</p>
+              <p className="text-sm text-gray-400">
+                {page.fileFormatText[language]}
+              </p>
+
+              <p className="text-sm text-[#F9F9F9]">{page.applyNeedText[language]}</p>
             </div>
 
             {/* Agreement checkboxes */}
@@ -406,7 +565,10 @@ export default function ApplyFive() {
                   onChange={handleCheckboxChange}
                   className="mt-1 h-4 w-4 text-blue-500 border-gray-600 rounded bg-transparent"
                 />
-                <label htmlFor="confirmAccuracy" className="ml-2 text-sm text-gray-400">
+                <label
+                  htmlFor="confirmAccuracy"
+                  className="ml-2 text-sm text-gray-400"
+                >
                   {page.checkboxes.confirmAccuracy[language]}
                 </label>
               </div>
@@ -419,7 +581,10 @@ export default function ApplyFive() {
                   onChange={handleCheckboxChange}
                   className="mt-1 h-4 w-4 text-blue-500 border-gray-600 rounded bg-transparent"
                 />
-                <label htmlFor="contactConsent" className="ml-2 text-sm text-gray-400">
+                <label
+                  htmlFor="contactConsent"
+                  className="ml-2 text-sm text-gray-400"
+                >
                   {page.checkboxes.contactConsent[language]}
                 </label>
               </div>
@@ -432,7 +597,11 @@ export default function ApplyFive() {
                   onChange={handleCheckboxChange}
                   className="mt-1 h-4 w-4 text-blue-500 border-gray-600 rounded bg-transparent"
                 />
-                <label htmlFor="termsAgreement" className="ml-2 text-sm text-gray-400">
+                <label
+                  htmlFor="termsAgreement"
+                  className="ml-2 text-sm text-gray-400 cursor-pointer underline underline-offset-8"
+                  onClick={downloadPDF}
+                >
                   {page.checkboxes.termsAgreement[language]}
                 </label>
               </div>
@@ -450,11 +619,10 @@ export default function ApplyFive() {
               <button
                 type="submit"
                 disabled={!allAgreementsChecked || isSubmitting}
-                className={`flex-1 py-3 rounded-lg transition-colors ${
-                  allAgreementsChecked && !isSubmitting
-                    ? "bg-blue-600 hover:bg-blue-700 text-white cursor-pointer"
-                    : "bg-blue-900/50 text-gray-400 cursor-not-allowed "
-                }`}
+                className={`flex-1 py-3 rounded-lg transition-colors ${allAgreementsChecked && !isSubmitting
+                  ? "bg-blue-600 hover:bg-blue-700 text-white cursor-pointer"
+                  : "bg-blue-900/50 text-gray-400 cursor-not-allowed "
+                  }`}
               >
                 {isSubmitting ? page.buttons.submitting[language] : page.buttons.confirm[language]}
               </button>
