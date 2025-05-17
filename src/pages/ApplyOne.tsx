@@ -103,32 +103,24 @@ export default function ApplyOne() {
 
   const handleNext = () => {
     const newErrors: Record<string, string> = {};
-    let companyNameEmpty = false;
     if (!localFormData.companyName.trim()) {
-      companyNameEmpty = true;
       newErrors.companyName = page.companyNameRequired[language];
     }
 
     if (!localFormData.vatNumber.trim()) {
-      newErrors.vatNumber = companyNameEmpty
-        ? page.companyNameRequired[language]
-        : page.vatNumberRequired[language];
+      newErrors.vatNumber = page.vatNumberRequired[language];
     }
     if (!localFormData.foundingDate.trim()) {
       newErrors.foundingDate = page.foundingDateRequired[language];
     }
     if (!localFormData.companySize.trim()) {
-      newErrors.companySize = companyNameEmpty
-        ? page.companyNameRequired[language]
-        : page.companySizeRequired[language];
+      newErrors.companySize = page.companySizeRequired[language];
     }
     if (!localFormData.annualTurnover.trim()) {
       newErrors.annualTurnover = page.annualTurnoverRequired[language];
     }
     if (!localFormData.companyAddress.trim()) {
-      newErrors.companyAddress = companyNameEmpty
-        ? page.companyNameRequired[language]
-        : page.companyAddressRequired[language];
+      newErrors.companyAddress = page.companyAddressRequired[language];
     }
     if (!localFormData.location.trim()) {
       newErrors.location = page.locationRequired[language];
@@ -137,9 +129,7 @@ export default function ApplyOne() {
       newErrors.website = page.websiteRequired[language];
     }
     if (!localFormData.contactPerson.trim()) {
-      newErrors.contactPerson = companyNameEmpty
-        ? page.companyNameRequired[language]
-        : page.contactPersonRequired[language];
+      newErrors.contactPerson = page.contactPersonRequired[language];
     }
     if (!localFormData.email.trim()) {
       newErrors.email = page.emailRequired[language];

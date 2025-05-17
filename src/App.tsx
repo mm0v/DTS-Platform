@@ -43,10 +43,11 @@ const App: React.FC = () => {
   }, [location.pathname, validPaths]);
 
   return (
+    // test
     <LanguageProvider>
       {!isNotFound && <Navbar />}
       <Suspense fallback={<LoadingSpinner />}>
-      <ToastContainer theme="dark" />
+        <ToastContainer theme="dark" />
         <Routes>
           <Route path='/' element={<Home />} />
           <Route path='/eligibility' element={<Compliance_And_Prioritization />} />
