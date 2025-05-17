@@ -306,7 +306,7 @@ export const pagesTranslations = {
       EN: "Please enter the website address.",
     },
     contactPersonRequired: {
-      AZ: "Zəhmət olmasa əlaqə şəxsi daxil edin.",
+      AZ: "Zəhmət olmasa əlaqələndirici şəxsi daxil edin.",
       EN: "Please enter the contact person.",
     },
     emailRequired: {
@@ -682,6 +682,10 @@ export const pagesTranslations = {
         AZ: "Müraciətinizin nəticəsi barəsində qısa zamanda sizinlə əlaqə saxlanılacaqdır.",
         EN: "You will be contacted shortly regarding the result of your application.",
       },
+    },
+    pdf: {
+      AZ: "İstifadə şərtləri və gizlilik şərtləri.pdf",
+      EN: "Terms of use and privacy terms.pdf"
     },
   },
 };

@@ -58,9 +58,9 @@ export default function ApplyFive() {
     e.preventDefault(); // Prevent default label behavior
 
     // Create a link element to download the PDF
-    const link = document.createElement('a');
-    link.href = '/Privacy.pdf'; // Replace with your actual PDF path
-    link.download = 'Privacy.pdf'; // Name that will appear when downloading
+    const link = document.createElement("a");
+    link.href = "/Privacy.pdf"; // Replace with your actual PDF path
+    link.download = page.pdf[language]; // Name that will appear when downloading
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -117,7 +117,7 @@ export default function ApplyFive() {
     if (!updatedFormData.companyData.declarationConsent) {
       updatedFormData.companyData.declarationConsent = {
         dataIsReal: false,
-        permitContact: false
+        permitContact: false,
       };
     }
 
@@ -130,7 +130,7 @@ export default function ApplyFive() {
             ...prev.companyData.declarationConsent,
             dataIsReal: checked,
           },
-        }
+        },
       }));
     } else if (name === "contactConsent") {
       setFormData((prev) => ({
@@ -141,7 +141,7 @@ export default function ApplyFive() {
             ...prev.companyData.declarationConsent,
             permitContact: checked,
           },
-        }
+        },
       }));
     }
   };
@@ -167,7 +167,7 @@ export default function ApplyFive() {
       // Handle the exportBazaar field - convert array to string if needed
       const exportBazaar = formData.companyData.propertyLaw.exportBazaar;
       const formattedExportBazaar = Array.isArray(exportBazaar)
-        ? exportBazaar.join(', ')
+        ? exportBazaar.join(", ")
         : exportBazaar;
 
       // Correctly access properties from formData.companyData
@@ -190,7 +190,9 @@ export default function ApplyFive() {
         digitalReadiness: {
           ...formData.companyData.digitalReadiness,
           // Ensure digital level is a number
-          digitalLevel: Number(formData.companyData.digitalReadiness.digitalLevel),
+          digitalLevel: Number(
+            formData.companyData.digitalReadiness.digitalLevel
+          ),
         },
         financialNeeding: formData.companyData.financialNeeding,
         propertyLaw: {
@@ -207,9 +209,13 @@ export default function ApplyFive() {
 
       // Log files for debugging (can remove later)
       if (files.companyRegistry || files.financialReports) {
-        console.log("Files are available but will not be submitted in this version:");
-        if (files.companyRegistry) console.log("- Company Registry File:", files.companyRegistry.name);
-        if (files.financialReports) console.log("- Financial Reports File:", files.financialReports.name);
+        console.log(
+          "Files are available but will not be submitted in this version:"
+        );
+        if (files.companyRegistry)
+          console.log("- Company Registry File:", files.companyRegistry.name);
+        if (files.financialReports)
+          console.log("- Financial Reports File:", files.financialReports.name);
 
         // TODO: Implement file upload when API supports it
         // For now, just notify the user that files will be sent separately
@@ -244,7 +250,7 @@ export default function ApplyFive() {
         <AnimatePresence>
           {showConfirmModal && (
             <motion.div
-              className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-75 z-50"
+              className="fixed inset-0 flex items-center justify-center backdrop-blur-sm z-50"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -261,7 +267,7 @@ export default function ApplyFive() {
                 </h2>
                 <button
                   onClick={handleConfirmModalClose}
-                  className="absolute top-5 right-5 text-red-500 hover:text-red-600 transition-colors"
+                  className="absolute cursor-pointer top-5 right-5 text-red-500 hover:text-red-600 transition-colors"
                   aria-label="Close modal"
                 >
                   <svg
@@ -283,14 +289,14 @@ export default function ApplyFive() {
                 <div className="flex space-x-8 w-full justify-center">
                   <button
                     onClick={handleConfirmModalClose}
-                    className="border border-red-500 text-red-500 py-3 px-10 rounded-lg hover:bg-red-50 transition font-medium"
+                    className="border cursor-pointer border-red-500 text-red-500 py-3 px-10 rounded-lg hover:bg-red-50 transition font-medium"
                     disabled={isSubmitting}
                   >
                     {page.confirmModal.noBtn[language]}
                   </button>
                   <button
                     onClick={handleConfirmModalYes}
-                    className="bg-green-500 text-white py-3 px-10 rounded-lg hover:bg-green-600 transition font-medium"
+                    className="bg-green-500 cursor-pointer text-white py-3 px-10 rounded-lg hover:bg-green-600 transition font-medium"
                     disabled={isSubmitting}
                   >
                     {isSubmitting
@@ -438,58 +444,124 @@ export default function ApplyFive() {
                 {page.fileFormatText[language]}
               </p>
 
-              <p className="text-sm text-[#F9F9F9]">{page.applyNeedText[language]}</p>
+              <p className="text-sm italic text-[#F9F9F9]">
+                {page.applyNeedText[language]}
+              </p>
             </div>
 
             {/* Razılıq qutuları */}
             <div className="space-y-4">
               <div className="flex items-start">
-                <input
-                  type="checkbox"
-                  id="confirmAccuracy"
-                  name="confirmAccuracy"
-                  checked={agreements.confirmAccuracy}
-                  onChange={handleCheckboxChange}
-                  className="mt-1 h-4 w-4 text-blue-500 border-gray-600 rounded bg-transparent"
-                />
                 <label
                   htmlFor="confirmAccuracy"
-                  className="ml-2 text-sm text-gray-400"
+                  className="flex items-start cursor-pointer"
                 >
-                  {page.checkboxes.confirmAccuracy[language]}
+                  <input
+                    type="checkbox"
+                    id="confirmAccuracy"
+                    name="confirmAccuracy"
+                    checked={agreements.confirmAccuracy}
+                    onChange={handleCheckboxChange}
+                    className="hidden"
+                  />
+                  <span className="mt-1 w-5 h-5 flex items-center justify-center border border-gray-400 rounded">
+                    {agreements.confirmAccuracy && (
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="w-4 h-4 text-blue-500"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={3}
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M5 13l4 4L19 7"
+                        />
+                      </svg>
+                    )}
+                  </span>
+                  <span className="ml-2 text-sm text-gray-400">
+                    {page.checkboxes.confirmAccuracy[language]}
+                  </span>
                 </label>
               </div>
+
               <div className="flex items-start">
-                <input
-                  type="checkbox"
-                  id="contactConsent"
-                  name="contactConsent"
-                  checked={agreements.contactConsent}
-                  onChange={handleCheckboxChange}
-                  className="mt-1 h-4 w-4 text-blue-500 border-gray-600 rounded bg-transparent"
-                />
                 <label
                   htmlFor="contactConsent"
-                  className="ml-2 text-sm text-gray-400"
+                  className="flex items-start cursor-pointer"
                 >
-                  {page.checkboxes.contactConsent[language]}
+                  <input
+                    type="checkbox"
+                    id="contactConsent"
+                    name="contactConsent"
+                    checked={agreements.contactConsent}
+                    onChange={handleCheckboxChange}
+                    className="hidden"
+                  />
+                  <span className="mt-1 w-5 h-5 flex items-center justify-center border border-gray-400 rounded">
+                    {agreements.contactConsent && (
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="w-4 h-4 text-blue-500"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={3}
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M5 13l4 4L19 7"
+                        />
+                      </svg>
+                    )}
+                  </span>
+                  <span className="ml-2 text-sm text-gray-400">
+                    {page.checkboxes.contactConsent[language]}
+                  </span>
                 </label>
               </div>
+
               <div className="flex items-start">
-                <input
-                  type="checkbox"
-                  id="termsAgreement"
-                  name="termsAgreement"
-                  checked={agreements.termsAgreement}
-                  onChange={handleCheckboxChange}
-                  className="mt-1 h-4 w-4 text-blue-500 border-gray-600 rounded bg-transparent"
-                />
                 <label
                   htmlFor="termsAgreement"
-                  className="ml-2 text-sm text-gray-400 cursor-pointer underline underline-offset-8"
-                  onClick={downloadPDF}
+                  className="flex items-start cursor-pointer"
                 >
-                  {page.checkboxes.termsAgreement[language]}
+                  <input
+                    type="checkbox"
+                    id="termsAgreement"
+                    name="termsAgreement"
+                    checked={agreements.termsAgreement}
+                    onChange={handleCheckboxChange}
+                    className="hidden"
+                  />
+                  <span className="mt-1 w-5 h-5 flex items-center justify-center border border-gray-400 rounded">
+                    {agreements.termsAgreement && (
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="w-4 h-4 text-blue-500"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={3}
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M5 13l4 4L19 7"
+                        />
+                      </svg>
+                    )}
+                  </span>
+                  <span
+                    className="ml-2 text-sm text-gray-400 underline underline-offset-8"
+                    onClick={downloadPDF}
+                  >
+                    {page.checkboxes.termsAgreement[language]}
+                  </span>
                 </label>
               </div>
             </div>
@@ -506,10 +578,11 @@ export default function ApplyFive() {
               <button
                 type="submit"
                 disabled={!allAgreementsChecked || isSubmitting}
-                className={`flex-1 py-3 rounded-lg transition-colors ${allAgreementsChecked && !isSubmitting
-                  ? "bg-blue-600 hover:bg-blue-700 text-white cursor-pointer"
-                  : "bg-blue-900/50 text-gray-400 cursor-not-allowed "
-                  }`}
+                className={`flex-1 py-3 rounded-lg transition-colors ${
+                  allAgreementsChecked && !isSubmitting
+                    ? "bg-blue-600 hover:bg-blue-700 text-white cursor-pointer"
+                    : "bg-blue-900/50 text-gray-400 cursor-not-allowed "
+                }`}
               >
                 {isSubmitting
                   ? page.buttons.submitting[language]

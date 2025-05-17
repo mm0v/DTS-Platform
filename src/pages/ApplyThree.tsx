@@ -36,8 +36,8 @@ const ApplyThree = () => {
             digitalLevel: 0,
             digitalTools: [],
             companyPurpose: "",
-          }
-        }
+          },
+        },
       }));
     }
   }, [formData, setFormData]);
@@ -140,8 +140,8 @@ const ApplyThree = () => {
         name === "digitalLevel"
           ? updatedFormData.companyData.digitalReadiness?.digitalLevel === 0
           : value.trim().length < 3 && name === "companyPurpose"
-            ? true
-            : false,
+          ? true
+          : false,
     }));
 
     // Ümumi error mesajını sil
@@ -237,28 +237,31 @@ const ApplyThree = () => {
                   name="digitalLevel"
                   value={getDigitalLevelString()}
                   onChange={handleInputChange}
-                  className={`w-full p-2 bg-gray-800 text-white rounded
-                    ${errors.digitalLevel
-                      ? "border-2 border-red-500"
-                      : "border border-gray-700"
+                  className={`w-full p-2 bg-transparent text-white rounded
+                    ${
+                      errors.digitalLevel
+                        ? "border-2 border-red-500"
+                        : "border border-gray-700"
                     }`}
                 >
-                  <option value="">
+                  <option value="" className="bg-[#131021]">
                     {page.placeholder ? page.placeholder[language] : "Seçin"}
                   </option>
-                  <option value="1">
+                  <option value="1" className="bg-[#131021]">
                     {page.digitalLevelOptions.level1[language]}
                   </option>
-                  <option value="2">
+                  <option value="2" className="bg-[#131021]">
                     {page.digitalLevelOptions.level2[language]}
                   </option>
-                  <option value="3">
+                  <option value="3" className="bg-[#131021]">
                     {page.digitalLevelOptions.level3[language]}
                   </option>
-                  <option value="4">
-                    {page.digitalLevelOptions.level4 ? page.digitalLevelOptions.level4[language] : page.digitalLevelOptions.level3[language]}
+                  <option value="4" className="bg-[#131021]">
+                    {page.digitalLevelOptions.level4
+                      ? page.digitalLevelOptions.level4[language]
+                      : page.digitalLevelOptions.level3[language]}
                   </option>
-                  <option value="5">
+                  <option value="5" className="bg-[#131021]">
                     {page.digitalLevelOptions.level5[language]}
                   </option>
                 </select>
@@ -276,10 +279,11 @@ const ApplyThree = () => {
                 <button
                   type="button"
                   onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                  className={`w-full p-2 bg-gray-800 text-white rounded text-left flex justify-between items-center
-                    ${errors.digitalTools
-                      ? "border-2 border-red-500"
-                      : "border border-gray-700"
+                  className={`w-full p-2 bg-trasnparent text-white rounded text-left flex justify-between items-center
+                    ${
+                      errors.digitalTools
+                        ? "border-2 border-red-500"
+                        : "border border-gray-700"
                     }`}
                 >
                   <span>
@@ -296,7 +300,7 @@ const ApplyThree = () => {
                   </span>
                 </button>
                 {isDropdownOpen && (
-                  <div className="absolute z-10 w-full mt-1 bg-gray-800 rounded shadow-lg max-h-48 overflow-auto">
+                  <div className="absolute z-10 w-full mt-1 bg-[#131021] rounded shadow-lg max-h-48 overflow-auto">
                     {[
                       { value: "crm", label: "CRM" },
                       { value: "erp", label: "ERP" },
@@ -320,8 +324,28 @@ const ApplyThree = () => {
                             tool.value
                           )}
                           onChange={handleDigitalToolChange}
-                          className="form-checkbox text-blue-500 rounded"
+                          className="hidden"
                         />
+                        <span className="w-5 h-5 flex items-center justify-center border border-gray-400 rounded">
+                          {safeDigitalReadiness.digitalTools.includes(
+                            tool.value
+                          ) && (
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              className="w-4 h-4 text-blue-500"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                              strokeWidth={3}
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M5 13l4 4L19 7"
+                              />
+                            </svg>
+                          )}
+                        </span>
                         <span className="ml-2">{tool.label}</span>
                       </label>
                     ))}
@@ -348,7 +372,10 @@ const ApplyThree = () => {
                   "infrastructure_limits",
                   "other",
                 ].map((challenge) => (
-                  <label key={challenge} className="inline-flex items-center">
+                  <label
+                    key={challenge}
+                    className="flex items-center space-x-2 cursor-pointer"
+                  >
                     <input
                       type="checkbox"
                       value={challenge}
@@ -360,8 +387,8 @@ const ApplyThree = () => {
                         const updatedKeyChallenges = checked
                           ? [...safeDigitalReadiness.keyChallenges, value]
                           : safeDigitalReadiness.keyChallenges.filter(
-                            (c) => c !== value
-                          );
+                              (c) => c !== value
+                            );
                         const updatedFormData = {
                           ...formData,
                           companyData: {
@@ -378,8 +405,28 @@ const ApplyThree = () => {
                           JSON.stringify(updatedFormData)
                         );
                       }}
-                      className="form-checkbox text-blue-500"
+                      className="hidden"
                     />
+                    <span className="w-5 h-5 flex items-center justify-center border border-gray-400 rounded">
+                      {safeDigitalReadiness.keyChallenges.includes(
+                        challenge
+                      ) && (
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="w-4 h-4 text-blue-500"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                          strokeWidth={3}
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M5 13l4 4L19 7"
+                          />
+                        </svg>
+                      )}
+                    </span>
                     <span className="ml-2">
                       {challenge === "budget_shortage" &&
                         page.keyChallenges.budget_shortage[language]}
@@ -407,10 +454,11 @@ const ApplyThree = () => {
                 name="companyPurpose"
                 value={safeDigitalReadiness.companyPurpose}
                 onChange={handleInputChange}
-                className={`w-full p-4 bg-gray-800 text-white rounded
-                  ${errors.companyPurpose
-                    ? "border-2 border-red-500"
-                    : "border border-gray-700"
+                className={`w-full p-4 bg-gray-800 text-white bg-transparent rounded
+                  ${
+                    errors.companyPurpose
+                      ? "border-2 border-red-500"
+                      : "border border-gray-700"
                   }`}
                 rows={4}
                 placeholder={page.companyPurpose.placeholder[language]}

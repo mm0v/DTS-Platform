@@ -406,7 +406,7 @@ export default function ApplyTwo() {
               name="businessIndustry"
               value={localFormData.businessIndustry}
               onChange={handleInputChange}
-              className={`w-full bg-[#131021] rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300
+              className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300
                 ${errors.businessIndustry
                   ? "border border-red-500"
                   : "border border-gray-700"
@@ -414,29 +414,29 @@ export default function ApplyTwo() {
               aria-invalid={!!errors.businessIndustry}
               aria-describedby="businessIndustry-error"
             >
-              <option className="text-white" value="">
+              <option className="text-white bg-[#131021]" value="">
                 {page.businessIndustry.placeholder[language]}
               </option>
               <option
-                className="text-white"
+                className="text-white bg-[#131021]"
                 value="Təmsil etdiyimiz sənayə sektoru"
               >
                 {page.businessIndustry.options.representedIndustry[language]}
               </option>
-              <option className="text-white" value="Qida və içkilər">
+              <option className="text-white bg-[#131021]" value="Qida və içkilər">
                 {page.businessIndustry.options.foodAndBeverages[language]}
               </option>
-              <option className="text-white" value="Neft - qaz">
+              <option className="text-white bg-[#131021]" value="Neft - qaz">
                 {page.businessIndustry.options.oilAndGas[language]}
               </option>
-              <option className="text-white" value="Kimya">
+              <option className="text-white bg-[#131021]" value="Kimya">
                 {page.businessIndustry.options.chemical[language]}
               </option>
-              <option className="text-white" value="Metallurgiya">
+              <option className="text-white bg-[#131021]" value="Metallurgiya">
                 {page.businessIndustry.options.metallurgy[language]}
               </option>
               <option
-                className="text-white"
+                className="text-white bg-[#131021]"
                 value="Maşın və avadanlıqların təmiri və quraşdırılması"
               >
                 {
@@ -446,7 +446,7 @@ export default function ApplyTwo() {
                 }
               </option>
               <option
-                className="text-white"
+                className="text-white bg-[#131021]"
                 value="Kauçuk və plastik məhsullar"
               >
                 {
@@ -455,13 +455,13 @@ export default function ApplyTwo() {
                   ]
                 }
               </option>
-              <option className="text-white" value="Tekstil">
+              <option className="text-white bg-[#131021]" value="Tekstil">
                 {page.businessIndustry.options.textile[language]}
               </option>
-              <option className="text-white" value="Elektrik avadanlıqları">
+              <option className="text-white bg-[#131021]" value="Elektrik avadanlıqları">
                 {page.businessIndustry.options.electricalEquipment[language]}
               </option>
-              <option className="text-white" value="Digər">
+              <option className="text-white bg-[#131021]" value="Digər">
                 {page.businessIndustry.options.other[language]}
               </option>
             </select>
@@ -639,7 +639,7 @@ export default function ApplyTwo() {
               name="document"
               accept=".doc,.docx,.pdf"
               onChange={handleFileChange}
-              className="w-full bg-transparent border border-gray-700 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300"
+              className="w-full cursor-pointer bg-transparent border border-gray-700 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300"
             />
             {localFormData.document && (
               <p className="text-xs text-gray-400 mt-1">
@@ -658,14 +658,14 @@ export default function ApplyTwo() {
             <button
               type="button"
               onClick={handleGoBack}
-              className="w-full bg-blue-900 hover:bg-blue-800 text-white py-2 sm:py-3 rounded-lg transition duration-200 text-xs sm:text-sm"
+              className="w-full cursor-pointer bg-blue-900 hover:bg-blue-800 text-white py-2 sm:py-3 rounded-lg transition duration-200 text-xs sm:text-sm"
             >
               {buttons.backBtn[language]}
             </button>
             <button
               type="button"
               onClick={handleGoNext}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 sm:py-3 rounded-lg transition duration-200 text-xs sm:text-sm"
+              className="w-full cursor-pointer bg-blue-600 hover:bg-blue-700 text-white py-2 sm:py-3 rounded-lg transition duration-200 text-xs sm:text-sm"
             >
               {buttons.nextBtn[language]}
             </button>

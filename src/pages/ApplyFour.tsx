@@ -676,14 +676,14 @@ export default function ApplyFour() {
           {/* Buttons */}
           <div className="flex justify-between mt-8">
             <button
-              className="w-[48%] bg-blue-600 hover:bg-blue-700 text-white py-3 rounded transition duration-200"
+              className="w-[48%] cursor-pointer bg-blue-600 hover:bg-blue-700 text-white py-3 rounded transition duration-200"
               onClick={handleGoBack}
               type="button"
             >
               {buttons.backBtn[language]}
             </button>
             <button
-              className="w-[48%] bg-blue-600 hover:bg-blue-700 text-white py-3 rounded transition duration-200"
+              className="w-[48%] cursor-pointer bg-blue-600 hover:bg-blue-700 text-white py-3 rounded transition duration-200"
               onClick={handleNext}
               type="button"
             >
