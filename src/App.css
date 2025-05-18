@@ -74,6 +74,11 @@ input.no-spinner::-webkit-inner-spin-button {
 }
 
 input.no-spinner {
+  appearance: none;
+}
+
+
+input.no-spinner {
   -moz-appearance: textfield; /* Firefox üçün */
 }
 
