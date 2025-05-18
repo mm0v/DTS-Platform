@@ -8,6 +8,7 @@ import { FormContext } from "../context/FormContext"
 import { useLanguage } from "../context/LanguageContext"
 import ApplySteps from "../components/ApplySteps"
 import { motion, AnimatePresence } from "framer-motion"
+import { companyService } from "../services/companyService"
 
 interface FileState {
   companyRegistry: File | null
@@ -28,7 +29,7 @@ export default function ApplyFive() {
     throw new Error("ApplyFive must be used within a FormContext.Provider")
   }
 
-  const { setFormData, handleSubmit, isSubmitting, submitError, submitSuccess } = context
+  const { setFormData, handleSubmit, isSubmitting, formData } = context
   const [files, setFiles] = useState<FileState>({
     companyRegistry: null,
     financialReports: null,
@@ -40,13 +41,33 @@ export default function ApplyFive() {
     termsAgreement: false,
   })
 
-  const [showConfirmModal, setShowConfirmModal] = useState<boolean>(false)
-  const [showThankYouModal, setShowThankYouModal] = useState<boolean>(false)
-  const [submissionError, setSubmissionError] = useState<string | null>(null)
-  const [retryCount, setRetryCount] = useState(0)
+  const [localIsSubmitting, setLocalIsSubmitting] = useState<boolean>(false);
+  const allAgreementsChecked = Object.values(agreements).every(
+    (value) => value === true
+  );
 
-  const allAgreementsChecked = Object.values(agreements).every((value) => value === true)
+  // Modal visibility states
+  const [showConfirmModal, setShowConfirmModal] = useState<boolean>(false);
+  const [showThankYouModal, setShowThankYouModal] = useState<boolean>(false);
+  const [submitSuccess, setSubmitSuccess] = useState<boolean>(false);
+  const [submissionError, setSubmissionError] = useState<string | null>(null);
+  const [retryCount, setRetryCount] = useState<number>(0);
 
+  // download
+
+  const downloadPDF = (e: React.MouseEvent<HTMLLabelElement>) => {
+    e.preventDefault(); // Prevent default label behavior
+
+    // Create a link element to download the PDF
+    const link = document.createElement('a');
+    link.href = '/Privacy.pdf'; // Replace with your actual PDF path
+    link.download = 'Privacy.pdf'; // Name that will appear when downloading
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  // LocalStorage-dan faylları və razılıqları yüklə (ehtiyat üçün)
   useEffect(() => {
     // Load saved files and agreements from localStorage
     try {
@@ -155,7 +176,7 @@ export default function ApplyFive() {
   }
 
   const handleConfirmModalYes = async () => {
-    setIsSubmitting(true);
+    setLocalIsSubmitting(true);
 
     try {
       // Handle the exportBazaar field - convert array to string if needed
@@ -197,9 +218,7 @@ export default function ApplyFive() {
       };
 
       // JSON məlumatı göndər (yalnız obyekt)
-      const dataToSubmit = {
-        companyRequest: dataToSend,
-      };
+      const dataToSubmit = dataToSend;
 
       // Log files for debugging (can remove later)
       if (files.companyRegistry || files.financialReports) {
@@ -218,12 +237,13 @@ export default function ApplyFive() {
 
       // Submit the JSON data
       await companyService.submitCompanyData(dataToSubmit);
-
       setShowConfirmModal(false);
+      setShowThankYouModal(true);
+      setSubmitSuccess(true);
       setShowThankYouModal(true);
     } catch (error) {
       console.error("Submission failed:", error)
-      setSubmissionError(submitError || "Məlumatların göndərilməsi zamanı xəta baş verdi")
+      setSubmissionError((error as string) || "Məlumatların göndərilməsi zamanı xəta baş verdi")
 
       // Increment retry count
       setRetryCount((prev) => prev + 1)
@@ -310,7 +330,7 @@ export default function ApplyFive() {
                   <button
                     onClick={handleConfirmModalClose}
                     className="border cursor-pointer border-red-500 text-red-500 py-3 px-10 rounded-lg hover:bg-red-50 transition font-medium"
-                    disabled={isSubmitting}
+                    disabled={localIsSubmitting}
                   >
                     Xeyr
                   </button>
@@ -319,7 +339,7 @@ export default function ApplyFive() {
                     className="bg-green-500 cursor-pointer text-white py-3 px-10 rounded-lg hover:bg-green-600 transition font-medium"
                     disabled={isSubmitting}
                   >
-                    {isSubmitting ? (
+                    {localIsSubmitting ? (
                       <span className="flex items-center">
                         <svg
                           className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
@@ -606,14 +626,14 @@ export default function ApplyFive() {
               </button>
               <button
                 type="submit"
-                disabled={!allAgreementsChecked || isSubmitting}
+                disabled={!allAgreementsChecked || localIsSubmitting}
                 className={`flex-1 py-3 rounded-lg transition-colors ${
-                  allAgreementsChecked && !isSubmitting
+                  allAgreementsChecked && !localIsSubmitting
                     ? "bg-blue-600 hover:bg-blue-700 text-white cursor-pointer"
                     : "bg-blue-900/50 text-gray-400 cursor-not-allowed "
                 }`}
               >
-                {isSubmitting ? page.buttons.submitting[language] : page.buttons.confirm[language]}
+                {localIsSubmitting ? page.buttons.submitting[language] : page.buttons.confirm[language]}
               </button>
             </div>
           </form>

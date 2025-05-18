@@ -256,7 +256,7 @@ const Apply = () => {
         <Route path="four" element={<ApplyFour />} />
         <Route path="five" element={<ApplyFive />} />
       </Routes>
-    </FormProvider>
+    </FormContext.Provider>
   )
 }
 

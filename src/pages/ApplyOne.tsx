@@ -55,51 +55,82 @@ export default function ApplyOne() {
     setLocalFormData(savedData);
   }, []);
 
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    const { name, value } = e.target;
-    setErrors((prev) => ({ ...prev, [name]: "" }));
-    setLocalFormData((prevState) => ({ ...prevState, [name]: value }));
-    localStorage.setItem(name, value);
+  
 
-    // Update context accordingly
-    setFormData((prev) => ({
-      ...prev,
-      companyData: {
-        ...prev.companyData,
-        [name === "vatNumber"
-          ? "companyRegisterNumber"
-          : name === "foundingDate"
-            ? "createYear"
-            : name === "companySize"
-              ? "workerCount"
-              : name === "annualTurnover"
-                ? "annualTurnover"
-                : name === "companyAddress"
-                  ? "address"
-                  : name === "location"
-                    ? "cityAndRegion"
-                    : name === "contactPerson"
-                      ? "contactName"
-                      : name === "email"
-                        ? "contactEmail"
-                        : name === "phone"
-                          ? "contactPhone"
-                          : "companyName"]: value,
-      },
-    }));
-  };
+const handleInputChange = (
+  e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+) => {
+  const { name, value } = e.target;
 
-  const handlePhoneChange = (phone: string) => {
+  // foundingDate üçün əlavə yoxlamalar
+  if (name === "foundingDate") {
+    // Yalnız rəqəmlərdən ibarət olsun
+    if (!/^\d{0,4}$/.test(value)) return;
+
+    // Əgər 4 rəqəm yazılıbsa, onu tam ədəd kimi yoxla
+    if (value.length === 4) {
+      const year = parseInt(value, 10);
+      if (year < 0 || year > 2025) return;
+    }
+  }
+
+  setErrors((prev) => ({ ...prev, [name]: "" }));
+  setLocalFormData((prevState) => ({ ...prevState, [name]: value }));
+  localStorage.setItem(name, value);
+
+  // Update context accordingly
+  setFormData((prev) => ({
+    ...prev,
+    companyData: {
+      ...prev.companyData,
+      [name === "vatNumber"
+        ? "companyRegisterNumber"
+        : name === "foundingDate"
+        ? "createYear"
+        : name === "companySize"
+        ? "workerCount"
+        : name === "annualTurnover"
+        ? "annualTurnover"
+        : name === "companyAddress"
+        ? "address"
+        : name === "location"
+        ? "cityAndRegion"
+        : name === "contactPerson"
+        ? "contactName"
+        : name === "email"
+        ? "contactEmail"
+        : name === "phone"
+        ? "contactPhone"
+        : "companyName"]: value,
+    },
+  }));
+};
+
+
+
+ const handlePhoneChange = (value: string) => {
+  setLocalFormData((prev) => ({ ...prev, phone: value }));
+  localStorage.setItem("phone", value);
+
+  // Sadə validasiya: boşdursa error yaz
+  if (!value || value.trim() === "") {
+    setErrors((prev) => ({ ...prev, phone: "Zəhmət olmasa telefon nömrəsini daxil edin" }));
+  } else {
     setErrors((prev) => ({ ...prev, phone: "" }));
-    setLocalFormData((prev) => ({ ...prev, phone }));
-    localStorage.setItem("phone", phone);
-    setFormData((prev) => ({
-      ...prev,
-      companyData: { ...prev.companyData, contactPhone: phone },
-    }));
-  };
+  }
+
+  // Context update
+  setFormData((prev) => ({
+    ...prev,
+    companyData: {
+      ...prev.companyData,
+      contactPhone: value,
+    },
+  }));
+};
+
+
+
 
   const handleNext = () => {
     const newErrors: Record<string, string> = {};
@@ -241,23 +272,26 @@ export default function ApplyOne() {
 
             {/* Founding Date */}
             <div className="flex-1 space-y-2">
-              <label className="text-sm">{page.foundingDate[language]}</label>
-              <input
-                type="number"
-                name="foundingDate"
-                value={localFormData.foundingDate}
-                onChange={handleInputChange}
-                max={new Date().getFullYear()}
-                placeholder="YYYY"
-                className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${errors.foundingDate
-                    ? "border-red-500 focus:ring-red-500"
-                    : "border-gray-700 focus:ring-blue-500"
-                  }`}
-              />
-              {errors.foundingDate && (
-                <p className="text-red-500 text-sm">{errors.foundingDate}</p>
-              )}
-            </div>
+  <label className="text-sm">{page.foundingDate[language]}</label>
+ <input
+  type="number"
+  name="foundingDate"
+  value={localFormData.foundingDate}
+  onChange={handleInputChange}
+  max={2025}
+  placeholder="YYYY"
+  className={`no-spinner w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${
+    errors.foundingDate
+      ? "border-red-500 focus:ring-red-500"
+      : "border-gray-700 focus:ring-blue-500"
+  }`}
+/>
+
+  {errors.foundingDate && (
+    <p className="text-red-500 text-sm">{errors.foundingDate}</p>
+  )}
+</div>
+
           </div>
           <div className="flex gap-4">
             {/* Company Size */}

@@ -66,6 +66,18 @@ html {
   background: var(--primary-color);
 }
 
+/* Oxları gizlət */
+input.no-spinner::-webkit-outer-spin-button,
+input.no-spinner::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input.no-spinner {
+  -moz-appearance: textfield; /* Firefox üçün */
+}
+
+
 /* Responsive video container for Home page */
 .video-container {
   position: relative;

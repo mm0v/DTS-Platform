@@ -1,7 +1,5 @@
 // Update your FormContext.tsx to include the new properties
 
-import { createContext } from "react";
-
 import { createContext, useState, type ReactNode } from "react"
 import { companyService } from "../services/companyService"
 
@@ -31,7 +29,7 @@ export interface FormContextType {
       };
       digitalReadiness: {
         keyChallenges: string[];
-        digitalLevel: Byte; // Number between 0-255
+        digitalLevel: number; // Number between 0-255
         digitalTools: string[];
         companyPurpose: string;
       };
