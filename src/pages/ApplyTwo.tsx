@@ -461,7 +461,7 @@ export default function ApplyTwo() {
               <option className="text-white bg-[#131021]" value="Elektrik avadanlıqları">
                 {page.businessIndustry.options.electricalEquipment[language]}
               </option>
-              {selectedOption === 'Digər' && (
+              {/* {selectedOption === 'Digər' && (
         <input
           type="text"
           placeholder="Sahəni daxil edin..."
@@ -469,7 +469,7 @@ export default function ApplyTwo() {
           onChange={(e) => setCustomIndustry(e.target.value)}
           className="p-2 rounded bg-white text-black"
         />
-      )}
+      )} */}
             </select>
             {errors.businessIndustry && (
               <p
