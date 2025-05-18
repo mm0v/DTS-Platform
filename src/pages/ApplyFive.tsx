@@ -103,24 +103,39 @@ export default function ApplyFive() {
     setAgreements((prev) => ({
       ...prev,
       [name as keyof AgreementState]: checked,
-    }))
+    }));
+
+    // Make sure companyData exists and has declarationConsent
+    const updatedFormData = { ...formData };
+    if (!updatedFormData.companyData.declarationConsent) {
+      updatedFormData.companyData.declarationConsent = {
+        dataIsReal: false,
+        permitContact: false,
+      };
+    }
 
     if (name === "confirmAccuracy") {
       setFormData((prev) => ({
         ...prev,
-        declarationConsent: {
-          ...prev.declarationConsent,
-          dataIsReal: checked,
+        companyData: {
+          ...prev.companyData,
+          declarationConsent: {
+            ...prev.companyData.declarationConsent,
+            dataIsReal: checked,
+          },
         },
-      }))
+      }));
     } else if (name === "contactConsent") {
       setFormData((prev) => ({
         ...prev,
-        declarationConsent: {
-          ...prev.declarationConsent,
-          permitContact: checked,
+        companyData: {
+          ...prev.companyData,
+          declarationConsent: {
+            ...prev.companyData.declarationConsent,
+            permitContact: checked,
+          },
         },
-      }))
+      }));
     }
   }
 
@@ -140,10 +155,72 @@ export default function ApplyFive() {
   }
 
   const handleConfirmModalYes = async () => {
+    setIsSubmitting(true);
+
     try {
-      setSubmissionError(null)
-      await handleSubmit()
-      // The thank you modal will be shown via the useEffect that watches submitSuccess
+      // Handle the exportBazaar field - convert array to string if needed
+      const exportBazaar = formData.companyData.propertyLaw.exportBazaar;
+      const formattedExportBazaar = Array.isArray(exportBazaar)
+        ? exportBazaar.join(", ")
+        : exportBazaar;
+
+      // Correctly access properties from formData.companyData
+      const dataToSend = {
+        companyData: {
+          companyName: formData.companyData.companyName,
+          companyRegisterNumber: formData.companyData.companyRegisterNumber,
+          createYear: formData.companyData.createYear,
+          workerCount: formData.companyData.workerCount,
+          annualTurnover: formData.companyData.annualTurnover,
+          address: formData.companyData.address,
+          cityAndRegion: formData.companyData.cityAndRegion,
+          website: formData.companyData.website,
+          contactName: formData.companyData.contactName,
+          contactEmail: formData.companyData.contactEmail,
+          contactPhone: formData.companyData.contactPhone,
+        },
+        declarationConsent: formData.companyData.declarationConsent,
+        digitalLeadership: formData.companyData.digitalLeadership,
+        digitalReadiness: {
+          ...formData.companyData.digitalReadiness,
+          // Ensure digital level is a number
+          digitalLevel: Number(
+            formData.companyData.digitalReadiness.digitalLevel
+          ),
+        },
+        financialNeeding: formData.companyData.financialNeeding,
+        propertyLaw: {
+          ...formData.companyData.propertyLaw,
+          // Use the formatted exportBazaar
+          exportBazaar: formattedExportBazaar,
+        },
+      };
+
+      // JSON məlumatı göndər (yalnız obyekt)
+      const dataToSubmit = {
+        companyRequest: dataToSend,
+      };
+
+      // Log files for debugging (can remove later)
+      if (files.companyRegistry || files.financialReports) {
+        console.log(
+          "Files are available but will not be submitted in this version:"
+        );
+        if (files.companyRegistry)
+          console.log("- Company Registry File:", files.companyRegistry.name);
+        if (files.financialReports)
+          console.log("- Financial Reports File:", files.financialReports.name);
+
+        // TODO: Implement file upload when API supports it
+        // For now, just notify the user that files will be sent separately
+        // alert(page.alerts.filesNotSubmitted ? page.alerts.filesNotSubmitted[language] : "Files have been saved but will need to be submitted separately.");
+      }
+
+      // Submit the JSON data
+      await companyService.submitCompanyData(dataToSubmit);
+
+      setShowConfirmModal(false);
+      setShowThankYouModal(true);
     } catch (error) {
       console.error("Submission failed:", error)
       setSubmissionError(submitError || "Məlumatların göndərilməsi zamanı xəta baş verdi")
@@ -174,7 +251,7 @@ export default function ApplyFive() {
         <AnimatePresence>
           {showConfirmModal && (
             <motion.div
-              className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-75 z-50"
+              className="fixed inset-0 flex items-center justify-center backdrop-blur-sm z-50"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -189,7 +266,7 @@ export default function ApplyFive() {
                 <h2 className="text-white text-xl font-semibold text-center">Müraciətinizi təsdiq edirsinizmi?</h2>
                 <button
                   onClick={handleConfirmModalClose}
-                  className="absolute top-5 right-5 text-red-500 hover:text-red-600 transition-colors"
+                  className="absolute cursor-pointer top-5 right-5 text-red-500 hover:text-red-600 transition-colors"
                   aria-label="Close modal"
                 >
                   <svg
@@ -232,15 +309,15 @@ export default function ApplyFive() {
                 <div className="flex space-x-8 w-full justify-center">
                   <button
                     onClick={handleConfirmModalClose}
-                    className="border border-red-500 text-red-500 py-3 px-10 rounded-lg hover:bg-red-50 transition font-medium"
+                    className="border cursor-pointer border-red-500 text-red-500 py-3 px-10 rounded-lg hover:bg-red-50 transition font-medium"
                     disabled={isSubmitting}
                   >
                     Xeyr
                   </button>
                   <button
                     onClick={handleConfirmModalYes}
-                    className="bg-green-500 text-white py-3 px-10 rounded-lg hover:bg-green-600 transition font-medium"
-                    disabled={isSubmitting || retryCount >= 3}
+                    className="bg-green-500 cursor-pointer text-white py-3 px-10 rounded-lg hover:bg-green-600 transition font-medium"
+                    disabled={isSubmitting}
                   >
                     {isSubmitting ? (
                       <span className="flex items-center">
@@ -392,48 +469,128 @@ export default function ApplyFive() {
                   onChange={(e) => handleFileChange(e, "financialReports")}
                 />
               </div>
-              <p className="text-sm text-gray-400">{page.fileFormatText[language]}</p>
+              <p className="text-sm text-gray-400">
+                {page.fileFormatText[language]}
+              </p>
+
+              <p className="text-sm italic text-[#F9F9F9]">
+                {page.applyNeedText[language]}
+              </p>
             </div>
 
             {/* Agreement checkboxes */}
             <div className="space-y-4">
               <div className="flex items-start">
-                <input
-                  type="checkbox"
-                  id="confirmAccuracy"
-                  name="confirmAccuracy"
-                  checked={agreements.confirmAccuracy}
-                  onChange={handleCheckboxChange}
-                  className="mt-1 h-4 w-4 text-blue-500 border-gray-600 rounded bg-transparent"
-                />
-                <label htmlFor="confirmAccuracy" className="ml-2 text-sm text-gray-400">
-                  {page.checkboxes.confirmAccuracy[language]}
+                <label
+                  htmlFor="confirmAccuracy"
+                  className="flex items-start cursor-pointer"
+                >
+                  <input
+                    type="checkbox"
+                    id="confirmAccuracy"
+                    name="confirmAccuracy"
+                    checked={agreements.confirmAccuracy}
+                    onChange={handleCheckboxChange}
+                    className="hidden"
+                  />
+                  <span className="mt-1 w-5 h-5 flex items-center justify-center border border-gray-400 rounded">
+                    {agreements.confirmAccuracy && (
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="w-4 h-4 text-blue-500"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={3}
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M5 13l4 4L19 7"
+                        />
+                      </svg>
+                    )}
+                  </span>
+                  <span className="ml-2 text-sm text-gray-400">
+                    {page.checkboxes.confirmAccuracy[language]}
+                  </span>
                 </label>
               </div>
+
               <div className="flex items-start">
-                <input
-                  type="checkbox"
-                  id="contactConsent"
-                  name="contactConsent"
-                  checked={agreements.contactConsent}
-                  onChange={handleCheckboxChange}
-                  className="mt-1 h-4 w-4 text-blue-500 border-gray-600 rounded bg-transparent"
-                />
-                <label htmlFor="contactConsent" className="ml-2 text-sm text-gray-400">
-                  {page.checkboxes.contactConsent[language]}
+                <label
+                  htmlFor="contactConsent"
+                  className="flex items-start cursor-pointer"
+                >
+                  <input
+                    type="checkbox"
+                    id="contactConsent"
+                    name="contactConsent"
+                    checked={agreements.contactConsent}
+                    onChange={handleCheckboxChange}
+                    className="hidden"
+                  />
+                  <span className="mt-1 w-5 h-5 flex items-center justify-center border border-gray-400 rounded">
+                    {agreements.contactConsent && (
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="w-4 h-4 text-blue-500"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={3}
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M5 13l4 4L19 7"
+                        />
+                      </svg>
+                    )}
+                  </span>
+                  <span className="ml-2 text-sm text-gray-400">
+                    {page.checkboxes.contactConsent[language]}
+                  </span>
                 </label>
               </div>
+
               <div className="flex items-start">
-                <input
-                  type="checkbox"
-                  id="termsAgreement"
-                  name="termsAgreement"
-                  checked={agreements.termsAgreement}
-                  onChange={handleCheckboxChange}
-                  className="mt-1 h-4 w-4 text-blue-500 border-gray-600 rounded bg-transparent"
-                />
-                <label htmlFor="termsAgreement" className="ml-2 text-sm text-gray-400">
-                  {page.checkboxes.termsAgreement[language]}
+                <label
+                  htmlFor="termsAgreement"
+                  className="flex items-start cursor-pointer"
+                >
+                  <input
+                    type="checkbox"
+                    id="termsAgreement"
+                    name="termsAgreement"
+                    checked={agreements.termsAgreement}
+                    onChange={handleCheckboxChange}
+                    className="hidden"
+                  />
+                  <span className="mt-1 w-5 h-5 flex items-center justify-center border border-gray-400 rounded">
+                    {agreements.termsAgreement && (
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="w-4 h-4 text-blue-500"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={3}
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M5 13l4 4L19 7"
+                        />
+                      </svg>
+                    )}
+                  </span>
+                  <span
+                    className="ml-2 text-sm text-gray-400 underline underline-offset-8"
+                    onClick={downloadPDF}
+                  >
+                    {page.checkboxes.termsAgreement[language]}
+                  </span>
                 </label>
               </div>
             </div>

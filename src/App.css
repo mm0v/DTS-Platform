@@ -131,19 +131,34 @@ button:focus-visible {
   box-shadow: none !important;
 }
 
-/* CSS for PhoneInput button */
-.phone-input__button {
+.react-international-phone-country-selector-button{
   background-color: transparent !important;
-  border-right: 1px solid #4b4b4b; /* Add a subtle border */
+  border-color: var(--color-gray-700) !important;
+  height: 48px !important;
 }
 
-.phone-input__dropdown {
+.react-international-phone-input {
   background-color: transparent !important;
-  border: 1px solid #4b4b4b;
+  border-color: var(--color-gray-700) !important;
+  color: #F9F9F9 !important;
+  height: 48px !important;
+  flex: 1;
+  font-size: 0.875rem !important;
+  line-height: 1.25rem !important; 
+}
+.react-international-phone-country-selector-dropdown {
+  background-color: #131021 !important;
+  color: #F9F9F9 !important;
+}
+.react-international-phone-country-selector-dropdown__list-item:hover {
+  background-color: #373176!important;
+}
+.react-international-phone-country-selector-dropdown__list-item[aria-selected="true"] {
+  background-color: #373176 !important;
+  color: #F9F9F9 !important;
 }
 
-.phone-input__country-option:hover {
-  background-color: rgba(128, 128, 128, 0.1); /* Hover effect */
-}
+
+
 
 

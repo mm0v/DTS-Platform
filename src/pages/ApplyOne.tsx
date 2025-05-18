@@ -420,7 +420,7 @@ export default function ApplyOne() {
             <div className="flex-1 space-y-2">
               <label className="text-sm">{page.phone[language]}</label>
               <PhoneInput
-                inputClassName="phone-dark-input flex-1"
+                inputClassName="phone-dark-input flex-1 bg-transparent"
                 defaultCountry="az"
                 value={localFormData.phone}
                 onChange={handlePhoneChange}
