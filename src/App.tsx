@@ -7,7 +7,7 @@ import { LanguageProvider } from './context/LanguageContext';
 import LoadingSpinner from './components/LoadingSpinner'; // We'll create this component
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-// Lazy load all page components
+// Lazy load all page components -- test not working very well i will fix it
 const Home = lazy(() => import('./pages/Home'));
 const Compliance_And_Prioritization = lazy(() => import('./pages/Compliance_And_Prioritization'));
 const Our_Success = lazy(() => import('./pages/Our_Success'));
