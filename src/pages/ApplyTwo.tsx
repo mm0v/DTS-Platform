@@ -358,9 +358,6 @@ export default function ApplyTwo() {
     localFormData.exportMarkets.includes(option.label)
   );
 
-  function setCustomIndustry(value: string): void {
-    throw new Error("Function not implemented.");
-  }
 
   return (
     <>

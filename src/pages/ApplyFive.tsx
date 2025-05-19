@@ -29,7 +29,7 @@ export default function ApplyFive() {
     throw new Error("ApplyFive must be used within a FormContext.Provider")
   }
 
-  const { setFormData, handleSubmit, isSubmitting, formData } = context
+  const { setFormData, isSubmitting, formData } = context
   const [files, setFiles] = useState<FileState>({
     companyRegistry: null,
     financialReports: null,

@@ -389,7 +389,7 @@ export default function ApplyFour() {
   return (
     <>
       <BackgroundVideo />
-      <div className="min-h-screen py-9 w-full bg-[url('/images/space-background.jpg')] bg-cover bg-center bg-no-repeat text-white flex flex-col items-center justify-center py-0">
+      <div className="min-h-screen py-9 w-full bg-[url('/images/space-background.jpg')] bg-cover bg-center bg-no-repeat text-white flex flex-col items-center justify-center">
         <ApplySteps step={4} />
 
         <div className="text-center mb-8">

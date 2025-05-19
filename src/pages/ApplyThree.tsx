@@ -454,7 +454,7 @@ const ApplyThree = () => {
                 name="companyPurpose"
                 value={safeDigitalReadiness.companyPurpose}
                 onChange={handleInputChange}
-                className={`w-full p-4 bg-gray-800 text-white bg-transparent rounded
+                className={`w-full p-4 bg-transparent text-white rounded
                   ${
                     errors.companyPurpose
                       ? "border-2 border-red-500"

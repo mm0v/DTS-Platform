@@ -1,7 +1,6 @@
 // Update your FormContext.tsx to include the new properties
 
-import { createContext, useState, type ReactNode } from "react"
-import { companyService } from "../services/companyService"
+import { createContext } from "react"
 
 // Update the FormContextType to include the file state
 export interface FormContextType {
