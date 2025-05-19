@@ -358,6 +358,10 @@ export default function ApplyTwo() {
     localFormData.exportMarkets.includes(option.label)
   );
 
+  function setCustomIndustry(value: string): void {
+    throw new Error("Function not implemented.");
+  }
+
   return (
     <>
       <BackgroundVideo />
@@ -461,15 +465,16 @@ export default function ApplyTwo() {
               <option className="text-white bg-[#131021]" value="Elektrik avadanlıqları">
                 {page.businessIndustry.options.electricalEquipment[language]}
               </option>
-              {/* {selectedOption === 'Digər' && (
+              {localFormData.businessIndustry === 'Digər' && (
         <input
           type="text"
           placeholder="Sahəni daxil edin..."
-          value={customIndustry}
-          onChange={(e) => setCustomIndustry(e.target.value)}
+          value={localFormData.businessIndustry}
+          onChange={handleInputChange}
+          name="businessIndustry"
           className="p-2 rounded bg-white text-black"
         />
-      )} */}
+      )}
             </select>
             {errors.businessIndustry && (
               <p
