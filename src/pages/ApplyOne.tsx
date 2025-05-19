@@ -32,7 +32,7 @@ export default function ApplyOne() {
     website: "",
     contactPerson: "",
     email: "",
-    phone: "",
+    phone: ""
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -108,18 +108,28 @@ const handleInputChange = (
 
 
 
- const handlePhoneChange = (value: string) => {
+const handlePhoneChange = (value: string) => {
+  // 1. Daxil edilən dəyəri saxla
   setLocalFormData((prev) => ({ ...prev, phone: value }));
   localStorage.setItem("phone", value);
 
-  // Sadə validasiya: boşdursa error yaz
-  if (!value || value.trim() === "") {
-    setErrors((prev) => ({ ...prev, phone: "Zəhmət olmasa telefon nömrəsini daxil edin" }));
-  } else {
-    setErrors((prev) => ({ ...prev, phone: "" }));
+  // 2. Sadecə rəqəmləri götür və uzunluğunu yoxla
+  const digits = value.replace(/\D/g, "");
+  let errorMsg = "";
+
+  if (digits.length === 0) {
+    errorMsg = "Zəhmət olmasa telefon nömrəsini daxil edin";
+  } else if (digits.length < 9) {
+    errorMsg = "Telefon nömrəsi ən azı 9 rəqəm olmalıdır";
   }
 
-  // Context update
+  // 3. Səhv mesajını set et
+  setErrors((prev) => ({
+    ...prev,
+    phone: errorMsg,
+  }));
+
+  // 4. Context-i yenilə
   setFormData((prev) => ({
     ...prev,
     companyData: {
@@ -128,6 +138,21 @@ const handleInputChange = (
     },
   }));
 };
+
+
+const validateForm = () => {
+  const newErrors: typeof errors = { /* əvvəlki qaydalar */ };
+
+  // Telefon validasiyası
+  const digitsOnly = (localFormData.phone || "").replace(/\D/g, "");
+  if (digitsOnly.length < 9) {
+    newErrors.phone = page.phoneRequired[language];
+  }
+
+  setErrors(newErrors);
+  return Object.keys(newErrors).length === 0;
+};
+
 
 
 
@@ -451,29 +476,40 @@ const handleInputChange = (
             </div>
 
             {/* Phone */}
-            <div className="flex-1 space-y-2">
-              <label className="text-sm">{page.phone[language]}</label>
-              <PhoneInput
-                inputClassName="phone-dark-input flex-1 bg-transparent"
-                defaultCountry="az"
-                value={localFormData.phone}
-                onChange={handlePhoneChange}
-                className={`w-full ${errors.phone ? "border border-red-500 rounded" : ""
-                  }`}
-              />
-              {errors.phone && (
-                <p className="text-red-500 text-sm">{errors.phone}</p>
-              )}
-            </div>
+          <div className="flex-1 space-y-2">
+  <label className="text-sm">{page.phone[language]}</label>
+  <PhoneInput
+    inputClassName="phone-dark-input flex-1 bg-transparent"
+    defaultCountry="az"
+    value={localFormData.phone}
+    onChange={handlePhoneChange}
+    className={`w-full ${
+      errors.phone ? "border border-red-500 rounded" : "border border-gray-700"
+    }`}
+  />
+  {errors.phone && (
+    <p className="text-red-500 text-sm">{errors.phone}</p>
+  )}
+</div>
+
           </div>
 
           {/* Next Button */}
-          <button
-            className="w-full cursor-pointer bg-blue-600 hover:bg-[#1a4381] text-white py-3 rounded-lg transition duration-300 mt-6"
-            onClick={handleNext}
-          >
-            {pagesTranslations.applyBtns.nextBtn[language]}
-          </button>
+        <button
+  type="button"
+  onClick={handleNext}
+  disabled={!!errors.phone}
+  className={`w-full py-3 rounded-lg transition duration-300 mt-6 text-white
+    ${
+      !errors.phone
+        ? 'bg-blue-600 hover:bg-[#1a4381] cursor-pointer'
+        : 'bg-gray-500 cursor-not-allowed'
+    }`
+  }
+>
+  {pagesTranslations.applyBtns.nextBtn[language]}
+</button>
+
         </div>
       </div>
     </>
