@@ -1,45 +1,45 @@
-"use client"
-import type React from "react"
-import { useState, useEffect, useContext } from "react"
-import { useNavigate } from "react-router-dom"
-import { Download } from "lucide-react"
-import BackgroundVideo from "../components/BackgroundVideo"
-import { FormContext } from "../context/FormContext"
-import { useLanguage } from "../context/LanguageContext"
-import ApplySteps from "../components/ApplySteps"
-import { motion, AnimatePresence } from "framer-motion"
-import { companyService } from "../services/companyService"
+"use client";
+import type React from "react";
+import { useState, useEffect, useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import { Download } from "lucide-react";
+import BackgroundVideo from "../components/BackgroundVideo";
+import { FormContext } from "../context/FormContext";
+import { useLanguage } from "../context/LanguageContext";
+import ApplySteps from "../components/ApplySteps";
+import { motion, AnimatePresence } from "framer-motion";
+import { companyService } from "../services/companyService";
 
 interface FileState {
-  companyRegistry: File | null
-  financialReports: File | null
+  companyRegistry: File | null;
+  financialReports: File | null;
 }
 interface AgreementState {
-  confirmAccuracy: boolean
-  contactConsent: boolean
-  termsAgreement: boolean
+  confirmAccuracy: boolean;
+  contactConsent: boolean;
+  termsAgreement: boolean;
 }
 
 export default function ApplyFive() {
-  const navigate = useNavigate()
-  const context = useContext(FormContext)
-  const { language, pagesTranslations } = useLanguage()
-  const page = pagesTranslations.apply5
+  const navigate = useNavigate();
+  const context = useContext(FormContext);
+  const { language, pagesTranslations } = useLanguage();
+  const page = pagesTranslations.apply5;
   if (!context) {
-    throw new Error("ApplyFive must be used within a FormContext.Provider")
+    throw new Error("ApplyFive must be used within a FormContext.Provider");
   }
 
-  const { setFormData, isSubmitting, formData } = context
+  const { setFormData, isSubmitting, formData } = context;
   const [files, setFiles] = useState<FileState>({
     companyRegistry: null,
     financialReports: null,
-  })
+  });
 
   const [agreements, setAgreements] = useState<AgreementState>({
     confirmAccuracy: false,
     contactConsent: false,
     termsAgreement: false,
-  })
+  });
 
   const [localIsSubmitting, setLocalIsSubmitting] = useState<boolean>(false);
   const allAgreementsChecked = Object.values(agreements).every(
@@ -59,9 +59,9 @@ export default function ApplyFive() {
     e.preventDefault(); // Prevent default label behavior
 
     // Create a link element to download the PDF
-    const link = document.createElement('a');
-    link.href = '/Privacy.pdf'; // Replace with your actual PDF path
-    link.download = 'Privacy.pdf'; // Name that will appear when downloading
+    const link = document.createElement("a");
+    link.href = "/Privacy.pdf"; // Replace with your actual PDF path
+    link.download = "Privacy.pdf"; // Name that will appear when downloading
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -71,56 +71,61 @@ export default function ApplyFive() {
   useEffect(() => {
     // Load saved files and agreements from localStorage
     try {
-      const savedAgreements = JSON.parse(localStorage.getItem("agreements") || "{}")
-      setAgreements(savedAgreements)
+      const savedAgreements = JSON.parse(
+        localStorage.getItem("agreements") || "{}"
+      );
+      setAgreements(savedAgreements);
     } catch (error) {
-      console.error("Error loading saved agreements:", error)
+      console.error("Error loading saved agreements:", error);
     }
-  }, [])
+  }, []);
 
   useEffect(() => {
     // Save agreements to localStorage when they change
-    localStorage.setItem("agreements", JSON.stringify(agreements))
-  }, [agreements])
+    localStorage.setItem("agreements", JSON.stringify(agreements));
+  }, [agreements]);
 
   useEffect(() => {
     // Show thank you modal if submission was successful
     if (submitSuccess) {
-      setShowConfirmModal(false)
-      setShowThankYouModal(true)
+      setShowConfirmModal(false);
+      setShowThankYouModal(true);
     }
-  }, [submitSuccess])
+  }, [submitSuccess]);
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, fileType: keyof FileState) => {
-    const fileList = e.target.files
+  const handleFileChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    fileType: keyof FileState
+  ) => {
+    const fileList = e.target.files;
     if (fileList && fileList.length > 0) {
-      const file = fileList[0]
+      const file = fileList[0];
 
       // Update state with the file
       setFiles((prev) => ({
         ...prev,
         [fileType]: file,
-      }))
+      }));
 
       // Store file reference in localStorage
       // Note: Files can't be directly stored in localStorage, so we're just storing metadata
       try {
-        const filesMetadata = JSON.parse(localStorage.getItem("files") || "{}")
+        const filesMetadata = JSON.parse(localStorage.getItem("files") || "{}");
         filesMetadata[fileType] = {
           name: file.name,
           size: file.size,
           type: file.type,
           lastModified: file.lastModified,
-        }
-        localStorage.setItem("files", JSON.stringify(filesMetadata))
+        };
+        localStorage.setItem("files", JSON.stringify(filesMetadata));
       } catch (error) {
-        console.error("Error storing file metadata:", error)
+        console.error("Error storing file metadata:", error);
       }
     }
-  }
+  };
 
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, checked } = e.target
+    const { name, checked } = e.target;
     setAgreements((prev) => ({
       ...prev,
       [name as keyof AgreementState]: checked,
@@ -132,6 +137,7 @@ export default function ApplyFive() {
       updatedFormData.companyData.declarationConsent = {
         dataIsReal: false,
         permitContact: false,
+        privacyAcceptance: false,
       };
     }
 
@@ -157,23 +163,34 @@ export default function ApplyFive() {
           },
         },
       }));
+    } else if (name === "termsAgreement") {
+      setFormData((prev) => ({
+        ...prev,
+        companyData: {
+          ...prev.companyData,
+          declarationConsent: {
+            ...prev.companyData.declarationConsent,
+            privacyAcceptance: true,
+          },
+        },
+      }));
     }
-  }
+  };
 
   const handleGoBack = () => {
-    navigate("/apply/four")
-  }
+    navigate("/apply/four");
+  };
 
   const handleConfirmModalClose = () => {
-    setShowConfirmModal(false)
-    setSubmissionError(null)
-  }
+    setShowConfirmModal(false);
+    setSubmissionError(null);
+  };
 
   const handleThankYouModalClose = () => {
-    setShowThankYouModal(false)
+    setShowThankYouModal(false);
     // Optionally navigate to a different page after closing thank you modal
-    navigate("/")
-  }
+    navigate("/");
+  };
 
   const handleConfirmModalYes = async () => {
     setLocalIsSubmitting(true);
@@ -205,9 +222,7 @@ export default function ApplyFive() {
         digitalReadiness: {
           ...formData.companyData.digitalReadiness,
           // Ensure digital level is a number
-          digitalLevel: Number(
-            formData.companyData.digitalReadiness.digitalLevel
-          ),
+          digitalLevel: +formData.companyData.digitalReadiness.digitalLevel,
         },
         financialNeeding: formData.companyData.financialNeeding,
         propertyLaw: {
@@ -236,30 +251,33 @@ export default function ApplyFive() {
       }
 
       // Submit the JSON data
+      console.log(dataToSubmit);
       await companyService.submitCompanyData(dataToSubmit);
       setShowConfirmModal(false);
       setShowThankYouModal(true);
       setSubmitSuccess(true);
       setShowThankYouModal(true);
     } catch (error) {
-      console.error("Submission failed:", error)
-      setSubmissionError((error as string) || "Məlumatların göndərilməsi zamanı xəta baş verdi")
+      console.error("Submission failed:", error);
+      setSubmissionError(
+        (error as string) || "Məlumatların göndərilməsi zamanı xəta baş verdi"
+      );
 
       // Increment retry count
-      setRetryCount((prev) => prev + 1)
+      setRetryCount((prev) => prev + 1);
     }
-  }
+  };
 
   const handleRetry = () => {
-    handleConfirmModalYes()
-  }
+    handleConfirmModalYes();
+  };
 
   const handleSubmitForm = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    setShowConfirmModal(true)
-    setSubmissionError(null)
-    setRetryCount(0)
-  }
+    e.preventDefault();
+    setShowConfirmModal(true);
+    setSubmissionError(null);
+    setRetryCount(0);
+  };
 
   return (
     <>
@@ -283,7 +301,9 @@ export default function ApplyFive() {
                 exit={{ scale: 0.85, opacity: 0 }}
                 transition={{ duration: 0.25 }}
               >
-                <h2 className="text-white text-xl font-semibold text-center">Müraciətinizi təsdiq edirsinizmi?</h2>
+                <h2 className="text-white text-xl font-semibold text-center">
+                  Müraciətinizi təsdiq edirsinizmi?
+                </h2>
                 <button
                   onClick={handleConfirmModalClose}
                   className="absolute cursor-pointer top-5 right-5 text-red-500 hover:text-red-600 transition-colors"
@@ -297,7 +317,11 @@ export default function ApplyFive() {
                     stroke="currentColor"
                     strokeWidth={2}
                   >
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M6 18L18 6M6 6l12 12"
+                    />
                   </svg>
                 </button>
 
@@ -318,8 +342,9 @@ export default function ApplyFive() {
                     {retryCount >= 3 && (
                       <div className="mt-3 text-amber-400 text-xs">
                         <p>
-                          Maksimum cəhd sayı aşıldı. Zəhmət olmasa daha sonra yenidən cəhd edin və ya texniki dəstəklə
-                          əlaqə saxlayın.
+                          Maksimum cəhd sayı aşıldı. Zəhmət olmasa daha sonra
+                          yenidən cəhd edin və ya texniki dəstəklə əlaqə
+                          saxlayın.
                         </p>
                       </div>
                     )}
@@ -389,9 +414,12 @@ export default function ApplyFive() {
                 exit={{ scale: 0.85, opacity: 0 }}
                 transition={{ duration: 0.25 }}
               >
-                <h2 className="text-white text-2xl font-bold">Müraciətiniz üçün təşəkkür edirik!</h2>
+                <h2 className="text-white text-2xl font-bold">
+                  Müraciətiniz üçün təşəkkür edirik!
+                </h2>
                 <p className="text-white text-base max-w-[360px] mx-auto">
-                  Müraciətinizin nəticəsi barəsində qısa zamanda sizinlə əlaqə saxlanılacaqdır.
+                  Müraciətinizin nəticəsi barəsində qısa zamanda sizinlə əlaqə
+                  saxlanılacaqdır.
                 </p>
 
                 <button
@@ -407,11 +435,19 @@ export default function ApplyFive() {
                     stroke="currentColor"
                     strokeWidth={2}
                   >
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M6 18L18 6M6 6l12 12"
+                    />
                   </svg>
                 </button>
 
-                <img src="/img/click.svg" alt="Confirmation checkmark" className="w-20 h-20 mx-auto mt-2" />
+                <img
+                  src="/img/click.svg"
+                  alt="Confirmation checkmark"
+                  className="w-20 h-20 mx-auto mt-2"
+                />
 
                 <button
                   onClick={handleThankYouModalClose}
@@ -432,7 +468,10 @@ export default function ApplyFive() {
           <form className="space-y-8" onSubmit={handleSubmitForm}>
             {/* Company registry file */}
             <div className="space-y-2">
-              <label htmlFor="companyRegistry" className="block text-lg cursor-pointer font-medium">
+              <label
+                htmlFor="companyRegistry"
+                className="block text-lg cursor-pointer font-medium"
+              >
                 {page.companyRegistry[language]}
               </label>
               <div className="relative">
@@ -440,7 +479,9 @@ export default function ApplyFive() {
                   htmlFor="companyRegistry"
                   className="w-full h-14 border border-gray-600 rounded-lg flex items-center justify-between px-4 bg-gray-800/30 text-gray-400 text-sm cursor-pointer select-none"
                 >
-                  {files.companyRegistry ? files.companyRegistry.name : "No file selected"}
+                  {files.companyRegistry
+                    ? files.companyRegistry.name
+                    : "No file selected"}
                 </label>
                 <button
                   type="button"
@@ -458,12 +499,17 @@ export default function ApplyFive() {
                   onChange={(e) => handleFileChange(e, "companyRegistry")}
                 />
               </div>
-              <p className="text-sm text-gray-400">{page.fileFormatText[language]}</p>
+              <p className="text-sm text-gray-400">
+                {page.fileFormatText[language]}
+              </p>
             </div>
 
             {/* Financial reports file */}
             <div className="space-y-2">
-              <label htmlFor="financialReports" className="block text-lg cursor-pointer font-medium">
+              <label
+                htmlFor="financialReports"
+                className="block text-lg cursor-pointer font-medium"
+              >
                 {page.financialReports[language]}
               </label>
               <div className="relative">
@@ -471,7 +517,9 @@ export default function ApplyFive() {
                   htmlFor="financialReports"
                   className="w-full h-14 border border-gray-600 rounded-lg flex items-center justify-between px-4 bg-gray-800/30 text-gray-400 text-sm cursor-pointer select-none"
                 >
-                  {files.financialReports ? files.financialReports.name : "No file selected"}
+                  {files.financialReports
+                    ? files.financialReports.name
+                    : "No file selected"}
                 </label>
                 <button
                   type="button"
@@ -633,12 +681,14 @@ export default function ApplyFive() {
                     : "bg-blue-900/50 text-gray-400 cursor-not-allowed "
                 }`}
               >
-                {localIsSubmitting ? page.buttons.submitting[language] : page.buttons.confirm[language]}
+                {localIsSubmitting
+                  ? page.buttons.submitting[language]
+                  : page.buttons.confirm[language]}
               </button>
             </div>
           </form>
         </div>
       </div>
     </>
-  )
+  );
 }

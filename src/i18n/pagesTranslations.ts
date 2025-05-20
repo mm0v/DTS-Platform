@@ -217,11 +217,11 @@ export const pagesTranslations = {
       AZ: "Şirkətin adı (Tam hüquqi adı)",
       EN: "Company Name (Full Legal Name)",
     },
-    vatNumber: {
+    companyRegisterNumber: {
       AZ: "Şirkətin VÖEN nömrəsi",
       EN: "Company VAT Number",
     },
-    foundingDate: {
+    createYear: {
       AZ: "Şirkətin yaranma tarixi",
       EN: "Company Founding Date",
     },
@@ -277,11 +277,11 @@ export const pagesTranslations = {
       AZ: "Şirkət adı tələb olunur, zəhmət olmasa daxil edin.",
       EN: "Company name is required, please enter it.",
     },
-    vatNumberRequired: {
+    companyRegisterNumberRequired: {
       AZ: "Zəhmət olmasa Vergi nömrəsini daxil edin.",
       EN: "Please enter the VAT number.",
     },
-    foundingDateRequired: {
+    createYearRequired: {
       AZ: "Zəhmət olmasa yaradılma ilini daxil edin.",
       EN: "Please enter the founding date.",
     },
@@ -685,7 +685,7 @@ export const pagesTranslations = {
     },
     pdf: {
       AZ: "İstifadə şərtləri və gizlilik şərtləri.pdf",
-      EN: "Terms of use and privacy terms.pdf"
+      EN: "Terms of use and privacy terms.pdf",
     },
   },
 };

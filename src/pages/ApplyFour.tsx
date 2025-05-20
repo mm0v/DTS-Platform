@@ -40,6 +40,7 @@ export default function ApplyFour() {
         declarationConsent: {
           dataIsReal: false,
           permitContact: false,
+          privacyAcceptance: false,
         },
         digitalLeadership: {
           digitalTeamOrLead: false,
@@ -171,6 +172,7 @@ export default function ApplyFour() {
             declarationConsent: {
               dataIsReal: false,
               permitContact: false,
+              privacyAcceptance: false,
             },
             digitalLeadership: {
               digitalTeamOrLead: false,
@@ -273,6 +275,7 @@ export default function ApplyFour() {
         declarationConsent: {
           dataIsReal: false,
           permitContact: false,
+          privacyAcceptance: false,
         },
         digitalLeadership: {
           digitalTeamOrLead: false,
