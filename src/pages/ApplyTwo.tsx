@@ -8,19 +8,13 @@ import { useLanguage } from "../context/LanguageContext";
 import ApplySteps from "../components/ApplySteps";
 import Select, { type MultiValue } from "react-select";
 import countryList from "react-select-country-list";
-
-// Tip tərifləri
 interface PropertyLaw {
   exportBazaar: string[];
   businessOperations: string;
   companyLawType: string;
   products: string;
   exportActivity: boolean;
-}
-
-interface FormData {
-  propertyLaw?: PropertyLaw;
-  // başqa sahələriniz varsa onları əlavə edin
+  document: string;
 }
 
 export default function ApplyTwo() {
@@ -29,179 +23,76 @@ export default function ApplyTwo() {
   const { language, pagesTranslations } = useLanguage();
   const page = pagesTranslations.apply2;
   const buttons = pagesTranslations.applyBtns;
+  const options = countryList().getData();
 
   if (!context) {
     throw new Error("ApplyTwo must be used within a FormContext.Provider");
   }
 
-  // formData tipini PropertyLaw tipinə uyğun təyin edirik
-  const { formData, setFormData } = context as unknown as {
-    formData: FormData;
-    setFormData: React.Dispatch<React.SetStateAction<FormData>>;
-  };
-
-  // Create a safe propertyLaw object with default values
-  const safePropertyLaw: PropertyLaw = formData?.propertyLaw || {
+  const initialValue: PropertyLaw = {
     exportBazaar: [],
     businessOperations: "",
     companyLawType: "",
     products: "",
-    exportActivity: false
+    exportActivity: false,
+    document: "",
   };
 
-  // Initialize formData.propertyLaw if it doesn't exist
-  useEffect(() => {
-    if (!formData.propertyLaw) {
-      setFormData((prevData) => ({
-        ...prevData,
-        propertyLaw: {
-          exportBazaar: [],
-          businessOperations: "",
-          companyLawType: "",
-          products: "",
-          exportActivity: false
-        }
-      }));
-    }
-  }, [formData, setFormData]);
-
-  const options = countryList().getData();
-
-  // Safely access exportBazaar using the safePropertyLaw object
-  const initialExportMarkets: string[] = Array.isArray(
-    safePropertyLaw.exportBazaar
-  )
-    ? safePropertyLaw.exportBazaar
-    : safePropertyLaw.exportBazaar
-      ? [safePropertyLaw.exportBazaar]
-      : [];
-
-  const [localFormData, setLocalFormData] = useState({
-    companyType: safePropertyLaw.companyLawType || "",
-    businessIndustry: safePropertyLaw.businessOperations || "",
-    mainProducts: safePropertyLaw.products || "",
-    exportActivity: safePropertyLaw.exportActivity ? "Bəli" : "Xeyr",
-    exportMarkets: initialExportMarkets, // massiv
-    document: "",
-  });
-
-  const [errors, setErrors] = useState<{
-    companyType?: string;
-    businessIndustry?: string;
-    mainProducts?: string;
-    exportActivity?: string;
-    exportMarkets?: string;
-    document?: string;
-  }>({});
+  const [localLawData, setLocalLawData] = useState(initialValue);
+  const [localLawDataErrors, setLocalLawDataErrors] = useState<
+    Record<string, string>
+  >({});
+  const propertyLawData = JSON.parse(localStorage.getItem("propertyLaw")!);
 
   useEffect(() => {
-    // Use safePropertyLaw for safe property access
-    const updatedExportMarkets: string[] = Array.isArray(
-      safePropertyLaw.exportBazaar
-    )
-      ? safePropertyLaw.exportBazaar
-      : safePropertyLaw.exportBazaar
-        ? [safePropertyLaw.exportBazaar]
-        : [];
-
-    setLocalFormData({
-      companyType: safePropertyLaw.companyLawType || "",
-      businessIndustry: safePropertyLaw.businessOperations || "",
-      mainProducts: safePropertyLaw.products || "",
-      exportActivity: safePropertyLaw.exportActivity ? "Bəli" : "Xeyr",
-      exportMarkets: updatedExportMarkets,
-      document: "",
-    });
-  }, [
-    formData,
-    safePropertyLaw.companyLawType,
-    safePropertyLaw.businessOperations,
-    safePropertyLaw.products,
-    safePropertyLaw.exportActivity,
-    safePropertyLaw.exportBazaar
-  ]);
-
-  useEffect(() => {
-    const savedData = localStorage.getItem("formData");
-    if (savedData) {
-      try {
-        const parsedData = JSON.parse(savedData) as FormData;
-        setFormData(parsedData);
-
-        // Safely access properties with optional chaining
-        const savedExportMarkets: string[] = Array.isArray(
-          parsedData.propertyLaw?.exportBazaar
-        )
-          ? parsedData.propertyLaw.exportBazaar
-          : parsedData.propertyLaw?.exportBazaar
-            ? [parsedData.propertyLaw.exportBazaar]
-            : [];
-
-        setLocalFormData({
-          companyType: parsedData.propertyLaw?.companyLawType || "",
-          businessIndustry: parsedData.propertyLaw?.businessOperations || "",
-          mainProducts: parsedData.propertyLaw?.products || "",
-          exportActivity: parsedData.propertyLaw?.exportActivity
-            ? "Bəli"
-            : "Xeyr",
-          exportMarkets: savedExportMarkets,
-          document: "",
-        });
-      } catch (error) {
-        console.error("Error parsing saved form data:", error);
-      }
-    }
-  }, [setFormData]);
+    const savedData = {
+      exportBazaar: propertyLawData?.exportBazaar || [],
+      businessOperations: propertyLawData?.businessOperations || "",
+      companyLawType: propertyLawData?.companyLawType || "",
+      products: propertyLawData?.products || "",
+      exportActivity: propertyLawData?.exportActivity || false,
+      document: propertyLawData?.document || "",
+    };
+    setLocalLawData(savedData);
+  }, []);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
 
-    setLocalFormData((prev) => ({
+    setLocalLawData((prev) => ({
       ...prev,
       [name]: value,
     }));
 
-    // Update errors on input change to remove error once fixed
-    setErrors((prev) => ({
+    setLocalLawDataErrors((prev) => ({
       ...prev,
-      [name]: undefined,
+      [name]: "",
     }));
 
-    // Make sure propertyLaw exists before updating its properties
-    const updatedFormData = { ...formData };
-    if (!updatedFormData.propertyLaw) {
-      updatedFormData.propertyLaw = {
-        exportBazaar: [],
-        businessOperations: "",
-        companyLawType: "",
-        products: "",
-        exportActivity: false
-      };
-    }
-
     switch (name) {
-      case "companyType":
-        updatedFormData.propertyLaw.companyLawType = value;
+      case "companyLawType":
+        localLawData.companyLawType = value;
         break;
-      case "businessIndustry":
-        updatedFormData.propertyLaw.businessOperations = value;
+      case "businessOperations":
+        localLawData.businessOperations = value;
         break;
-      case "mainProducts":
-        updatedFormData.propertyLaw.products = value;
+      case "products":
+        localLawData.products = value;
         break;
-      case "exportActivity":
-        updatedFormData.propertyLaw.exportActivity = value === "Bəli";
+      case "exportActivity": {
+        const checked = value === "Xeyr" ? false : true;
+        localLawData.exportActivity = checked;
         break;
+      }
       case "document":
+        localLawData.document = value;
         break;
       default:
         break;
     }
-
-    setFormData(updatedFormData);
-    localStorage.setItem("formData", JSON.stringify(updatedFormData));
+    localStorage.setItem("propertyLaw", JSON.stringify(localLawData));
   };
 
   const handleCountryChange = (
@@ -212,135 +103,114 @@ export default function ApplyTwo() {
       countries = selectedOptions.map((option) => option.label);
     }
 
-    setLocalFormData((prev) => ({
+    setLocalLawData((prev) => ({
       ...prev,
-      exportMarkets: countries,
+      exportBazaar: countries,
     }));
 
-    // Remove error on valid change
-    setErrors((prev) => ({
+    setLocalLawDataErrors((prev) => ({
       ...prev,
-      exportMarkets: undefined,
+      exportBazaar: "",
     }));
 
-    // Make sure propertyLaw exists before updating
-    const updatedFormData = { ...formData };
-    if (!updatedFormData.propertyLaw) {
-      updatedFormData.propertyLaw = {
-        exportBazaar: countries,
+    let updatedFormData = { ...localLawData };
+    if (!updatedFormData) {
+      updatedFormData = {
+        exportBazaar: [],
         businessOperations: "",
         companyLawType: "",
         products: "",
-        exportActivity: false
+        exportActivity: false,
+        document: "",
       };
     } else {
-      updatedFormData.propertyLaw = {
-        ...updatedFormData.propertyLaw,
+      updatedFormData = {
+        ...updatedFormData,
         exportBazaar: countries,
       };
     }
-
-    setFormData(updatedFormData);
-    localStorage.setItem("formData", JSON.stringify(updatedFormData));
+    localStorage.setItem("propertyLaw", JSON.stringify(updatedFormData));
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      setLocalFormData((prev) => ({
+      setLocalLawData((prev) => ({
         ...prev,
         document: file.name,
       }));
 
       // Remove error if any
-      setErrors((prev) => ({
+      setLocalLawDataErrors((prev) => ({
         ...prev,
-        document: undefined,
+        document: "",
       }));
     }
   };
 
-  // Form validasiyası
   const validateForm = () => {
-    const newErrors: typeof errors = {};
+    const newErrors: typeof localLawDataErrors = {};
 
-    if (!localFormData.companyType.trim()) {
-      newErrors.companyType = page.companyTypeRequired[language];
+    if (!localLawData.companyLawType.trim()) {
+      newErrors.companyLawType = page.companyTypeRequired[language];
     }
 
-    if (!localFormData.businessIndustry.trim()) {
-      newErrors.businessIndustry = page.businessIndustryRequired[language];
+    if (!localLawData.businessOperations.trim()) {
+      newErrors.businessOperations = page.businessIndustryRequired[language];
     }
 
-    if (!localFormData.mainProducts.trim()) {
-      newErrors.mainProducts = page.mainProductsRequired[language];
+    if (!localLawData.products.trim()) {
+      newErrors.products = page.mainProductsRequired[language];
     }
 
-    if (
-      localFormData.exportActivity !== "Bəli" &&
-      localFormData.exportActivity !== "Xeyr"
-    ) {
+    if (localLawData.exportActivity && localLawData.exportActivity === null) {
       newErrors.exportActivity = page.exportActivityRequired[language];
     }
 
-    if (
-      !localFormData.exportMarkets ||
-      localFormData.exportMarkets.length === 0
-    ) {
-      newErrors.exportMarkets = page.exportMarketsRequired[language];
+    if (!localLawData.exportBazaar || localLawData.exportBazaar.length === 0) {
+      newErrors.exportBazaar = page.exportMarketsRequired[language];
     }
 
-    // Əgər sən sənədin yüklənməsini mütləq etmək istəyirsənsə, burada əlavə et.
-    // Məsələn:
-    // if (!localFormData.document) {
-    //   newErrors.document = "Sənəd yüklənməlidir."
-    // }
-
-    setErrors(newErrors);
+    setLocalLawDataErrors(newErrors);
 
     return Object.keys(newErrors).length === 0;
   };
 
   useEffect(() => {
-    if (Object.keys(errors).length > 0) {
-      const translatedErrors: typeof errors = {};
+    if (Object.keys(localLawDataErrors).length > 0) {
+      const translatedErrors: typeof localLawDataErrors = {};
 
-      if (errors.companyType) {
-        translatedErrors.companyType = page.companyTypeRequired[language];
+      if (localLawDataErrors.companyLawType) {
+        translatedErrors.companyLawType = page.companyTypeRequired[language];
       }
 
-      if (errors.businessIndustry) {
-        translatedErrors.businessIndustry =
+      if (localLawDataErrors.businessOperations) {
+        translatedErrors.businessOperations =
           page.businessIndustryRequired[language];
       }
 
-      if (errors.mainProducts) {
-        translatedErrors.mainProducts = page.mainProductsRequired[language];
+      if (localLawDataErrors.products) {
+        translatedErrors.products = page.mainProductsRequired[language];
       }
 
-      if (errors.exportActivity) {
+      if (localLawDataErrors.exportActivity) {
         translatedErrors.exportActivity = page.exportActivityRequired[language];
       }
 
-      if (errors.exportMarkets) {
-        translatedErrors.exportMarkets = page.exportMarketsRequired[language];
+      if (localLawDataErrors.exportBazaar) {
+        translatedErrors.exportBazaar = page.exportMarketsRequired[language];
       }
 
-      // Optional for document if you're validating it
-      // if (errors.document) {
-      //   translatedErrors.document = page.documentRequired[language];
-      // }
-
-      setErrors(translatedErrors);
+      setLocalLawDataErrors(translatedErrors);
     }
   }, [
     language,
-    errors,
+    localLawDataErrors,
     page.companyTypeRequired,
     page.businessIndustryRequired,
     page.mainProductsRequired,
     page.exportActivityRequired,
-    page.exportMarketsRequired
+    page.exportMarketsRequired,
   ]);
 
   const handleGoBack = () => navigate("/apply");
@@ -355,9 +225,8 @@ export default function ApplyTwo() {
   };
 
   const selectedOptions = options.filter((option) =>
-    localFormData.exportMarkets.includes(option.label)
+    localLawData.exportBazaar.includes(option.label)
   );
-
 
   return (
     <>
@@ -377,23 +246,24 @@ export default function ApplyTwo() {
             <label className="text-sm">{page.companyType[language]}</label>
             <input
               type="text"
-              name="companyType"
-              value={localFormData.companyType}
+              name="companyLawType"
+              value={localLawData.companyLawType}
               onChange={handleInputChange}
               className={`w-full bg-transparent rounded-lg p-2 sm:p-3 text-xs sm:text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 transition duration-300
-                ${errors.companyType
-                  ? "border border-red-500"
-                  : "border border-gray-700"
+                ${
+                  localLawDataErrors.companyLawType
+                    ? "border border-red-500"
+                    : "border border-gray-700"
                 }`}
-              aria-invalid={!!errors.companyType}
+              aria-invalid={!!localLawDataErrors.companyLawType}
               aria-describedby="companyType-error"
             />
-            {errors.companyType && (
+            {localLawDataErrors.companyLawType && (
               <p
                 id="companyType-error"
                 className="text-red-500 text-xs mt-1 input-error"
               >
-                {errors.companyType}
+                {localLawDataErrors.companyLawType}
               </p>
             )}
           </div>
@@ -404,15 +274,16 @@ export default function ApplyTwo() {
               {page.businessIndustry.label[language]}
             </label>
             <select
-              name="businessIndustry"
-              value={localFormData.businessIndustry}
+              name="businessOperations"
+              value={localLawData.businessOperations}
               onChange={handleInputChange}
               className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300
-                ${errors.businessIndustry
-                  ? "border border-red-500"
-                  : "border border-gray-700"
+                ${
+                  localLawDataErrors.businessOperations
+                    ? "border border-red-500"
+                    : "border border-gray-700"
                 }`}
-              aria-invalid={!!errors.businessIndustry}
+              aria-invalid={!!localLawDataErrors.businessOperations}
               aria-describedby="businessIndustry-error"
             >
               <option className="text-white bg-[#131021]" value="">
@@ -424,7 +295,10 @@ export default function ApplyTwo() {
               >
                 {page.businessIndustry.options.representedIndustry[language]}
               </option>
-              <option className="text-white bg-[#131021]" value="Qida və içkilər">
+              <option
+                className="text-white bg-[#131021]"
+                value="Qida və içkilər"
+              >
                 {page.businessIndustry.options.foodAndBeverages[language]}
               </option>
               <option className="text-white bg-[#131021]" value="Neft - qaz">
@@ -442,7 +316,7 @@ export default function ApplyTwo() {
               >
                 {
                   page.businessIndustry.options.machineRepairAndInstallation[
-                  language
+                    language
                   ]
                 }
               </option>
@@ -452,33 +326,36 @@ export default function ApplyTwo() {
               >
                 {
                   page.businessIndustry.options.rubberAndPlasticProducts[
-                  language
+                    language
                   ]
                 }
               </option>
               <option className="text-white bg-[#131021]" value="Tekstil">
                 {page.businessIndustry.options.textile[language]}
               </option>
-              <option className="text-white bg-[#131021]" value="Elektrik avadanlıqları">
+              <option
+                className="text-white bg-[#131021]"
+                value="Elektrik avadanlıqları"
+              >
                 {page.businessIndustry.options.electricalEquipment[language]}
               </option>
-              {localFormData.businessIndustry === 'Digər' && (
-        <input
-          type="text"
-          placeholder="Sahəni daxil edin..."
-          value={localFormData.businessIndustry}
-          onChange={handleInputChange}
-          name="businessIndustry"
-          className="p-2 rounded bg-white text-black"
-        />
-      )}
+              {localLawData.businessOperations === "Digər" && (
+                <input
+                  type="text"
+                  placeholder="Sahəni daxil edin..."
+                  value={localLawData.businessOperations}
+                  onChange={handleInputChange}
+                  name="businessIndustry"
+                  className="p-2 rounded bg-white text-black"
+                />
+              )}
             </select>
-            {errors.businessIndustry && (
+            {localLawDataErrors.businessOperations && (
               <p
                 id="businessIndustry-error"
                 className="text-red-500 text-xs mt-1 input-error"
               >
-                {errors.businessIndustry}
+                {localLawDataErrors.businessOperations}
               </p>
             )}
           </div>
@@ -488,23 +365,24 @@ export default function ApplyTwo() {
             <label className="text-sm">{page.mainProducts[language]}</label>
             <input
               type="text"
-              name="mainProducts"
-              value={localFormData.mainProducts}
+              name="products"
+              value={localLawData.products}
               onChange={handleInputChange}
               className={`w-full bg-transparent rounded-lg p-2 sm:p-3 text-xs sm:text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 transition duration-300
-                ${errors.mainProducts
-                  ? "border border-red-500"
-                  : "border border-gray-700"
+                ${
+                  localLawDataErrors.products
+                    ? "border border-red-500"
+                    : "border border-gray-700"
                 }`}
-              aria-invalid={!!errors.mainProducts}
+              aria-invalid={!localLawData.products}
               aria-describedby="mainProducts-error"
             />
-            {errors.mainProducts && (
+            {localLawDataErrors.products && (
               <p
                 id="mainProducts-error"
                 className="text-red-500 text-xs mt-1 input-error"
               >
-                {errors.mainProducts}
+                {localLawDataErrors.products}
               </p>
             )}
           </div>
@@ -519,11 +397,11 @@ export default function ApplyTwo() {
                   name="exportActivity"
                   value="Bəli"
                   onChange={handleInputChange}
-                  checked={localFormData.exportActivity === "Bəli"}
+                  checked={localLawData.exportActivity === true}
                   className="hidden"
                 />
                 <span className="w-5 h-5 flex items-center justify-center border border-gray-400 rounded">
-                  {localFormData.exportActivity === "Bəli" && (
+                  {localLawData.exportActivity && (
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       className="w-4 h-4 text-blue-500"
@@ -549,11 +427,11 @@ export default function ApplyTwo() {
                   name="exportActivity"
                   value="Xeyr"
                   onChange={handleInputChange}
-                  checked={localFormData.exportActivity === "Xeyr"}
+                  checked={localLawData.exportActivity === false}
                   className="hidden"
                 />
                 <span className="w-5 h-5 flex items-center justify-center border border-gray-400 rounded">
-                  {localFormData.exportActivity === "Xeyr" && (
+                  {localLawData.exportActivity === false && (
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       className="w-4 h-4 text-blue-500"
@@ -573,9 +451,9 @@ export default function ApplyTwo() {
                 <span className="text-sm">{page.no[language]}</span>
               </label>
             </div>
-            {errors.exportActivity && (
+            {localLawDataErrors.exportActivity && (
               <p className="text-red-500 text-xs mt-1 input-error">
-                {errors.exportActivity}
+                {localLawDataErrors.exportActivity}
               </p>
             )}
           </div>
@@ -593,8 +471,11 @@ export default function ApplyTwo() {
                 }
                 handleCountryChange(selected);
               }}
-              className={`w-full ${errors.exportMarkets ? "border border-red-500 rounded" : ""
-                }`}
+              className={`w-full ${
+                localLawDataErrors.exportBazaar
+                  ? "border border-red-500 rounded"
+                  : ""
+              }`}
               classNamePrefix="react-select"
               placeholder={page.exportMarketsPlaceholder[language]}
               isClearable
@@ -609,7 +490,9 @@ export default function ApplyTwo() {
                 control: (provided) => ({
                   ...provided,
                   backgroundColor: "transparent",
-                  borderColor: errors.exportMarkets ? "red" : "#4B5563",
+                  borderColor: localLawDataErrors.exportBazaar
+                    ? "red"
+                    : "#4B5563",
                 }),
                 singleValue: (provided) => ({
                   ...provided,
@@ -632,9 +515,9 @@ export default function ApplyTwo() {
                 }),
               }}
             />
-            {errors.exportMarkets && (
+            {localLawDataErrors.exportBazaar && (
               <p className="text-red-500 text-xs mt-1 input-error">
-                {errors.exportMarkets}
+                {localLawDataErrors.exportBazaar}
               </p>
             )}
           </div>
@@ -649,9 +532,9 @@ export default function ApplyTwo() {
               onChange={handleFileChange}
               className="w-full cursor-pointer bg-transparent border border-gray-700 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300"
             />
-            {localFormData.document && (
+            {localLawDataErrors.document && (
               <p className="text-xs text-gray-400 mt-1">
-                {page.selectedFile[language]} {localFormData.document}
+                {page.selectedFile[language]} {localLawDataErrors.document}
               </p>
             )}
             <div>

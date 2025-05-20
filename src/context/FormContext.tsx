@@ -1,6 +1,6 @@
 // Update your FormContext.tsx to include the new properties
 
-import { createContext } from "react"
+import { createContext } from "react";
 
 // Update the FormContextType to include the file state
 export interface FormContextType {
@@ -20,6 +20,7 @@ export interface FormContextType {
       declarationConsent: {
         dataIsReal: boolean;
         permitContact: boolean;
+        privacyAcceptance: boolean;
       };
       digitalLeadership: {
         digitalTeamOrLead: boolean;
@@ -28,7 +29,7 @@ export interface FormContextType {
       };
       digitalReadiness: {
         keyChallenges: string[];
-        digitalLevel: number; // Number between 0-255
+        digitalLevel: number;
         digitalTools: string[];
         companyPurpose: string;
       };

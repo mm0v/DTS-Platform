@@ -19,12 +19,10 @@ export default function ApplyOne() {
     throw new Error("ApplyOne must be used within a FormContext.Provider");
   }
 
-  const { setFormData } = context;
-
-  const [localFormData, setLocalFormData] = useState({
+  const initialValue = {
     companyName: "",
-    vatNumber: "",
-    foundingDate: "",
+    companyRegisterNumber: "",
+    createYear: "",
     companySize: "",
     annualTurnover: "",
     companyAddress: "",
@@ -32,171 +30,105 @@ export default function ApplyOne() {
     website: "",
     contactPerson: "",
     email: "",
-    phone: ""
-  });
+    phone: "",
+  };
 
+  const [localFormData, setLocalFormData] = useState(initialValue);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const companyData = JSON.parse(localStorage.getItem("companyData")!);
 
   useEffect(() => {
-    // Load saved data if any
     const savedData = {
-      companyName: localStorage.getItem("companyName") || "",
-      vatNumber: localStorage.getItem("vatNumber") || "",
-      foundingDate: localStorage.getItem("foundingDate") || "",
-      companySize: localStorage.getItem("companySize") || "",
-      annualTurnover: localStorage.getItem("annualTurnover") || "",
-      companyAddress: localStorage.getItem("companyAddress") || "",
-      location: localStorage.getItem("location") || "",
-      website: localStorage.getItem("website") || "",
-      contactPerson: localStorage.getItem("contactPerson") || "",
-      email: localStorage.getItem("email") || "",
-      phone: localStorage.getItem("phone") || "",
+      companyName: companyData?.companyName || "",
+      companyRegisterNumber: companyData?.companyRegisterNumber || "",
+      createYear: companyData?.createYear || "",
+      companySize: companyData?.companySize || "",
+      annualTurnover: companyData?.annualTurnover || "",
+      companyAddress: companyData?.companyAddress || "",
+      location: companyData?.location || "",
+      website: companyData?.website || "",
+      contactPerson: companyData?.contactPerson || "",
+      email: companyData?.email || "",
+      phone: companyData?.phone || "",
     };
     setLocalFormData(savedData);
   }, []);
 
-  
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target;
 
-const handleInputChange = (
-  e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-) => {
-  const { name, value } = e.target;
-
-  // foundingDate üçün əlavə yoxlamalar
-  if (name === "foundingDate") {
-    // Yalnız rəqəmlərdən ibarət olsun
-    if (!/^\d{0,4}$/.test(value)) return;
-
-    // Əgər 4 rəqəm yazılıbsa, onu tam ədəd kimi yoxla
-    if (value.length === 4) {
-      const year = parseInt(value, 10);
-      if (year < 0 || year > 2025) return;
+    if (name === "createYear") {
+      if (!/^\d{0,4}$/.test(value)) return;
+      if (value.length === 4) {
+        const year = parseInt(value, 10);
+        if (year < 0 || year > 2025) return;
+      }
     }
-  }
 
-  setErrors((prev) => ({ ...prev, [name]: "" }));
-  setLocalFormData((prevState) => ({ ...prevState, [name]: value }));
-  localStorage.setItem(name, value);
+    setErrors((prev) => ({ ...prev, [name]: "" }));
+    setLocalFormData((prevState) => ({ ...prevState, [name]: value }));
+    localStorage.setItem(
+      "companyData",
+      JSON.stringify({ ...companyData, [name]: value })
+    );
+  };
 
-  // Update context accordingly
-  setFormData((prev) => ({
-    ...prev,
-    companyData: {
-      ...prev.companyData,
-      [name === "vatNumber"
-        ? "companyRegisterNumber"
-        : name === "foundingDate"
-        ? "createYear"
-        : name === "companySize"
-        ? "workerCount"
-        : name === "annualTurnover"
-        ? "annualTurnover"
-        : name === "companyAddress"
-        ? "address"
-        : name === "location"
-        ? "cityAndRegion"
-        : name === "contactPerson"
-        ? "contactName"
-        : name === "email"
-        ? "contactEmail"
-        : name === "phone"
-        ? "contactPhone"
-        : "companyName"]: value,
-    },
-  }));
-};
+  const handlePhoneChange = (value: string) => {
+    setLocalFormData((prev) => ({ ...prev, phone: value }));
+    localStorage.setItem(
+      "companyData",
+      JSON.stringify({ ...companyData, phone: value })
+    );
 
+    const digits = value.replace(/\D/g, "");
+    let errorMsg = "";
 
+    if (digits.length === 0) {
+      errorMsg = "Zəhmət olmasa telefon nömrəsini daxil edin";
+    } else if (digits.length < 9) {
+      errorMsg = "Telefon nömrəsi ən azı 9 rəqəm olmalıdır";
+    }
 
-const handlePhoneChange = (value: string) => {
-  // 1. Daxil edilən dəyəri saxla
-  setLocalFormData((prev) => ({ ...prev, phone: value }));
-  localStorage.setItem("phone", value);
-
-  // 2. Sadecə rəqəmləri götür və uzunluğunu yoxla
-  const digits = value.replace(/\D/g, "");
-  let errorMsg = "";
-
-  if (digits.length === 0) {
-    errorMsg = "Zəhmət olmasa telefon nömrəsini daxil edin";
-  } else if (digits.length < 9) {
-    errorMsg = "Telefon nömrəsi ən azı 9 rəqəm olmalıdır";
-  }
-
-  // 3. Səhv mesajını set et
-  setErrors((prev) => ({
-    ...prev,
-    phone: errorMsg,
-  }));
-
-  // 4. Context-i yenilə
-  setFormData((prev) => ({
-    ...prev,
-    companyData: {
-      ...prev.companyData,
-      contactPhone: value,
-    },
-  }));
-};
-
-
-const validateForm = () => {
-  const newErrors: typeof errors = { /* əvvəlki qaydalar */ };
-
-  // Telefon validasiyası
-  const digitsOnly = (localFormData.phone || "").replace(/\D/g, "");
-  if (digitsOnly.length < 9) {
-    newErrors.phone = page.phoneRequired[language];
-  }
-
-  setErrors(newErrors);
-  return Object.keys(newErrors).length === 0;
-};
-
-
-
-
+    setErrors((prev) => ({
+      ...prev,
+      phone: errorMsg,
+    }));
+  };
 
   const handleNext = () => {
-    const newErrors: Record<string, string> = {};
-    if (!localFormData.companyName.trim()) {
-      newErrors.companyName = page.companyNameRequired[language];
-    }
+    const requiredFields: {
+      key: keyof typeof localFormData;
+      errorKey: keyof typeof page;
+    }[] = [
+      { key: "companyName", errorKey: "companyNameRequired" },
+      {
+        key: "companyRegisterNumber",
+        errorKey: "companyRegisterNumberRequired",
+      },
+      { key: "createYear", errorKey: "createYearRequired" },
+      { key: "companySize", errorKey: "companySizeRequired" },
+      { key: "annualTurnover", errorKey: "annualTurnoverRequired" },
+      { key: "companyAddress", errorKey: "companyAddressRequired" },
+      { key: "location", errorKey: "locationRequired" },
+      { key: "website", errorKey: "websiteRequired" },
+      { key: "contactPerson", errorKey: "contactPersonRequired" },
+      { key: "email", errorKey: "emailRequired" },
+      { key: "phone", errorKey: "phoneRequired" },
+    ];
 
-    if (!localFormData.vatNumber.trim()) {
-      newErrors.vatNumber = page.vatNumberRequired[language];
-    }
-    if (!localFormData.foundingDate.trim()) {
-      newErrors.foundingDate = page.foundingDateRequired[language];
-    }
-    if (!localFormData.companySize.trim()) {
-      newErrors.companySize = page.companySizeRequired[language];
-    }
-    if (!localFormData.annualTurnover.trim()) {
-      newErrors.annualTurnover = page.annualTurnoverRequired[language];
-    }
-    if (!localFormData.companyAddress.trim()) {
-      newErrors.companyAddress = page.companyAddressRequired[language];
-    }
-    if (!localFormData.location.trim()) {
-      newErrors.location = page.locationRequired[language];
-    }
-    if (!localFormData.website.trim()) {
-      newErrors.website = page.websiteRequired[language];
-    }
-    if (!localFormData.contactPerson.trim()) {
-      newErrors.contactPerson = page.contactPersonRequired[language];
-    }
-    if (!localFormData.email.trim()) {
-      newErrors.email = page.emailRequired[language];
-    }
-    if (!localFormData.phone.trim()) {
-      newErrors.phone = page.phoneRequired[language];
-    }
+    const newErrors: Record<string, string> = {};
+
+    requiredFields.forEach(({ key, errorKey }) => {
+      const value = localFormData[key];
+      if (typeof value === "string" && !value.trim()) {
+        newErrors[key] = page[errorKey][language];
+      }
+    });
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
-      window.scrollTo({ top: 0, behavior: "smooth" });
       return;
     }
 
@@ -206,41 +138,33 @@ const validateForm = () => {
   useEffect(() => {
     if (Object.keys(errors).length === 0) return;
 
+    const requiredFields: {
+      key: keyof typeof errors;
+      errorKey: keyof typeof page;
+    }[] = [
+      { key: "companyName", errorKey: "companyNameRequired" },
+      {
+        key: "companyRegisterNumber",
+        errorKey: "companyRegisterNumberRequired",
+      },
+      { key: "createYear", errorKey: "createYearRequired" },
+      { key: "companySize", errorKey: "companySizeRequired" },
+      { key: "annualTurnover", errorKey: "annualTurnoverRequired" },
+      { key: "companyAddress", errorKey: "companyAddressRequired" },
+      { key: "location", errorKey: "locationRequired" },
+      { key: "website", errorKey: "websiteRequired" },
+      { key: "contactPerson", errorKey: "contactPersonRequired" },
+      { key: "email", errorKey: "emailRequired" },
+      { key: "phone", errorKey: "phoneRequired" },
+    ];
+
     const updatedErrors: Record<string, string> = {};
 
-    if (errors.companyName) {
-      updatedErrors.companyName = page.companyNameRequired[language];
-    }
-    if (errors.vatNumber) {
-      updatedErrors.vatNumber = page.vatNumberRequired[language];
-    }
-    if (errors.foundingDate) {
-      updatedErrors.foundingDate = page.foundingDateRequired[language];
-    }
-    if (errors.companySize) {
-      updatedErrors.companySize = page.companySizeRequired[language];
-    }
-    if (errors.annualTurnover) {
-      updatedErrors.annualTurnover = page.annualTurnoverRequired[language];
-    }
-    if (errors.companyAddress) {
-      updatedErrors.companyAddress = page.companyAddressRequired[language];
-    }
-    if (errors.location) {
-      updatedErrors.location = page.locationRequired[language];
-    }
-    if (errors.website) {
-      updatedErrors.website = page.websiteRequired[language];
-    }
-    if (errors.contactPerson) {
-      updatedErrors.contactPerson = page.contactPersonRequired[language];
-    }
-    if (errors.email) {
-      updatedErrors.email = page.emailRequired[language];
-    }
-    if (errors.phone) {
-      updatedErrors.phone = page.phoneRequired[language];
-    }
+    requiredFields.forEach(({ key, errorKey }) => {
+      if (errors[key]) {
+        updatedErrors[key] = page[errorKey][language];
+      }
+    });
 
     setErrors(updatedErrors);
   }, [language]);
@@ -266,10 +190,11 @@ const validateForm = () => {
               name="companyName"
               value={localFormData.companyName}
               onChange={handleInputChange}
-              className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${errors.companyName
+              className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${
+                errors.companyName
                   ? "border-red-500 focus:ring-red-500"
                   : "border-gray-700 focus:ring-blue-500"
-                }`}
+              }`}
             />
             {errors.companyName && (
               <p className="text-red-500 text-sm">{errors.companyName}</p>
@@ -279,44 +204,48 @@ const validateForm = () => {
           <div className="flex gap-4">
             {/* VAT Number */}
             <div className="flex-1 space-y-2">
-              <label className="text-sm">{page.vatNumber[language]}</label>
+              <label className="text-sm">
+                {page.companyRegisterNumber[language]}
+              </label>
               <input
                 type="text"
-                name="vatNumber"
-                value={localFormData.vatNumber}
+                name="companyRegisterNumber"
+                value={localFormData.companyRegisterNumber}
                 onChange={handleInputChange}
-                className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${errors.vatNumber
+                className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${
+                  errors.companyRegisterNumber
                     ? "border-red-500 focus:ring-red-500"
                     : "border-gray-700 focus:ring-blue-500"
-                  }`}
+                }`}
               />
-              {errors.vatNumber && (
-                <p className="text-red-500 text-sm">{errors.vatNumber}</p>
+              {errors.companyRegisterNumber && (
+                <p className="text-red-500 text-sm">
+                  {errors.companyRegisterNumber}
+                </p>
               )}
             </div>
 
             {/* Founding Date */}
             <div className="flex-1 space-y-2">
-  <label className="text-sm">{page.foundingDate[language]}</label>
- <input
-  type="number"
-  name="foundingDate"
-  value={localFormData.foundingDate}
-  onChange={handleInputChange}
-  max={2025}
-  placeholder="YYYY"
-  className={`no-spinner w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${
-    errors.foundingDate
-      ? "border-red-500 focus:ring-red-500"
-      : "border-gray-700 focus:ring-blue-500"
-  }`}
-/>
+              <label className="text-sm">{page.createYear[language]}</label>
+              <input
+                type="number"
+                name="createYear"
+                value={localFormData.createYear}
+                onChange={handleInputChange}
+                max={2025}
+                placeholder="YYYY"
+                className={`no-spinner w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${
+                  errors.createYear
+                    ? "border-red-500 focus:ring-red-500"
+                    : "border-gray-700 focus:ring-blue-500"
+                }`}
+              />
 
-  {errors.foundingDate && (
-    <p className="text-red-500 text-sm">{errors.foundingDate}</p>
-  )}
-</div>
-
+              {errors.createYear && (
+                <p className="text-red-500 text-sm">{errors.createYear}</p>
+              )}
+            </div>
           </div>
           <div className="flex gap-4">
             {/* Company Size */}
@@ -326,10 +255,11 @@ const validateForm = () => {
                 name="companySize"
                 value={localFormData.companySize}
                 onChange={handleInputChange}
-                className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${errors.companySize
+                className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${
+                  errors.companySize
                     ? "border-red-500 focus:ring-red-500"
                     : "border-gray-700 focus:ring-blue-500"
-                  }`}
+                }`}
               >
                 <option className="text-white bg-[#070618]" value="">
                   {page.placeholder[language]}
@@ -361,10 +291,11 @@ const validateForm = () => {
                 name="annualTurnover"
                 value={localFormData.annualTurnover}
                 onChange={handleInputChange}
-                className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${errors.annualTurnover
+                className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${
+                  errors.annualTurnover
                     ? "border-red-500 focus:ring-red-500"
                     : "border-gray-700 focus:ring-blue-500"
-                  }`}
+                }`}
               >
                 <option className="text-white bg-[#070618]" value="">
                   {page.placeholder[language]}
@@ -393,10 +324,11 @@ const validateForm = () => {
               name="companyAddress"
               value={localFormData.companyAddress}
               onChange={handleInputChange}
-              className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${errors.companyAddress
+              className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${
+                errors.companyAddress
                   ? "border-red-500 focus:ring-red-500"
                   : "border-gray-700 focus:ring-blue-500"
-                }`}
+              }`}
             />
             {errors.companyAddress && (
               <p className="text-red-500 text-sm">{errors.companyAddress}</p>
@@ -411,10 +343,11 @@ const validateForm = () => {
               name="location"
               value={localFormData.location}
               onChange={handleInputChange}
-              className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${errors.location
+              className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${
+                errors.location
                   ? "border-red-500 focus:ring-red-500"
                   : "border-gray-700 focus:ring-blue-500"
-                }`}
+              }`}
             />
             {errors.location && (
               <p className="text-red-500 text-sm">{errors.location}</p>
@@ -429,10 +362,11 @@ const validateForm = () => {
               name="website"
               value={localFormData.website}
               onChange={handleInputChange}
-              className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${errors.website
+              className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${
+                errors.website
                   ? "border-red-500 focus:ring-red-500"
                   : "border-gray-700 focus:ring-blue-500"
-                }`}
+              }`}
             />
             {errors.website && (
               <p className="text-red-500 text-sm">{errors.website}</p>
@@ -446,10 +380,11 @@ const validateForm = () => {
               name="contactPerson"
               value={localFormData.contactPerson}
               onChange={handleInputChange}
-              className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${errors.contactPerson
+              className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${
+                errors.contactPerson
                   ? "border-red-500 focus:ring-red-500"
                   : "border-gray-700 focus:ring-blue-500"
-                }`}
+              }`}
             />
             {errors.contactPerson && (
               <p className="text-red-500 text-sm">{errors.contactPerson}</p>
@@ -465,10 +400,11 @@ const validateForm = () => {
                 name="email"
                 value={localFormData.email}
                 onChange={handleInputChange}
-                className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${errors.email
+                className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${
+                  errors.email
                     ? "border-red-500 focus:ring-red-500"
                     : "border-gray-700 focus:ring-blue-500"
-                  }`}
+                }`}
               />
               {errors.email && (
                 <p className="text-red-500 text-sm">{errors.email}</p>
@@ -476,42 +412,43 @@ const validateForm = () => {
             </div>
 
             {/* Phone */}
-          <div className="flex-1 space-y-2">
-  <label className="text-sm">{page.phone[language]}</label>
-  <PhoneInput
-    inputClassName="phone-dark-input flex-1 bg-transparent"
-    defaultCountry="az"
-    value={localFormData.phone}
-    onChange={handlePhoneChange}
-    className={`w-full ${
-      errors.phone ? "border border-red-500 rounded" : "border border-gray-700"
-    }`}
-  />
-  {errors.phone && (
-    <p className="text-red-500 text-sm">{errors.phone}</p>
-  )}
-</div>
-
+            <div className="flex-1 space-y-2">
+              <label className="text-sm">{page.phone[language]}</label>
+              <PhoneInput
+                inputClassName="phone-dark-input flex-1 bg-transparent"
+                defaultCountry="az"
+                value={localFormData.phone}
+                onChange={handlePhoneChange}
+                className={`w-full ${
+                  errors.phone
+                    ? "border border-red-500 rounded"
+                    : "border border-gray-700"
+                }`}
+              />
+              {errors.phone && (
+                <p className="text-red-500 text-sm">{errors.phone}</p>
+              )}
+            </div>
           </div>
 
           {/* Next Button */}
-        <button
-  type="button"
-  onClick={handleNext}
-  disabled={!!errors.phone}
-  className={`w-full py-3 rounded-lg transition duration-300 mt-6 text-white
+          <button
+            type="button"
+            onClick={handleNext}
+            disabled={!!errors.phone}
+            className={`w-full py-3 rounded-lg transition duration-300 mt-6 text-white
     ${
       !errors.phone
-        ? 'bg-blue-600 hover:bg-[#1a4381] cursor-pointer'
-        : 'bg-gray-500 cursor-not-allowed'
-    }`
-  }
->
-  {pagesTranslations.applyBtns.nextBtn[language]}
-</button>
-
+        ? "bg-blue-600 hover:bg-[#1a4381] cursor-pointer"
+        : "bg-gray-500 cursor-not-allowed"
+    }`}
+          >
+            {pagesTranslations.applyBtns.nextBtn[language]}
+          </button>
         </div>
       </div>
     </>
   );
 }
+
+// Verified and refactored

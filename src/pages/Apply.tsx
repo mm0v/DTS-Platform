@@ -4,13 +4,12 @@ import ApplyTwo from "./ApplyTwo";
 import ApplyThree from "./ApplyThree";
 import ApplyFour from "./ApplyFour";
 import ApplyFive from "./ApplyFive";
-import { useState, useRef } from "react";
+import { useState } from "react";
 import API from "../services/axiosConfig";
 import { FormContext } from "../context/FormContext";
 import type { FormContextType } from "../context/FormContext";
 
 const Apply = () => {
-  const fileInputRef = useRef<HTMLInputElement>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [files, setFiles] = useState<File[]>([]);
 
@@ -30,6 +29,7 @@ const Apply = () => {
       declarationConsent: {
         dataIsReal: false,
         permitContact: false,
+        privacyAcceptance: false,
       },
       digitalLeadership: {
         digitalTeamOrLead: false,
@@ -61,10 +61,10 @@ const Apply = () => {
   };
 
   const handleSubmit = async () => {
+    console.log("handleSubmit");
     try {
       setIsSubmitting(true);
 
-      // Restructure data to match the required format
       const apiData = {
         companyData: {
           companyName: formData.companyData.companyName,
@@ -81,73 +81,74 @@ const Apply = () => {
           contactPhone: formData.companyData.contactPhone,
         },
         declarationConsent: {
-          dataIsReal: Boolean(formData.companyData.declarationConsent.dataIsReal),
-          permitContact: Boolean(formData.companyData.declarationConsent.permitContact),
+          dataIsReal: formData.companyData.declarationConsent.dataIsReal, // Note by Rash why we cast here
+          permitContact: Boolean(
+            formData.companyData.declarationConsent.permitContact // Note by Rash why we cast here
+          ),
+          privacyAcceptance: Boolean(
+            formData.companyData.declarationConsent.privacyAcceptance // Note by Rash why we cast here
+          ),
         },
         digitalLeadership: {
           digitalTeamOrLead: Boolean(
             formData.companyData.digitalLeadership.digitalTeamOrLead
           ),
-          digitalPath: Boolean(formData.companyData.digitalLeadership.digitalPath),
+          digitalPath: Boolean(
+            formData.companyData.digitalLeadership.digitalPath
+          ),
           digitalTransformationLoyality: Boolean(
             formData.companyData.digitalLeadership.digitalTransformationLoyality
           ),
         },
         digitalReadiness: {
-          keyChallenges: formData.companyData.digitalReadiness.keyChallenges || [],
-          digitalLevel: Number(formData.companyData.digitalReadiness.digitalLevel),
-          digitalTools: formData.companyData.digitalReadiness.digitalTools || [],
+          keyChallenges:
+            formData.companyData.digitalReadiness.keyChallenges || [],
+          digitalLevel: formData.companyData.digitalReadiness.digitalLevel,
+          digitalTools:
+            formData.companyData.digitalReadiness.digitalTools || [],
           companyPurpose: formData.companyData.digitalReadiness.companyPurpose,
         },
         financialNeeding: {
-          financialNeed: Boolean(formData.companyData.financialNeeding.financialNeed),
+          financialNeed: Boolean(
+            formData.companyData.financialNeeding.financialNeed
+          ),
           neededBudget: formData.companyData.financialNeeding.neededBudget,
         },
         propertyLaw: {
-          businessOperations: formData.companyData.propertyLaw.businessOperations,
+          businessOperations:
+            formData.companyData.propertyLaw.businessOperations,
           companyLawType: formData.companyData.propertyLaw.companyLawType,
           products: formData.companyData.propertyLaw.products,
-          exportActivity: Boolean(formData.companyData.propertyLaw.exportActivity),
+          exportActivity: Boolean(
+            formData.companyData.propertyLaw.exportActivity
+          ),
           exportBazaar: formData.companyData.propertyLaw.exportBazaar,
         },
       };
 
-      console.log("Submitting form data:", apiData);
-      console.log(
-        "Digital level type:",
-        typeof apiData.digitalReadiness.digitalLevel
-      );
-      console.log(
-        "Digital level value:",
-        apiData.digitalReadiness.digitalLevel
-      );
+      console.log(apiData, "apiData");
 
-      // Check if there are files to upload
       if (files && files.length > 0) {
-        // Create FormData for multipart/form-data submission with files
         const formDataWithFiles = new FormData();
-
-        // Add JSON data as a string in a field called 'data'
-        formDataWithFiles.append('data', JSON.stringify(apiData));
-
-        // Add each file with a unique field name
+        formDataWithFiles.append("data", JSON.stringify(apiData));
         files.forEach((file, index) => {
           formDataWithFiles.append(`file${index + 1}`, file);
         });
 
         try {
-          console.log("Submitting form with files...");
-          const response = await API.post("/api/v1/company/add", formDataWithFiles, {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-            },
-          });
-          console.log("Submission with files successful!", response.data);
+          const response = await API.post(
+            "/api/v1/company/add",
+            formDataWithFiles,
+            {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+            }
+          );
           setIsSubmitting(false);
           return response.data;
         } catch (error) {
           console.error("Submission with files via API failed:", error);
-
           // Fallback: try direct fetch
           console.log("Trying direct fetch with files...");
           const fetchResponse = await fetch(
@@ -227,28 +228,16 @@ const Apply = () => {
   };
 
   return (
-    <FormContext.Provider value={{
-      formData,
-      setFormData,
-      handleSubmit,
-      isSubmitting,
-      files,
-      setFiles: setFilesToUpload
-    }}>
-      {/* Hidden file input for file selection (can be triggered from any child component) */}
-      <input
-        type="file"
-        ref={fileInputRef}
-        style={{ display: 'none' }}
-        multiple
-        onChange={(e) => {
-          if (e.target.files) {
-            const filesArray = Array.from(e.target.files);
-            setFiles(filesArray);
-          }
-        }}
-      />
-
+    <FormContext.Provider
+      value={{
+        formData,
+        setFormData,
+        handleSubmit,
+        isSubmitting,
+        files,
+        setFiles: setFilesToUpload,
+      }}
+    >
       <Routes>
         <Route index element={<ApplyOne />} />
         <Route path="two" element={<ApplyTwo />} />
@@ -257,7 +246,7 @@ const Apply = () => {
         <Route path="five" element={<ApplyFive />} />
       </Routes>
     </FormContext.Provider>
-  )
-}
+  );
+};
 
 export default Apply;
