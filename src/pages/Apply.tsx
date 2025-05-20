@@ -61,7 +61,6 @@ const Apply = () => {
   };
 
   const handleSubmit = async () => {
-    console.log("handleSubmit");
     try {
       setIsSubmitting(true);
 
@@ -125,8 +124,6 @@ const Apply = () => {
           exportBazaar: formData.companyData.propertyLaw.exportBazaar,
         },
       };
-
-      console.log(apiData, "apiData");
 
       if (files && files.length > 0) {
         const formDataWithFiles = new FormData();
