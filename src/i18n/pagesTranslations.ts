@@ -399,7 +399,7 @@ export const pagesTranslations = {
       AZ: "Məhsullarınızın ixrac olunduğu bazarlar",
       EN: "Markets where your products are exported",
     },
-    document: {
+    registerCertificate: {
       AZ: "Təsdiqedici sənəd (.doc, .docx, .pdf)",
       EN: "Verification document (.doc, .docx, .pdf)",
     },
@@ -539,8 +539,8 @@ export const pagesTranslations = {
         EN: "This field is required.",
       },
       minLength: {
-        AZ: "Bu sahə mütləq doldurulmalıdır və ən azı 3 simvol olmalıdır.",
-        EN: "This field is required and must be at least 3 characters.",
+        AZ: "Ən azı 3 simvol olmalıdır.",
+        EN: "Must be at least 3 characters.",
       },
       formError: {
         AZ: "Zəhmət olmasa bütün sahələri doldurun.",
@@ -598,10 +598,6 @@ export const pagesTranslations = {
         AZ: "Maliyyə dəstəyi lazımdırsa, büdcə məbləğini qeyd edin!",
         EN: "If financial support is needed, please specify the budget amount!",
       },
-      formValidation: {
-        AZ: "Zəhmət olmasa bütün məcburi xanaları doldurun!",
-        EN: "Please fill in all required fields!",
-      },
     },
   },
   apply5: {
@@ -626,15 +622,15 @@ export const pagesTranslations = {
       EN: "You will be contacted if additional supporting documents are needed regarding your application.",
     },
     checkboxes: {
-      confirmAccuracy: {
+      dataIsReal: {
         AZ: "Təqdim olunan məlumatların doğruluğunu təsdiq edirəm.",
         EN: "I confirm the accuracy of the submitted information.",
       },
-      contactConsent: {
+      permitContact: {
         AZ: "Müraciətimlə əlaqədar 4SİM tərəfindən əlaqə saxlanmasını qəbul edirəm.",
         EN: "I accept to be contacted by 4SIM regarding my application.",
       },
-      termsAgreement: {
+      privacyAcceptance: {
         AZ: "İstifadə şərtləri və gizlilik şərtləri ilə razıyam (yüklə)",
         EN: "I agree with the terms of use and privacy terms (download)",
       },

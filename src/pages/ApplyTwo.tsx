@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import BackgroundVideo from "../components/BackgroundVideo";
 import { FormContext } from "../context/FormContext";
@@ -8,13 +8,54 @@ import { useLanguage } from "../context/LanguageContext";
 import ApplySteps from "../components/ApplySteps";
 import Select, { type MultiValue } from "react-select";
 import countryList from "react-select-country-list";
+
 interface PropertyLaw {
   exportBazaar: string[];
   businessOperations: string;
   companyLawType: string;
   products: string;
   exportActivity: boolean;
-  document: string;
+  registerCertificate: string;
+}
+
+const DB_NAME = "ALL files";
+const STORE_NAME = "files";
+const FILE_KEY = "registerCertificate";
+
+function openDB() {
+  return new Promise<IDBDatabase>((resolve, reject) => {
+    const request = indexedDB.open(DB_NAME, 1);
+    request.onerror = () => reject(request.error);
+    request.onsuccess = () => resolve(request.result);
+    request.onupgradeneeded = () => {
+      const db = request.result;
+      if (!db.objectStoreNames.contains(STORE_NAME)) {
+        db.createObjectStore(STORE_NAME);
+      }
+    };
+  });
+}
+
+async function saveFileToIndexedDB(file: File) {
+  const db = await openDB();
+  return new Promise<void>((resolve, reject) => {
+    const tx = db.transaction(STORE_NAME, "readwrite");
+    const store = tx.objectStore(STORE_NAME);
+    const putRequest = store.put(file, FILE_KEY);
+    putRequest.onsuccess = () => resolve();
+    putRequest.onerror = () => reject(putRequest.error);
+  });
+}
+
+async function getFileFromIndexedDB(): Promise<File | null> {
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(STORE_NAME, "readonly");
+    const store = tx.objectStore(STORE_NAME);
+    const getRequest = store.get(FILE_KEY);
+    getRequest.onsuccess = () => resolve(getRequest.result || null);
+    getRequest.onerror = () => reject(getRequest.error);
+  });
 }
 
 export default function ApplyTwo() {
@@ -35,198 +76,103 @@ export default function ApplyTwo() {
     companyLawType: "",
     products: "",
     exportActivity: false,
-    document: "",
+    registerCertificate: "",
   };
 
-  const [localLawData, setLocalLawData] = useState(initialValue);
+  const [localLawData, setLocalLawData] = useState<PropertyLaw>(initialValue);
   const [localLawDataErrors, setLocalLawDataErrors] = useState<
     Record<string, string>
   >({});
-  const propertyLawData = JSON.parse(localStorage.getItem("propertyLaw")!);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    const savedData = {
-      exportBazaar: propertyLawData?.exportBazaar || [],
-      businessOperations: propertyLawData?.businessOperations || "",
-      companyLawType: propertyLawData?.companyLawType || "",
-      products: propertyLawData?.products || "",
-      exportActivity: propertyLawData?.exportActivity || false,
-      document: propertyLawData?.document || "",
-    };
-    setLocalLawData(savedData);
+    const savedData = JSON.parse(localStorage.getItem("propertyLaw") || "null");
+    getFileFromIndexedDB()
+      .then((file) => {
+        console.log(file!.name);
+        if (file && savedData) {
+          setLocalLawData({
+            ...savedData,
+            registerCertificate: file.name,
+          });
+          fileInputRef.current!.name = file.name;
+        } else if (savedData) {
+          setLocalLawData(savedData);
+        }
+      })
+      .catch(console.error);
   }, []);
+
+  const updateLocalStorage = (data: PropertyLaw) => {
+    localStorage.setItem("propertyLaw", JSON.stringify(data));
+  };
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
+    let newValue: unknown = value;
 
-    setLocalLawData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-
-    setLocalLawDataErrors((prev) => ({
-      ...prev,
-      [name]: "",
-    }));
-
-    switch (name) {
-      case "companyLawType":
-        localLawData.companyLawType = value;
-        break;
-      case "businessOperations":
-        localLawData.businessOperations = value;
-        break;
-      case "products":
-        localLawData.products = value;
-        break;
-      case "exportActivity": {
-        const checked = value === "Xeyr" ? false : true;
-        localLawData.exportActivity = checked;
-        break;
-      }
-      case "document":
-        localLawData.document = value;
-        break;
-      default:
-        break;
+    if (name === "exportActivity") {
+      newValue = value === "Bəli";
     }
-    localStorage.setItem("propertyLaw", JSON.stringify(localLawData));
+
+    const updatedData = { ...localLawData, [name]: newValue };
+    setLocalLawData(updatedData);
+    setLocalLawDataErrors((prev) => ({ ...prev, [name]: "" }));
+    updateLocalStorage(updatedData);
   };
 
   const handleCountryChange = (
     selectedOptions: MultiValue<{ label: string; value: string }>
   ) => {
-    let countries: string[] = [];
-    if (Array.isArray(selectedOptions)) {
-      countries = selectedOptions.map((option) => option.label);
-    }
-
-    setLocalLawData((prev) => ({
-      ...prev,
-      exportBazaar: countries,
-    }));
-
-    setLocalLawDataErrors((prev) => ({
-      ...prev,
-      exportBazaar: "",
-    }));
-
-    let updatedFormData = { ...localLawData };
-    if (!updatedFormData) {
-      updatedFormData = {
-        exportBazaar: [],
-        businessOperations: "",
-        companyLawType: "",
-        products: "",
-        exportActivity: false,
-        document: "",
-      };
-    } else {
-      updatedFormData = {
-        ...updatedFormData,
-        exportBazaar: countries,
-      };
-    }
-    localStorage.setItem("propertyLaw", JSON.stringify(updatedFormData));
-  };
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setLocalLawData((prev) => ({
-        ...prev,
-        document: file.name,
-      }));
-
-      // Remove error if any
-      setLocalLawDataErrors((prev) => ({
-        ...prev,
-        document: "",
-      }));
-    }
+    const countries = selectedOptions.map((option) => option.label);
+    const updatedData = { ...localLawData, exportBazaar: countries };
+    setLocalLawData(updatedData);
+    setLocalLawDataErrors((prev) => ({ ...prev, exportBazaar: "" }));
+    updateLocalStorage(updatedData);
   };
 
   const validateForm = () => {
-    const newErrors: typeof localLawDataErrors = {};
+    const errors: Record<string, string> = {};
 
-    if (!localLawData.companyLawType.trim()) {
-      newErrors.companyLawType = page.companyTypeRequired[language];
-    }
+    if (!localLawData.companyLawType.trim())
+      errors.companyLawType = page.companyTypeRequired[language];
+    if (!localLawData.businessOperations.trim())
+      errors.businessOperations = page.businessIndustryRequired[language];
+    if (!localLawData.products.trim())
+      errors.products = page.mainProductsRequired[language];
+    if (localLawData.exportActivity === null)
+      errors.exportActivity = page.exportActivityRequired[language];
+    if (!localLawData.exportBazaar.length)
+      errors.exportBazaar = page.exportMarketsRequired[language];
 
-    if (!localLawData.businessOperations.trim()) {
-      newErrors.businessOperations = page.businessIndustryRequired[language];
-    }
-
-    if (!localLawData.products.trim()) {
-      newErrors.products = page.mainProductsRequired[language];
-    }
-
-    if (localLawData.exportActivity && localLawData.exportActivity === null) {
-      newErrors.exportActivity = page.exportActivityRequired[language];
-    }
-
-    if (!localLawData.exportBazaar || localLawData.exportBazaar.length === 0) {
-      newErrors.exportBazaar = page.exportMarketsRequired[language];
-    }
-
-    setLocalLawDataErrors(newErrors);
-
-    return Object.keys(newErrors).length === 0;
+    setLocalLawDataErrors(errors);
+    return Object.keys(errors).length === 0;
   };
-
-  useEffect(() => {
-    if (Object.keys(localLawDataErrors).length > 0) {
-      const translatedErrors: typeof localLawDataErrors = {};
-
-      if (localLawDataErrors.companyLawType) {
-        translatedErrors.companyLawType = page.companyTypeRequired[language];
-      }
-
-      if (localLawDataErrors.businessOperations) {
-        translatedErrors.businessOperations =
-          page.businessIndustryRequired[language];
-      }
-
-      if (localLawDataErrors.products) {
-        translatedErrors.products = page.mainProductsRequired[language];
-      }
-
-      if (localLawDataErrors.exportActivity) {
-        translatedErrors.exportActivity = page.exportActivityRequired[language];
-      }
-
-      if (localLawDataErrors.exportBazaar) {
-        translatedErrors.exportBazaar = page.exportMarketsRequired[language];
-      }
-
-      setLocalLawDataErrors(translatedErrors);
-    }
-  }, [
-    language,
-    localLawDataErrors,
-    page.companyTypeRequired,
-    page.businessIndustryRequired,
-    page.mainProductsRequired,
-    page.exportActivityRequired,
-    page.exportMarketsRequired,
-  ]);
 
   const handleGoBack = () => navigate("/apply");
   const handleGoNext = () => {
-    if (validateForm()) {
-      navigate("/apply/three");
-    } else {
-      // İstəyə bağlı: səhv olan ilk sahəyə scroll
-      const firstError = document.querySelector(".input-error");
-      firstError?.scrollIntoView({ behavior: "smooth" });
-    }
+    if (validateForm()) navigate("/apply/three");
   };
 
   const selectedOptions = options.filter((option) =>
     localLawData.exportBazaar.includes(option.label)
   );
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      try {
+        await saveFileToIndexedDB(file);
+        const updatedData = { ...localLawData, registerCertificate: file.name };
+        setLocalLawData(updatedData);
+        updateLocalStorage(updatedData);
+      } catch (error) {
+        console.error("Failed to save file to IndexedDB", error);
+      }
+    }
+  };
 
   return (
     <>
@@ -267,7 +213,6 @@ export default function ApplyTwo() {
               </p>
             )}
           </div>
-
           {/* Business Industry */}
           <div className="space-y-2">
             <label className="text-sm">
@@ -359,7 +304,6 @@ export default function ApplyTwo() {
               </p>
             )}
           </div>
-
           {/* Main Products */}
           <div className="space-y-2">
             <label className="text-sm">{page.mainProducts[language]}</label>
@@ -386,7 +330,6 @@ export default function ApplyTwo() {
               </p>
             )}
           </div>
-
           {/* Export Activity */}
           <div className="space-y-2">
             <label className="text-sm">{page.exportActivity[language]}</label>
@@ -457,7 +400,6 @@ export default function ApplyTwo() {
               </p>
             )}
           </div>
-
           {/* Export Markets Multi-Select */}
           <div className="space-y-2">
             <label className="text-sm">{page.exportMarkets[language]}</label>
@@ -522,19 +464,24 @@ export default function ApplyTwo() {
             )}
           </div>
 
-          {/* Document upload */}
+          {/* RegisterCertificate upload */}
           <div className="space-y-2">
-            <label className="text-sm ">{page.document[language]}</label>
+            <label className="text-sm ">
+              {page.registerCertificate[language]}
+            </label>
             <input
               type="file"
-              name="document"
+              name="registerCertificate"
               accept=".doc,.docx,.pdf"
+              ref={fileInputRef}
               onChange={handleFileChange}
               className="w-full cursor-pointer bg-transparent border border-gray-700 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300"
             />
-            {localLawDataErrors.document && (
+            {}
+            {localLawDataErrors.registerCertificate && (
               <p className="text-xs text-gray-400 mt-1">
-                {page.selectedFile[language]} {localLawDataErrors.document}
+                {page.selectedFile[language]}{" "}
+                {localLawDataErrors.registerCertificate}
               </p>
             )}
             <div>
@@ -543,7 +490,6 @@ export default function ApplyTwo() {
               </p>
             </div>
           </div>
-
           {/* Buttons */}
           <div className="flex justify-between mt-6 sm:mt-8 gap-4">
             <button

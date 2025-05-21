@@ -4,9 +4,22 @@ import React, { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import BackgroundVideo from "../components/BackgroundVideo";
 import { FormContext } from "../context/FormContext";
-import type { FormContextType } from "../context/FormContext";
 import { useLanguage } from "../context/LanguageContext";
 import ApplySteps from "../components/ApplySteps";
+
+interface DigitalAndFinancial {
+  digital: DigitalLeadership;
+  finance: FinancialNeeding;
+}
+interface DigitalLeadership {
+  digitalTeamOrLead: boolean;
+  digitalPath: boolean;
+  digitalTransformationLoyality: boolean;
+}
+interface FinancialNeeding {
+  financialNeed: boolean;
+  neededBudget: number;
+}
 
 export default function ApplyFour() {
   const navigate = useNavigate();
@@ -19,361 +32,142 @@ export default function ApplyFour() {
     throw new Error("ApplyFour must be used within a FormContext.Provider");
   }
 
-  const { formData, setFormData } = context as FormContextType;
+  const initialValue: DigitalAndFinancial = {
+    digital: {
+      digitalTeamOrLead: false,
+      digitalPath: false,
+      digitalTransformationLoyality: false,
+    },
+    finance: {
+      financialNeed: false,
+      neededBudget: 0,
+    },
+  };
+  const [formData, setFormData] = useState<DigitalAndFinancial>(initialValue);
 
-  // Initialize digitalLeadership and financialNeeding if they don't exist
   useEffect(() => {
-    const updatedFormData = { ...formData };
-    if (!updatedFormData.companyData) {
-      updatedFormData.companyData = {
-        companyName: "",
-        companyRegisterNumber: "",
-        createYear: null,
-        workerCount: "",
-        annualTurnover: "",
-        address: "",
-        cityAndRegion: "",
-        website: "",
-        contactName: "",
-        contactEmail: "",
-        contactPhone: "",
-        declarationConsent: {
-          dataIsReal: false,
-          permitContact: false,
-          privacyAcceptance: false,
-        },
-        digitalLeadership: {
+    if (!formData) {
+      setFormData((prevData) => ({
+        ...prevData,
+        digital: {
           digitalTeamOrLead: false,
           digitalPath: false,
           digitalTransformationLoyality: false,
         },
-        digitalReadiness: {
-          keyChallenges: [],
-          digitalLevel: 1,
-          digitalTools: [],
-          companyPurpose: "",
-        },
-        financialNeeding: {
+        finance: {
           financialNeed: false,
-          neededBudget: "",
+          neededBudget: 0,
         },
-        propertyLaw: {
-          businessOperations: "",
-          companyLawType: "",
-          products: "",
-          exportActivity: false,
-          exportBazaar: "",
-        },
-      };
+      }));
     }
+  }, [formData, setFormData]);
 
-    if (!updatedFormData.companyData.digitalLeadership) {
-      updatedFormData.companyData.digitalLeadership = {
-        digitalTeamOrLead: false,
-        digitalPath: false,
-        digitalTransformationLoyality: false,
-      };
-    }
-
-    if (!updatedFormData.companyData.financialNeeding) {
-      updatedFormData.companyData.financialNeeding = {
-        financialNeed: false,
-        neededBudget: "",
-      };
-    }
-
-    setFormData(updatedFormData);
-  }, []);
-
-  // Create safe access objects
-  const safeDigitalLeadership = formData.companyData?.digitalLeadership || {
-    digitalTeamOrLead: false,
-    digitalPath: false,
-    digitalTransformationLoyality: false,
-  };
-
-  const safeFinancialNeeding = formData.companyData?.financialNeeding || {
-    financialNeed: false,
-    neededBudget: "",
-  };
-
-  // Lokal form state
-  const [localFormData, setLocalFormData] = useState({
-    digitalTeamOrLead: safeDigitalLeadership.digitalTeamOrLead
-      ? "Bəli"
-      : "Xeyr",
-    digitalPath: safeDigitalLeadership.digitalPath ? "Bəli" : "Xeyr",
-    digitalTransformationLoyality:
-      safeDigitalLeadership.digitalTransformationLoyality ? "Bəli" : "Xeyr",
-    financialNeed: safeFinancialNeeding.financialNeed ? "Bəli" : "Xeyr",
-    neededBudget: safeFinancialNeeding.neededBudget || "",
-  });
-
-  // Validation səhvləri
-  const [errors, setErrors] = useState({
-    digitalTeamOrLead: false,
-    digitalPath: false,
-    digitalTransformationLoyality: false,
-    financialNeed: false,
-    neededBudget: false,
-  });
-
-  // Validation mesajını göstərmək üçün state
-  const [showValidationMessage, setShowValidationMessage] = useState(false);
-
-  // Update localFormData when formData changes
   useEffect(() => {
-    setLocalFormData({
-      digitalTeamOrLead: safeDigitalLeadership.digitalTeamOrLead
-        ? "Bəli"
-        : "Xeyr",
-      digitalPath: safeDigitalLeadership.digitalPath ? "Bəli" : "Xeyr",
-      digitalTransformationLoyality:
-        safeDigitalLeadership.digitalTransformationLoyality ? "Bəli" : "Xeyr",
-      financialNeed: safeFinancialNeeding.financialNeed ? "Bəli" : "Xeyr",
-      neededBudget: safeFinancialNeeding.neededBudget || "",
-    });
-  }, [formData]);
+    const savedData = JSON.parse(
+      localStorage.getItem("digitalAndFinancial") || "null"
+    );
 
-  // LocalStorage-dan data yükləmək (varsa)
-  useEffect(() => {
-    try {
-      const savedData = JSON.parse(
-        localStorage.getItem("formDataFour") || "{}"
-      );
-      if (Object.keys(savedData).length > 0) {
-        setLocalFormData((prev) => ({
-          ...prev,
-          digitalTeamOrLead:
-            savedData.digitalTeamOrLead || prev.digitalTeamOrLead,
-          digitalPath: savedData.digitalPath || prev.digitalPath,
-          digitalTransformationLoyality:
-            savedData.digitalTransformationLoyality ||
-            prev.digitalTransformationLoyality,
-          financialNeed: savedData.financialNeed || prev.financialNeed,
-          neededBudget: savedData.neededBudget || prev.neededBudget,
-        }));
-
-        // Also update the form context
-        const updatedFormData = { ...formData };
-        if (!updatedFormData.companyData) {
-          updatedFormData.companyData = {
-            companyName: "",
-            companyRegisterNumber: "",
-            createYear: null,
-            workerCount: "",
-            annualTurnover: "",
-            address: "",
-            cityAndRegion: "",
-            website: "",
-            contactName: "",
-            contactEmail: "",
-            contactPhone: "",
-            declarationConsent: {
-              dataIsReal: false,
-              permitContact: false,
-              privacyAcceptance: false,
-            },
-            digitalLeadership: {
-              digitalTeamOrLead: false,
-              digitalPath: false,
-              digitalTransformationLoyality: false,
-            },
-            digitalReadiness: {
-              keyChallenges: [],
-              digitalLevel: 1,
-              digitalTools: [],
-              companyPurpose: "",
-            },
-            financialNeeding: {
-              financialNeed: false,
-              neededBudget: "",
-            },
-            propertyLaw: {
-              businessOperations: "",
-              companyLawType: "",
-              products: "",
-              exportActivity: false,
-              exportBazaar: "",
-            },
-          };
-        }
-
-        if (!updatedFormData.companyData.digitalLeadership) {
-          updatedFormData.companyData.digitalLeadership = {
-            digitalTeamOrLead: false,
-            digitalPath: false,
-            digitalTransformationLoyality: false,
-          };
-        }
-
-        if (!updatedFormData.companyData.financialNeeding) {
-          updatedFormData.companyData.financialNeeding = {
-            financialNeed: false,
-            neededBudget: "",
-          };
-        }
-
-        updatedFormData.companyData.digitalLeadership = {
-          ...updatedFormData.companyData.digitalLeadership,
-          digitalTeamOrLead: savedData.digitalTeamOrLead === "Bəli",
-          digitalPath: savedData.digitalPath === "Bəli",
-          digitalTransformationLoyality:
-            savedData.digitalTransformationLoyality === "Bəli",
-        };
-
-        updatedFormData.companyData.financialNeeding = {
-          ...updatedFormData.companyData.financialNeeding,
-          financialNeed: savedData.financialNeed === "Bəli",
-          neededBudget: savedData.neededBudget || "",
-        };
-
-        setFormData(updatedFormData);
+    if (savedData) {
+      try {
+        setFormData(savedData);
+      } catch (error) {
+        console.error("Error parsing saved form data:", error);
       }
-    } catch (error) {
-      console.error("Error loading saved form data:", error);
     }
   }, []);
 
-  // LocalStorage-a data yadda saxlamaq
-  useEffect(() => {
-    localStorage.setItem("formDataFour", JSON.stringify(localFormData));
-  }, [localFormData]);
+  const [errors, setErrors] = useState<Record<string, Record<string, string>>>(
+    {}
+  );
 
-  // Input dəyişdikdə local state və global konteksti yenilə
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
-    setLocalFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    const digitalVariables: string[] = [
+      "digitalTeamOrLead",
+      "digitalPath",
+      "digitalTransformationLoyality",
+    ];
+    const financeVariables: string[] = ["financialNeed", "neededBudget"];
+    let parentName = "";
 
+    let updatedValue;
+    updatedValue =
+      name !== "neededBudget"
+        ? (updatedValue = value === "Bəli" ? true : false)
+        : value;
+
+    if (digitalVariables.includes(name)) {
+      parentName = "digital";
+    }
+
+    if (financeVariables.includes(name)) {
+      parentName = "finance";
+    }
+
+    const updatedData = {
+      ...formData,
+      [parentName]: {
+        ...(formData as any)[parentName],
+        [name]: updatedValue,
+      },
+    };
+    setFormData(updatedData);
+    localStorage.setItem("digitalAndFinancial", JSON.stringify(updatedData));
     setErrors((prev) => ({
       ...prev,
-      [name]: false,
+      [parentName]: {
+        ...(prev as any)[parentName],
+        [name]: false,
+      },
     }));
-
-    if (showValidationMessage) setShowValidationMessage(false);
-
-    // Ensure companyData exists
-    const updatedFormData = { ...formData };
-    if (!updatedFormData.companyData) {
-      updatedFormData.companyData = {
-        companyName: "",
-        companyRegisterNumber: "",
-        createYear: null,
-        workerCount: "",
-        annualTurnover: "",
-        address: "",
-        cityAndRegion: "",
-        website: "",
-        contactName: "",
-        contactEmail: "",
-        contactPhone: "",
-        declarationConsent: {
-          dataIsReal: false,
-          permitContact: false,
-          privacyAcceptance: false,
-        },
-        digitalLeadership: {
-          digitalTeamOrLead: false,
-          digitalPath: false,
-          digitalTransformationLoyality: false,
-        },
-        digitalReadiness: {
-          keyChallenges: [],
-          digitalLevel: 1,
-          digitalTools: [],
-          companyPurpose: "",
-        },
-        financialNeeding: {
-          financialNeed: false,
-          neededBudget: "",
-        },
-        propertyLaw: {
-          businessOperations: "",
-          companyLawType: "",
-          products: "",
-          exportActivity: false,
-          exportBazaar: "",
-        },
-      };
-    }
-
-    // Global konteksti də yenilə
-    if (
-      name === "digitalTeamOrLead" ||
-      name === "digitalPath" ||
-      name === "digitalTransformationLoyality"
-    ) {
-      // Ensure digitalLeadership exists
-      if (!updatedFormData.companyData.digitalLeadership) {
-        updatedFormData.companyData.digitalLeadership = {
-          digitalTeamOrLead: false,
-          digitalPath: false,
-          digitalTransformationLoyality: false,
-        };
-      }
-
-      updatedFormData.companyData.digitalLeadership = {
-        ...updatedFormData.companyData.digitalLeadership,
-        [name]: value === "Bəli",
-      };
-    } else if (name === "financialNeed") {
-      // Ensure financialNeeding exists
-      if (!updatedFormData.companyData.financialNeeding) {
-        updatedFormData.companyData.financialNeeding = {
-          financialNeed: false,
-          neededBudget: "",
-        };
-      }
-
-      updatedFormData.companyData.financialNeeding = {
-        ...updatedFormData.companyData.financialNeeding,
-        financialNeed: value === "Bəli",
-      };
-    } else if (name === "neededBudget") {
-      // Ensure financialNeeding exists
-      if (!updatedFormData.companyData.financialNeeding) {
-        updatedFormData.companyData.financialNeeding = {
-          financialNeed: false,
-          neededBudget: "",
-        };
-      }
-
-      updatedFormData.companyData.financialNeeding = {
-        ...updatedFormData.companyData.financialNeeding,
-        neededBudget: value,
-      };
-    }
-
-    setFormData(updatedFormData);
   };
 
-  // Formu validasiya et
-  const validateForm = () => {
-    const newErrors = {
-      digitalTeamOrLead:
-        !localFormData.digitalTeamOrLead ||
-        localFormData.digitalTeamOrLead === "",
-      digitalPath:
-        !localFormData.digitalPath || localFormData.digitalPath === "",
-      digitalTransformationLoyality:
-        !localFormData.digitalTransformationLoyality ||
-        localFormData.digitalTransformationLoyality === "",
-      financialNeed:
-        !localFormData.financialNeed || localFormData.financialNeed === "",
-      neededBudget:
-        localFormData.financialNeed === "Bəli" &&
-        (!localFormData.neededBudget ||
-          localFormData.neededBudget.trim() === ""),
-    };
-    setErrors(newErrors);
+  const validateForm = (): boolean => {
+    const errors: any = {};
 
-    // Əgər səhv varsa false qaytar, yoxsa true
-    return !Object.values(newErrors).some(Boolean);
+    if (!formData.finance.financialNeed) {
+      errors.finance = {
+        ...errors.finance,
+        financialNeed: page.errorMessages.requiredField[language],
+      };
+    }
+
+    if (
+      formData.finance.financialNeed === true &&
+      (formData.finance.neededBudget.toString() === "0" ||
+        formData.finance.neededBudget.toString() === "")
+    ) {
+      errors.finance = {
+        ...errors.finance,
+        neededBudget: page.errorMessages.requiredField[language],
+      };
+    }
+
+    if (formData.digital.digitalTeamOrLead === null) {
+      errors.digital = {
+        ...errors.digital,
+        digitalTeamOrLead: page.errorMessages.requiredField[language],
+      };
+    }
+
+    if (formData.digital.digitalPath === null) {
+      errors.digital = {
+        ...errors.digital,
+        digitalPath: page.errorMessages.requiredField[language],
+      };
+    }
+
+    if (formData.digital.digitalTransformationLoyality === null) {
+      errors.digital = {
+        ...errors.digital,
+        digitalTransformationLoyality:
+          page.errorMessages.requiredField[language],
+      };
+    }
+    setErrors(errors);
+    return errors.finance === undefined;
   };
 
   const handleGoBack = () => {
@@ -383,9 +177,6 @@ export default function ApplyFour() {
   const handleNext = () => {
     if (validateForm()) {
       navigate("/apply/five");
-    } else {
-      setShowValidationMessage(true);
-      window.scrollTo({ top: 0, behavior: "smooth" });
     }
   };
 
@@ -400,12 +191,6 @@ export default function ApplyFour() {
             {page.title[language]}
           </h1>
         </div>
-
-        {showValidationMessage && (
-          <div className="w-full max-w-2xl mb-4 p-4 bg-red-500/20 border-2 border-red-500 rounded-md text-red-500 text-center font-medium">
-            {page.errorMessages.formValidation[language]}
-          </div>
-        )}
 
         <div className="w-full max-w-2xl space-y-6 text-white">
           {/* Leadership */}
@@ -425,12 +210,16 @@ export default function ApplyFour() {
                       type="radio"
                       name="digitalTeamOrLead"
                       value={option}
-                      checked={localFormData.digitalTeamOrLead === option}
+                      checked={
+                        formData.digital.digitalTeamOrLead ===
+                        (option === "Bəli" ? true : false)
+                      }
                       onChange={handleInputChange}
                       className="hidden"
                     />
                     <span className="w-5 h-5 flex items-center justify-center border border-gray-400 rounded">
-                      {localFormData.digitalTeamOrLead === option && (
+                      {formData.digital.digitalTeamOrLead ===
+                        (option === "Bəli" ? true : false) && (
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           className="w-4 h-4 text-blue-500"
@@ -457,7 +246,7 @@ export default function ApplyFour() {
                   </label>
                 ))}
               </div>
-              {errors.digitalTeamOrLead && (
+              {errors.digital?.digitalTeamOrLead && (
                 <p className="text-red-500 font-medium text-sm mt-1">
                   {page.errorMessages.requiredField[language]}
                 </p>
@@ -474,19 +263,25 @@ export default function ApplyFour() {
                   <label
                     key={option}
                     className={`flex items-center cursor-pointer space-x-2 ${
-                      errors.digitalPath ? "text-red-400" : ""
+                      errors.digital?.digitalPath ? "text-red-400" : ""
                     }`}
                   >
                     <input
                       type="radio"
                       name="digitalPath"
                       value={option}
-                      checked={localFormData.digitalPath === option}
+                      checked={
+                        (formData.digital.digitalPath === true
+                          ? "Bəli"
+                          : "Xeyr") === option
+                      }
                       onChange={handleInputChange}
                       className="hidden"
                     />
                     <span className="w-5 h-5 flex items-center justify-center border border-gray-400 rounded">
-                      {localFormData.digitalPath === option && (
+                      {(formData.digital.digitalPath === true
+                        ? "Bəli"
+                        : "Xeyr") === option && (
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           className="w-4 h-4 text-blue-500"
@@ -514,7 +309,7 @@ export default function ApplyFour() {
                 ))}
               </div>
 
-              {errors.digitalPath && (
+              {errors.digital?.digitalPath && (
                 <p className="text-red-500 font-medium text-sm mt-1">
                   {page.errorMessages.requiredField[language]}
                 </p>
@@ -531,7 +326,9 @@ export default function ApplyFour() {
                   <label
                     key={option}
                     className={`flex items-center cursor-pointer space-x-2 ${
-                      errors.digitalTransformationLoyality ? "text-red-400" : ""
+                      errors.digital?.digitalTransformationLoyality
+                        ? "text-red-400"
+                        : ""
                     }`}
                   >
                     <input
@@ -539,14 +336,17 @@ export default function ApplyFour() {
                       name="digitalTransformationLoyality"
                       value={option}
                       checked={
-                        localFormData.digitalTransformationLoyality === option
+                        (formData.digital.digitalTransformationLoyality === true
+                          ? "Bəli"
+                          : "Xeyr") === option
                       }
                       onChange={handleInputChange}
                       className="hidden"
                     />
                     <span className="w-5 h-5 flex items-center justify-center border border-gray-400 rounded">
-                      {localFormData.digitalTransformationLoyality ===
-                        option && (
+                      {(formData.digital.digitalTransformationLoyality === true
+                        ? "Bəli"
+                        : "Xeyr") === option && (
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           className="w-4 h-4 text-blue-500"
@@ -574,7 +374,7 @@ export default function ApplyFour() {
                 ))}
               </div>
 
-              {errors.digitalTransformationLoyality && (
+              {errors.digital?.digitalTransformationLoyality && (
                 <p className="text-red-500 font-medium text-sm mt-1">
                   {page.errorMessages.requiredField[language]}
                 </p>
@@ -598,19 +398,25 @@ export default function ApplyFour() {
                   <label
                     key={option}
                     className={`flex items-center cursor-pointer space-x-2 ${
-                      errors.financialNeed ? "text-red-400" : ""
+                      errors.finance?.financialNeed ? "text-red-400" : ""
                     }`}
                   >
                     <input
                       type="radio"
                       name="financialNeed"
                       value={option}
-                      checked={localFormData.financialNeed === option}
+                      checked={
+                        (formData.finance.financialNeed === true
+                          ? "Bəli"
+                          : "Xeyr") === option
+                      }
                       onChange={handleInputChange}
                       className="hidden"
                     />
                     <span className="w-5 h-5 flex items-center justify-center border border-gray-400 rounded">
-                      {localFormData.financialNeed === option && (
+                      {(formData.finance.financialNeed === true
+                        ? "Bəli"
+                        : "Xeyr") === option && (
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           className="w-4 h-4 text-blue-500"
@@ -638,7 +444,7 @@ export default function ApplyFour() {
                 ))}
               </div>
 
-              {errors.financialNeed && (
+              {errors.finance?.financialNeed && (
                 <p className="text-red-500 font-medium text-sm mt-1">
                   {page.errorMessages.requiredField[language]}
                 </p>
@@ -646,7 +452,7 @@ export default function ApplyFour() {
             </div>
 
             {/* Needed Budget - Show when financialNeed is "Bəli" */}
-            {localFormData.financialNeed === "Bəli" && (
+            {formData.finance.financialNeed === true && (
               <div className="space-y-2">
                 <label className="text-sm md:text-base">
                   {page.transformationBudget[language]}
@@ -655,10 +461,12 @@ export default function ApplyFour() {
                   <input
                     type="number"
                     name="neededBudget"
-                    value={localFormData.neededBudget}
+                    value={formData.finance.neededBudget}
                     onChange={handleInputChange}
                     className={`w-full bg-transparent border ${
-                      errors.neededBudget ? "border-red-400" : "border-gray-700"
+                      errors.finance?.neededBudget
+                        ? "border-red-400"
+                        : "border-gray-700"
                     } rounded p-3 focus:outline-none focus:border-blue-500`}
                     placeholder="AZN"
                     min={0}
@@ -667,7 +475,7 @@ export default function ApplyFour() {
                     AZN
                   </div>
                 </div>
-                {errors.neededBudget && (
+                {errors.finance?.neededBudget && (
                   <p className="text-red-500 font-medium text-sm mt-1">
                     {page.errorMessages.budgetRequired[language]}
                   </p>

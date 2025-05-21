@@ -5,10 +5,16 @@ import { useContext, useState, useEffect } from "react";
 import type { ChangeEvent } from "react";
 import BackgroundVideo from "../components/BackgroundVideo";
 import { FormContext } from "../context/FormContext";
-import type { FormContextType } from "../context/FormContext";
 import { useLanguage } from "../context/LanguageContext";
 import ApplySteps from "../components/ApplySteps";
 import { ChevronDown, ChevronUp } from "lucide-react";
+
+interface DigitalReadiness {
+  keyChallenges: string[];
+  digitalLevel: number;
+  digitalTools: string[];
+  companyPurpose: string;
+}
 
 const ApplyThree = () => {
   const navigate = useNavigate();
@@ -18,77 +24,65 @@ const ApplyThree = () => {
   const page = pagesTranslations.apply3;
   const buttons = pagesTranslations.applyBtns;
 
-  if (!context) {
-    throw new Error("ApplyThree must be used within a FormContext.Provider");
-  }
-
-  const { formData, setFormData } = context as FormContextType;
-
-  // Initialize digitalReadiness if it doesn't exist
-  useEffect(() => {
-    if (!formData.companyData.digitalReadiness) {
-      setFormData((prevData) => ({
-        ...prevData,
-        companyData: {
-          ...prevData.companyData,
-          digitalReadiness: {
-            keyChallenges: [],
-            digitalLevel: 0,
-            digitalTools: [],
-            companyPurpose: "",
-          },
-        },
-      }));
-    }
-  }, [formData, setFormData]);
-
-  // Create safe access to digitalReadiness
-  const safeDigitalReadiness = formData.companyData.digitalReadiness || {
+  const initialValue: DigitalReadiness = {
     keyChallenges: [],
     digitalLevel: 0,
     digitalTools: [],
     companyPurpose: "",
   };
+  const [formData, setFormData] = useState<DigitalReadiness>(initialValue);
 
-  // Validasiya üçün error state
-  const [errors, setErrors] = useState<{
-    digitalLevel: boolean;
-    digitalTools: boolean;
-    companyPurpose: boolean;
-  }>({
-    digitalLevel: false,
-    digitalTools: false,
-    companyPurpose: false,
-  });
+  if (!context) {
+    throw new Error("ApplyThree must be used within a FormContext.Provider");
+  }
 
-  // Form səviyyəsində ümumi error mesajı
-  const [errorMessage, setErrorMessage] = useState("");
-
-  // LocalStorage-dan məlumat yüklə
   useEffect(() => {
-    const savedData = localStorage.getItem("formData");
+    if (!formData) {
+      setFormData((prevData) => ({
+        ...prevData,
+        keyChallenges: [],
+        digitalLevel: 0,
+        digitalTools: [],
+        companyPurpose: "",
+      }));
+    }
+  }, [formData, setFormData]);
+
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
+  useEffect(() => {
+    const savedData = JSON.parse(
+      localStorage.getItem("digitalReadiness") || "null"
+    );
+
     if (savedData) {
       try {
-        const parsedData = JSON.parse(savedData);
-        setFormData(parsedData);
+        setFormData(savedData);
       } catch (error) {
         console.error("Error parsing saved form data:", error);
       }
     }
   }, [setFormData]);
 
-  // Formu validasiya edən funksiya
   const validateForm = () => {
-    const newErrors = {
-      digitalLevel: safeDigitalReadiness.digitalLevel === 0,
-      digitalTools: safeDigitalReadiness.digitalTools.length === 0,
-      companyPurpose: safeDigitalReadiness.companyPurpose.trim().length < 3,
-    };
-    setErrors(newErrors);
-    return !Object.values(newErrors).some(Boolean);
+    const errors: Record<string, string> = {};
+
+    if (formData.keyChallenges.length === 0)
+      errors.keyChallenges = page.errorMessages.required[language];
+    if (formData.digitalLevel === 0)
+      errors.digitalLevel = page.errorMessages.required[language];
+    if (formData.digitalTools.length === 0)
+      errors.digitalTools = page.errorMessages.required[language];
+    if (
+      formData.companyPurpose.trim().length > 0 &&
+      formData.companyPurpose.trim().length < 3
+    )
+      errors.companyPurpose = page.errorMessages.minLength[language];
+
+    setErrors(errors);
+    return Object.keys(errors).length === 0;
   };
 
-  // Input dəyişdikdə
   const handleInputChange = (
     e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
   ) => {
@@ -109,73 +103,43 @@ const ApplyThree = () => {
 
       updatedFormData = {
         ...updatedFormData,
-        companyData: {
-          ...updatedFormData.companyData,
-          digitalReadiness: {
-            ...safeDigitalReadiness,
-            digitalLevel: numericValue,
-          },
-        },
+        digitalLevel: numericValue,
       };
     } else {
       updatedFormData = {
         ...updatedFormData,
-        companyData: {
-          ...updatedFormData.companyData,
-          digitalReadiness: {
-            ...safeDigitalReadiness,
-            [name]: value,
-          },
-        },
+        [name]: value,
       };
     }
 
     setFormData(updatedFormData);
-    localStorage.setItem("formData", JSON.stringify(updatedFormData));
+    localStorage.setItem("digitalReadiness", JSON.stringify(updatedFormData));
 
-    // Səhvləri real vaxtda yenilə
     setErrors((prev) => ({
       ...prev,
-      [name]:
-        name === "digitalLevel"
-          ? updatedFormData.companyData.digitalReadiness?.digitalLevel === 0
-          : value.trim().length < 3 && name === "companyPurpose"
-          ? true
-          : false,
+      [name]: "",
     }));
-
-    // Ümumi error mesajını sil
-    setErrorMessage("");
   };
 
-  // Checkbox dəyişəndə (digitalTools üçün)
   const handleDigitalToolChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { value, checked } = e.target;
 
     const updatedDigitalTools = checked
-      ? [...safeDigitalReadiness.digitalTools, value]
-      : safeDigitalReadiness.digitalTools.filter((tool) => tool !== value);
+      ? [...formData.digitalTools, value]
+      : formData.digitalTools.filter((tool) => tool !== value);
 
     const updatedFormData = {
       ...formData,
-      companyData: {
-        ...formData.companyData,
-        digitalReadiness: {
-          ...safeDigitalReadiness,
-          digitalTools: updatedDigitalTools,
-        },
-      },
+      digitalTools: updatedDigitalTools,
     };
 
     setFormData(updatedFormData);
-    localStorage.setItem("formData", JSON.stringify(updatedFormData));
+    localStorage.setItem("digitalReadiness", JSON.stringify(updatedFormData));
 
     setErrors((prev) => ({
       ...prev,
-      digitalTools: updatedDigitalTools.length === 0,
+      digitalTools: "",
     }));
-
-    setErrorMessage("");
   };
 
   const handleGoBack = () => {
@@ -183,37 +147,11 @@ const ApplyThree = () => {
   };
 
   const handleGoNext = () => {
-    if (validateForm()) {
-      setErrorMessage("");
-      navigate("/apply/four");
-    } else {
-      setErrorMessage(page.errorMessages.formError[language]);
-    }
+    if (validateForm()) navigate("/apply/four");
   };
 
-  useEffect(() => {
-    if (errors.digitalLevel || errors.digitalTools || errors.companyPurpose) {
-      setErrorMessage(page.errorMessages.formError[language]);
-    } else {
-      setErrorMessage("");
-    }
-  }, [language, errors, page.errorMessages.formError]);
-
   const getDigitalLevelString = (): string => {
-    switch (safeDigitalReadiness.digitalLevel) {
-      case 1:
-        return "1";
-      case 2:
-        return "2";
-      case 3:
-        return "3";
-      case 4:
-        return "4";
-      case 5:
-        return "5";
-      default:
-        return "";
-    }
+    return formData.digitalLevel.toString();
   };
 
   return (
@@ -287,8 +225,8 @@ const ApplyThree = () => {
                     }`}
                 >
                   <span>
-                    {safeDigitalReadiness.digitalTools.length > 0
-                      ? `${safeDigitalReadiness.digitalTools.length} ${page.digitalToolsOptions.selected[language]}`
+                    {formData.digitalTools.length > 0
+                      ? `${formData.digitalTools.length} ${page.digitalToolsOptions.selected[language]}`
                       : page.placeholder[language]}
                   </span>
                   <span className="ml-2">
@@ -320,16 +258,12 @@ const ApplyThree = () => {
                         <input
                           type="checkbox"
                           value={tool.value}
-                          checked={safeDigitalReadiness.digitalTools.includes(
-                            tool.value
-                          )}
+                          checked={formData.digitalTools.includes(tool.value)}
                           onChange={handleDigitalToolChange}
                           className="hidden"
                         />
                         <span className="w-5 h-5 flex items-center justify-center border border-gray-400 rounded">
-                          {safeDigitalReadiness.digitalTools.includes(
-                            tool.value
-                          ) && (
+                          {formData.digitalTools.includes(tool.value) && (
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
                               className="w-4 h-4 text-blue-500"
@@ -379,38 +313,26 @@ const ApplyThree = () => {
                     <input
                       type="checkbox"
                       value={challenge}
-                      checked={safeDigitalReadiness.keyChallenges.includes(
-                        challenge
-                      )}
+                      checked={formData.keyChallenges.includes(challenge)}
                       onChange={(e) => {
                         const { value, checked } = e.target;
                         const updatedKeyChallenges = checked
-                          ? [...safeDigitalReadiness.keyChallenges, value]
-                          : safeDigitalReadiness.keyChallenges.filter(
-                              (c) => c !== value
-                            );
+                          ? [...formData.keyChallenges, value]
+                          : formData.keyChallenges.filter((c) => c !== value);
                         const updatedFormData = {
                           ...formData,
-                          companyData: {
-                            ...formData.companyData,
-                            digitalReadiness: {
-                              ...safeDigitalReadiness,
-                              keyChallenges: updatedKeyChallenges,
-                            },
-                          },
+                          keyChallenges: updatedKeyChallenges,
                         };
                         setFormData(updatedFormData);
                         localStorage.setItem(
-                          "formData",
+                          "digitalReadiness",
                           JSON.stringify(updatedFormData)
                         );
                       }}
                       className="hidden"
                     />
                     <span className="w-5 h-5 flex items-center justify-center border border-gray-400 rounded">
-                      {safeDigitalReadiness.keyChallenges.includes(
-                        challenge
-                      ) && (
+                      {formData.keyChallenges.includes(challenge) && (
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           className="w-4 h-4 text-blue-500"
@@ -452,7 +374,7 @@ const ApplyThree = () => {
               </p>
               <textarea
                 name="companyPurpose"
-                value={safeDigitalReadiness.companyPurpose}
+                value={formData.companyPurpose}
                 onChange={handleInputChange}
                 className={`w-full p-4 bg-transparent text-white rounded
                   ${
@@ -472,13 +394,6 @@ const ApplyThree = () => {
               )}
             </div>
           </form>
-
-          {/* Ümumi səhv mesajı */}
-          {errorMessage && (
-            <div className="mt-6 mb-2 text-center text-red-500 font-semibold">
-              {errorMessage}
-            </div>
-          )}
 
           <div className="flex justify-between mt-6">
             <button
