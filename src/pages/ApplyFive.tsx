@@ -10,14 +10,53 @@ import ApplySteps from "../components/ApplySteps";
 import { motion, AnimatePresence } from "framer-motion";
 import { companyService } from "../services/companyService";
 
+const DB_NAME = "ALL files";
+const STORE_NAME = "files";
+
+function openDB() {
+  return new Promise<IDBDatabase>((resolve, reject) => {
+    const request = indexedDB.open(DB_NAME, 1);
+    request.onerror = () => reject(request.error);
+    request.onsuccess = () => resolve(request.result);
+    request.onupgradeneeded = () => {
+      const db = request.result;
+      if (!db.objectStoreNames.contains(STORE_NAME)) {
+        db.createObjectStore(STORE_NAME);
+      }
+    };
+  });
+}
+
+async function saveFileToIndexedDB(file: File, FILE_KEY: string) {
+  const db = await openDB();
+  return new Promise<void>((resolve, reject) => {
+    const tx = db.transaction(STORE_NAME, "readwrite");
+    const store = tx.objectStore(STORE_NAME);
+    const putRequest = store.put(file, FILE_KEY);
+    putRequest.onsuccess = () => resolve();
+    putRequest.onerror = () => reject(putRequest.error);
+  });
+}
+
+async function getFileFromIndexedDB(FILE_KEY: string): Promise<File | null> {
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(STORE_NAME, "readonly");
+    const store = tx.objectStore(STORE_NAME);
+    const getRequest = store.get(FILE_KEY);
+    getRequest.onsuccess = () => resolve(getRequest.result || null);
+    getRequest.onerror = () => reject(getRequest.error);
+  });
+}
+
 interface FileState {
-  companyRegistry: File | null;
-  financialReports: File | null;
+  propertyLawCertificate: File | null;
+  financialStatement: File | null;
 }
 interface AgreementState {
-  confirmAccuracy: boolean;
-  contactConsent: boolean;
-  termsAgreement: boolean;
+  dataIsReal: boolean;
+  permitContact: boolean;
+  privacyAcceptance: boolean;
 }
 
 export default function ApplyFive() {
@@ -31,14 +70,14 @@ export default function ApplyFive() {
 
   const { setFormData, isSubmitting, formData } = context;
   const [files, setFiles] = useState<FileState>({
-    companyRegistry: null,
-    financialReports: null,
+    propertyLawCertificate: null,
+    financialStatement: null,
   });
 
   const [agreements, setAgreements] = useState<AgreementState>({
-    confirmAccuracy: false,
-    contactConsent: false,
-    termsAgreement: false,
+    dataIsReal: false,
+    permitContact: false,
+    privacyAcceptance: false,
   });
 
   const [localIsSubmitting, setLocalIsSubmitting] = useState<boolean>(false);
@@ -46,33 +85,26 @@ export default function ApplyFive() {
     (value) => value === true
   );
 
-  // Modal visibility states
   const [showConfirmModal, setShowConfirmModal] = useState<boolean>(false);
   const [showThankYouModal, setShowThankYouModal] = useState<boolean>(false);
   const [submitSuccess, setSubmitSuccess] = useState<boolean>(false);
   const [submissionError, setSubmissionError] = useState<string | null>(null);
   const [retryCount, setRetryCount] = useState<number>(0);
 
-  // download
-
   const downloadPDF = (e: React.MouseEvent<HTMLLabelElement>) => {
-    e.preventDefault(); // Prevent default label behavior
-
-    // Create a link element to download the PDF
+    e.preventDefault();
     const link = document.createElement("a");
-    link.href = "/Privacy.pdf"; // Replace with your actual PDF path
-    link.download = "Privacy.pdf"; // Name that will appear when downloading
+    link.href = "/Privacy.pdf";
+    link.download = "Privacy.pdf";
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
   };
 
-  // LocalStorage-dan faylları və razılıqları yüklə (ehtiyat üçün)
   useEffect(() => {
-    // Load saved files and agreements from localStorage
     try {
       const savedAgreements = JSON.parse(
-        localStorage.getItem("agreements") || "{}"
+        localStorage.getItem("restOfData") || "{}"
       );
       setAgreements(savedAgreements);
     } catch (error) {
@@ -81,12 +113,6 @@ export default function ApplyFive() {
   }, []);
 
   useEffect(() => {
-    // Save agreements to localStorage when they change
-    localStorage.setItem("agreements", JSON.stringify(agreements));
-  }, [agreements]);
-
-  useEffect(() => {
-    // Show thank you modal if submission was successful
     if (submitSuccess) {
       setShowConfirmModal(false);
       setShowThankYouModal(true);
@@ -101,14 +127,11 @@ export default function ApplyFive() {
     if (fileList && fileList.length > 0) {
       const file = fileList[0];
 
-      // Update state with the file
       setFiles((prev) => ({
         ...prev,
         [fileType]: file,
       }));
 
-      // Store file reference in localStorage
-      // Note: Files can't be directly stored in localStorage, so we're just storing metadata
       try {
         const filesMetadata = JSON.parse(localStorage.getItem("files") || "{}");
         filesMetadata[fileType] = {
@@ -131,7 +154,6 @@ export default function ApplyFive() {
       [name as keyof AgreementState]: checked,
     }));
 
-    // Make sure companyData exists and has declarationConsent
     const updatedFormData = { ...formData };
     if (!updatedFormData.companyData.declarationConsent) {
       updatedFormData.companyData.declarationConsent = {
@@ -141,7 +163,7 @@ export default function ApplyFive() {
       };
     }
 
-    if (name === "confirmAccuracy") {
+    if (name === "dataIsReal") {
       setFormData((prev) => ({
         ...prev,
         companyData: {
@@ -152,7 +174,7 @@ export default function ApplyFive() {
           },
         },
       }));
-    } else if (name === "contactConsent") {
+    } else if (name === "permitContact") {
       setFormData((prev) => ({
         ...prev,
         companyData: {
@@ -163,7 +185,7 @@ export default function ApplyFive() {
           },
         },
       }));
-    } else if (name === "termsAgreement") {
+    } else if (name === "privacyAcceptance") {
       setFormData((prev) => ({
         ...prev,
         companyData: {
@@ -188,7 +210,6 @@ export default function ApplyFive() {
 
   const handleThankYouModalClose = () => {
     setShowThankYouModal(false);
-    // Optionally navigate to a different page after closing thank you modal
     navigate("/");
   };
 
@@ -196,13 +217,11 @@ export default function ApplyFive() {
     setLocalIsSubmitting(true);
 
     try {
-      // Handle the exportBazaar field - convert array to string if needed
       const exportBazaar = formData.companyData.propertyLaw.exportBazaar;
       const formattedExportBazaar = Array.isArray(exportBazaar)
         ? exportBazaar.join(", ")
         : exportBazaar;
 
-      // Correctly access properties from formData.companyData
       const dataToSend = {
         companyData: {
           companyName: formData.companyData.companyName,
@@ -221,36 +240,33 @@ export default function ApplyFive() {
         digitalLeadership: formData.companyData.digitalLeadership,
         digitalReadiness: {
           ...formData.companyData.digitalReadiness,
-          // Ensure digital level is a number
           digitalLevel: +formData.companyData.digitalReadiness.digitalLevel,
         },
         financialNeeding: formData.companyData.financialNeeding,
         propertyLaw: {
           ...formData.companyData.propertyLaw,
-          // Use the formatted exportBazaar
           exportBazaar: formattedExportBazaar,
         },
       };
 
-      // JSON məlumatı göndər (yalnız obyekt)
       const dataToSubmit = dataToSend;
 
-      // Log files for debugging (can remove later)
-      if (files.companyRegistry || files.financialReports) {
+      if (files.financialStatement || files.propertyLawCertificate) {
         console.log(
           "Files are available but will not be submitted in this version:"
         );
-        if (files.companyRegistry)
-          console.log("- Company Registry File:", files.companyRegistry.name);
-        if (files.financialReports)
-          console.log("- Financial Reports File:", files.financialReports.name);
-
-        // TODO: Implement file upload when API supports it
-        // For now, just notify the user that files will be sent separately
-        // alert(page.alerts.filesNotSubmitted ? page.alerts.filesNotSubmitted[language] : "Files have been saved but will need to be submitted separately.");
+        if (files.propertyLawCertificate)
+          console.log(
+            "- Company Registry File:",
+            files.propertyLawCertificate.name
+          );
+        if (files.financialStatement)
+          console.log(
+            "- Financial Reports File:",
+            files.financialStatement.name
+          );
       }
 
-      // Submit the JSON data
       console.log(dataToSubmit);
       await companyService.submitCompanyData(dataToSubmit);
       setShowConfirmModal(false);
@@ -263,7 +279,6 @@ export default function ApplyFive() {
         (error as string) || "Məlumatların göndərilməsi zamanı xəta baş verdi"
       );
 
-      // Increment retry count
       setRetryCount((prev) => prev + 1);
     }
   };
@@ -479,8 +494,8 @@ export default function ApplyFive() {
                   htmlFor="companyRegistry"
                   className="w-full h-14 border border-gray-600 rounded-lg flex items-center justify-between px-4 bg-gray-800/30 text-gray-400 text-sm cursor-pointer select-none"
                 >
-                  {files.companyRegistry
-                    ? files.companyRegistry.name
+                  {files.propertyLawCertificate
+                    ? files.propertyLawCertificate.name
                     : "No file selected"}
                 </label>
                 <button
@@ -496,7 +511,9 @@ export default function ApplyFive() {
                   type="file"
                   className="hidden"
                   accept=".doc,.docx,.pdf"
-                  onChange={(e) => handleFileChange(e, "companyRegistry")}
+                  onChange={(e) =>
+                    handleFileChange(e, "propertyLawCertificate")
+                  }
                 />
               </div>
               <p className="text-sm text-gray-400">
@@ -517,8 +534,8 @@ export default function ApplyFive() {
                   htmlFor="financialReports"
                   className="w-full h-14 border border-gray-600 rounded-lg flex items-center justify-between px-4 bg-gray-800/30 text-gray-400 text-sm cursor-pointer select-none"
                 >
-                  {files.financialReports
-                    ? files.financialReports.name
+                  {files.financialStatement
+                    ? files.financialStatement.name
                     : "No file selected"}
                 </label>
                 <button
@@ -534,7 +551,7 @@ export default function ApplyFive() {
                   type="file"
                   className="hidden"
                   accept=".doc,.docx,.pdf,.xls,.xlsx"
-                  onChange={(e) => handleFileChange(e, "financialReports")}
+                  onChange={(e) => handleFileChange(e, "financialStatement")}
                 />
               </div>
               <p className="text-sm text-gray-400">
@@ -550,19 +567,19 @@ export default function ApplyFive() {
             <div className="space-y-4">
               <div className="flex items-start">
                 <label
-                  htmlFor="confirmAccuracy"
+                  htmlFor="dataIsReal"
                   className="flex items-start cursor-pointer"
                 >
                   <input
                     type="checkbox"
-                    id="confirmAccuracy"
-                    name="confirmAccuracy"
-                    checked={agreements.confirmAccuracy}
+                    id="dataIsReal"
+                    name="dataIsReal"
+                    checked={agreements.dataIsReal}
                     onChange={handleCheckboxChange}
                     className="hidden"
                   />
                   <span className="mt-1 w-5 h-5 flex items-center justify-center border border-gray-400 rounded">
-                    {agreements.confirmAccuracy && (
+                    {agreements.dataIsReal && (
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         className="w-4 h-4 text-blue-500"
@@ -580,26 +597,26 @@ export default function ApplyFive() {
                     )}
                   </span>
                   <span className="ml-2 text-sm text-gray-400">
-                    {page.checkboxes.confirmAccuracy[language]}
+                    {page.checkboxes.dataIsReal[language]}
                   </span>
                 </label>
               </div>
 
               <div className="flex items-start">
                 <label
-                  htmlFor="contactConsent"
+                  htmlFor="permitContact"
                   className="flex items-start cursor-pointer"
                 >
                   <input
                     type="checkbox"
-                    id="contactConsent"
-                    name="contactConsent"
-                    checked={agreements.contactConsent}
+                    id="permitContact"
+                    name="permitContact"
+                    checked={agreements.permitContact}
                     onChange={handleCheckboxChange}
                     className="hidden"
                   />
                   <span className="mt-1 w-5 h-5 flex items-center justify-center border border-gray-400 rounded">
-                    {agreements.contactConsent && (
+                    {agreements.permitContact && (
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         className="w-4 h-4 text-blue-500"
@@ -617,26 +634,26 @@ export default function ApplyFive() {
                     )}
                   </span>
                   <span className="ml-2 text-sm text-gray-400">
-                    {page.checkboxes.contactConsent[language]}
+                    {page.checkboxes.permitContact[language]}
                   </span>
                 </label>
               </div>
 
               <div className="flex items-start">
                 <label
-                  htmlFor="termsAgreement"
+                  htmlFor="privacyAcceptance"
                   className="flex items-start cursor-pointer"
                 >
                   <input
                     type="checkbox"
-                    id="termsAgreement"
-                    name="termsAgreement"
-                    checked={agreements.termsAgreement}
+                    id="privacyAcceptance"
+                    name="privacyAcceptance"
+                    checked={agreements.privacyAcceptance}
                     onChange={handleCheckboxChange}
                     className="hidden"
                   />
                   <span className="mt-1 w-5 h-5 flex items-center justify-center border border-gray-400 rounded">
-                    {agreements.termsAgreement && (
+                    {agreements.privacyAcceptance && (
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         className="w-4 h-4 text-blue-500"
@@ -657,7 +674,7 @@ export default function ApplyFive() {
                     className="ml-2 text-sm text-gray-400 underline underline-offset-8"
                     onClick={downloadPDF}
                   >
-                    {page.checkboxes.termsAgreement[language]}
+                    {page.checkboxes.privacyAcceptance[language]}
                   </span>
                 </label>
               </div>
