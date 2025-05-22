@@ -53,7 +53,10 @@ export const companyService = {
   ): Promise<unknown> => {
     const formData = new FormData();
 
-    formData.append("companyRequest", JSON.stringify(companyRequest));
+    const jsonBlob = new Blob([JSON.stringify(companyRequest)], {
+      type: "application/json",
+    });
+    formData.append("companyRequest", jsonBlob);
 
     if (files.propertyLawCertificate) {
       formData.append("propertyLawCertificate", files.propertyLawCertificate);
