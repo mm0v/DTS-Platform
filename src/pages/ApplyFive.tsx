@@ -268,7 +268,7 @@ export default function ApplyFive() {
       }
 
       console.log(dataToSubmit);
-      await companyService.submitCompanyData(dataToSubmit);
+      // await companyService.submitCompanyData(dataToSubmit);
       setShowConfirmModal(false);
       setShowThankYouModal(true);
       setSubmitSuccess(true);
