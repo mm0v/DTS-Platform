@@ -1,8 +1,7 @@
 import axios from "axios";
 
-// Create a base axios instance with common configuration
 const API = axios.create({
-  baseURL: "http://50.16.57.115:8080", // Backend server URL
+  baseURL: "http://50.16.57.115:8080",
   timeout: 30000,
   headers: {
     "Content-Type": "application/json",

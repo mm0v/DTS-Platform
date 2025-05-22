@@ -264,29 +264,22 @@ export default function ApplyFiveCopy() {
           financialStatement: null,
         };
 
-        getFileFromIndexedDB("propertyLawCertificate")
-          .then((file) => {
-            if (file) {
-              files.propertyLawCertificate = file;
-            }
-          })
-          .catch(() => (files.propertyLawCertificate = null));
+        const fileKeys = [
+          "propertyLawCertificate",
+          "financialStatement",
+          "registerCertificate",
+        ] as const;
 
-        getFileFromIndexedDB("registerCertificate")
-          .then((file) => {
-            if (file) {
-              files.registerCertificate = file;
+        await Promise.all(
+          fileKeys.map(async (key) => {
+            try {
+              const file = await getFileFromIndexedDB(key);
+              files[key] = file;
+            } catch {
+              files[key] = null;
             }
           })
-          .catch(() => (files.registerCertificate = null));
-
-        getFileFromIndexedDB("financialStatement")
-          .then((file) => {
-            if (file) {
-              files.financialStatement = file;
-            }
-          })
-          .catch(() => (files.financialStatement = null));
+        );
 
         await companyService.submitCompanyData(dataToSubmit, files);
       } catch (error) {
