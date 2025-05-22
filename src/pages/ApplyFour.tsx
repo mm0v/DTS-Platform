@@ -46,23 +46,6 @@ export default function ApplyFour() {
   const [formData, setFormData] = useState<DigitalAndFinancial>(initialValue);
 
   useEffect(() => {
-    if (!formData) {
-      setFormData((prevData) => ({
-        ...prevData,
-        digital: {
-          digitalTeamOrLead: false,
-          digitalPath: false,
-          digitalTransformationLoyality: false,
-        },
-        finance: {
-          financialNeed: false,
-          neededBudget: 0,
-        },
-      }));
-    }
-  }, [formData, setFormData]);
-
-  useEffect(() => {
     const savedData = JSON.parse(
       localStorage.getItem("digitalAndFinancial") || "null"
     );

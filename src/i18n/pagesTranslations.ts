@@ -416,8 +416,12 @@ export const pagesTranslations = {
       EN: "Selected file",
     },
     fileLimitNote: {
-      AZ: "Yüklənən fayl 50 mb - dan çox ola bilməz.",
-      EN: "Uploaded file cannot exceed 50 MB.",
+      AZ: "Yüklənən fayl 20 mb - dan çox ola bilməz.",
+      EN: "Uploaded file cannot exceed 20 MB.",
+    },
+    fileRequired: {
+      AZ: "Bu sahə doldurulmalıdır.",
+      EN: "This field is required.",
     },
     companyTypeRequired: {
       AZ: "Bu sahə doldurulmalıdır.",
@@ -614,8 +618,8 @@ export const pagesTranslations = {
       EN: "Financial reports (last 2 years)",
     },
     fileFormatText: {
-      AZ: "Yüklənən fayl 50 mb – dan çox ola bilməz.",
-      EN: "The uploaded file cannot exceed 50 MB.",
+      AZ: "Yüklənən fayl 20 mb – dan çox ola bilməz.",
+      EN: "The uploaded file cannot exceed 20 MB.",
     },
     applyNeedText: {
       AZ: "Müraciətinizlə bağlı əlavə təsdiqedici sənədlərə ehtiyac olacağı təqdirdə sizlərlə əlaqə saxlanılacaqdır.",
@@ -633,6 +637,24 @@ export const pagesTranslations = {
       privacyAcceptance: {
         AZ: "İstifadə şərtləri və gizlilik şərtləri ilə razıyam (yüklə)",
         EN: "I agree with the terms of use and privacy terms (download)",
+      },
+    },
+    errorMessages: {
+      fileLimit: {
+        AZ: "Fayl çox böyükdür.Maksimum 20 MB fayl yükləyə bilərsiz!",
+        EN: "The uploaded file cannot exceed 20 MB",
+      },
+      propertyLawCertificateRequired: {
+        AZ: "Zəhmət olmasa şirkət qeydiyyatı sertifikatını əlavə edin!",
+        EN: "****",
+      },
+      propertyLawCertificateType: {
+        AZ: "Zəhmət olmasa word və ya pdf faylarını əlavə edin!",
+        EN: "****",
+      },
+      financialStatementType: {
+        AZ: "Zəhmət olmasa word,pdf və ya excel faylarını əlavə edin!",
+        EN: "****",
       },
     },
     buttons: {

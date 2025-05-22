@@ -8,6 +8,7 @@ import { useState } from "react";
 import API from "../services/axiosConfig";
 import { FormContext } from "../context/FormContext";
 import type { FormContextType } from "../context/FormContext";
+import ApplyFiveCopy from "./ApplyFive copy";
 
 const Apply = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -240,7 +241,7 @@ const Apply = () => {
         <Route path="two" element={<ApplyTwo />} />
         <Route path="three" element={<ApplyThree />} />
         <Route path="four" element={<ApplyFour />} />
-        <Route path="five" element={<ApplyFive />} />
+        <Route path="five" element={<ApplyFiveCopy />} />
       </Routes>
     </FormContext.Provider>
   );

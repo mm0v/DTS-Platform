@@ -4,14 +4,14 @@ import axios from "axios";
 const API = axios.create({
   baseURL: "http://50.16.57.115:8080", // Base URL without /api
   timeout: 30000, // Increased timeout for slow connections
-  headers: {
-    "Content-Type": "application/json",
-    // Enable CORS headers for development
-    "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-    "Access-Control-Allow-Headers":
-      "Origin, Content-Type, Accept, Authorization",
-  },
+  // headers: {
+  //   "Content-Type": "application/json",
+  //   // Enable CORS headers for development
+  //   "Access-Control-Allow-Origin": "*",
+  //   "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+  //   "Access-Control-Allow-Headers":
+  //     "Origin, Content-Type, Accept, Authorization",
+  // },
 });
 
 // Request interceptor for handling requests
@@ -49,16 +49,6 @@ API.interceptors.request.use(
 // Response interceptor for handling responses
 API.interceptors.response.use(
   (response) => {
-    console.log(`✅ Response from ${response.config.url}:`, {
-      status: response.status,
-      data: response.data,
-    });
-
-    // Store tokens if they are in the response
-    if (response.data?.token) {
-      localStorage.setItem("token", response.data.token);
-    }
-
     return response;
   },
   (error) => {

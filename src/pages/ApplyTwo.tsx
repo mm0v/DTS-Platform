@@ -89,7 +89,6 @@ export default function ApplyTwo() {
     const savedData = JSON.parse(localStorage.getItem("propertyLaw") || "null");
     getFileFromIndexedDB()
       .then((file) => {
-        console.log(file!.name);
         if (file && savedData) {
           setLocalLawData({
             ...savedData,
