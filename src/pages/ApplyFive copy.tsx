@@ -287,6 +287,7 @@ export default function ApplyFiveCopy() {
             }
           })
           .catch(() => (files.financialStatement = null));
+
         await companyService.submitCompanyData(dataToSubmit, files);
       } catch (error) {
         console.error("Submission failed:", error);

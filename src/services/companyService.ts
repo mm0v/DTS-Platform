@@ -45,7 +45,7 @@ interface CompanyRequest {
 export const companyService = {
   submitCompanyData: async (
     companyRequest: CompanyRequest,
-    files?: {
+    files: {
       propertyLawCertificate: File | null;
       registerCertificate?: File | null;
       financialStatement?: File | null;
@@ -55,15 +55,15 @@ export const companyService = {
 
     formData.append("companyRequest", JSON.stringify(companyRequest));
 
-    if (files?.propertyLawCertificate) {
+    if (files.propertyLawCertificate) {
       formData.append("propertyLawCertificate", files.propertyLawCertificate);
     }
 
-    if (files?.registerCertificate) {
+    if (files.registerCertificate) {
       formData.append("registerCertificate", files.registerCertificate);
     }
 
-    if (files?.financialStatement) {
+    if (files.financialStatement) {
       formData.append("financialStatement", files.financialStatement);
     }
 
