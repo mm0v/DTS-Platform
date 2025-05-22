@@ -53,7 +53,7 @@ export const companyService = {
   ): Promise<unknown> => {
     const formData = new FormData();
 
-    formData.append("companyRequest", JSON.stringify({ companyRequest }));
+    formData.append("companyRequest", JSON.stringify(companyRequest));
 
     if (files?.propertyLawCertificate) {
       formData.append("propertyLawCertificate", files.propertyLawCertificate);
@@ -70,6 +70,7 @@ export const companyService = {
     try {
       const response = await API.post("/api/v1/company/add", formData);
       return response.data;
+      return;
     } catch (error) {
       console.error("FormData submission failed:", error);
       throw error;
