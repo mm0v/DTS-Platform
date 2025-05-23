@@ -1,6 +1,6 @@
 "use client";
 import type React from "react";
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { Download } from "lucide-react";
 import BackgroundVideo from "../components/BackgroundVideo";
@@ -8,52 +8,62 @@ import { FormContext } from "../context/FormContext";
 import { useLanguage } from "../context/LanguageContext";
 import ApplySteps from "../components/ApplySteps";
 import { motion, AnimatePresence } from "framer-motion";
-// import { companyService } from "../services/companyService";
+import { companyService } from "../services/companyService";
 
-// const DB_NAME = "ALL files";
-// const STORE_NAME = "files";
+const DB_NAME = "ALL files";
+const STORE_NAME = "files";
 
-// function openDB() {
-//   return new Promise<IDBDatabase>((resolve, reject) => {
-//     const request = indexedDB.open(DB_NAME, 1);
-//     request.onerror = () => reject(request.error);
-//     request.onsuccess = () => resolve(request.result);
-//     request.onupgradeneeded = () => {
-//       const db = request.result;
-//       if (!db.objectStoreNames.contains(STORE_NAME)) {
-//         db.createObjectStore(STORE_NAME);
-//       }
-//     };
-//   });
-// }
+function openDB() {
+  return new Promise<IDBDatabase>((resolve, reject) => {
+    const request = indexedDB.open(DB_NAME, 1);
+    request.onerror = () => reject(request.error);
+    request.onsuccess = () => resolve(request.result);
+    request.onupgradeneeded = () => {
+      const db = request.result;
+      if (!db.objectStoreNames.contains(STORE_NAME)) {
+        db.createObjectStore(STORE_NAME);
+      }
+    };
+  });
+}
 
-// async function saveFileToIndexedDB(file: File, FILE_KEY: string) {
-//   const db = await openDB();
-//   return new Promise<void>((resolve, reject) => {
-//     const tx = db.transaction(STORE_NAME, "readwrite");
-//     const store = tx.objectStore(STORE_NAME);
-//     const putRequest = store.put(file, FILE_KEY);
-//     putRequest.onsuccess = () => resolve();
-//     putRequest.onerror = () => reject(putRequest.error);
-//   });
-// }
+async function saveFileToIndexedDB(file: File, FILE_KEY: string) {
+  const db = await openDB();
+  return new Promise<void>((resolve, reject) => {
+    const tx = db.transaction(STORE_NAME, "readwrite");
+    const store = tx.objectStore(STORE_NAME);
+    const putRequest = store.put(file, FILE_KEY);
+    putRequest.onsuccess = () => resolve();
+    putRequest.onerror = () => reject(putRequest.error);
+  });
+}
 
-// async function getFileFromIndexedDB(FILE_KEY: string): Promise<File | null> {
-//   const db = await openDB();
-//   return new Promise((resolve, reject) => {
-//     const tx = db.transaction(STORE_NAME, "readonly");
-//     const store = tx.objectStore(STORE_NAME);
-//     const getRequest = store.get(FILE_KEY);
-//     getRequest.onsuccess = () => resolve(getRequest.result || null);
-//     getRequest.onerror = () => reject(getRequest.error);
-//   });
-// }
+async function getFileFromIndexedDB(
+  FILE_KEY:
+    | "propertyLawCertificate"
+    | "financialStatement"
+    | "registerCertificate"
+): Promise<File | null> {
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(STORE_NAME, "readonly");
+    const store = tx.objectStore(STORE_NAME);
+    const getRequest = store.get(FILE_KEY);
+    getRequest.onsuccess = () => resolve(getRequest.result || null);
+    getRequest.onerror = () => reject(getRequest.error);
+  });
+}
+
+interface DeclarationAndFileState {
+  files: FileState;
+  declaration: DeclarationConsent;
+}
 
 interface FileState {
-  propertyLawCertificate: File | null;
-  financialStatement: File | null;
+  propertyLawCertificate: Pick<File, "size" | "name" | "type"> | null;
+  financialStatement: Pick<File, "size" | "name" | "type"> | null;
 }
-interface AgreementState {
+interface DeclarationConsent {
   dataIsReal: boolean;
   permitContact: boolean;
   privacyAcceptance: boolean;
@@ -64,26 +74,286 @@ export default function ApplyFive() {
   const context = useContext(FormContext);
   const { language, pagesTranslations } = useLanguage();
   const page = pagesTranslations.apply5;
+
   if (!context) {
-    throw new Error("ApplyFive must be used within a FormContext.Provider");
+    throw new Error("ApplyFour must be used within a FormContext.Provider");
   }
 
-  const { setFormData, isSubmitting, formData } = context;
-  const [files, setFiles] = useState<FileState>({
-    propertyLawCertificate: null,
-    financialStatement: null,
+  const initialValue: DeclarationAndFileState = {
+    files: {
+      propertyLawCertificate: null,
+      financialStatement: null,
+    },
+    declaration: {
+      dataIsReal: false,
+      permitContact: false,
+      privacyAcceptance: false,
+    },
+  };
+  const [formData, setFormData] =
+    useState<DeclarationAndFileState>(initialValue);
+
+  const propertyLawCertificateRef = useRef<HTMLInputElement>(null);
+  const financialStatementRef = useRef<HTMLInputElement>(null);
+  useEffect(() => {
+    const savedData = JSON.parse(localStorage.getItem("restOfData") || "null");
+    Promise.all([
+      getFileFromIndexedDB("propertyLawCertificate").catch(() => null),
+      getFileFromIndexedDB("financialStatement").catch(() => null),
+    ])
+      .then(([propertyFile, financialFile]) => {
+        if (savedData) {
+          const updatedData = {
+            ...savedData,
+            files: {
+              ...savedData.files,
+              ...(propertyFile && {
+                propertyLawCertificate: {
+                  name: propertyFile.name,
+                  size: propertyFile.size,
+                  type: propertyFile.type,
+                },
+              }),
+              ...(financialFile && {
+                financialStatement: {
+                  name: financialFile.name,
+                  size: financialFile.size,
+                  type: financialFile.type,
+                },
+              }),
+            },
+          };
+
+          setFormData(updatedData);
+
+          if (propertyFile && propertyLawCertificateRef.current) {
+            propertyLawCertificateRef.current.name = propertyFile.name;
+          }
+          if (financialFile && financialStatementRef.current) {
+            financialStatementRef.current.name = financialFile.name;
+          }
+        }
+      })
+      .catch(console.error);
+  }, []);
+
+  const [errors, setErrors] = useState<Record<string, string>>({
+    propertyLawCertificate: "",
+    financialStatement: "",
   });
 
-  const [agreements, setAgreements] = useState<AgreementState>({
-    dataIsReal: false,
-    permitContact: false,
-    privacyAcceptance: false,
-  });
+  const validateForm = (): boolean => {
+    const errors: Record<string, string> = {};
+
+    const allowedFileType: string[] = [
+      "application/pdf",
+      "application/doc",
+      "application/docx",
+      "application/xlsx",
+      "application/xls",
+    ];
+
+    if (
+      (formData.files.propertyLawCertificate &&
+        formData.files.propertyLawCertificate.name === "") ||
+      formData.files.propertyLawCertificate === null
+    ) {
+      errors.propertyLawCertificate =
+        page.errorMessages.propertyLawCertificateRequired[language];
+    }
+
+    if (
+      formData.files.propertyLawCertificate &&
+      !allowedFileType.includes(
+        formData.files.propertyLawCertificate?.type as string
+      )
+    ) {
+      errors.propertyLawCertificate =
+        page.errorMessages.propertyLawCertificateType[language];
+    }
+
+    if (
+      formData.files.financialStatement !== null &&
+      !allowedFileType.includes(
+        formData.files.financialStatement?.type as string
+      )
+    ) {
+      errors.financialStatement =
+        page.errorMessages.financialStatementType[language];
+    }
+
+    if (
+      formData.files.financialStatement &&
+      formData.files.financialStatement.size >= 20000000
+    ) {
+      errors.financialStatement = page.errorMessages.fileLimit[language];
+    }
+    if (
+      formData.files.propertyLawCertificate &&
+      formData.files.propertyLawCertificate.size >= 20000000
+    ) {
+      errors.propertyLawCertificate = page.errorMessages.fileLimit[language];
+    }
+
+    setErrors(errors);
+    return !!errors;
+  };
+
+  const handleGoBack = () => {
+    navigate("/apply/four");
+  };
+
+  const handleConfirmModalYes = async () => {
+    if (validateForm()) {
+      setLocalIsSubmitting(true);
+      try {
+        const companyData = JSON.parse(localStorage.getItem("companyData")!);
+        const digitalAndFinancial = JSON.parse(
+          localStorage.getItem("digitalAndFinancial")!
+        );
+        const digitalReadiness = JSON.parse(
+          localStorage.getItem("digitalReadiness")!
+        );
+        const propertyLaw = JSON.parse(localStorage.getItem("propertyLaw")!);
+        const restOfData = JSON.parse(localStorage.getItem("restOfData")!);
+        const dataToSubmit = {
+          companyData: {
+            companyName: companyData.companyName,
+            companyRegisterNumber: companyData.companyRegisterNumber,
+            createYear: Number(companyData.createYear),
+            workerCount: companyData.companySize,
+            annualTurnover: companyData.annualTurnover,
+            address: companyData.companyAddress,
+            cityAndRegion: companyData.location,
+            website: companyData.website,
+            contactName: companyData.contactPerson,
+            contactEmail: companyData.email,
+            contactPhone: companyData.phone,
+          },
+          declarationConsent: {
+            dataIsReal: restOfData.declaration.dataIsReal,
+            permitContact: restOfData.declaration.permitContact,
+            privacyAcceptance: restOfData.declaration.privacyAcceptance,
+          },
+          digitalLeadership: {
+            digitalTeamOrLead: digitalAndFinancial.digital.digitalTeamOrLead,
+            digitalPath: digitalAndFinancial.digital.digitalPath,
+            digitalTransformationLoyality:
+              digitalAndFinancial.digital.digitalTransformationLoyality,
+          },
+          financialNeeding: {
+            financialNeed: digitalAndFinancial.finance.financialNeed,
+            neededBudget: digitalAndFinancial.finance.neededBudget,
+          },
+          digitalReadiness: {
+            keyChallenges: digitalReadiness.keyChallenges,
+            digitalLevel: Number(digitalReadiness.digitalLevel),
+            digitalTools: digitalReadiness.digitalTools,
+            companyPurpose: digitalReadiness.companyPurpose,
+          },
+          propertyLaw: {
+            businessOperations: propertyLaw.businessOperations,
+            companyLawType: propertyLaw.companyLawType,
+            products: propertyLaw.products,
+            exportActivity: propertyLaw.exportActivity,
+            exportBazaar: propertyLaw.exportBazaar,
+          },
+        };
+
+        const files: {
+          propertyLawCertificate: File | null;
+          registerCertificate: File | null;
+          financialStatement: File | null;
+        } = {
+          propertyLawCertificate: null,
+          registerCertificate: null,
+          financialStatement: null,
+        };
+
+        const fileKeys = [
+          "propertyLawCertificate",
+          "financialStatement",
+          "registerCertificate",
+        ] as const;
+
+        await Promise.all(
+          fileKeys.map(async (key) => {
+            try {
+              const file = await getFileFromIndexedDB(key);
+              files[key] = file;
+            } catch {
+              files[key] = null;
+            }
+          })
+        );
+
+        await companyService.submitCompanyData(dataToSubmit, files);
+
+        setShowConfirmModal(false);
+        setShowThankYouModal(true);
+        setSubmitSuccess(true);
+        setShowThankYouModal(true);
+      } catch (error) {
+        console.error("Submission failed:", error);
+        setSubmissionError(page.submissionErrorMessage[language]);
+        setRetryCount((prev) => prev + 1);
+      }
+    }
+  };
+
+  const handleCheckboxChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target;
+    const updatedValue = value === "on" ? true : false;
+    const updatedData = {
+      ...formData,
+      declaration: {
+        ...formData.declaration,
+        [name]: updatedValue,
+      },
+    };
+    setFormData(updatedData);
+    localStorage.setItem("restOfData", JSON.stringify(updatedData));
+    setErrors((prev) => ({
+      ...prev,
+      [name]: "",
+    }));
+  };
+
+  //#region file uploading
+
+  const handleFileChange = async (
+    e: React.ChangeEvent<HTMLInputElement>,
+    type: "propertyLawCertificate" | "financialStatement"
+  ) => {
+    const file: File | undefined = e.target.files?.[0];
+
+    setErrors({
+      propertyLawCertificate:
+        type === "propertyLawCertificate" ? "" : errors.propertyLawCertificate,
+      financialStatement:
+        type === "financialStatement" ? "" : errors.financialStatement,
+    });
+    if (file) {
+      try {
+        await saveFileToIndexedDB(file, type);
+        const updatedData = {
+          ...formData,
+          files: {
+            ...formData.files,
+            [type]: { name: file.name, size: file.size, type: file.type },
+          },
+        };
+        setFormData(updatedData);
+        localStorage.setItem("restOfData", JSON.stringify(updatedData));
+      } catch (error) {
+        console.error("Failed to save file to IndexedDB", error);
+      }
+    }
+  };
 
   const [localIsSubmitting, setLocalIsSubmitting] = useState<boolean>(false);
-  const allAgreementsChecked = Object.values(agreements).every(
-    (value) => value === true
-  );
 
   const [showConfirmModal, setShowConfirmModal] = useState<boolean>(false);
   const [showThankYouModal, setShowThankYouModal] = useState<boolean>(false);
@@ -91,6 +361,7 @@ export default function ApplyFive() {
   const [submissionError, setSubmissionError] = useState<string | null>(null);
   const [retryCount, setRetryCount] = useState<number>(0);
 
+  // Works correctly
   const downloadPDF = (e: React.MouseEvent<HTMLLabelElement>) => {
     e.preventDefault();
     const link = document.createElement("a");
@@ -100,17 +371,8 @@ export default function ApplyFive() {
     link.click();
     document.body.removeChild(link);
   };
-
-  useEffect(() => {
-    try {
-      const savedAgreements = JSON.parse(
-        localStorage.getItem("restOfData") || "{}"
-      );
-      setAgreements(savedAgreements);
-    } catch (error) {
-      console.error("Error loading saved agreements:", error);
-    }
-  }, []);
+  //
+  //#endregion
 
   useEffect(() => {
     if (submitSuccess) {
@@ -118,90 +380,6 @@ export default function ApplyFive() {
       setShowThankYouModal(true);
     }
   }, [submitSuccess]);
-
-  const handleFileChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    fileType: keyof FileState
-  ) => {
-    const fileList = e.target.files;
-    if (fileList && fileList.length > 0) {
-      const file = fileList[0];
-
-      setFiles((prev) => ({
-        ...prev,
-        [fileType]: file,
-      }));
-
-      try {
-        const filesMetadata = JSON.parse(localStorage.getItem("files") || "{}");
-        filesMetadata[fileType] = {
-          name: file.name,
-          size: file.size,
-          type: file.type,
-          lastModified: file.lastModified,
-        };
-        localStorage.setItem("files", JSON.stringify(filesMetadata));
-      } catch (error) {
-        console.error("Error storing file metadata:", error);
-      }
-    }
-  };
-
-  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, checked } = e.target;
-    setAgreements((prev) => ({
-      ...prev,
-      [name as keyof AgreementState]: checked,
-    }));
-
-    const updatedFormData = { ...formData };
-    if (!updatedFormData.companyData.declarationConsent) {
-      updatedFormData.companyData.declarationConsent = {
-        dataIsReal: false,
-        permitContact: false,
-        privacyAcceptance: false,
-      };
-    }
-
-    if (name === "dataIsReal") {
-      setFormData((prev) => ({
-        ...prev,
-        companyData: {
-          ...prev.companyData,
-          declarationConsent: {
-            ...prev.companyData.declarationConsent,
-            dataIsReal: checked,
-          },
-        },
-      }));
-    } else if (name === "permitContact") {
-      setFormData((prev) => ({
-        ...prev,
-        companyData: {
-          ...prev.companyData,
-          declarationConsent: {
-            ...prev.companyData.declarationConsent,
-            permitContact: checked,
-          },
-        },
-      }));
-    } else if (name === "privacyAcceptance") {
-      setFormData((prev) => ({
-        ...prev,
-        companyData: {
-          ...prev.companyData,
-          declarationConsent: {
-            ...prev.companyData.declarationConsent,
-            privacyAcceptance: true,
-          },
-        },
-      }));
-    }
-  };
-
-  const handleGoBack = () => {
-    navigate("/apply/four");
-  };
 
   const handleConfirmModalClose = () => {
     setShowConfirmModal(false);
@@ -213,85 +391,16 @@ export default function ApplyFive() {
     navigate("/");
   };
 
-  const handleConfirmModalYes = async () => {
-    setLocalIsSubmitting(true);
-
-    try {
-      const exportBazaar = formData.companyData.propertyLaw.exportBazaar;
-      const formattedExportBazaar = Array.isArray(exportBazaar)
-        ? exportBazaar.join(", ")
-        : exportBazaar;
-
-      const dataToSend = {
-        companyData: {
-          companyName: formData.companyData.companyName,
-          companyRegisterNumber: formData.companyData.companyRegisterNumber,
-          createYear: formData.companyData.createYear,
-          workerCount: formData.companyData.workerCount,
-          annualTurnover: formData.companyData.annualTurnover,
-          address: formData.companyData.address,
-          cityAndRegion: formData.companyData.cityAndRegion,
-          website: formData.companyData.website,
-          contactName: formData.companyData.contactName,
-          contactEmail: formData.companyData.contactEmail,
-          contactPhone: formData.companyData.contactPhone,
-        },
-        declarationConsent: formData.companyData.declarationConsent,
-        digitalLeadership: formData.companyData.digitalLeadership,
-        digitalReadiness: {
-          ...formData.companyData.digitalReadiness,
-          digitalLevel: +formData.companyData.digitalReadiness.digitalLevel,
-        },
-        financialNeeding: formData.companyData.financialNeeding,
-        propertyLaw: {
-          ...formData.companyData.propertyLaw,
-          exportBazaar: formattedExportBazaar,
-        },
-      };
-
-      const dataToSubmit = dataToSend;
-
-      if (files.financialStatement || files.propertyLawCertificate) {
-        console.log(
-          "Files are available but will not be submitted in this version:"
-        );
-        if (files.propertyLawCertificate)
-          console.log(
-            "- Company Registry File:",
-            files.propertyLawCertificate.name
-          );
-        if (files.financialStatement)
-          console.log(
-            "- Financial Reports File:",
-            files.financialStatement.name
-          );
-      }
-
-      console.log(dataToSubmit);
-      // await companyService.submitCompanyData(dataToSubmit);
-      setShowConfirmModal(false);
-      setShowThankYouModal(true);
-      setSubmitSuccess(true);
-      setShowThankYouModal(true);
-    } catch (error) {
-      console.error("Submission failed:", error);
-      setSubmissionError(
-        (error as string) || "Məlumatların göndərilməsi zamanı xəta baş verdi"
-      );
-
-      setRetryCount((prev) => prev + 1);
-    }
-  };
-
   const handleRetry = () => {
     handleConfirmModalYes();
   };
 
-  const handleSubmitForm = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setShowConfirmModal(true);
-    setSubmissionError(null);
-    setRetryCount(0);
+  const handleSubmitForm = () => {
+    if (validateForm()) {
+      setShowConfirmModal(true);
+      setSubmissionError(null);
+      setRetryCount(0);
+    }
   };
 
   return (
@@ -317,7 +426,7 @@ export default function ApplyFive() {
                 transition={{ duration: 0.25 }}
               >
                 <h2 className="text-white text-xl font-semibold text-center">
-                  Müraciətinizi təsdiq edirsinizmi?
+                  {page.confirmModal.title[language]}
                 </h2>
                 <button
                   onClick={handleConfirmModalClose}
@@ -342,7 +451,9 @@ export default function ApplyFive() {
 
                 {submissionError && (
                   <div className="bg-red-500/20 border border-red-500 text-red-500 p-4 rounded-md text-sm mb-4 w-full">
-                    <p className="font-medium mb-2">Xəta:</p>
+                    <p className="font-medium mb-2">
+                      {page.submissionError.errorTitle[language]}
+                    </p>
                     <p>{submissionError}</p>
 
                     {retryCount < 3 && (
@@ -350,17 +461,14 @@ export default function ApplyFive() {
                         onClick={handleRetry}
                         className="mt-3 bg-red-500 text-white py-2 px-4 rounded-md text-sm hover:bg-red-600 transition-colors w-full"
                       >
-                        Yenidən cəhd edin ({retryCount}/3)
+                        {page.submissionError.retryButton[language]} (
+                        {retryCount}/3)
                       </button>
                     )}
 
                     {retryCount >= 3 && (
                       <div className="mt-3 text-amber-400 text-xs">
-                        <p>
-                          Maksimum cəhd sayı aşıldı. Zəhmət olmasa daha sonra
-                          yenidən cəhd edin və ya texniki dəstəklə əlaqə
-                          saxlayın.
-                        </p>
+                        <p>{page.submissionError.maxRetryMessage[language]}</p>
                       </div>
                     )}
                   </div>
@@ -372,12 +480,12 @@ export default function ApplyFive() {
                     className="border cursor-pointer border-red-500 text-red-500 py-3 px-10 rounded-lg hover:bg-red-50 transition font-medium"
                     disabled={localIsSubmitting}
                   >
-                    Xeyr
+                    {page.confirmModal.noBtn[language]}
                   </button>
                   <button
                     onClick={handleConfirmModalYes}
                     className="bg-green-500 cursor-pointer text-white py-3 px-10 rounded-lg hover:bg-green-600 transition font-medium"
-                    disabled={isSubmitting}
+                    // disabled={isSubmitting}
                   >
                     {localIsSubmitting ? (
                       <span className="flex items-center">
@@ -401,10 +509,10 @@ export default function ApplyFive() {
                             d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                           ></path>
                         </svg>
-                        Göndərilir...
+                        {page.buttons.submitting[language]}
                       </span>
                     ) : (
-                      "Bəli"
+                      page.confirmModal.yesBtn[language]
                     )}
                   </button>
                 </div>
@@ -430,11 +538,10 @@ export default function ApplyFive() {
                 transition={{ duration: 0.25 }}
               >
                 <h2 className="text-white text-2xl font-bold">
-                  Müraciətiniz üçün təşəkkür edirik!
+                  {page.thankYouModal.title[language]}
                 </h2>
                 <p className="text-white text-base max-w-[360px] mx-auto">
-                  Müraciətinizin nəticəsi barəsində qısa zamanda sizinlə əlaqə
-                  saxlanılacaqdır.
+                  {page.thankYouModal.message[language]}
                 </p>
 
                 <button
@@ -468,7 +575,7 @@ export default function ApplyFive() {
                   onClick={handleThankYouModalClose}
                   className="bg-blue-600 text-white py-3 px-8 rounded-lg hover:bg-blue-700 transition font-medium"
                 >
-                  Ana səhifəyə qayıt
+                  {page.thankYouModal.backToHome[language]}
                 </button>
               </motion.div>
             </motion.div>
@@ -480,7 +587,7 @@ export default function ApplyFive() {
           <div className="text-center mb-10">
             <h1 className="text-3xl font-bold">{page.title[language]}</h1>
           </div>
-          <form className="space-y-8" onSubmit={handleSubmitForm}>
+          <form className="space-y-8">
             {/* Company registry file */}
             <div className="space-y-2">
               <label
@@ -491,34 +598,48 @@ export default function ApplyFive() {
               </label>
               <div className="relative">
                 <label
-                  htmlFor="companyRegistry"
+                  htmlFor="propertyLawCertificate"
                   className="w-full h-14 border border-gray-600 rounded-lg flex items-center justify-between px-4 bg-gray-800/30 text-gray-400 text-sm cursor-pointer select-none"
                 >
-                  {files.propertyLawCertificate
-                    ? files.propertyLawCertificate.name
-                    : "No file selected"}
+                  <span className="truncate">
+                    {formData.files?.propertyLawCertificate
+                      ? formData.files.propertyLawCertificate.name
+                      : "No file selected"}
+                  </span>
+                  <Download size={20} className="text-white ml-2" />
                 </label>
                 <button
                   type="button"
-                  className="text-white absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none"
+                  className={`w-full bg-transparent border text-white absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none sr-only ${
+                    errors.propertyLawCertificate
+                      ? "border-red-400"
+                      : "border-gray-700"
+                  } rounded p-3 focus:outline-none focus:border-blue-500`}
                   tabIndex={-1}
                   aria-hidden="true"
                 >
-                  <Download size={20} />
+                  {/* <Download size={20} /> */}
                 </button>
                 <input
-                  id="companyRegistry"
+                  id="propertyLawCertificate"
                   type="file"
                   className="hidden"
                   accept=".doc,.docx,.pdf"
-                  onChange={(e) =>
-                    handleFileChange(e, "propertyLawCertificate")
-                  }
+                  ref={propertyLawCertificateRef}
+                  onChange={(e) => {
+                    handleFileChange(e, "propertyLawCertificate");
+                  }}
                 />
               </div>
               <p className="text-sm text-gray-400">
                 {page.fileFormatText[language]}
               </p>
+
+              {errors.propertyLawCertificate && (
+                <p className="text-red-500 font-medium text-sm mt-1">
+                  {errors.propertyLawCertificate}
+                </p>
+              )}
             </div>
 
             {/* Financial reports file */}
@@ -531,27 +652,37 @@ export default function ApplyFive() {
               </label>
               <div className="relative">
                 <label
-                  htmlFor="financialReports"
+                  htmlFor="financialStatement"
                   className="w-full h-14 border border-gray-600 rounded-lg flex items-center justify-between px-4 bg-gray-800/30 text-gray-400 text-sm cursor-pointer select-none"
                 >
-                  {files.financialStatement
-                    ? files.financialStatement.name
-                    : "No file selected"}
+                  <span className="truncate">
+                    {formData.files?.financialStatement
+                      ? formData.files?.financialStatement.name
+                      : "No file selected"}
+                  </span>
+                  <Download size={20} className="text-white ml-2" />
                 </label>
                 <button
                   type="button"
-                  className="text-white absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none"
+                  className={`w-full bg-transparent border text-white absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none sr-only ${
+                    errors.financialStatement
+                      ? "border-red-400"
+                      : "border-gray-700"
+                  } rounded p-3 focus:outline-none focus:border-blue-500`}
                   tabIndex={-1}
                   aria-hidden="true"
                 >
-                  <Download size={20} />
+                  {/* <Download size={20} /> */}
                 </button>
                 <input
-                  id="financialReports"
+                  id="financialStatement"
                   type="file"
                   className="hidden"
                   accept=".doc,.docx,.pdf,.xls,.xlsx"
-                  onChange={(e) => handleFileChange(e, "financialStatement")}
+                  ref={financialStatementRef}
+                  onChange={(e) => {
+                    handleFileChange(e, "financialStatement");
+                  }}
                 />
               </div>
               <p className="text-sm text-gray-400">
@@ -561,6 +692,12 @@ export default function ApplyFive() {
               <p className="text-sm italic text-[#F9F9F9]">
                 {page.applyNeedText[language]}
               </p>
+
+              {errors.financialStatement && (
+                <p className="text-red-500 font-medium text-sm mt-1">
+                  {errors.financialStatement}
+                </p>
+              )}
             </div>
 
             {/* Agreement checkboxes */}
@@ -574,12 +711,12 @@ export default function ApplyFive() {
                     type="checkbox"
                     id="dataIsReal"
                     name="dataIsReal"
-                    checked={agreements.dataIsReal}
+                    checked={formData.declaration?.dataIsReal}
                     onChange={handleCheckboxChange}
                     className="hidden"
                   />
                   <span className="mt-1 w-5 h-5 flex items-center justify-center border border-gray-400 rounded">
-                    {agreements.dataIsReal && (
+                    {formData.declaration?.dataIsReal && (
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         className="w-4 h-4 text-blue-500"
@@ -611,12 +748,12 @@ export default function ApplyFive() {
                     type="checkbox"
                     id="permitContact"
                     name="permitContact"
-                    checked={agreements.permitContact}
+                    checked={formData.declaration?.permitContact}
                     onChange={handleCheckboxChange}
                     className="hidden"
                   />
                   <span className="mt-1 w-5 h-5 flex items-center justify-center border border-gray-400 rounded">
-                    {agreements.permitContact && (
+                    {formData.declaration?.permitContact && (
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         className="w-4 h-4 text-blue-500"
@@ -648,12 +785,12 @@ export default function ApplyFive() {
                     type="checkbox"
                     id="privacyAcceptance"
                     name="privacyAcceptance"
-                    checked={agreements.privacyAcceptance}
+                    checked={formData.declaration?.privacyAcceptance}
                     onChange={handleCheckboxChange}
                     className="hidden"
                   />
                   <span className="mt-1 w-5 h-5 flex items-center justify-center border border-gray-400 rounded">
-                    {agreements.privacyAcceptance && (
+                    {formData.declaration?.privacyAcceptance && (
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         className="w-4 h-4 text-blue-500"
@@ -690,14 +827,22 @@ export default function ApplyFive() {
                 {pagesTranslations.applyBtns.backBtn[language]}
               </button>
               <button
-                type="submit"
-                disabled={!allAgreementsChecked || localIsSubmitting}
+                type="button"
+                onClick={handleSubmitForm}
+                disabled={
+                  !formData.declaration?.dataIsReal &&
+                  !formData.declaration?.privacyAcceptance &&
+                  !formData.declaration?.permitContact
+                }
                 className={`flex-1 py-3 rounded-lg transition-colors ${
-                  allAgreementsChecked && !localIsSubmitting
+                  formData.declaration?.dataIsReal &&
+                  formData.declaration?.privacyAcceptance &&
+                  formData.declaration?.permitContact
                     ? "bg-blue-600 hover:bg-blue-700 text-white cursor-pointer"
                     : "bg-blue-900/50 text-gray-400 cursor-not-allowed "
                 }`}
               >
+                {/* {page.buttons.confirm[language]} */}
                 {localIsSubmitting
                   ? page.buttons.submitting[language]
                   : page.buttons.confirm[language]}
