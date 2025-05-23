@@ -59,9 +59,19 @@ export default function ApplyFour() {
     }
   }, []);
 
-  const [errors, setErrors] = useState<Record<string, Record<string, string>>>(
-    {}
-  );
+  type ErrorsType = {
+    digital?: {
+      digitalTeamOrLead?: string;
+      digitalPath?: string;
+      digitalTransformationLoyality?: string;
+    };
+    finance?: {
+      financialNeed?: string;
+      neededBudget?: string;
+    };
+  };
+
+  const [errors, setErrors] = useState<ErrorsType>({});
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -92,7 +102,7 @@ export default function ApplyFour() {
     const updatedData = {
       ...formData,
       [parentName]: {
-        ...(formData as any)[parentName],
+        ...(formData[parentName as keyof DigitalAndFinancial] as object),
         [name]: updatedValue,
       },
     };
@@ -101,14 +111,14 @@ export default function ApplyFour() {
     setErrors((prev) => ({
       ...prev,
       [parentName]: {
-        ...(prev as any)[parentName],
+        ...((prev[parentName as keyof ErrorsType] || {})),
         [name]: false,
       },
     }));
   };
 
   const validateForm = (): boolean => {
-    const errors: any = {};
+    const errors: ErrorsType = {};
 
     if (!formData.finance.financialNeed) {
       errors.finance = {

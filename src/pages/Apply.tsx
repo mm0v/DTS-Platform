@@ -9,7 +9,7 @@ import type { FormContextType } from "../context/FormContext";
 import ApplyFiveCopy from "./ApplyFive copy";
 
 const Apply = () => {
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitting] = useState(false);
   const [files, setFiles] = useState<File[]>([]);
 
   const [formData, setFormData] = useState<FormContextType["formData"]>({

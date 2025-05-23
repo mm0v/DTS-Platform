@@ -7,7 +7,7 @@ import BackgroundVideo from "../components/BackgroundVideo";
 import { FormContext } from "../context/FormContext";
 import { useLanguage } from "../context/LanguageContext";
 import ApplySteps from "../components/ApplySteps";
-import { motion, AnimatePresence } from "framer-motion";
+// import { motion, AnimatePresence } from "framer-motion";
 import { companyService } from "../services/companyService";
 
 const DB_NAME = "ALL files";
@@ -296,7 +296,7 @@ export default function ApplyFiveCopy() {
     const updatedData = {
       ...formData,
       declaration: {
-        ...(formData as any).declaration,
+        ...formData.declaration,
         [name]: updatedValue,
       },
     };
@@ -304,10 +304,7 @@ export default function ApplyFiveCopy() {
     localStorage.setItem("restOfData", JSON.stringify(updatedData));
     setErrors((prev) => ({
       ...prev,
-      declaration: {
-        ...(prev as any).declaration,
-        [name]: updatedValue,
-      },
+      [name]: "",
     }));
   };
 
