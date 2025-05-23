@@ -97,36 +97,41 @@ export default function ApplyFiveCopy() {
   const financialStatementRef = useRef<HTMLInputElement>(null);
   useEffect(() => {
     const savedData = JSON.parse(localStorage.getItem("restOfData") || "null");
-    getFileFromIndexedDB("propertyLawCertificate")
-      .then((file) => {
-        if (file && savedData) {
-          setFormData({
+    Promise.all([
+      getFileFromIndexedDB("propertyLawCertificate").catch(() => null),
+      getFileFromIndexedDB("financialStatement").catch(() => null),
+    ])
+      .then(([propertyFile, financialFile]) => {
+        if (savedData) {
+          const updatedData = {
             ...savedData,
             files: {
               ...savedData.files,
-              propertyLawCertificate: file.name,
+              ...(propertyFile && {
+                propertyLawCertificate: {
+                  name: propertyFile.name,
+                  size: propertyFile.size,
+                  type: propertyFile.type,
+                },
+              }),
+              ...(financialFile && {
+                financialStatement: {
+                  name: financialFile.name,
+                  size: financialFile.size,
+                  type: financialFile.type,
+                },
+              }),
             },
-          });
-          propertyLawCertificateRef.current!.name = file.name;
-        } else if (savedData) {
-          setFormData(savedData);
-        }
-      })
-      .catch(console.error);
+          };
 
-    getFileFromIndexedDB("financialStatement")
-      .then((file) => {
-        if (file && savedData) {
-          setFormData({
-            ...savedData,
-            files: {
-              ...savedData.files,
-              financialStatement: file.name,
-            },
-          });
-          financialStatementRef.current!.name = file.name;
-        } else if (savedData) {
-          setFormData(savedData);
+          setFormData(updatedData);
+
+          if (propertyFile && propertyLawCertificateRef.current) {
+            propertyLawCertificateRef.current.name = propertyFile.name;
+          }
+          if (financialFile && financialStatementRef.current) {
+            financialStatementRef.current.name = financialFile.name;
+          }
         }
       })
       .catch(console.error);
@@ -195,11 +200,12 @@ export default function ApplyFiveCopy() {
   };
 
   const handleGoBack = () => {
-    navigate("/apply/three");
+    navigate("/apply/four");
   };
 
-  const handleSubmitForm = async () => {
+  const handleConfirmModalYes = async () => {
     if (validateForm()) {
+      setLocalIsSubmitting(true);
       try {
         const companyData = JSON.parse(localStorage.getItem("companyData")!);
         const digitalAndFinancial = JSON.parse(
@@ -282,8 +288,15 @@ export default function ApplyFiveCopy() {
         );
 
         await companyService.submitCompanyData(dataToSubmit, files);
+
+        setShowConfirmModal(false);
+        setShowThankYouModal(true);
+        setSubmitSuccess(true);
+        setShowThankYouModal(true);
       } catch (error) {
         console.error("Submission failed:", error);
+        setSubmissionError(page.submissionErrorMessage[language]);
+        setRetryCount((prev) => prev + 1);
       }
     }
   };
@@ -340,6 +353,14 @@ export default function ApplyFiveCopy() {
     }
   };
 
+  const [localIsSubmitting, setLocalIsSubmitting] = useState<boolean>(false);
+
+  const [showConfirmModal, setShowConfirmModal] = useState<boolean>(false);
+  const [showThankYouModal, setShowThankYouModal] = useState<boolean>(false);
+  const [submitSuccess, setSubmitSuccess] = useState<boolean>(false);
+  const [submissionError, setSubmissionError] = useState<string | null>(null);
+  const [retryCount, setRetryCount] = useState<number>(0);
+
   // Works correctly
   const downloadPDF = (e: React.MouseEvent<HTMLLabelElement>) => {
     e.preventDefault();
@@ -353,6 +374,35 @@ export default function ApplyFiveCopy() {
   //
   //#endregion
 
+  useEffect(() => {
+    if (submitSuccess) {
+      setShowConfirmModal(false);
+      setShowThankYouModal(true);
+    }
+  }, [submitSuccess]);
+
+  const handleConfirmModalClose = () => {
+    setShowConfirmModal(false);
+    setSubmissionError(null);
+  };
+
+  const handleThankYouModalClose = () => {
+    setShowThankYouModal(false);
+    navigate("/");
+  };
+
+  const handleRetry = () => {
+    handleConfirmModalYes();
+  };
+
+  const handleSubmitForm = () => {
+    if (validateForm()) {
+      setShowConfirmModal(true);
+      setSubmissionError(null);
+      setRetryCount(0);
+    }
+  };
+
   return (
     <>
       <BackgroundVideo />
@@ -360,7 +410,7 @@ export default function ApplyFiveCopy() {
         <ApplySteps step={5} />
 
         {/* Confirmation Modal */}
-        {/* <AnimatePresence>
+        <AnimatePresence>
           {showConfirmModal && (
             <motion.div
               className="fixed inset-0 flex items-center justify-center backdrop-blur-sm z-50"
@@ -376,7 +426,7 @@ export default function ApplyFiveCopy() {
                 transition={{ duration: 0.25 }}
               >
                 <h2 className="text-white text-xl font-semibold text-center">
-                  Müraciətinizi təsdiq edirsinizmi?
+                  {page.confirmModal.title[language]}
                 </h2>
                 <button
                   onClick={handleConfirmModalClose}
@@ -401,7 +451,9 @@ export default function ApplyFiveCopy() {
 
                 {submissionError && (
                   <div className="bg-red-500/20 border border-red-500 text-red-500 p-4 rounded-md text-sm mb-4 w-full">
-                    <p className="font-medium mb-2">Xəta:</p>
+                    <p className="font-medium mb-2">
+                      {page.submissionError.errorTitle[language]}
+                    </p>
                     <p>{submissionError}</p>
 
                     {retryCount < 3 && (
@@ -409,17 +461,14 @@ export default function ApplyFiveCopy() {
                         onClick={handleRetry}
                         className="mt-3 bg-red-500 text-white py-2 px-4 rounded-md text-sm hover:bg-red-600 transition-colors w-full"
                       >
-                        Yenidən cəhd edin ({retryCount}/3)
+                        {page.submissionError.retryButton[language]} (
+                        {retryCount}/3)
                       </button>
                     )}
 
                     {retryCount >= 3 && (
                       <div className="mt-3 text-amber-400 text-xs">
-                        <p>
-                          Maksimum cəhd sayı aşıldı. Zəhmət olmasa daha sonra
-                          yenidən cəhd edin və ya texniki dəstəklə əlaqə
-                          saxlayın.
-                        </p>
+                        <p>{page.submissionError.maxRetryMessage[language]}</p>
                       </div>
                     )}
                   </div>
@@ -431,12 +480,12 @@ export default function ApplyFiveCopy() {
                     className="border cursor-pointer border-red-500 text-red-500 py-3 px-10 rounded-lg hover:bg-red-50 transition font-medium"
                     disabled={localIsSubmitting}
                   >
-                    Xeyr
+                    {page.confirmModal.noBtn[language]}
                   </button>
                   <button
                     onClick={handleConfirmModalYes}
                     className="bg-green-500 cursor-pointer text-white py-3 px-10 rounded-lg hover:bg-green-600 transition font-medium"
-                    disabled={isSubmitting}
+                    // disabled={isSubmitting}
                   >
                     {localIsSubmitting ? (
                       <span className="flex items-center">
@@ -460,20 +509,20 @@ export default function ApplyFiveCopy() {
                             d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                           ></path>
                         </svg>
-                        Göndərilir...
+                        {page.buttons.submitting[language]}
                       </span>
                     ) : (
-                      "Bəli"
+                      page.confirmModal.yesBtn[language]
                     )}
                   </button>
                 </div>
               </motion.div>
             </motion.div>
           )}
-        </AnimatePresence> */}
+        </AnimatePresence>
 
         {/* Thank You Modal */}
-        {/* <AnimatePresence>
+        <AnimatePresence>
           {showThankYouModal && (
             <motion.div
               className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-75 z-50"
@@ -489,11 +538,10 @@ export default function ApplyFiveCopy() {
                 transition={{ duration: 0.25 }}
               >
                 <h2 className="text-white text-2xl font-bold">
-                  Müraciətiniz üçün təşəkkür edirik!
+                  {page.thankYouModal.title[language]}
                 </h2>
                 <p className="text-white text-base max-w-[360px] mx-auto">
-                  Müraciətinizin nəticəsi barəsində qısa zamanda sizinlə əlaqə
-                  saxlanılacaqdır.
+                  {page.thankYouModal.message[language]}
                 </p>
 
                 <button
@@ -527,12 +575,12 @@ export default function ApplyFiveCopy() {
                   onClick={handleThankYouModalClose}
                   className="bg-blue-600 text-white py-3 px-8 rounded-lg hover:bg-blue-700 transition font-medium"
                 >
-                  Ana səhifəyə qayıt
+                  {page.thankYouModal.backToHome[language]}
                 </button>
               </motion.div>
             </motion.div>
           )}
-        </AnimatePresence> */}
+        </AnimatePresence>
 
         {/* Form section */}
         <div className="w-full max-w-4xl p-8 rounded-lg">
@@ -553,13 +601,16 @@ export default function ApplyFiveCopy() {
                   htmlFor="propertyLawCertificate"
                   className="w-full h-14 border border-gray-600 rounded-lg flex items-center justify-between px-4 bg-gray-800/30 text-gray-400 text-sm cursor-pointer select-none"
                 >
-                  {formData.files?.propertyLawCertificate
-                    ? formData.files?.propertyLawCertificate.name
-                    : "No file selected"}
+                  <span className="truncate">
+                    {formData.files?.propertyLawCertificate
+                      ? formData.files.propertyLawCertificate.name
+                      : "No file selected"}
+                  </span>
+                  <Download size={20} className="text-white ml-2" />
                 </label>
                 <button
                   type="button"
-                  className={`w-full bg-transparent border text-white absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none ${
+                  className={`w-full bg-transparent border text-white absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none sr-only ${
                     errors.propertyLawCertificate
                       ? "border-red-400"
                       : "border-gray-700"
@@ -567,7 +618,7 @@ export default function ApplyFiveCopy() {
                   tabIndex={-1}
                   aria-hidden="true"
                 >
-                  <Download size={20} />
+                  {/* <Download size={20} /> */}
                 </button>
                 <input
                   id="propertyLawCertificate"
@@ -604,13 +655,16 @@ export default function ApplyFiveCopy() {
                   htmlFor="financialStatement"
                   className="w-full h-14 border border-gray-600 rounded-lg flex items-center justify-between px-4 bg-gray-800/30 text-gray-400 text-sm cursor-pointer select-none"
                 >
-                  {formData.files?.financialStatement
-                    ? formData.files?.financialStatement.name
-                    : "No file selected"}
+                  <span className="truncate">
+                    {formData.files?.financialStatement
+                      ? formData.files?.financialStatement.name
+                      : "No file selected"}
+                  </span>
+                  <Download size={20} className="text-white ml-2" />
                 </label>
                 <button
                   type="button"
-                  className={`w-full bg-transparent border text-white absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none ${
+                  className={`w-full bg-transparent border text-white absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none sr-only ${
                     errors.financialStatement
                       ? "border-red-400"
                       : "border-gray-700"
@@ -618,7 +672,7 @@ export default function ApplyFiveCopy() {
                   tabIndex={-1}
                   aria-hidden="true"
                 >
-                  <Download size={20} />
+                  {/* <Download size={20} /> */}
                 </button>
                 <input
                   id="financialStatement"
@@ -788,10 +842,10 @@ export default function ApplyFiveCopy() {
                     : "bg-blue-900/50 text-gray-400 cursor-not-allowed "
                 }`}
               >
-                {page.buttons.confirm[language]}
-                {/* {localIsSubmitting
+                {/* {page.buttons.confirm[language]} */}
+                {localIsSubmitting
                   ? page.buttons.submitting[language]
-                  : page.buttons.confirm[language]} */}
+                  : page.buttons.confirm[language]}
               </button>
             </div>
           </form>
