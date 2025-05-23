@@ -8,46 +8,46 @@ import { FormContext } from "../context/FormContext";
 import { useLanguage } from "../context/LanguageContext";
 import ApplySteps from "../components/ApplySteps";
 import { motion, AnimatePresence } from "framer-motion";
-import { companyService } from "../services/companyService";
+// import { companyService } from "../services/companyService";
 
-const DB_NAME = "ALL files";
-const STORE_NAME = "files";
+// const DB_NAME = "ALL files";
+// const STORE_NAME = "files";
 
-function openDB() {
-  return new Promise<IDBDatabase>((resolve, reject) => {
-    const request = indexedDB.open(DB_NAME, 1);
-    request.onerror = () => reject(request.error);
-    request.onsuccess = () => resolve(request.result);
-    request.onupgradeneeded = () => {
-      const db = request.result;
-      if (!db.objectStoreNames.contains(STORE_NAME)) {
-        db.createObjectStore(STORE_NAME);
-      }
-    };
-  });
-}
+// function openDB() {
+//   return new Promise<IDBDatabase>((resolve, reject) => {
+//     const request = indexedDB.open(DB_NAME, 1);
+//     request.onerror = () => reject(request.error);
+//     request.onsuccess = () => resolve(request.result);
+//     request.onupgradeneeded = () => {
+//       const db = request.result;
+//       if (!db.objectStoreNames.contains(STORE_NAME)) {
+//         db.createObjectStore(STORE_NAME);
+//       }
+//     };
+//   });
+// }
 
-async function saveFileToIndexedDB(file: File, FILE_KEY: string) {
-  const db = await openDB();
-  return new Promise<void>((resolve, reject) => {
-    const tx = db.transaction(STORE_NAME, "readwrite");
-    const store = tx.objectStore(STORE_NAME);
-    const putRequest = store.put(file, FILE_KEY);
-    putRequest.onsuccess = () => resolve();
-    putRequest.onerror = () => reject(putRequest.error);
-  });
-}
+// async function saveFileToIndexedDB(file: File, FILE_KEY: string) {
+//   const db = await openDB();
+//   return new Promise<void>((resolve, reject) => {
+//     const tx = db.transaction(STORE_NAME, "readwrite");
+//     const store = tx.objectStore(STORE_NAME);
+//     const putRequest = store.put(file, FILE_KEY);
+//     putRequest.onsuccess = () => resolve();
+//     putRequest.onerror = () => reject(putRequest.error);
+//   });
+// }
 
-async function getFileFromIndexedDB(FILE_KEY: string): Promise<File | null> {
-  const db = await openDB();
-  return new Promise((resolve, reject) => {
-    const tx = db.transaction(STORE_NAME, "readonly");
-    const store = tx.objectStore(STORE_NAME);
-    const getRequest = store.get(FILE_KEY);
-    getRequest.onsuccess = () => resolve(getRequest.result || null);
-    getRequest.onerror = () => reject(getRequest.error);
-  });
-}
+// async function getFileFromIndexedDB(FILE_KEY: string): Promise<File | null> {
+//   const db = await openDB();
+//   return new Promise((resolve, reject) => {
+//     const tx = db.transaction(STORE_NAME, "readonly");
+//     const store = tx.objectStore(STORE_NAME);
+//     const getRequest = store.get(FILE_KEY);
+//     getRequest.onsuccess = () => resolve(getRequest.result || null);
+//     getRequest.onerror = () => reject(getRequest.error);
+//   });
+// }
 
 interface FileState {
   propertyLawCertificate: File | null;

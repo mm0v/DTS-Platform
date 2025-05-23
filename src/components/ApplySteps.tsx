@@ -55,7 +55,7 @@ const ApplySteps = ({ step }: ApplyStepsProps) => {
             </div>
           );
 
-          const hasAllValues = (obj): boolean => {
+          const hasAllValues = (obj: unknown): boolean => {
             if (obj == null || obj === "" || obj === undefined) return false;
 
             if (typeof obj === "string") return obj.trim().length > 0;
@@ -64,9 +64,9 @@ const ApplySteps = ({ step }: ApplyStepsProps) => {
               return obj.length > 0 && obj.every(hasAllValues);
 
             if (typeof obj === "object") {
-              const keys = Object.keys(obj);
+              const keys = Object.keys(obj as object);
               if (keys.length === 0) return false;
-              return keys.every((key) => hasAllValues(obj[key]));
+              return keys.every((key) => hasAllValues((obj as Record<string, unknown>)[key]));
             }
 
             return true;
