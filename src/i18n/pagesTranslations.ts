@@ -646,15 +646,15 @@ export const pagesTranslations = {
       },
       propertyLawCertificateRequired: {
         AZ: "Zəhmət olmasa şirkət qeydiyyatı sertifikatını əlavə edin!",
-        EN: "****",
+        EN: "Please upload the company registration certificate!",
       },
       propertyLawCertificateType: {
         AZ: "Zəhmət olmasa word və ya pdf faylarını əlavə edin!",
-        EN: "****",
+        EN: "Please upload Word or PDF files!",
       },
       financialStatementType: {
         AZ: "Zəhmət olmasa word,pdf və ya excel faylarını əlavə edin!",
-        EN: "****",
+        EN: "Please upload Word, PDF, or Excel files!",
       },
     },
     buttons: {
@@ -700,10 +700,32 @@ export const pagesTranslations = {
         AZ: "Müraciətinizin nəticəsi barəsində qısa zamanda sizinlə əlaqə saxlanılacaqdır.",
         EN: "You will be contacted shortly regarding the result of your application.",
       },
+      backToHome: {
+        AZ: "Ana səhifəyə qayıt",
+        EN: "Back to Home",
+      },
     },
     pdf: {
       AZ: "İstifadə şərtləri və gizlilik şərtləri.pdf",
       EN: "Terms of use and privacy terms.pdf",
+    },
+    submissionErrorMessage: {
+      AZ: "Məlumatların göndərilməsi zamanı xəta baş verdi",
+      EN: "An error occurred while submitting the data",
+    },
+    submissionError: {
+      errorTitle: {
+        AZ: "Xəta:",
+        EN: "Error:",
+      },
+      retryButton: {
+        AZ: "Yenidən cəhd edin",
+        EN: "Try again",
+      },
+      maxRetryMessage: {
+        AZ: "Maksimum cəhd sayı aşıldı. Zəhmət olmasa daha sonra yenidən cəhd edin və ya texniki dəstəklə əlaqə saxlayın.",
+        EN: "Maximum retry limit exceeded. Please try again later or contact technical support.",
+      },
     },
   },
 };

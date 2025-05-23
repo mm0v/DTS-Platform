@@ -8,6 +8,7 @@ import { useLanguage } from "../context/LanguageContext";
 import ApplySteps from "../components/ApplySteps";
 import Select, { type MultiValue } from "react-select";
 import countryList from "react-select-country-list";
+import { Download } from "lucide-react";
 
 interface PropertyLaw {
   exportBazaar: string[];
@@ -468,15 +469,28 @@ export default function ApplyTwo() {
             <label className="text-sm ">
               {page.registerCertificate[language]}
             </label>
+            <label
+              htmlFor="registerCertificate"
+              className="w-full h-14 border border-gray-700 rounded-lg flex items-center justify-between px-4 bg-transparent text-gray-400 text-sm cursor-pointer select-none"
+            >
+              <span className="truncate">
+                {localLawData?.registerCertificate
+                  ? `${localLawData.registerCertificate}`
+                  : "No file selected"}
+              </span>
+              <Download size={20} className="text-white ml-2" />
+            </label>
             <input
+              id="registerCertificate"
               type="file"
               name="registerCertificate"
               accept=".doc,.docx,.pdf"
               ref={fileInputRef}
               onChange={handleFileChange}
-              className="w-full cursor-pointer bg-transparent border border-gray-700 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300"
+              className="hidden"
             />
             {}
+
             {localLawDataErrors.registerCertificate && (
               <p className="text-xs text-gray-400 mt-1">
                 {page.selectedFile[language]}{" "}

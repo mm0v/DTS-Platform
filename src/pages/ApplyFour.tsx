@@ -120,7 +120,7 @@ export default function ApplyFour() {
   const validateForm = (): boolean => {
     const errors: ErrorsType = {};
 
-    if (!formData.finance.financialNeed) {
+    if (formData.finance.financialNeed === undefined || formData.finance.financialNeed === null) {
       errors.finance = {
         ...errors.finance,
         financialNeed: page.errorMessages.requiredField[language],
