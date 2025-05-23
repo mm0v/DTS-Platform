@@ -6,7 +6,8 @@ import ApplyFour from "./ApplyFour";
 import { useState } from "react";
 import { FormContext } from "../context/FormContext";
 import type { FormContextType } from "../context/FormContext";
-import ApplyFiveCopy from "./ApplyFive copy";
+// import ApplyFiveCopy from "./ApplyFive copy";
+import ApplyFive from "./ApplyFive";
 
 const Apply = () => {
   const [isSubmitting] = useState(false);
@@ -79,7 +80,7 @@ const Apply = () => {
         <Route path="two" element={<ApplyTwo />} />
         <Route path="three" element={<ApplyThree />} />
         <Route path="four" element={<ApplyFour />} />
-        <Route path="five" element={<ApplyFiveCopy />} />
+        <Route path="five" element={<ApplyFive />} />
       </Routes>
     </FormContext.Provider>
   );
