@@ -234,12 +234,12 @@ export default function ApplyTwo() {
               <option className="text-white bg-[#131021]" value="">
                 {page.businessIndustry.placeholder[language]}
               </option>
-              <option
+              {/* <option
                 className="text-white bg-[#131021]"
                 value="Təmsil etdiyimiz sənayə sektoru"
               >
                 {page.businessIndustry.options.representedIndustry[language]}
-              </option>
+              </option> */}
               <option
                 className="text-white bg-[#131021]"
                 value="Qida və içkilər"
