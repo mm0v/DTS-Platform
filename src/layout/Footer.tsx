@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useLanguage } from "../context/LanguageContext";
+import logoEconomy from '/img/Navbar/economy_logo.png';
 
 const Footer = () => {
     const { language, layoutTranslations } = useLanguage();
@@ -17,7 +18,7 @@ const Footer = () => {
                         <div className="flex items-center justify-center">
                             {/* https://www.economy.gov.az/az */}
                             <a href="https://www.economy.gov.az/az" target="_blank" rel="noopener noreferrer">
-                                <img src="img/Navbar/economy_logo.png" width={"120px"} alt="Economy Logo" />
+                                <img src={logoEconomy} width={"120px"} alt="Economy Logo" />
                             </a>
                         </div>
                         <div className="ml-4 mr-4 sm:mt-0 sm:ml-8">

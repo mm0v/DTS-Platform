@@ -54,6 +54,54 @@
 //     setLocalFormData(savedData);
 //   }, []);
 
+//   // Validation functions
+//   const validateCompanyName = (value: string) => {
+//     if (!value.trim()) {
+//       return "Boş buraxıla bilməz, minimum 2, maksimum 255 simvol";
+//     }
+//     if (value.trim().length < 2) {
+//       return "Boş buraxıla bilməz, minimum 2, maksimum 255 simvol";
+//     }
+//     if (value.trim().length > 255) {
+//       return "Boş buraxıla bilməz, minimum 2, maksimum 255 simvol";
+//     }
+//     return "";
+//   };
+
+//   const validateCompanyAddress = (value: string) => {
+//     if (!value.trim()) {
+//       return page.companyAddressRequired[language];
+//     }
+//     if (value.trim().length < 5) {
+//       return "Minimum 5 simvol olmalıdır";
+//     }
+//     return "";
+//   };
+
+//   const validateWebsite = (value: string) => {
+//     if (!value.trim()) {
+//       return ""; // Website is optional
+//     }
+
+//     const urlPattern = /^(https?:\/\/)([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(\/.*)?$/;
+//     if (!urlPattern.test(value.trim())) {
+//       return "URL tam olmalıdır (http:// və ya https:// ilə başlamalıdır)";
+//     }
+//     return "";
+//   };
+
+//   const validateEmail = (value: string) => {
+//     if (!value.trim()) {
+//       return page.emailRequired[language];
+//     }
+
+//     const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+//     if (!emailPattern.test(value.trim())) {
+//       return "Düzgün email ünvanı daxil edin";
+//     }
+//     return "";
+//   };
+
 //   const handleInputChange = (
 //     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
 //   ) => {
@@ -67,12 +115,36 @@
 //       }
 //     }
 
+//     // Clear previous error for this field
 //     setErrors((prev) => ({ ...prev, [name]: "" }));
+
+//     // Update form data
 //     setLocalFormData((prevState) => ({ ...prevState, [name]: value }));
 //     localStorage.setItem(
 //       "companyData",
 //       JSON.stringify({ ...companyData, [name]: value })
 //     );
+
+//     // Real-time validation
+//     let error = "";
+//     switch (name) {
+//       case "companyName":
+//         error = validateCompanyName(value);
+//         break;
+//       case "companyAddress":
+//         error = validateCompanyAddress(value);
+//         break;
+//       case "website":
+//         error = validateWebsite(value);
+//         break;
+//       case "email":
+//         error = validateEmail(value);
+//         break;
+//     }
+
+//     if (error) {
+//       setErrors((prev) => ({ ...prev, [name]: error }));
+//     }
 //   };
 
 //   const handlePhoneChange = (value: string) => {
@@ -112,7 +184,6 @@
 //         { key: "annualTurnover", errorKey: "annualTurnoverRequired" },
 //         { key: "companyAddress", errorKey: "companyAddressRequired" },
 //         { key: "location", errorKey: "locationRequired" },
-//         { key: "website", errorKey: "websiteRequired" },
 //         { key: "contactPerson", errorKey: "contactPersonRequired" },
 //         { key: "email", errorKey: "emailRequired" },
 //         { key: "phone", errorKey: "phoneRequired" },
@@ -120,12 +191,42 @@
 
 //     const newErrors: Record<string, string> = {};
 
+//     // Validate all required fields
 //     requiredFields.forEach(({ key, errorKey }) => {
 //       const value = localFormData[key];
 //       if (typeof value === "string" && !value.trim()) {
 //         newErrors[key] = page[errorKey][language];
 //       }
 //     });
+
+//     // Apply specific validation rules
+//     const companyNameError = validateCompanyName(localFormData.companyName);
+//     if (companyNameError) {
+//       newErrors.companyName = companyNameError;
+//     }
+
+//     const companyAddressError = validateCompanyAddress(localFormData.companyAddress);
+//     if (companyAddressError) {
+//       newErrors.companyAddress = companyAddressError;
+//     }
+
+//     const websiteError = validateWebsite(localFormData.website);
+//     if (websiteError) {
+//       newErrors.website = websiteError;
+//     }
+
+//     const emailError = validateEmail(localFormData.email);
+//     if (emailError) {
+//       newErrors.email = emailError;
+//     }
+
+//     // Phone validation
+//     const digits = localFormData.phone.replace(/\D/g, "");
+//     if (digits.length === 0) {
+//       newErrors.phone = "Zəhmət olmasa telefon nömrəsini daxil edin";
+//     } else if (digits.length < 9) {
+//       newErrors.phone = "Telefon nömrəsi ən azı 9 rəqəm olmalıdır";
+//     }
 
 //     if (Object.keys(newErrors).length > 0) {
 //       setErrors(newErrors);
@@ -152,7 +253,6 @@
 //         { key: "annualTurnover", errorKey: "annualTurnoverRequired" },
 //         { key: "companyAddress", errorKey: "companyAddressRequired" },
 //         { key: "location", errorKey: "locationRequired" },
-//         { key: "website", errorKey: "websiteRequired" },
 //         { key: "contactPerson", errorKey: "contactPersonRequired" },
 //         { key: "email", errorKey: "emailRequired" },
 //         { key: "phone", errorKey: "phoneRequired" },
@@ -349,12 +449,13 @@
 
 //           {/* Website */}
 //           <div className="space-y-2">
-//             <label className="text-sm">{page.website[language]}</label>
+//             <label className="text-sm">{page.website[language]} (İstəyə bağlı)</label>
 //             <input
 //               type="text"
 //               name="website"
 //               value={localFormData.website}
 //               onChange={handleInputChange}
+//               placeholder="https://example.com"
 //               className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${errors.website
 //                 ? "border-red-500 focus:ring-red-500"
 //                 : "border-gray-700 focus:ring-blue-500"
@@ -391,6 +492,7 @@
 //                 name="email"
 //                 value={localFormData.email}
 //                 onChange={handleInputChange}
+//                 placeholder="example@domain.com"
 //                 className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${errors.email
 //                   ? "border-red-500 focus:ring-red-500"
 //                   : "border-gray-700 focus:ring-blue-500"
@@ -409,7 +511,7 @@
 //                 defaultCountry="az"
 //                 value={localFormData.phone}
 //                 onChange={handlePhoneChange}
-//                 className={`w-full ${errors.phone
+//                 className={`w-full ${errors.phonea
 //                   ? "border border-red-500 rounded"
 //                   : "border border-gray-700"
 //                   }`}
@@ -424,12 +526,7 @@
 //           <button
 //             type="button"
 //             onClick={handleNext}
-//             disabled={!!errors.phone}
-//             className={`w-full py-3 rounded-lg transition duration-300 mt-6 text-white
-//     ${!errors.phone
-//                 ? "bg-blue-600 hover:bg-[#1a4381] cursor-pointer"
-//                 : "bg-gray-500 cursor-not-allowed"
-//               }`}
+//             className="w-full py-3 rounded-lg transition duration-300 mt-6 text-white bg-blue-600 hover:bg-[#1a4381] cursor-pointer"
 //           >
 //             {pagesTranslations.applyBtns.nextBtn[language]}
 //           </button>
@@ -439,7 +536,7 @@
 //   );
 // }
 
-// // Verified and refactored
+// // Verified and refactored with enhanced validation
 
 
 "use client";
@@ -512,6 +609,57 @@ export default function ApplyOne() {
     return "";
   };
 
+  // Company Register Number validation - Enhanced
+  const validateCompanyRegisterNumber = (value: string) => {
+    if (!value.trim()) {
+      return page.companyRegisterNumberRequired[language];
+    }
+
+    // Only allow latin letters and numbers
+    const alphanumericPattern = /^[a-zA-Z0-9]+$/;
+    if (!alphanumericPattern.test(value.trim())) {
+      return "Yalnız latın hərifləri və rəqəmlər daxil edilə bilər";
+    }
+
+    // Max 50 characters
+    if (value.trim().length > 50) {
+      return "Maksimum 50 simvol ola bilər";
+    }
+
+    return "";
+  };
+
+  // Create Year validation - Enhanced with business logic
+  const validateCreateYear = (value: string) => {
+    if (!value.trim()) {
+      return page.createYearRequired[language];
+    }
+
+    const year = parseInt(value, 10);
+    const currentYear = new Date().getFullYear();
+
+    // Check if it's a valid 4-digit year
+    if (!/^\d{4}$/.test(value)) {
+      return "4 rəqəmli il daxil edin";
+    }
+
+    // Reasonable business founding year (not before 1800 and not in future)
+    if (year < 1800) {
+      return "Şirkətin yaranma ili 1800-dən əvvəl ola bilməz";
+    }
+
+    if (year > currentYear) {
+      return "Şirkətin yaranma ili gələcəkdə ola bilməz";
+    }
+
+    // Additional business logic - warn if company is too old or too new
+    if (year < 1900) {
+      return "Şirkətin yaranma ili çox köhnə görünür";
+    }
+
+    return "";
+  };
+
   const validateCompanyAddress = (value: string) => {
     if (!value.trim()) {
       return page.companyAddressRequired[language];
@@ -551,12 +699,25 @@ export default function ApplyOne() {
   ) => {
     const { name, value } = e.target;
 
+    // Enhanced createYear validation during input
     if (name === "createYear") {
+      // Only allow 4 digits
       if (!/^\d{0,4}$/.test(value)) return;
+
       if (value.length === 4) {
         const year = parseInt(value, 10);
-        if (year < 0 || year > 2025) return;
+        const currentYear = new Date().getFullYear();
+
+        // Don't allow future years or unreasonably old years
+        if (year < 1800 || year > currentYear) return;
       }
+    }
+
+    // Enhanced companyRegisterNumber validation during input
+    if (name === "companyRegisterNumber") {
+      // Only allow alphanumeric characters and limit to 50
+      if (value.length > 50) return;
+      if (!/^[a-zA-Z0-9]*$/.test(value)) return;
     }
 
     // Clear previous error for this field
@@ -575,6 +736,12 @@ export default function ApplyOne() {
       case "companyName":
         error = validateCompanyName(value);
         break;
+      case "companyRegisterNumber":
+        error = validateCompanyRegisterNumber(value);
+        break;
+      case "createYear":
+        error = validateCreateYear(value);
+        break;
       case "companyAddress":
         error = validateCompanyAddress(value);
         break;
@@ -591,6 +758,7 @@ export default function ApplyOne() {
     }
   };
 
+  // Enhanced phone validation
   const handlePhoneChange = (value: string) => {
     setLocalFormData((prev) => ({ ...prev, phone: value }));
     localStorage.setItem(
@@ -598,13 +766,16 @@ export default function ApplyOne() {
       JSON.stringify({ ...companyData, phone: value })
     );
 
+    // Extract only digits for validation
     const digits = value.replace(/\D/g, "");
     let errorMsg = "";
 
     if (digits.length === 0) {
       errorMsg = "Zəhmət olmasa telefon nömrəsini daxil edin";
-    } else if (digits.length < 9) {
-      errorMsg = "Telefon nömrəsi ən azı 9 rəqəm olmalıdır";
+    } else if (digits.length < 7) {
+      errorMsg = "Telefon nömrəsi ən azı 7 rəqəm olmalıdır";
+    } else if (digits.length > 15) {
+      errorMsg = "Telefon nömrəsi maksimum 15 rəqəm ola bilər";
     }
 
     setErrors((prev) => ({
@@ -649,6 +820,16 @@ export default function ApplyOne() {
       newErrors.companyName = companyNameError;
     }
 
+    const companyRegisterNumberError = validateCompanyRegisterNumber(localFormData.companyRegisterNumber);
+    if (companyRegisterNumberError) {
+      newErrors.companyRegisterNumber = companyRegisterNumberError;
+    }
+
+    const createYearError = validateCreateYear(localFormData.createYear);
+    if (createYearError) {
+      newErrors.createYear = createYearError;
+    }
+
     const companyAddressError = validateCompanyAddress(localFormData.companyAddress);
     if (companyAddressError) {
       newErrors.companyAddress = companyAddressError;
@@ -664,12 +845,14 @@ export default function ApplyOne() {
       newErrors.email = emailError;
     }
 
-    // Phone validation
+    // Enhanced phone validation
     const digits = localFormData.phone.replace(/\D/g, "");
     if (digits.length === 0) {
       newErrors.phone = "Zəhmət olmasa telefon nömrəsini daxil edin";
-    } else if (digits.length < 9) {
-      newErrors.phone = "Telefon nömrəsi ən azı 9 rəqəm olmalıdır";
+    } else if (digits.length < 7) {
+      newErrors.phone = "Telefon nömrəsi ən azı 7 rəqəm olmalıdır";
+    } else if (digits.length > 15) {
+      newErrors.phone = "Telefon nömrəsi maksimum 15 rəqəm ola bilər";
     }
 
     if (Object.keys(newErrors).length > 0) {
@@ -745,7 +928,7 @@ export default function ApplyOne() {
           </div>
 
           <div className="flex gap-4">
-            {/* VAT Number */}
+            {/* Company Register Number - Enhanced */}
             <div className="flex-1 space-y-2">
               <label className="text-sm">
                 {page.companyRegisterNumber[language]}
@@ -755,6 +938,8 @@ export default function ApplyOne() {
                 name="companyRegisterNumber"
                 value={localFormData.companyRegisterNumber}
                 onChange={handleInputChange}
+                maxLength={50}
+                placeholder="Yalnız hərf və rəqəmlər"
                 className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${errors.companyRegisterNumber
                   ? "border-red-500 focus:ring-red-500"
                   : "border-gray-700 focus:ring-blue-500"
@@ -767,27 +952,27 @@ export default function ApplyOne() {
               )}
             </div>
 
-            {/* Founding Date */}
+            {/* Create Year - Enhanced */}
             <div className="flex-1 space-y-2">
               <label className="text-sm">{page.createYear[language]}</label>
               <input
-                type="number"
+                type="text"
                 name="createYear"
                 value={localFormData.createYear}
                 onChange={handleInputChange}
-                max={2025}
+                maxLength={4}
                 placeholder="YYYY"
                 className={`no-spinner w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${errors.createYear
                   ? "border-red-500 focus:ring-red-500"
                   : "border-gray-700 focus:ring-blue-500"
                   }`}
               />
-
               {errors.createYear && (
                 <p className="text-red-500 text-sm">{errors.createYear}</p>
               )}
             </div>
           </div>
+
           <div className="flex gap-4">
             {/* Company Size */}
             <div className="flex-1 space-y-2">
@@ -909,6 +1094,7 @@ export default function ApplyOne() {
               <p className="text-red-500 text-sm">{errors.website}</p>
             )}
           </div>
+
           {/* Contact Person */}
           <div className="flex-1 space-y-2">
             <label className="text-sm">{page.contactPerson[language]}</label>
@@ -947,7 +1133,7 @@ export default function ApplyOne() {
               )}
             </div>
 
-            {/* Phone */}
+            {/* Phone - Enhanced validation */}
             <div className="flex-1 space-y-2">
               <label className="text-sm">{page.phone[language]}</label>
               <PhoneInput
@@ -980,4 +1166,4 @@ export default function ApplyOne() {
   );
 }
 
-// Verified and refactored with enhanced validation
+// Enhanced with improved validations for companyRegisterNumber, createYear, and phone
