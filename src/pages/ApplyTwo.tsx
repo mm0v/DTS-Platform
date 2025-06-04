@@ -147,7 +147,7 @@ export default function ApplyTwo() {
       if (value.trim().length > 0 && value.trim().length < 3) {
         setLocalLawDataErrors((prev) => ({
           ...prev,
-          [name]: page.mainProductsMinLength ? page.mainProductsMinLength[language] : "Minimum 3 simvol daxil edilməlidir"
+          [name]: "Minimum 3 simvol daxil edilməlidir"
         }));
       } else {
         setLocalLawDataErrors((prev) => ({ ...prev, [name]: "" }));
@@ -191,7 +191,7 @@ export default function ApplyTwo() {
     if (!localLawData.products.trim()) {
       errors.products = page.mainProductsRequired[language];
     } else if (localLawData.products.trim().length < 3) {
-      errors.products = page.mainProductsMinLength ? page.mainProductsMinLength[language] : "Minimum 3 simvol daxil edilməlidir";
+      errors.products = "Minimum 3 simvol daxil edilməlidir";
     }
 
     if (localLawData.exportActivity === null)
