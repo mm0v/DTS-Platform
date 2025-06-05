@@ -258,8 +258,9 @@ export const pagesTranslations = {
       EN: "City/Region",
     },
     website: {
-      AZ: "Vebsayt (əgər varsa)",
-      EN: "Website (if available)",
+      // AZ: "Vebsayt (əgər varsa)",
+      AZ: "Vebsayt",
+      EN: "Website",
     },
     contactPerson: {
       AZ: "Əlaqələndirici şəxs (ad və soyad)",

@@ -84,6 +84,8 @@ export default function ApplyTwo() {
   const [localLawDataErrors, setLocalLawDataErrors] = useState<
     Record<string, string>
   >({});
+  const [customIndustry, setCustomIndustry] = useState<string>("");
+  const [showCustomInput, setShowCustomInput] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -98,6 +100,15 @@ export default function ApplyTwo() {
           fileInputRef.current!.name = file.name;
         } else if (savedData) {
           setLocalLawData(savedData);
+        }
+
+        // Check if the saved data has a custom industry value
+        if (savedData && savedData.businessOperations &&
+          !["", "Qida və içkilər", "Neft - qaz", "Kimya", "Metallurgiya",
+            "Maşın və avadanlıqların təmiri və quraşdırılması",
+            "Kauçuk və plastik məhsullar", "Tekstil", "Elektrik avadanlıqları"].includes(savedData.businessOperations)) {
+          setCustomIndustry(savedData.businessOperations);
+          setShowCustomInput(true);
         }
       })
       .catch(console.error);
@@ -117,9 +128,44 @@ export default function ApplyTwo() {
       newValue = value === "Bəli";
     }
 
+    if (name === "businessOperations") {
+      if (value === "Digər") {
+        setShowCustomInput(true);
+        setCustomIndustry("");
+        newValue = "";
+      } else {
+        setShowCustomInput(false);
+        setCustomIndustry("");
+      }
+    }
+
     const updatedData = { ...localLawData, [name]: newValue };
     setLocalLawData(updatedData);
-    setLocalLawDataErrors((prev) => ({ ...prev, [name]: "" }));
+
+    // Real-time validasiya - xüsusilə products üçün
+    if (name === "products") {
+      if (value.trim().length > 0 && value.trim().length < 3) {
+        setLocalLawDataErrors((prev) => ({
+          ...prev,
+          [name]: "Minimum 3 simvol daxil edilməlidir"
+        }));
+      } else {
+        setLocalLawDataErrors((prev) => ({ ...prev, [name]: "" }));
+      }
+    } else {
+      setLocalLawDataErrors((prev) => ({ ...prev, [name]: "" }));
+    }
+
+    updateLocalStorage(updatedData);
+  };
+
+  const handleCustomIndustryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setCustomIndustry(value);
+
+    const updatedData = { ...localLawData, businessOperations: value };
+    setLocalLawData(updatedData);
+    setLocalLawDataErrors((prev) => ({ ...prev, businessOperations: "" }));
     updateLocalStorage(updatedData);
   };
 
@@ -140,8 +186,14 @@ export default function ApplyTwo() {
       errors.companyLawType = page.companyTypeRequired[language];
     if (!localLawData.businessOperations.trim())
       errors.businessOperations = page.businessIndustryRequired[language];
-    if (!localLawData.products.trim())
+
+    // Products üçün yenilənmiş validasiya
+    if (!localLawData.products.trim()) {
       errors.products = page.mainProductsRequired[language];
+    } else if (localLawData.products.trim().length < 3) {
+      errors.products = "Minimum 3 simvol daxil edilməlidir";
+    }
+
     if (localLawData.exportActivity === null)
       errors.exportActivity = page.exportActivityRequired[language];
     if (!localLawData.exportBazaar.length)
@@ -196,10 +248,9 @@ export default function ApplyTwo() {
               value={localLawData.companyLawType}
               onChange={handleInputChange}
               className={`w-full bg-transparent rounded-lg p-2 sm:p-3 text-xs sm:text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 transition duration-300
-                ${
-                  localLawDataErrors.companyLawType
-                    ? "border border-red-500"
-                    : "border border-gray-700"
+                ${localLawDataErrors.companyLawType
+                  ? "border border-red-500"
+                  : "border border-gray-700"
                 }`}
               aria-invalid={!!localLawDataErrors.companyLawType}
               aria-describedby="companyType-error"
@@ -213,6 +264,7 @@ export default function ApplyTwo() {
               </p>
             )}
           </div>
+
           {/* Business Industry */}
           <div className="space-y-2">
             <label className="text-sm">
@@ -220,25 +272,18 @@ export default function ApplyTwo() {
             </label>
             <select
               name="businessOperations"
-              value={localLawData.businessOperations}
+              value={showCustomInput ? "Digər" : localLawData.businessOperations}
               onChange={handleInputChange}
               className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300
-                ${
-                  localLawDataErrors.businessOperations
-                    ? "border border-red-500"
-                    : "border border-gray-700"
+                ${localLawDataErrors.businessOperations
+                  ? "border border-red-500"
+                  : "border border-gray-700"
                 }`}
               aria-invalid={!!localLawDataErrors.businessOperations}
               aria-describedby="businessIndustry-error"
             >
               <option className="text-white bg-[#131021]" value="">
                 {page.businessIndustry.placeholder[language]}
-              </option>
-              <option
-                className="text-white bg-[#131021]"
-                value="Təmsil etdiyimiz sənayə sektoru"
-              >
-                {page.businessIndustry.options.representedIndustry[language]}
               </option>
               <option
                 className="text-white bg-[#131021]"
@@ -261,7 +306,7 @@ export default function ApplyTwo() {
               >
                 {
                   page.businessIndustry.options.machineRepairAndInstallation[
-                    language
+                  language
                   ]
                 }
               </option>
@@ -271,7 +316,7 @@ export default function ApplyTwo() {
               >
                 {
                   page.businessIndustry.options.rubberAndPlasticProducts[
-                    language
+                  language
                   ]
                 }
               </option>
@@ -284,17 +329,22 @@ export default function ApplyTwo() {
               >
                 {page.businessIndustry.options.electricalEquipment[language]}
               </option>
-              {localLawData.businessOperations === "Digər" && (
-                <input
-                  type="text"
-                  placeholder="Sahəni daxil edin..."
-                  value={localLawData.businessOperations}
-                  onChange={handleInputChange}
-                  name="businessIndustry"
-                  className="p-2 rounded bg-white text-black"
-                />
-              )}
+              <option className="text-white bg-[#131021]" value="Digər">
+                Digər
+              </option>
             </select>
+
+            {/* Custom Industry Input */}
+            {showCustomInput && (
+              <input
+                type="text"
+                placeholder="Sahəni daxil edin..."
+                value={customIndustry}
+                onChange={handleCustomIndustryChange}
+                className="w-full bg-transparent rounded-lg p-2 sm:p-3 text-xs sm:text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 transition duration-300 border border-gray-700 mt-2"
+              />
+            )}
+
             {localLawDataErrors.businessOperations && (
               <p
                 id="businessIndustry-error"
@@ -304,6 +354,7 @@ export default function ApplyTwo() {
               </p>
             )}
           </div>
+
           {/* Main Products */}
           <div className="space-y-2">
             <label className="text-sm">{page.mainProducts[language]}</label>
@@ -313,12 +364,11 @@ export default function ApplyTwo() {
               value={localLawData.products}
               onChange={handleInputChange}
               className={`w-full bg-transparent rounded-lg p-2 sm:p-3 text-xs sm:text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 transition duration-300
-                ${
-                  localLawDataErrors.products
-                    ? "border border-red-500"
-                    : "border border-gray-700"
+                ${localLawDataErrors.products
+                  ? "border border-red-500"
+                  : "border border-gray-700"
                 }`}
-              aria-invalid={!localLawData.products}
+              aria-invalid={!!localLawDataErrors.products}
               aria-describedby="mainProducts-error"
             />
             {localLawDataErrors.products && (
@@ -330,6 +380,7 @@ export default function ApplyTwo() {
               </p>
             )}
           </div>
+
           {/* Export Activity */}
           <div className="space-y-2">
             <label className="text-sm">{page.exportActivity[language]}</label>
@@ -400,6 +451,7 @@ export default function ApplyTwo() {
               </p>
             )}
           </div>
+
           {/* Export Markets Multi-Select */}
           <div className="space-y-2">
             <label className="text-sm">{page.exportMarkets[language]}</label>
@@ -413,11 +465,10 @@ export default function ApplyTwo() {
                 }
                 handleCountryChange(selected);
               }}
-              className={`w-full ${
-                localLawDataErrors.exportBazaar
-                  ? "border border-red-500 rounded"
-                  : ""
-              }`}
+              className={`w-full ${localLawDataErrors.exportBazaar
+                ? "border border-red-500 rounded"
+                : ""
+                }`}
               classNamePrefix="react-select"
               placeholder={page.exportMarketsPlaceholder[language]}
               isClearable
@@ -489,7 +540,6 @@ export default function ApplyTwo() {
               onChange={handleFileChange}
               className="hidden"
             />
-            {}
 
             {localLawDataErrors.registerCertificate && (
               <p className="text-xs text-gray-400 mt-1">
@@ -503,6 +553,7 @@ export default function ApplyTwo() {
               </p>
             </div>
           </div>
+
           {/* Buttons */}
           <div className="flex justify-between mt-6 sm:mt-8 gap-4">
             <button

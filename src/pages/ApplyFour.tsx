@@ -12,12 +12,12 @@ interface DigitalAndFinancial {
   finance: FinancialNeeding;
 }
 interface DigitalLeadership {
-  digitalTeamOrLead: boolean;
-  digitalPath: boolean;
-  digitalTransformationLoyality: boolean;
+  digitalTeamOrLead: boolean | null;
+  digitalPath: boolean | null;
+  digitalTransformationLoyality: boolean | null;
 }
 interface FinancialNeeding {
-  financialNeed: boolean;
+  financialNeed: boolean | null;
   neededBudget: number;
 }
 
@@ -34,12 +34,12 @@ export default function ApplyFour() {
 
   const initialValue: DigitalAndFinancial = {
     digital: {
-      digitalTeamOrLead: false,
-      digitalPath: false,
-      digitalTransformationLoyality: false,
+      digitalTeamOrLead: null,
+      digitalPath: null,
+      digitalTransformationLoyality: null,
     },
     finance: {
-      financialNeed: false,
+      financialNeed: null,
       neededBudget: 0,
     },
   };
@@ -86,10 +86,26 @@ export default function ApplyFour() {
     let parentName = "";
 
     let updatedValue;
-    updatedValue =
-      name !== "neededBudget"
-        ? (updatedValue = value === "Bəli" ? true : false)
-        : value;
+
+    if (name === "neededBudget") {
+      // Boş dəyər üçün 0 təyin et
+      if (value === "" || value === null || value === undefined) {
+        updatedValue = 0;
+      } else {
+        // String-i təmizlə və yalnız rəqəmləri saxla
+        const cleanedValue = value.toString().replace(/[^0-9]/g, '');
+
+        if (cleanedValue === "" || cleanedValue === "0") {
+          updatedValue = 0;
+        } else {
+          // Başlanğıcdakı 0-ları sil
+          const withoutLeadingZeros = cleanedValue.replace(/^0+/, '');
+          updatedValue = parseInt(withoutLeadingZeros || '0', 10);
+        }
+      }
+    } else {
+      updatedValue = value === "Bəli" ? true : false;
+    }
 
     if (digitalVariables.includes(name)) {
       parentName = "digital";
@@ -112,7 +128,7 @@ export default function ApplyFour() {
       ...prev,
       [parentName]: {
         ...((prev[parentName as keyof ErrorsType] || {})),
-        [name]: false,
+        [name]: "",
       },
     }));
   };
@@ -129,8 +145,7 @@ export default function ApplyFour() {
 
     if (
       formData.finance.financialNeed === true &&
-      (formData.finance.neededBudget.toString() === "0" ||
-        formData.finance.neededBudget.toString() === "")
+      (formData.finance.neededBudget === 0 || formData.finance.neededBudget === null || formData.finance.neededBudget === undefined)
     ) {
       errors.finance = {
         ...errors.finance,
@@ -138,29 +153,29 @@ export default function ApplyFour() {
       };
     }
 
-    if (formData.digital.digitalTeamOrLead === null) {
+    if (formData.digital.digitalTeamOrLead === null || formData.digital.digitalTeamOrLead === undefined) {
       errors.digital = {
         ...errors.digital,
         digitalTeamOrLead: page.errorMessages.requiredField[language],
       };
     }
 
-    if (formData.digital.digitalPath === null) {
+    if (formData.digital.digitalPath === null || formData.digital.digitalPath === undefined) {
       errors.digital = {
         ...errors.digital,
         digitalPath: page.errorMessages.requiredField[language],
       };
     }
 
-    if (formData.digital.digitalTransformationLoyality === null) {
+    if (formData.digital.digitalTransformationLoyality === null || formData.digital.digitalTransformationLoyality === undefined) {
       errors.digital = {
         ...errors.digital,
-        digitalTransformationLoyality:
-          page.errorMessages.requiredField[language],
+        digitalTransformationLoyality: page.errorMessages.requiredField[language],
       };
     }
+
     setErrors(errors);
-    return errors.finance === undefined;
+    return Object.keys(errors).length === 0;
   };
 
   const handleGoBack = () => {
@@ -171,6 +186,31 @@ export default function ApplyFour() {
     if (validateForm()) {
       navigate("/apply/five");
     }
+  };
+
+  // Budget input üçün xüsusi handler
+  const handleBudgetKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    // Mənfi işarəsi, nöqtə, vergül və hərf simvollarını blokla
+    const blockedKeys = ['-', '+', 'e', 'E', '.', ','];
+
+    if (blockedKeys.includes(e.key)) {
+      e.preventDefault();
+    }
+  };
+
+  const handleBudgetInput = (e: React.FormEvent<HTMLInputElement>) => {
+    const target = e.target as HTMLInputElement;
+    let value = target.value;
+
+    // Yalnız rəqəmləri saxla
+    value = value.replace(/[^0-9]/g, '');
+
+    // Əgər dəyər başlanğıcda 0 ilə başlayır və 1-dən çox simvol varsa
+    if (value.length > 1 && value.startsWith('0')) {
+      value = value.replace(/^0+/, '') || '0';
+    }
+
+    target.value = value;
   };
 
   return (
@@ -204,6 +244,7 @@ export default function ApplyFour() {
                       name="digitalTeamOrLead"
                       value={option}
                       checked={
+                        formData.digital.digitalTeamOrLead !== null &&
                         formData.digital.digitalTeamOrLead ===
                         (option === "Bəli" ? true : false)
                       }
@@ -211,28 +252,29 @@ export default function ApplyFour() {
                       className="hidden"
                     />
                     <span className="w-5 h-5 flex items-center justify-center border border-gray-400 rounded">
-                      {formData.digital.digitalTeamOrLead ===
+                      {formData.digital.digitalTeamOrLead !== null &&
+                        formData.digital.digitalTeamOrLead ===
                         (option === "Bəli" ? true : false) && (
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="w-4 h-4 text-blue-500"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                          strokeWidth={3}
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M5 13l4 4L19 7"
-                          />
-                        </svg>
-                      )}
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="w-4 h-4 text-blue-500"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            strokeWidth={3}
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M5 13l4 4L19 7"
+                            />
+                          </svg>
+                        )}
                     </span>
                     <span className="text-sm">
                       {
                         page.optionLabels[option === "Bəli" ? "yes" : "no"][
-                          language
+                        language
                         ]
                       }
                     </span>
@@ -255,15 +297,15 @@ export default function ApplyFour() {
                 {["Bəli", "Xeyr"].map((option) => (
                   <label
                     key={option}
-                    className={`flex items-center cursor-pointer space-x-2 ${
-                      errors.digital?.digitalPath ? "text-red-400" : ""
-                    }`}
+                    className={`flex items-center cursor-pointer space-x-2 ${errors.digital?.digitalPath ? "text-red-400" : ""
+                      }`}
                   >
                     <input
                       type="radio"
                       name="digitalPath"
                       value={option}
                       checked={
+                        formData.digital.digitalPath !== null &&
                         (formData.digital.digitalPath === true
                           ? "Bəli"
                           : "Xeyr") === option
@@ -272,29 +314,30 @@ export default function ApplyFour() {
                       className="hidden"
                     />
                     <span className="w-5 h-5 flex items-center justify-center border border-gray-400 rounded">
-                      {(formData.digital.digitalPath === true
-                        ? "Bəli"
-                        : "Xeyr") === option && (
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="w-4 h-4 text-blue-500"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                          strokeWidth={3}
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M5 13l4 4L19 7"
-                          />
-                        </svg>
-                      )}
+                      {formData.digital.digitalPath !== null &&
+                        (formData.digital.digitalPath === true
+                          ? "Bəli"
+                          : "Xeyr") === option && (
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="w-4 h-4 text-blue-500"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            strokeWidth={3}
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M5 13l4 4L19 7"
+                            />
+                          </svg>
+                        )}
                     </span>
                     <span className="text-sm">
                       {
                         page.optionLabels[option === "Bəli" ? "yes" : "no"][
-                          language
+                        language
                         ]
                       }
                     </span>
@@ -318,17 +361,17 @@ export default function ApplyFour() {
                 {["Bəli", "Xeyr"].map((option) => (
                   <label
                     key={option}
-                    className={`flex items-center cursor-pointer space-x-2 ${
-                      errors.digital?.digitalTransformationLoyality
+                    className={`flex items-center cursor-pointer space-x-2 ${errors.digital?.digitalTransformationLoyality
                         ? "text-red-400"
                         : ""
-                    }`}
+                      }`}
                   >
                     <input
                       type="radio"
                       name="digitalTransformationLoyality"
                       value={option}
                       checked={
+                        formData.digital.digitalTransformationLoyality !== null &&
                         (formData.digital.digitalTransformationLoyality === true
                           ? "Bəli"
                           : "Xeyr") === option
@@ -337,29 +380,30 @@ export default function ApplyFour() {
                       className="hidden"
                     />
                     <span className="w-5 h-5 flex items-center justify-center border border-gray-400 rounded">
-                      {(formData.digital.digitalTransformationLoyality === true
-                        ? "Bəli"
-                        : "Xeyr") === option && (
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="w-4 h-4 text-blue-500"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                          strokeWidth={3}
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M5 13l4 4L19 7"
-                          />
-                        </svg>
-                      )}
+                      {formData.digital.digitalTransformationLoyality !== null &&
+                        (formData.digital.digitalTransformationLoyality === true
+                          ? "Bəli"
+                          : "Xeyr") === option && (
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="w-4 h-4 text-blue-500"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            strokeWidth={3}
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M5 13l4 4L19 7"
+                            />
+                          </svg>
+                        )}
                     </span>
                     <span className="text-sm">
                       {
                         page.optionLabels[option === "Bəli" ? "yes" : "no"][
-                          language
+                        language
                         ]
                       }
                     </span>
@@ -390,15 +434,15 @@ export default function ApplyFour() {
                 {["Bəli", "Xeyr"].map((option) => (
                   <label
                     key={option}
-                    className={`flex items-center cursor-pointer space-x-2 ${
-                      errors.finance?.financialNeed ? "text-red-400" : ""
-                    }`}
+                    className={`flex items-center cursor-pointer space-x-2 ${errors.finance?.financialNeed ? "text-red-400" : ""
+                      }`}
                   >
                     <input
                       type="radio"
                       name="financialNeed"
                       value={option}
                       checked={
+                        formData.finance.financialNeed !== null &&
                         (formData.finance.financialNeed === true
                           ? "Bəli"
                           : "Xeyr") === option
@@ -407,29 +451,30 @@ export default function ApplyFour() {
                       className="hidden"
                     />
                     <span className="w-5 h-5 flex items-center justify-center border border-gray-400 rounded">
-                      {(formData.finance.financialNeed === true
-                        ? "Bəli"
-                        : "Xeyr") === option && (
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="w-4 h-4 text-blue-500"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                          strokeWidth={3}
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M5 13l4 4L19 7"
-                          />
-                        </svg>
-                      )}
+                      {formData.finance.financialNeed !== null &&
+                        (formData.finance.financialNeed === true
+                          ? "Bəli"
+                          : "Xeyr") === option && (
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="w-4 h-4 text-blue-500"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            strokeWidth={3}
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M5 13l4 4L19 7"
+                            />
+                          </svg>
+                        )}
                     </span>
                     <span className="text-sm">
                       {
                         page.optionLabels[option === "Bəli" ? "yes" : "no"][
-                          language
+                        language
                         ]
                       }
                     </span>
@@ -452,17 +497,18 @@ export default function ApplyFour() {
                 </label>
                 <div className="relative">
                   <input
-                    type="number"
+                    type="text"
                     name="neededBudget"
-                    value={formData.finance.neededBudget}
+                    value={formData.finance.neededBudget === 0 ? "" : formData.finance.neededBudget}
                     onChange={handleInputChange}
-                    className={`w-full bg-transparent border ${
-                      errors.finance?.neededBudget
+                    onKeyDown={handleBudgetKeyDown}
+                    onInput={handleBudgetInput}
+                    className={`w-full bg-transparent border ${errors.finance?.neededBudget
                         ? "border-red-400"
                         : "border-gray-700"
-                    } rounded p-3 focus:outline-none focus:border-blue-500`}
+                      } rounded p-3 focus:outline-none focus:border-blue-500`}
                     placeholder="AZN"
-                    min={0}
+                    inputMode="numeric"
                   />
                   <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400">
                     AZN

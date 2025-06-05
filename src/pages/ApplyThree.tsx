@@ -14,6 +14,7 @@ interface DigitalReadiness {
   digitalLevel: number;
   digitalTools: string[];
   companyPurpose: string;
+  otherDigitalTool: string; // Add this new field
 }
 
 const ApplyThree = () => {
@@ -29,6 +30,7 @@ const ApplyThree = () => {
     digitalLevel: 0,
     digitalTools: [],
     companyPurpose: "",
+    otherDigitalTool: "", // Initialize the new field
   };
   const [formData, setFormData] = useState<DigitalReadiness>(initialValue);
 
@@ -44,6 +46,7 @@ const ApplyThree = () => {
         digitalLevel: 0,
         digitalTools: [],
         companyPurpose: "",
+        otherDigitalTool: "",
       }));
     }
   }, [formData, setFormData]);
@@ -73,11 +76,17 @@ const ApplyThree = () => {
       errors.digitalLevel = page.errorMessages.required[language];
     if (formData.digitalTools.length === 0)
       errors.digitalTools = page.errorMessages.required[language];
-    if (
-      formData.companyPurpose.trim().length > 0 &&
-      formData.companyPurpose.trim().length < 3
-    )
+
+    // Validate "other" digital tool input if "other" is selected
+    if (formData.digitalTools.includes("other") && formData.otherDigitalTool.trim().length === 0)
+      errors.otherDigitalTool = page.errorMessages.required[language];
+
+    // Make companyPurpose required
+    if (formData.companyPurpose.trim().length === 0) {
+      errors.companyPurpose = page.errorMessages.required[language];
+    } else if (formData.companyPurpose.trim().length < 3) {
       errors.companyPurpose = page.errorMessages.minLength[language];
+    }
 
     setErrors(errors);
     return Object.keys(errors).length === 0;
@@ -124,13 +133,19 @@ const ApplyThree = () => {
   const handleDigitalToolChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { value, checked } = e.target;
 
-    const updatedDigitalTools = checked
-      ? [...formData.digitalTools, value]
-      : formData.digitalTools.filter((tool) => tool !== value);
+    let updatedDigitalTools;
+
+    if (checked) {
+      updatedDigitalTools = [...formData.digitalTools, value];
+    } else {
+      updatedDigitalTools = formData.digitalTools.filter((tool) => tool !== value);
+    }
 
     const updatedFormData = {
       ...formData,
       digitalTools: updatedDigitalTools,
+      // Clear the other input if "other" is unchecked
+      otherDigitalTool: updatedDigitalTools.includes("other") ? formData.otherDigitalTool : "",
     };
 
     setFormData(updatedFormData);
@@ -139,7 +154,18 @@ const ApplyThree = () => {
     setErrors((prev) => ({
       ...prev,
       digitalTools: "",
+      otherDigitalTool: "",
     }));
+  };
+
+  // Function to get final digital tools array with actual "other" value
+  const getFinalDigitalTools = () => {
+    return formData.digitalTools.map(tool => {
+      if (tool === "other" && formData.otherDigitalTool.trim()) {
+        return formData.otherDigitalTool.trim();
+      }
+      return tool;
+    }).filter(tool => tool !== "other" || formData.otherDigitalTool.trim());
   };
 
   const handleGoBack = () => {
@@ -147,7 +173,21 @@ const ApplyThree = () => {
   };
 
   const handleGoNext = () => {
-    if (validateForm()) navigate("/apply/four");
+    if (validateForm()) {
+      // Update form data with final digital tools before navigation
+      const finalFormData = {
+        ...formData,
+        digitalTools: getFinalDigitalTools()
+      };
+
+      // Save final data to localStorage
+      localStorage.setItem("digitalReadiness", JSON.stringify(finalFormData));
+
+      // You can also update the context here if needed
+      // context.updateFormData(finalFormData);
+
+      navigate("/apply/four");
+    }
   };
 
   const getDigitalLevelString = (): string => {
@@ -176,10 +216,9 @@ const ApplyThree = () => {
                   value={getDigitalLevelString()}
                   onChange={handleInputChange}
                   className={`w-full p-2 bg-transparent text-white rounded
-                    ${
-                      errors.digitalLevel
-                        ? "border-2 border-red-500"
-                        : "border border-gray-700"
+                    ${errors.digitalLevel
+                      ? "border-2 border-red-500"
+                      : "border border-gray-700"
                     }`}
                 >
                   <option value="" className="bg-[#131021]">
@@ -218,16 +257,15 @@ const ApplyThree = () => {
                   type="button"
                   onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                   className={`w-full p-2 bg-trasnparent text-white rounded text-left flex justify-between items-center
-                    ${
-                      errors.digitalTools
-                        ? "border-2 border-red-500"
-                        : "border border-gray-700"
+                    ${errors.digitalTools
+                      ? "border-2 border-red-500"
+                      : "border border-gray-700"
                     }`}
                 >
                   <span>
                     {formData.digitalTools.length > 0
-                      ? `${formData.digitalTools.length} ${page.digitalToolsOptions.selected[language]}`
-                      : page.placeholder[language]}
+                      ? `${formData.digitalTools.length} ${page.digitalToolsOptions?.selected?.[language] || 'selected'}`
+                      : (page.placeholder?.[language] || "Select digital tools")}
                   </span>
                   <span className="ml-2">
                     {isDropdownOpen ? (
@@ -238,7 +276,7 @@ const ApplyThree = () => {
                   </span>
                 </button>
                 {isDropdownOpen && (
-                  <div className="absolute z-10 w-full mt-1 bg-[#131021] rounded shadow-lg max-h-48 overflow-auto">
+                  <div className="absolute z-10 w-full mt-1 bg-[#131021] rounded shadow-lg max-h-60 overflow-auto">
                     {[
                       { value: "crm", label: "CRM" },
                       { value: "erp", label: "ERP" },
@@ -251,37 +289,60 @@ const ApplyThree = () => {
                         label: page.digitalToolsOptions.other[language],
                       },
                     ].map((tool) => (
-                      <label
-                        key={tool.value}
-                        className="flex items-center px-4 py-2 hover:bg-gray-700 cursor-pointer"
-                      >
-                        <input
-                          type="checkbox"
-                          value={tool.value}
-                          checked={formData.digitalTools.includes(tool.value)}
-                          onChange={handleDigitalToolChange}
-                          className="hidden"
-                        />
-                        <span className="w-5 h-5 flex items-center justify-center border border-gray-400 rounded">
-                          {formData.digitalTools.includes(tool.value) && (
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              className="w-4 h-4 text-blue-500"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              stroke="currentColor"
-                              strokeWidth={3}
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                d="M5 13l4 4L19 7"
-                              />
-                            </svg>
-                          )}
-                        </span>
-                        <span className="ml-2">{tool.label}</span>
-                      </label>
+                      <div key={tool.value}>
+                        <label className="flex items-center px-4 py-2 hover:bg-gray-700 cursor-pointer">
+                          <input
+                            type="checkbox"
+                            value={tool.value}
+                            checked={formData.digitalTools.includes(tool.value)}
+                            onChange={handleDigitalToolChange}
+                            className="hidden"
+                          />
+                          <span className="w-5 h-5 flex items-center justify-center border border-gray-400 rounded">
+                            {formData.digitalTools.includes(tool.value) && (
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="w-4 h-4 text-blue-500"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                                strokeWidth={3}
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  d="M5 13l4 4L19 7"
+                                />
+                              </svg>
+                            )}
+                          </span>
+                          <span className="ml-2">{tool.label}</span>
+                        </label>
+
+                        {/* Other Digital Tool Input inside dropdown */}
+                        {tool.value === "other" && formData.digitalTools.includes("other") && (
+                          <div className="px-4 pb-3" onClick={(e) => e.stopPropagation()}>
+                            <input
+                              type="text"
+                              name="otherDigitalTool"
+                              value={formData.otherDigitalTool}
+                              onChange={handleInputChange}
+                              placeholder="Please specify the digital tool..."
+                              className={`w-full p-2 bg-gray-800 text-white rounded text-sm
+                                ${errors.otherDigitalTool
+                                  ? "border-2 border-red-500"
+                                  : "border border-gray-600"
+                                }`}
+                              onClick={(e) => e.stopPropagation()}
+                            />
+                            {errors.otherDigitalTool && (
+                              <p className="text-red-500 text-xs mt-1">
+                                {page.errorMessages.required[language]}
+                              </p>
+                            )}
+                          </div>
+                        )}
+                      </div>
                     ))}
                   </div>
                 )}
@@ -290,6 +351,7 @@ const ApplyThree = () => {
                     {page.errorMessages.required[language]}
                   </p>
                 )}
+
               </div>
             </div>
 
@@ -377,10 +439,9 @@ const ApplyThree = () => {
                 value={formData.companyPurpose}
                 onChange={handleInputChange}
                 className={`w-full p-4 bg-transparent text-white rounded
-                  ${
-                    errors.companyPurpose
-                      ? "border-2 border-red-500"
-                      : "border border-gray-700"
+                  ${errors.companyPurpose
+                    ? "border-2 border-red-500"
+                    : "border border-gray-700"
                   }`}
                 rows={4}
                 placeholder={page.companyPurpose.placeholder[language]}
