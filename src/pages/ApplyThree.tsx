@@ -81,11 +81,12 @@ const ApplyThree = () => {
     if (formData.digitalTools.includes("other") && formData.otherDigitalTool.trim().length === 0)
       errors.otherDigitalTool = page.errorMessages.required[language];
 
-    if (
-      formData.companyPurpose.trim().length > 0 &&
-      formData.companyPurpose.trim().length < 3
-    )
+    // Make companyPurpose required
+    if (formData.companyPurpose.trim().length === 0) {
+      errors.companyPurpose = page.errorMessages.required[language];
+    } else if (formData.companyPurpose.trim().length < 3) {
       errors.companyPurpose = page.errorMessages.minLength[language];
+    }
 
     setErrors(errors);
     return Object.keys(errors).length === 0;

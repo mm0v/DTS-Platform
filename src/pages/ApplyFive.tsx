@@ -2,7 +2,7 @@
 // -------------------------------------------------------------------------------------------
 // -------------------------------------------------------------------------------------------
 "use client";
-import type React from "react";
+import React from "react";
 import { useState, useEffect, useContext, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { Download } from "lucide-react";
@@ -17,10 +17,43 @@ import ReCAPTCHA from "react-google-recaptcha";
 // Replace with your actual reCAPTCHA site key
 const RECAPTCHA_SITE_KEY = "6LerN1MrAAAAAHK3l-g1D8z0377xlEUT9_SbfQv-";
 
+// Enhanced file type configuration with strict security
+const ALLOWED_FILE_TYPES = {
+  propertyLawCertificate: {
+    mimeTypes: [
+      "application/pdf",
+      "application/msword", // .doc
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document", // .docx
+    ],
+    extensions: ['.pdf', '.doc', '.docx'],
+    accept: ".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+  },
+  financialStatement: {
+    mimeTypes: [
+      "application/pdf",
+      "application/msword", // .doc
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document", // .docx
+      "application/vnd.ms-excel", // .xls
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", // .xlsx
+    ],
+    extensions: ['.pdf', '.doc', '.docx', '.xls', '.xlsx'],
+    accept: ".pdf,.doc,.docx,.xls,.xlsx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+  }
+} as const;
+
+// File signature validation for enhanced security
+const FILE_SIGNATURES = {
+  'application/pdf': [0x25, 0x50, 0x44, 0x46], // %PDF
+  'application/msword': [0xD0, 0xCF, 0x11, 0xE0], // MS Office legacy
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document': [0x50, 0x4B, 0x03, 0x04], // ZIP-based
+  'application/vnd.ms-excel': [0xD0, 0xCF, 0x11, 0xE0], // MS Office legacy
+  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': [0x50, 0x4B, 0x03, 0x04] // ZIP-based
+} as const;
+
 const DB_NAME = "ALL files";
 const STORE_NAME = "files";
 
-function openDB() {
+function openDB(): Promise<IDBDatabase> {
   return new Promise<IDBDatabase>((resolve, reject) => {
     const request = indexedDB.open(DB_NAME, 1);
     request.onerror = () => reject(request.error);
@@ -34,7 +67,7 @@ function openDB() {
   });
 }
 
-async function saveFileToIndexedDB(file: File, FILE_KEY: string) {
+async function saveFileToIndexedDB(file: File, FILE_KEY: string): Promise<void> {
   const db = await openDB();
   return new Promise<void>((resolve, reject) => {
     const tx = db.transaction(STORE_NAME, "readwrite");
@@ -76,6 +109,78 @@ interface DeclarationConsent {
   permitContact: boolean;
   privacyAcceptance: boolean;
 }
+
+type FileType = "propertyLawCertificate" | "financialStatement";
+
+interface FileValidationResult {
+  isValid: boolean;
+  errors: string[];
+}
+
+// Enhanced file validation function with security checks
+const validateFileTypeAndSignature = async (file: File, fileType: FileType): Promise<FileValidationResult> => {
+  const allowedConfig = ALLOWED_FILE_TYPES[fileType];
+  const errors: string[] = [];
+
+  // Sanitize file name
+  const sanitizedName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_');
+  if (sanitizedName !== file.name) {
+    console.warn('File name was sanitized for security');
+  }
+
+  // Check file extension
+  const fileExtension = file.name.toLowerCase().split('.').pop();
+  const allowedExtensions = allowedConfig.extensions.map(ext => ext.slice(1));
+
+  if (!fileExtension || !allowedExtensions.includes(fileExtension)) {
+    errors.push('Invalid or missing file extension');
+  }
+
+  // Check MIME type
+  if (!(allowedConfig.mimeTypes as readonly string[]).includes(file.type)) {
+    errors.push('Invalid file MIME type');
+  }
+
+  // Verify MIME type matches extension
+  const expectedExtensions: Record<string, string[]> = {
+    'application/pdf': ['pdf'],
+    'application/msword': ['doc'],
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document': ['docx'],
+    'application/vnd.ms-excel': ['xls'],
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': ['xlsx']
+  };
+
+  if (fileExtension && expectedExtensions[file.type] && !expectedExtensions[file.type].includes(fileExtension)) {
+    errors.push('File extension does not match MIME type');
+  }
+
+  // Check file signature (magic numbers) for additional security
+  try {
+    const arrayBuffer = await file.slice(0, 8).arrayBuffer();
+    const uint8Array = new Uint8Array(arrayBuffer);
+
+    const expectedSignature = FILE_SIGNATURES[file.type as keyof typeof FILE_SIGNATURES];
+    if (expectedSignature) {
+      const matches = expectedSignature.every((byte, index) => uint8Array[index] === byte);
+      if (!matches) {
+        errors.push('File signature validation failed - potential malicious file');
+      }
+    }
+  } catch (error) {
+    console.warn('Could not validate file signature:', error);
+    errors.push('Could not validate file integrity');
+  }
+
+  // Additional security checks
+  if (file.name.includes('..') || file.name.includes('/') || file.name.includes('\\')) {
+    errors.push('Invalid characters in file name');
+  }
+
+  return {
+    isValid: errors.length === 0,
+    errors
+  };
+};
 
 export default function ApplyFive() {
   const navigate = useNavigate();
@@ -165,14 +270,14 @@ export default function ApplyFive() {
   });
 
   // reCAPTCHA handlers
-  const handleRecaptchaChange = (token: string | null) => {
+  const handleRecaptchaChange = (token: string | null): void => {
     setRecaptchaToken(token || "");
     if (token) {
       setErrors(prev => ({ ...prev, recaptcha: "" }));
     }
   };
 
-  const resetRecaptcha = () => {
+  const resetRecaptcha = (): void => {
     if (recaptchaRef.current) {
       recaptchaRef.current.reset();
       setRecaptchaToken("");
@@ -180,7 +285,6 @@ export default function ApplyFive() {
   };
 
   const getErrorMessage = (key: string): string => {
-    // Fixed TypeScript error by properly handling language comparison
     if (language as string === 'az') {
       switch (key) {
         case 'recaptcha_required':
@@ -206,58 +310,38 @@ export default function ApplyFive() {
     }
   };
 
+  // Enhanced form validation with strict security
   const validateForm = (): boolean => {
     const newErrors: Record<string, string> = {};
 
-    const allowedFileType: string[] = [
-      "application/pdf",
-      "application/doc",
-      "application/docx",
-      "application/xlsx",
-      "application/xls",
-    ];
+    // Property law certificate validation (REQUIRED)
+    if (!formData.files.propertyLawCertificate) {
+      newErrors.propertyLawCertificate = page.errorMessages.propertyLawCertificateRequired[language];
+    } else {
+      const file = formData.files.propertyLawCertificate;
+      const allowedTypes = ALLOWED_FILE_TYPES.propertyLawCertificate.mimeTypes;
 
-    if (
-      (formData.files.propertyLawCertificate &&
-        formData.files.propertyLawCertificate.name === "") ||
-      formData.files.propertyLawCertificate === null
-    ) {
-      newErrors.propertyLawCertificate =
-        page.errorMessages.propertyLawCertificateRequired[language];
+      if (!allowedTypes.includes(file.type as ("application/pdf" | "application/msword" | "application/vnd.openxmlformats-officedocument.wordprocessingml.document"))) {
+        newErrors.propertyLawCertificate = page.errorMessages.propertyLawCertificateType[language];
+      }
+
+      if (file.size >= 20000000) {
+        newErrors.propertyLawCertificate = page.errorMessages.fileLimit[language];
+      }
     }
 
-    if (
-      formData.files.propertyLawCertificate &&
-      !allowedFileType.includes(
-        formData.files.propertyLawCertificate?.type as string
-      )
-    ) {
-      newErrors.propertyLawCertificate =
-        page.errorMessages.propertyLawCertificateType[language];
-    }
+    // Financial statement validation (OPTIONAL)
+    if (formData.files.financialStatement) {
+      const file = formData.files.financialStatement;
+      const allowedTypes = ALLOWED_FILE_TYPES.financialStatement.mimeTypes;
 
-    if (
-      formData.files.financialStatement !== null &&
-      !allowedFileType.includes(
-        formData.files.financialStatement?.type as string
-      )
-    ) {
-      newErrors.financialStatement =
-        page.errorMessages.financialStatementType[language];
-    }
+      if (!allowedTypes.includes(file.type as ("application/pdf" | "application/msword" | "application/vnd.openxmlformats-officedocument.wordprocessingml.document" | "application/vnd.ms-excel" | "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))) {
+        newErrors.financialStatement = page.errorMessages.financialStatementType[language];
+      }
 
-    if (
-      formData.files.financialStatement &&
-      formData.files.financialStatement.size >= 20000000
-    ) {
-      newErrors.financialStatement = page.errorMessages.fileLimit[language];
-    }
-
-    if (
-      formData.files.propertyLawCertificate &&
-      formData.files.propertyLawCertificate.size >= 20000000
-    ) {
-      newErrors.propertyLawCertificate = page.errorMessages.fileLimit[language];
+      if (file.size >= 20000000) {
+        newErrors.financialStatement = page.errorMessages.fileLimit[language];
+      }
     }
 
     // reCAPTCHA validation
@@ -269,11 +353,11 @@ export default function ApplyFive() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleGoBack = () => {
+  const handleGoBack = (): void => {
     navigate("/apply/four");
   };
 
-  const handleConfirmModalYes = async () => {
+  const handleConfirmModalYes = async (): Promise<void> => {
     if (!validateForm()) {
       setLocalIsSubmitting(false);
       return;
@@ -384,7 +468,7 @@ export default function ApplyFive() {
 
   const handleCheckboxChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
+  ): void => {
     const { name, value } = e.target;
     const updatedValue = value === "on" ? true : false;
     const updatedData = {
@@ -402,36 +486,66 @@ export default function ApplyFive() {
     }));
   };
 
+  // Enhanced file change handler with strict security validation
   const handleFileChange = async (
     e: React.ChangeEvent<HTMLInputElement>,
-    type: "propertyLawCertificate" | "financialStatement"
-  ) => {
+    type: FileType
+  ): Promise<void> => {
     const file: File | undefined = e.target.files?.[0];
 
+    // Clear previous errors
     setErrors(prev => ({
       ...prev,
       [type]: "",
     }));
 
-    if (file) {
-      try {
-        await saveFileToIndexedDB(file, type);
-        const updatedData = {
-          ...formData,
-          files: {
-            ...formData.files,
-            [type]: { name: file.name, size: file.size, type: file.type },
-          },
-        };
-        setFormData(updatedData);
-        localStorage.setItem("restOfData", JSON.stringify(updatedData));
-      } catch (error) {
-        console.error("Failed to save file to IndexedDB", error);
-      }
+    if (!file) return;
+
+    // Size validation (20MB limit)
+    const MAX_FILE_SIZE = 20 * 1024 * 1024;
+    if (file.size > MAX_FILE_SIZE) {
+      setErrors(prev => ({
+        ...prev,
+        [type]: page.errorMessages.fileLimit[language]
+      }));
+      e.target.value = '';
+      return;
+    }
+
+    // Enhanced file type validation with security checks
+    const validation = await validateFileTypeAndSignature(file, type);
+
+    if (!validation.isValid) {
+      setErrors(prev => ({
+        ...prev,
+        [type]: `${page.errorMessages[`${type}Type`][language]}. Security validation failed: ${validation.errors.join(', ')}`
+      }));
+      e.target.value = '';
+      return;
+    }
+
+    // If validation passes, save the file
+    try {
+      await saveFileToIndexedDB(file, type);
+      const updatedData = {
+        ...formData,
+        files: {
+          ...formData.files,
+          [type]: { name: file.name, size: file.size, type: file.type },
+        },
+      };
+      setFormData(updatedData);
+      localStorage.setItem("restOfData", JSON.stringify(updatedData));
+    } catch (error) {
+      console.error("Failed to save file to IndexedDB", error);
+      setErrors(prev => ({
+        ...prev,
+        [type]: "Failed to save file securely"
+      }));
     }
   };
 
-  const downloadPDF = (e: React.MouseEvent<HTMLLabelElement>) => {
+  const downloadPDF = (e: React.MouseEvent<HTMLLabelElement>): void => {
     e.preventDefault();
     const link = document.createElement("a");
     link.href = "/Privacy.pdf";
@@ -448,21 +562,21 @@ export default function ApplyFive() {
     }
   }, [submitSuccess]);
 
-  const handleConfirmModalClose = () => {
+  const handleConfirmModalClose = (): void => {
     setShowConfirmModal(false);
     setSubmissionError(null);
   };
 
-  const handleThankYouModalClose = () => {
+  const handleThankYouModalClose = (): void => {
     setShowThankYouModal(false);
     navigate("/");
   };
 
-  const handleRetry = () => {
+  const handleRetry = (): void => {
     handleConfirmModalYes();
   };
 
-  const handleSubmitForm = () => {
+  const handleSubmitForm = (): void => {
     if (validateForm()) {
       setShowConfirmModal(true);
       setSubmissionError(null);
@@ -685,8 +799,8 @@ export default function ApplyFive() {
                 <button
                   type="button"
                   className={`w-full bg-transparent border text-white absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none sr-only ${errors.propertyLawCertificate
-                      ? "border-red-400"
-                      : "border-gray-700"
+                    ? "border-red-400"
+                    : "border-gray-700"
                     } rounded p-3 focus:outline-none focus:border-blue-500`}
                   tabIndex={-1}
                   aria-hidden="true"
@@ -696,7 +810,7 @@ export default function ApplyFive() {
                   id="propertyLawCertificate"
                   type="file"
                   className="hidden"
-                  accept=".doc,.docx,.pdf"
+                  accept={ALLOWED_FILE_TYPES.propertyLawCertificate.accept}
                   ref={propertyLawCertificateRef}
                   onChange={(e) => {
                     handleFileChange(e, "propertyLawCertificate");
@@ -704,7 +818,7 @@ export default function ApplyFive() {
                 />
               </div>
               <p className="text-sm text-gray-400">
-                {page.fileFormatText[language]}
+                {page.fileFormatText[language]} (PDF, DOC, DOCX only)
               </p>
 
               {errors.propertyLawCertificate && (
@@ -737,8 +851,8 @@ export default function ApplyFive() {
                 <button
                   type="button"
                   className={`w-full bg-transparent border text-white absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none sr-only ${errors.financialStatement
-                      ? "border-red-400"
-                      : "border-gray-700"
+                    ? "border-red-400"
+                    : "border-gray-700"
                     } rounded p-3 focus:outline-none focus:border-blue-500`}
                   tabIndex={-1}
                   aria-hidden="true"
@@ -748,7 +862,7 @@ export default function ApplyFive() {
                   id="financialStatement"
                   type="file"
                   className="hidden"
-                  accept=".doc,.docx,.pdf,.xls,.xlsx"
+                  accept={ALLOWED_FILE_TYPES.financialStatement.accept}
                   ref={financialStatementRef}
                   onChange={(e) => {
                     handleFileChange(e, "financialStatement");
@@ -756,7 +870,7 @@ export default function ApplyFive() {
                 />
               </div>
               <p className="text-sm text-gray-400">
-                {page.fileFormatText[language]}
+                {page.fileFormatText[language]} (PDF, DOC, DOCX, XLS, XLSX only)
               </p>
 
               <p className="text-sm italic text-[#F9F9F9]">
@@ -935,8 +1049,8 @@ export default function ApplyFive() {
                 onClick={handleSubmitForm}
                 disabled={!isFormValid}
                 className={`flex-1 py-3 rounded-lg transition-colors ${isFormValid
-                    ? "bg-blue-600 hover:bg-blue-700 text-white cursor-pointer"
-                    : "bg-blue-900/50 text-gray-400 cursor-not-allowed"
+                  ? "bg-blue-600 hover:bg-blue-700 text-white cursor-pointer"
+                  : "bg-blue-900/50 text-gray-400 cursor-not-allowed"
                   }`}
               >
                 {localIsSubmitting
