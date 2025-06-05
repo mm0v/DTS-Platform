@@ -1,0 +1,18 @@
+# Dockerfile
+FROM node:20-alpine
+
+# Set working directory
+WORKDIR /app
+
+# Copy package files and install dependencies
+COPY package*.json .
+RUN npm install
+
+# Copy the rest of the code
+COPY . .
+
+# Build the app
+EXPOSE 5173
+
+# Default CMD (can be anything, won't be used if you're just copying dist)
+CMD ["npm", "run","dev"]

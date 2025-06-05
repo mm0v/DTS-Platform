@@ -2,7 +2,7 @@ import axios from "axios";
 
 // Create a base axios instance with common configuration
 const API = axios.create({
-  baseURL: "http://50.16.57.115:8080", // Base URL without /api
+  baseURL: "https://industry4.az", // Base URL without /api
   timeout: 30000, // Increased timeout for slow connections
   // headers: {
   //   "Content-Type": "application/json",
@@ -102,7 +102,7 @@ API.interceptors.response.use(
 
 // Alternative fallback request method using fetch
 export const fetchAPI = async (endpoint: string, options = {}) => {
-  const url = `http://50.16.57.115:8080${endpoint}`;
+  const url = `https://industry4.az${endpoint}`;
 
   const defaultOptions = {
     headers: {
