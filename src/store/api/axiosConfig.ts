@@ -2,7 +2,8 @@ import axios from "axios";
 
 // Create a base axios instance with common configuration
 const API = axios.create({
-  baseURL: "https://industry4.az", // Base URL without /api
+  // baseURL: "https://industry4.az", // Base URL without /api
+  baseURL: "http://50.16.57.115:8080", // Base URL without /api
   timeout: 30000, // Increased timeout for slow connections
   // headers: {
   //   "Content-Type": "application/json",

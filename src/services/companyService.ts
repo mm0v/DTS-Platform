@@ -49,7 +49,8 @@
 //       propertyLawCertificate: File | null;
 //       registerCertificate?: File | null;
 //       financialStatement?: File | null;
-//     }
+//     },
+//     recaptchaToken: string // ADDED: reCAPTCHA token parameter
 //   ): Promise<unknown> => {
 //     const formData = new FormData();
 
@@ -70,17 +71,18 @@
 //       formData.append("financialStatement", files.financialStatement);
 //     }
 
+//     // ADDED: Append reCAPTCHA token to FormData
+//     formData.append("recaptchaToken", recaptchaToken);
+
 //     try {
 //       const response = await API.post("/api/v1/company/add", formData);
 //       return response.data;
-//       return;
 //     } catch (error) {
 //       console.error("FormData submission failed:", error);
 //       throw error;
 //     }
 //   },
 // };
-
 import API from "./axiosConfig";
 
 interface CompanyRequest {
@@ -134,36 +136,102 @@ export const companyService = {
       registerCertificate?: File | null;
       financialStatement?: File | null;
     },
-    recaptchaToken: string // ADDED: reCAPTCHA token parameter
+    recaptchaToken: string
   ): Promise<unknown> => {
+    // Validate reCAPTCHA token before making request
+    if (!recaptchaToken || recaptchaToken.trim().length === 0) {
+      throw new Error("reCAPTCHA token is required");
+    }
+
+    console.log(
+      "Submitting with reCAPTCHA token:",
+      recaptchaToken.substring(0, 20) + "..."
+    );
+
     const formData = new FormData();
 
+    // Add the JSON data as a blob
     const jsonBlob = new Blob([JSON.stringify(companyRequest)], {
       type: "application/json",
     });
     formData.append("companyRequest", jsonBlob);
 
+    // Add required property law certificate
     if (files.propertyLawCertificate) {
       formData.append("propertyLawCertificate", files.propertyLawCertificate);
+    } else {
+      throw new Error("Property law certificate is required");
     }
 
+    // Add optional register certificate
     if (files.registerCertificate) {
       formData.append("registerCertificate", files.registerCertificate);
     }
 
+    // Add optional financial statement
     if (files.financialStatement) {
       formData.append("financialStatement", files.financialStatement);
     }
 
-    // ADDED: Append reCAPTCHA token to FormData
+    // CRITICAL: Add reCAPTCHA token - this is essential for backend validation
     formData.append("recaptchaToken", recaptchaToken);
 
     try {
-      const response = await API.post("/api/v1/company/add", formData);
+      const response = await API.post("/api/v1/company/add", formData, {
+        headers: {
+          // Let axios set the content-type automatically for FormData
+          // This ensures proper multipart/form-data boundary is set
+        },
+        timeout: 60000, // Increase timeout for file uploads
+      });
+
       return response.data;
-    } catch (error) {
+    } catch (error: any) {
       console.error("FormData submission failed:", error);
-      throw error;
+
+      // Handle specific error types
+      if (error.name === "CaptchaError") {
+        throw new Error("reCAPTCHA verification failed. Please try again.");
+      }
+
+      if (error.response) {
+        // Server responded with error status
+        const status = error.response.status;
+        const message = error.response.data?.message || error.message;
+
+        switch (status) {
+          case 400:
+            if (
+              message.toLowerCase().includes("recaptcha") ||
+              message.toLowerCase().includes("captcha")
+            ) {
+              throw new Error(
+                "reCAPTCHA verification failed. Please complete the reCAPTCHA and try again."
+              );
+            }
+            throw new Error(`Validation error: ${message}`);
+          case 413:
+            throw new Error(
+              "File size too large. Please reduce file size and try again."
+            );
+          case 429:
+            throw new Error(
+              "Too many requests. Please wait a moment and try again."
+            );
+          case 500:
+            throw new Error("Server error occurred. Please try again later.");
+          default:
+            throw new Error(`Request failed with status ${status}: ${message}`);
+        }
+      } else if (error.request) {
+        // Network error
+        throw new Error(
+          "Network error. Please check your connection and try again."
+        );
+      } else {
+        // Other error
+        throw error;
+      }
     }
   },
 };
