@@ -144,9 +144,16 @@ export const companyService = {
     }
 
     console.log(
-      "Submitting with reCAPTCHA token:",
+      "🔐 Submitting with reCAPTCHA token:",
       recaptchaToken.substring(0, 20) + "..."
     );
+
+    // Check if we're getting test tokens
+    if (recaptchaToken.startsWith("03AF") || recaptchaToken.startsWith("09A")) {
+      console.warn("⚠️ Sending test token to backend - may fail validation");
+    } else {
+      console.log("✅ Sending production token to backend");
+    }
 
     const formData = new FormData();
 
@@ -185,9 +192,10 @@ export const companyService = {
         timeout: 60000, // Increase timeout for file uploads
       });
 
+      console.log("✅ Backend submission successful:", response.status);
       return response.data;
     } catch (error: any) {
-      console.error("FormData submission failed:", error);
+      console.error("❌ FormData submission failed:", error);
 
       // Handle specific error types
       if (error.name === "CaptchaError") {
@@ -199,12 +207,19 @@ export const companyService = {
         const status = error.response.status;
         const message = error.response.data?.message || error.message;
 
+        console.error("Backend error response:", {
+          status,
+          message,
+          data: error.response.data,
+        });
+
         switch (status) {
           case 400:
             if (
               message.toLowerCase().includes("recaptcha") ||
               message.toLowerCase().includes("captcha")
             ) {
+              console.error("🚨 Backend reCAPTCHA validation failed");
               throw new Error(
                 "reCAPTCHA verification failed. Please complete the reCAPTCHA and try again."
               );
@@ -219,17 +234,20 @@ export const companyService = {
               "Too many requests. Please wait a moment and try again."
             );
           case 500:
+            console.error("🚨 Backend internal server error");
             throw new Error("Server error occurred. Please try again later.");
           default:
             throw new Error(`Request failed with status ${status}: ${message}`);
         }
       } else if (error.request) {
         // Network error
+        console.error("🌐 Network error:", error.request);
         throw new Error(
           "Network error. Please check your connection and try again."
         );
       } else {
         // Other error
+        console.error("❓ Unknown error:", error);
         throw error;
       }
     }

@@ -1576,22 +1576,13 @@ export default function ApplyFive() {
 
       // Reset reCAPTCHA after successful submission
       resetRecaptcha();
-    } catch (error: unknown) {
+    } catch (error: any) {
       console.error("Submission failed:", error);
 
       let errorMessage = page.submissionErrorMessage[language];
 
       // Handle specific reCAPTCHA errors
-      if (
-        typeof error === "object" &&
-        error !== null &&
-        "message" in error &&
-        typeof (error as { message: unknown }).message === "string" &&
-        (
-          (error as { message: string }).message.toLowerCase().includes('recaptcha') ||
-          (error as { message: string }).message.toLowerCase().includes('captcha')
-        )
-      ) {
+      if (error.message.toLowerCase().includes('recaptcha') || error.message.toLowerCase().includes('captcha')) {
         errorMessage = getErrorMessage('recaptcha_error');
         resetRecaptcha(); // Reset reCAPTCHA on validation failure
       }
@@ -2200,8 +2191,8 @@ export default function ApplyFive() {
                 onClick={handleSubmitForm}
                 disabled={!isFormValid}
                 className={`flex-1 py-3 rounded-lg transition-colors ${isFormValid
-                    ? "bg-blue-600 hover:bg-blue-700 text-white cursor-pointer"
-                    : "bg-blue-900/50 text-gray-400 cursor-not-allowed"
+                  ? "bg-blue-600 hover:bg-blue-700 text-white cursor-pointer"
+                  : "bg-blue-900/50 text-gray-400 cursor-not-allowed"
                   }`}
               >
                 {localIsSubmitting
