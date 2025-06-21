@@ -2,12 +2,12 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useLanguage } from "../context/LanguageContext";
 import logoEconomy from "/img/Navbar/economy_logo.png";
+
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { language, toggleLanguage, layoutTranslations } = useLanguage();
   const page = layoutTranslations.navbar;
 
-  // Handle body scroll lock when menu is open
   useEffect(() => {
     if (isMenuOpen) {
       document.body.style.overflow = "hidden";
@@ -457,7 +457,7 @@ const Navbar = () => {
           </div>
         </div>
 
-        {/* Mobile Menu Slide-in */}
+
         <div
           className={`lg:hidden fixed top-0 left-0 w-full h-full bg-blue-900 transform transition-transform duration-300 ease-in-out z-40 ${
             isMenuOpen ? "translate-x-0" : "-translate-x-full"
