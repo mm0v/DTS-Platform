@@ -9,6 +9,8 @@ import { useLanguage } from "../context/LanguageContext";
 import ApplySteps from "../components/ApplySteps";
 import { motion, AnimatePresence } from "framer-motion";
 import { companyService } from "../services/companyService";
+import ReCAPTCHA from "react-google-recaptcha";
+import useRecaptcha from "../services/recapture";
 
 const DB_NAME = "ALL files";
 const STORE_NAME = "files";
@@ -73,6 +75,7 @@ export default function ApplyFive() {
   const navigate = useNavigate();
   const context = useContext(FormContext);
   const { language, pagesTranslations } = useLanguage();
+  const { captchaToken, recaptchaRef, handleRecaptcha } = useRecaptcha();
   const page = pagesTranslations.apply5;
 
   if (!context) {
@@ -287,7 +290,25 @@ export default function ApplyFive() {
           })
         );
 
-        await companyService.submitCompanyData(dataToSubmit, files);
+        if (captchaToken) {
+          const result = await companyService.submitCompanyData(
+            dataToSubmit,
+            files,
+            captchaToken
+          );
+          if (result.status !== 201) {
+            alert("ReCAPTCHA validation failed. Please try again.");
+            handleRecaptcha("");
+            if (recaptchaRef.current) {
+              recaptchaRef.current.reset();
+            }
+            return;
+          }
+
+          recaptchaRef.current?.reset();
+        } else {
+          alert("Please input valid recaptcha!");
+        }
 
         setShowConfirmModal(false);
         setShowThankYouModal(true);
@@ -485,7 +506,7 @@ export default function ApplyFive() {
                   <button
                     onClick={handleConfirmModalYes}
                     className="bg-green-500 cursor-pointer text-white py-3 px-10 rounded-lg hover:bg-green-600 transition font-medium"
-                  // disabled={isSubmitting}
+                    // disabled={isSubmitting}
                   >
                     {localIsSubmitting ? (
                       <span className="flex items-center">
@@ -610,10 +631,11 @@ export default function ApplyFive() {
                 </label>
                 <button
                   type="button"
-                  className={`w-full bg-transparent border text-white absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none sr-only ${errors.propertyLawCertificate
-                    ? "border-red-400"
-                    : "border-gray-700"
-                    } rounded p-3 focus:outline-none focus:border-blue-500`}
+                  className={`w-full bg-transparent border text-white absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none sr-only ${
+                    errors.propertyLawCertificate
+                      ? "border-red-400"
+                      : "border-gray-700"
+                  } rounded p-3 focus:outline-none focus:border-blue-500`}
                   tabIndex={-1}
                   aria-hidden="true"
                 >
@@ -663,10 +685,11 @@ export default function ApplyFive() {
                 </label>
                 <button
                   type="button"
-                  className={`w-full bg-transparent border text-white absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none sr-only ${errors.financialStatement
-                    ? "border-red-400"
-                    : "border-gray-700"
-                    } rounded p-3 focus:outline-none focus:border-blue-500`}
+                  className={`w-full bg-transparent border text-white absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none sr-only ${
+                    errors.financialStatement
+                      ? "border-red-400"
+                      : "border-gray-700"
+                  } rounded p-3 focus:outline-none focus:border-blue-500`}
                   tabIndex={-1}
                   aria-hidden="true"
                 >
@@ -815,6 +838,12 @@ export default function ApplyFive() {
               </div>
             </div>
 
+            <ReCAPTCHA
+              ref={recaptchaRef}
+              sitekey="6LerN1MrAAAAAHK3l-g1D8z0377xlEUT9_SbfQv-"
+              onChange={handleRecaptcha}
+            />
+
             {/* Buttons */}
             <div className="flex space-x-4 mt-10">
               <button
@@ -832,12 +861,13 @@ export default function ApplyFive() {
                   !formData.declaration?.privacyAcceptance &&
                   !formData.declaration?.permitContact
                 }
-                className={`flex-1 py-3 rounded-lg transition-colors ${formData.declaration?.dataIsReal &&
+                className={`flex-1 py-3 rounded-lg transition-colors ${
+                  formData.declaration?.dataIsReal &&
                   formData.declaration?.privacyAcceptance &&
                   formData.declaration?.permitContact
-                  ? "bg-blue-600 hover:bg-blue-700 text-white cursor-pointer"
-                  : "bg-blue-900/50 text-gray-400 cursor-not-allowed "
-                  }`}
+                    ? "bg-blue-600 hover:bg-blue-700 text-white cursor-pointer"
+                    : "bg-blue-900/50 text-gray-400 cursor-not-allowed "
+                }`}
               >
                 {/* {page.buttons.confirm[language]} */}
                 {localIsSubmitting

@@ -49,14 +49,16 @@ export const companyService = {
       propertyLawCertificate: File | null;
       registerCertificate?: File | null;
       financialStatement?: File | null;
-    }
-  ): Promise<unknown> => {
+    },
+    captchaToken: string
+  ) => {
     const formData = new FormData();
 
     const jsonBlob = new Blob([JSON.stringify(companyRequest)], {
       type: "application/json",
     });
     formData.append("companyRequest", jsonBlob);
+    formData.append("recaptchaToken", captchaToken);
 
     if (files.propertyLawCertificate) {
       formData.append("propertyLawCertificate", files.propertyLawCertificate);
@@ -71,9 +73,7 @@ export const companyService = {
     }
 
     try {
-      const response = await API.post("/api/v1/company/add", formData);
-      return response.data;
-      return;
+      return await API.post("/api/v1/company/add", formData);
     } catch (error) {
       console.error("FormData submission failed:", error);
       throw error;
