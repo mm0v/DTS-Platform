@@ -1,0 +1,31 @@
+@import "./variable.css";
+
+.react-international-phone-country-selector-button {
+  background-color: transparent !important;
+  border-color: var(--color-gray-700) !important;
+  height: 48px !important;
+}
+
+.react-international-phone-input {
+  background-color: transparent !important;
+  border-color: var(--color-gray-700) !important;
+  color: var(--white-contrast-1) !important;
+  height: 48px !important;
+  flex: 1;
+  font-size: 0.875rem !important;
+  line-height: 1.25rem !important;
+}
+
+.react-international-phone-country-selector-dropdown {
+  background-color: var(--black-contrast-1) !important;
+  color: --white-contrast-1 !important;
+}
+
+.react-international-phone-country-selector-dropdown__list-item:hover {
+  background-color: var(--blue-color-contrast-2) !important;
+}
+
+.react-international-phone-country-selector-dropdown__list-item[aria-selected="true"] {
+  background-color: var(--blue-color-contrast-2) !important;
+  color: --white-contrast-1 !important;
+}

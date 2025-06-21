@@ -1,12 +1,8 @@
-:root {
-  --react-international-phone-flag-width: 32px;
-  --react-international-phone-flag-height: 44px;
-  --react-international-phone-font-size: 18px;
-}
+@import "./../public/styles/variable.css";
 
 .phone-dark-input {
-  background-color: #060515 !important;
-  color: #ffff !important;
+  background-color: --black-contrast-2 !important;
+  color: --white-contrast-2 !important;
   height: 48px !important;
 }
 
