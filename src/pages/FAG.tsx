@@ -1,5 +1,5 @@
-import AccordionExpandDefault from "../components/AccordionSimpleMui"
-import BackgroundVideo from "../components/BackgroundVideo";
+import AccordionExpandDefault from "../components/shared/AccordionSimpleMui"
+import BackgroundVideo from "../components/videos/BackgroundVideo";
 import ToContact from "../components/ToContact";
 import { useLanguage } from "../context/LanguageContext";
 
@@ -16,15 +16,8 @@ const FAG = () => {
         <ToContact />
 
         <div style={{
-          // background: "linear-gradient(180deg, #1A4381 -96.34%, #FFF 99.92%)",
           background: "linear-gradient(180deg, rgba(35, 42, 96, 0.90) -4.83%, rgba(0, 0, 0, 0.00) 102.71%), var(--surface-white-primary, #FFF)",
         }}>
-
-          {/* <div className="video-background">
-            <video className="absolute w-full h-full object-cover" autoPlay loop muted>
-              <source src="img/Navbar/bg-header.mp4" type="video/mp4" />
-            </video>
-          </div> */}
 
           <BackgroundVideo />
 

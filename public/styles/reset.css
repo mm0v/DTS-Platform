@@ -1,0 +1,29 @@
+@import "./variable.css";
+
+body {
+  font-family: "DM Sans", sans-serif;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+}
+
+.MuiTypography-root {
+  font-family: "DM Sans", sans-serif !important;
+}
+
+a:focus,
+a:focus-visible,
+button:focus,
+button:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+:focus {
+  outline: 2px solid var(--secondary-color);
+  outline-offset: 2px;
+}
+
+input:-internal-autofill-selected {
+  background-color: transparent!important;
+}

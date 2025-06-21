@@ -3,15 +3,10 @@ import { useLanguage } from "../context/LanguageContext";
 import LogoCarousel from '../components/LogoCarousel';
 import BasicModal from '../components/ModalMui';
 import Timeline from '../components/Timeline';
-import BackgroundVideo from '../components/BackgroundVideo';
-import VideoSection from '../components/VideoSection';
+import BackgroundVideo from '../components/videos/BackgroundVideo';
+import VideoSection from '../components/videos/VideoSection';
 import ToContact from '../components/ToContact';
 
-// const PartnerLogo = ({ src, alt }: { src: string, alt: string }) => (
-//   <div className="flex items-center justify-center p-2">
-//     <img src={src} alt={alt} className="h-8 md:h-10" />
-//   </div>
-// );
 
 const Home = () => {
   const { language, pagesTranslations } = useLanguage();
@@ -23,9 +18,7 @@ const Home = () => {
 
         <BackgroundVideo />
 
-        {/* Content */}
         <div className="relative z-10 container mx-auto px-4 py-8 md:py-32 min-h-screen flex flex-col">
-          {/* Main content */}
           <div className="flex-grow flex flex-col items-center justify-center text-white text-center">
             <h1 className="text-3xl md:text-4xl pt-12 lg:text-5xl font-bold mb-6" style={{ fontFamily: "Space Grotesk" }}>{page.title[language]}</h1>
 
@@ -54,7 +47,6 @@ const Home = () => {
 
 
 
-          {/* Partners section */}
           <div className="mt-8 md:mt-16 px-4">
             <h2 className="text-center text-white text-base md:text-2xl font-medium mb-6">
               {page.companiesTitle[language]}
@@ -116,25 +108,20 @@ const Home = () => {
           </div>
         </div>
 
-        {/* TimeLine Section */}
+
         <div>
           <Timeline />
         </div>
 
-        {/* Video section */}
         <div>
           <VideoSection />
         </div>
 
-        {/* Mission section */}
         <div className="bg-gray-200 py-12 md:py-16 lg:py-24">
           <div className="container mx-auto px-4">
-            {/* Section heading - can be added if needed */}
 
             <div className="flex flex-col md:flex-row items-center justify-center gap-4 lg:gap-8">
-              {/* Mission Card */}
               <div className="flex flex-col md:flex-row items-center justify-center gap-4 lg:gap-8 w-full">
-                {/* Mission Card */}
                 <div className="bg-white rounded-lg shadow-md p-5 lg:p-4 w-full md:w-[48%] lg:max-w-[400px] flex flex-col h-80 transform transition-all duration-300 hover:shadow-lg">
                   <div className="flex flex-col h-full">
                     <div className="mb-4">
@@ -149,7 +136,6 @@ const Home = () => {
                   </div>
                 </div>
 
-                {/* Vision Card */}
                 <div className="bg-white rounded-lg shadow-md p-5 lg:p-4 w-full md:w-[48%] lg:max-w-[400px] flex flex-col h-78 transform transition-all duration-300 hover:shadow-lg">
                   <div className="flex flex-col h-full">
                     <div className="mb-4">

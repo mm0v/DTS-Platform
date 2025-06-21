@@ -14,13 +14,15 @@ interface LanguageContextType {
   componentsTranslations: typeof componentsTranslations;
 }
 
-const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
+const LanguageContext = createContext<LanguageContextType | undefined>(
+  undefined
+);
 
 export const LanguageProvider = ({ children }: { children: ReactNode }) => {
   const [language, setLanguage] = useState<Language>("AZ");
 
   const toggleLanguage = () => {
-    setLanguage(prev => (prev === "AZ" ? "EN" : "AZ"));
+    setLanguage((prev) => (prev === "AZ" ? "EN" : "AZ"));
   };
 
   const value: LanguageContextType = {
@@ -28,10 +30,14 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
     toggleLanguage,
     layoutTranslations,
     pagesTranslations,
-    componentsTranslations
+    componentsTranslations,
   };
 
-  return <LanguageContext.Provider value={value}>{children}</LanguageContext.Provider>;
+  return (
+    <LanguageContext.Provider value={value}>
+      {children}
+    </LanguageContext.Provider>
+  );
 };
 
 export const useLanguage = () => {
@@ -39,4 +45,3 @@ export const useLanguage = () => {
   if (!context) throw new Error("error");
   return context;
 };
-

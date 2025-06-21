@@ -5,7 +5,6 @@ import { useLanguage } from "../context/LanguageContext";
 import { toast } from "react-toastify";
 
 interface ApplyStepsProps {
-  /** Cari addım (1-dən başlayır) */
   step: number;
 }
 
@@ -14,16 +13,14 @@ const ApplySteps = ({ step }: ApplyStepsProps) => {
   const { language, componentsTranslations } = useLanguage();
   const steps = componentsTranslations.applySteps;
 
-  /* Hər addımın route-u */
   const routes = [
-    "/apply", // 1
-    "/apply/two", // 2
-    "/apply/three", // 3
-    "/apply/four", // 4
-    "/apply/five", // 5
+    "/apply",
+    "/apply/two",
+    "/apply/three",
+    "/apply/four",
+    "/apply/five",
   ];
 
-  /* Toast mesajı (istəsən translations-a ata bilərsən) */
   const showFillToast = () =>
     toast.warning(steps.fillFieldsWarning[language], {
       position: "top-center",
@@ -66,7 +63,9 @@ const ApplySteps = ({ step }: ApplyStepsProps) => {
             if (typeof obj === "object") {
               const keys = Object.keys(obj as object);
               if (keys.length === 0) return false;
-              return keys.every((key) => hasAllValues((obj as Record<string, unknown>)[key]));
+              return keys.every((key) =>
+                hasAllValues((obj as Record<string, unknown>)[key])
+              );
             }
 
             return true;
