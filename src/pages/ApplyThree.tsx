@@ -14,7 +14,7 @@ interface DigitalReadiness {
   digitalLevel: number;
   digitalTools: string[];
   companyPurpose: string;
-  otherDigitalTool: string; // Add this new field
+  otherDigitalTool: string; 
 }
 
 const ApplyThree = () => {
@@ -30,7 +30,7 @@ const ApplyThree = () => {
     digitalLevel: 0,
     digitalTools: [],
     companyPurpose: "",
-    otherDigitalTool: "", // Initialize the new field
+    otherDigitalTool: "", 
   };
   const [formData, setFormData] = useState<DigitalReadiness>(initialValue);
 
@@ -77,11 +77,9 @@ const ApplyThree = () => {
     if (formData.digitalTools.length === 0)
       errors.digitalTools = page.errorMessages.required[language];
 
-    // Validate "other" digital tool input if "other" is selected
     if (formData.digitalTools.includes("other") && formData.otherDigitalTool.trim().length === 0)
       errors.otherDigitalTool = page.errorMessages.required[language];
 
-    // Make companyPurpose required
     if (formData.companyPurpose.trim().length === 0) {
       errors.companyPurpose = page.errorMessages.required[language];
     } else if (formData.companyPurpose.trim().length < 3) {
@@ -144,7 +142,6 @@ const ApplyThree = () => {
     const updatedFormData = {
       ...formData,
       digitalTools: updatedDigitalTools,
-      // Clear the other input if "other" is unchecked
       otherDigitalTool: updatedDigitalTools.includes("other") ? formData.otherDigitalTool : "",
     };
 
@@ -158,7 +155,6 @@ const ApplyThree = () => {
     }));
   };
 
-  // Function to get final digital tools array with actual "other" value
   const getFinalDigitalTools = () => {
     return formData.digitalTools.map(tool => {
       if (tool === "other" && formData.otherDigitalTool.trim()) {
@@ -174,17 +170,12 @@ const ApplyThree = () => {
 
   const handleGoNext = () => {
     if (validateForm()) {
-      // Update form data with final digital tools before navigation
       const finalFormData = {
         ...formData,
         digitalTools: getFinalDigitalTools()
       };
 
-      // Save final data to localStorage
       localStorage.setItem("digitalReadiness", JSON.stringify(finalFormData));
-
-      // You can also update the context here if needed
-      // context.updateFormData(finalFormData);
 
       navigate("/apply/four");
     }
@@ -319,7 +310,6 @@ const ApplyThree = () => {
                           <span className="ml-2">{tool.label}</span>
                         </label>
 
-                        {/* Other Digital Tool Input inside dropdown */}
                         {tool.value === "other" && formData.digitalTools.includes("other") && (
                           <div className="px-4 pb-3" onClick={(e) => e.stopPropagation()}>
                             <input

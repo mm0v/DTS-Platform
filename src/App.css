@@ -3,12 +3,11 @@
 @import "tailwindcss";
 
 :root {
-  --primary-color: #1e3a8a; /* blue-900 */
-  --secondary-color: #1d4ed8; /* blue-700 */
+  --primary-color: #1e3a8a;
+  --secondary-color: #1d4ed8;
 }
 
 body {
-  /* font-family: "Roboto", sans-serif;*/
   font-family: "DM Sans", sans-serif;
   margin: 0;
   padding: 0;
@@ -18,12 +17,10 @@ body {
   font-family: "DM Sans", sans-serif !important;
 }
 
-/* Smooth scrolling */
 html {
   scroll-behavior: smooth;
 }
 
-/* Button hover effects */
 .hover-scale {
   transition: transform 0.2s ease-in-out;
 }
@@ -32,7 +29,6 @@ html {
   transform: scale(1.05);
 }
 
-/* Animation for page transitions */
 .page-transition {
   animation: fadeIn 0.3s ease-in-out;
 }
@@ -48,7 +44,6 @@ html {
   }
 }
 
-/* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
 }
@@ -66,7 +61,6 @@ html {
   background: var(--primary-color);
 }
 
-/* Oxları gizlət */
 input.no-spinner::-webkit-outer-spin-button,
 input.no-spinner::-webkit-inner-spin-button {
   -webkit-appearance: none;
@@ -77,13 +71,10 @@ input.no-spinner {
   appearance: none;
 }
 
-
 input.no-spinner {
-  -moz-appearance: textfield; /* Firefox üçün */
+  -moz-appearance: textfield; 
 }
 
-
-/* Responsive video container for Home page */
 .video-container {
   position: relative;
   overflow: hidden;
@@ -104,13 +95,11 @@ input.no-spinner {
   object-fit: cover;
 }
 
-/* Add accessibility focus styles */
 :focus {
   outline: 2px solid var(--secondary-color);
   outline-offset: 2px;
 }
 
-/* Gradient text animation */
 .gradient-text {
   background: linear-gradient(90deg, #1e3a8a, #3b82f6, #1e3a8a);
   background-size: 200% auto;
@@ -148,7 +137,7 @@ button:focus-visible {
   box-shadow: none !important;
 }
 
-.react-international-phone-country-selector-button{
+.react-international-phone-country-selector-button {
   background-color: transparent !important;
   border-color: var(--color-gray-700) !important;
   height: 48px !important;
@@ -157,25 +146,20 @@ button:focus-visible {
 .react-international-phone-input {
   background-color: transparent !important;
   border-color: var(--color-gray-700) !important;
-  color: #F9F9F9 !important;
+  color: #f9f9f9 !important;
   height: 48px !important;
   flex: 1;
   font-size: 0.875rem !important;
-  line-height: 1.25rem !important; 
+  line-height: 1.25rem !important;
 }
 .react-international-phone-country-selector-dropdown {
   background-color: #131021 !important;
-  color: #F9F9F9 !important;
+  color: #f9f9f9 !important;
 }
 .react-international-phone-country-selector-dropdown__list-item:hover {
-  background-color: #373176!important;
+  background-color: #373176 !important;
 }
 .react-international-phone-country-selector-dropdown__list-item[aria-selected="true"] {
   background-color: #373176 !important;
-  color: #F9F9F9 !important;
+  color: #f9f9f9 !important;
 }
-
-
-
-
-

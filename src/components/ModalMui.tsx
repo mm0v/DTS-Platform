@@ -10,7 +10,6 @@ import { useLanguage } from "../context/LanguageContext";
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 
-// Enhanced modal style with better mobile responsiveness
 const getModalStyle = (isMobile: boolean) => ({
     position: 'absolute',
     top: '50%',
@@ -41,7 +40,6 @@ export default function ResponsiveModal() {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
-    // Determine transform value based on animation state and device
     const getTransformValue = () => {
         switch (animationState) {
             case 'entering':
@@ -59,7 +57,6 @@ export default function ResponsiveModal() {
         setAnimationState('initial');
         setOpen(true);
 
-        // Small delay to ensure the modal is rendered before animating
         setTimeout(() => {
             setAnimationState('entering');
         }, 50);
@@ -68,14 +65,12 @@ export default function ResponsiveModal() {
     const handleClose = () => {
         setAnimationState('exiting');
 
-        // Adjust animation duration based on device
         setTimeout(() => {
             setOpen(false);
             setAnimationState('initial');
         }, isMobile ? 300 : 400);
     };
 
-    // Handle swipe down to close on mobile
     const [touchStart, setTouchStart] = React.useState<number | null>(null);
     const [touchEnd, setTouchEnd] = React.useState<number | null>(null);
 

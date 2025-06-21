@@ -1,4 +1,5 @@
-import API from "./axiosConfig";
+import API from "../API/axiosConfig,api";
+
 interface CompanyRequest {
   companyData: {
     companyName: string;

@@ -123,21 +123,6 @@ export default function AccordionExpandDefault() {
                     </Typography>
                 </AccordionDetails>
             </Accordion>
-            {/* <Accordion className='mt-4 mb-4'>
-                <AccordionSummary
-                    expandIcon={<ExpandMoreIcon />}
-                    aria-controls="panel2-content"
-                    style={{ color: "#1A4381" }}
-                    id="panel2-header"
-                >
-                    <Typography component="span" style={{ fontWeight: "500" }}>{page.questions.q8[language]}</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                    <Typography style={{ fontSize: "14px" }}>
-                        {page.answers.a8[language]}
-                    </Typography>
-                </AccordionDetails>
-            </Accordion> */}
             <Accordion className='mt-4 mb-4'>
                 <AccordionSummary
                     expandIcon={<ExpandMoreIcon />}

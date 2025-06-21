@@ -88,19 +88,16 @@ export default function ApplyFour() {
     let updatedValue;
 
     if (name === "neededBudget") {
-      // Boş dəyər üçün 0 təyin et
       if (value === "" || value === null || value === undefined) {
         updatedValue = 0;
       } else {
-        // String-i təmizlə və yalnız rəqəmləri saxla
-        const cleanedValue = value.toString().replace(/[^0-9]/g, '');
+        const cleanedValue = value.toString().replace(/[^0-9]/g, "");
 
         if (cleanedValue === "" || cleanedValue === "0") {
           updatedValue = 0;
         } else {
-          // Başlanğıcdakı 0-ları sil
-          const withoutLeadingZeros = cleanedValue.replace(/^0+/, '');
-          updatedValue = parseInt(withoutLeadingZeros || '0', 10);
+          const withoutLeadingZeros = cleanedValue.replace(/^0+/, "");
+          updatedValue = parseInt(withoutLeadingZeros || "0", 10);
         }
       }
     } else {
@@ -127,7 +124,7 @@ export default function ApplyFour() {
     setErrors((prev) => ({
       ...prev,
       [parentName]: {
-        ...((prev[parentName as keyof ErrorsType] || {})),
+        ...(prev[parentName as keyof ErrorsType] || {}),
         [name]: "",
       },
     }));
@@ -136,7 +133,10 @@ export default function ApplyFour() {
   const validateForm = (): boolean => {
     const errors: ErrorsType = {};
 
-    if (formData.finance.financialNeed === undefined || formData.finance.financialNeed === null) {
+    if (
+      formData.finance.financialNeed === undefined ||
+      formData.finance.financialNeed === null
+    ) {
       errors.finance = {
         ...errors.finance,
         financialNeed: page.errorMessages.requiredField[language],
@@ -145,7 +145,9 @@ export default function ApplyFour() {
 
     if (
       formData.finance.financialNeed === true &&
-      (formData.finance.neededBudget === 0 || formData.finance.neededBudget === null || formData.finance.neededBudget === undefined)
+      (formData.finance.neededBudget === 0 ||
+        formData.finance.neededBudget === null ||
+        formData.finance.neededBudget === undefined)
     ) {
       errors.finance = {
         ...errors.finance,
@@ -153,24 +155,34 @@ export default function ApplyFour() {
       };
     }
 
-    if (formData.digital.digitalTeamOrLead === null || formData.digital.digitalTeamOrLead === undefined) {
+    if (
+      formData.digital.digitalTeamOrLead === null ||
+      formData.digital.digitalTeamOrLead === undefined
+    ) {
       errors.digital = {
         ...errors.digital,
         digitalTeamOrLead: page.errorMessages.requiredField[language],
       };
     }
 
-    if (formData.digital.digitalPath === null || formData.digital.digitalPath === undefined) {
+    if (
+      formData.digital.digitalPath === null ||
+      formData.digital.digitalPath === undefined
+    ) {
       errors.digital = {
         ...errors.digital,
         digitalPath: page.errorMessages.requiredField[language],
       };
     }
 
-    if (formData.digital.digitalTransformationLoyality === null || formData.digital.digitalTransformationLoyality === undefined) {
+    if (
+      formData.digital.digitalTransformationLoyality === null ||
+      formData.digital.digitalTransformationLoyality === undefined
+    ) {
       errors.digital = {
         ...errors.digital,
-        digitalTransformationLoyality: page.errorMessages.requiredField[language],
+        digitalTransformationLoyality:
+          page.errorMessages.requiredField[language],
       };
     }
 
@@ -188,10 +200,8 @@ export default function ApplyFour() {
     }
   };
 
-  // Budget input üçün xüsusi handler
   const handleBudgetKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    // Mənfi işarəsi, nöqtə, vergül və hərf simvollarını blokla
-    const blockedKeys = ['-', '+', 'e', 'E', '.', ','];
+    const blockedKeys = ["-", "+", "e", "E", ".", ","];
 
     if (blockedKeys.includes(e.key)) {
       e.preventDefault();
@@ -202,12 +212,10 @@ export default function ApplyFour() {
     const target = e.target as HTMLInputElement;
     let value = target.value;
 
-    // Yalnız rəqəmləri saxla
-    value = value.replace(/[^0-9]/g, '');
+    value = value.replace(/[^0-9]/g, "");
 
-    // Əgər dəyər başlanğıcda 0 ilə başlayır və 1-dən çox simvol varsa
-    if (value.length > 1 && value.startsWith('0')) {
-      value = value.replace(/^0+/, '') || '0';
+    if (value.length > 1 && value.startsWith("0")) {
+      value = value.replace(/^0+/, "") || "0";
     }
 
     target.value = value;
@@ -226,9 +234,7 @@ export default function ApplyFour() {
         </div>
 
         <div className="w-full max-w-2xl space-y-6 text-white">
-          {/* Leadership */}
           <div className="space-y-6">
-            {/* Digital Team or Lead */}
             <div className="space-y-2">
               <label className="text-sm md:text-base">
                 {page.digitalTransformationLeader[language]}
@@ -246,7 +252,7 @@ export default function ApplyFour() {
                       checked={
                         formData.digital.digitalTeamOrLead !== null &&
                         formData.digital.digitalTeamOrLead ===
-                        (option === "Bəli" ? true : false)
+                          (option === "Bəli" ? true : false)
                       }
                       onChange={handleInputChange}
                       className="hidden"
@@ -254,7 +260,7 @@ export default function ApplyFour() {
                     <span className="w-5 h-5 flex items-center justify-center border border-gray-400 rounded">
                       {formData.digital.digitalTeamOrLead !== null &&
                         formData.digital.digitalTeamOrLead ===
-                        (option === "Bəli" ? true : false) && (
+                          (option === "Bəli" ? true : false) && (
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
                             className="w-4 h-4 text-blue-500"
@@ -274,7 +280,7 @@ export default function ApplyFour() {
                     <span className="text-sm">
                       {
                         page.optionLabels[option === "Bəli" ? "yes" : "no"][
-                        language
+                          language
                         ]
                       }
                     </span>
@@ -288,7 +294,6 @@ export default function ApplyFour() {
               )}
             </div>
 
-            {/* Digital Path */}
             <div className="space-y-2">
               <label className="text-sm md:text-base">
                 {page.hasStrategy[language]}
@@ -297,8 +302,9 @@ export default function ApplyFour() {
                 {["Bəli", "Xeyr"].map((option) => (
                   <label
                     key={option}
-                    className={`flex items-center cursor-pointer space-x-2 ${errors.digital?.digitalPath ? "text-red-400" : ""
-                      }`}
+                    className={`flex items-center cursor-pointer space-x-2 ${
+                      errors.digital?.digitalPath ? "text-red-400" : ""
+                    }`}
                   >
                     <input
                       type="radio"
@@ -337,7 +343,7 @@ export default function ApplyFour() {
                     <span className="text-sm">
                       {
                         page.optionLabels[option === "Bəli" ? "yes" : "no"][
-                        language
+                          language
                         ]
                       }
                     </span>
@@ -352,7 +358,6 @@ export default function ApplyFour() {
               )}
             </div>
 
-            {/* Digital Transformation Loyalty */}
             <div className="space-y-2">
               <label className="text-sm md:text-base">
                 {page.highLevelManagementSupport[language]}
@@ -361,17 +366,19 @@ export default function ApplyFour() {
                 {["Bəli", "Xeyr"].map((option) => (
                   <label
                     key={option}
-                    className={`flex items-center cursor-pointer space-x-2 ${errors.digital?.digitalTransformationLoyality
+                    className={`flex items-center cursor-pointer space-x-2 ${
+                      errors.digital?.digitalTransformationLoyality
                         ? "text-red-400"
                         : ""
-                      }`}
+                    }`}
                   >
                     <input
                       type="radio"
                       name="digitalTransformationLoyality"
                       value={option}
                       checked={
-                        formData.digital.digitalTransformationLoyality !== null &&
+                        formData.digital.digitalTransformationLoyality !==
+                          null &&
                         (formData.digital.digitalTransformationLoyality === true
                           ? "Bəli"
                           : "Xeyr") === option
@@ -380,7 +387,8 @@ export default function ApplyFour() {
                       className="hidden"
                     />
                     <span className="w-5 h-5 flex items-center justify-center border border-gray-400 rounded">
-                      {formData.digital.digitalTransformationLoyality !== null &&
+                      {formData.digital.digitalTransformationLoyality !==
+                        null &&
                         (formData.digital.digitalTransformationLoyality === true
                           ? "Bəli"
                           : "Xeyr") === option && (
@@ -403,7 +411,7 @@ export default function ApplyFour() {
                     <span className="text-sm">
                       {
                         page.optionLabels[option === "Bəli" ? "yes" : "no"][
-                        language
+                          language
                         ]
                       }
                     </span>
@@ -419,13 +427,11 @@ export default function ApplyFour() {
             </div>
           </div>
 
-          {/* Financial Section */}
           <div className="pt-6 border-t border-gray-700/30">
             <h2 className="text-xl md:text-2xl font-medium mb-6 text-center">
               {page.financialNeeds.title[language]}
             </h2>
 
-            {/* Financial Need */}
             <div className="space-y-2 mb-6">
               <label className="text-sm md:text-base">
                 {page.financialNeeds.question[language]}
@@ -434,8 +440,9 @@ export default function ApplyFour() {
                 {["Bəli", "Xeyr"].map((option) => (
                   <label
                     key={option}
-                    className={`flex items-center cursor-pointer space-x-2 ${errors.finance?.financialNeed ? "text-red-400" : ""
-                      }`}
+                    className={`flex items-center cursor-pointer space-x-2 ${
+                      errors.finance?.financialNeed ? "text-red-400" : ""
+                    }`}
                   >
                     <input
                       type="radio"
@@ -474,7 +481,7 @@ export default function ApplyFour() {
                     <span className="text-sm">
                       {
                         page.optionLabels[option === "Bəli" ? "yes" : "no"][
-                        language
+                          language
                         ]
                       }
                     </span>
@@ -489,7 +496,6 @@ export default function ApplyFour() {
               )}
             </div>
 
-            {/* Needed Budget - Show when financialNeed is "Bəli" */}
             {formData.finance.financialNeed === true && (
               <div className="space-y-2">
                 <label className="text-sm md:text-base">
@@ -499,14 +505,19 @@ export default function ApplyFour() {
                   <input
                     type="text"
                     name="neededBudget"
-                    value={formData.finance.neededBudget === 0 ? "" : formData.finance.neededBudget}
+                    value={
+                      formData.finance.neededBudget === 0
+                        ? ""
+                        : formData.finance.neededBudget
+                    }
                     onChange={handleInputChange}
                     onKeyDown={handleBudgetKeyDown}
                     onInput={handleBudgetInput}
-                    className={`w-full bg-transparent border ${errors.finance?.neededBudget
+                    className={`w-full bg-transparent border ${
+                      errors.finance?.neededBudget
                         ? "border-red-400"
                         : "border-gray-700"
-                      } rounded p-3 focus:outline-none focus:border-blue-500`}
+                    } rounded p-3 focus:outline-none focus:border-blue-500`}
                     placeholder="AZN"
                     inputMode="numeric"
                   />
@@ -523,7 +534,6 @@ export default function ApplyFour() {
             )}
           </div>
 
-          {/* Buttons */}
           <div className="flex justify-between mt-8">
             <button
               className="w-[48%] cursor-pointer bg-blue-600 hover:bg-blue-700 text-white py-3 rounded transition duration-200"

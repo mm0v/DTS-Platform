@@ -102,7 +102,7 @@ export default function ApplyTwo() {
           setLocalLawData(savedData);
         }
 
-        // Check if the saved data has a custom industry value
+    
         if (savedData && savedData.businessOperations &&
           !["", "Qida və içkilər", "Neft - qaz", "Kimya", "Metallurgiya",
             "Maşın və avadanlıqların təmiri və quraşdırılması",
@@ -142,12 +142,11 @@ export default function ApplyTwo() {
     const updatedData = { ...localLawData, [name]: newValue };
     setLocalLawData(updatedData);
 
-    // Real-time validasiya - xüsusilə products üçün
     if (name === "products") {
       if (value.trim().length > 0 && value.trim().length < 3) {
         setLocalLawDataErrors((prev) => ({
           ...prev,
-          [name]: "Minimum 3 simvol daxil edilməlidir"
+          [name]: "Minimum 3 simvol daxil edilməlidir" //localizations
         }));
       } else {
         setLocalLawDataErrors((prev) => ({ ...prev, [name]: "" }));
@@ -187,11 +186,10 @@ export default function ApplyTwo() {
     if (!localLawData.businessOperations.trim())
       errors.businessOperations = page.businessIndustryRequired[language];
 
-    // Products üçün yenilənmiş validasiya
     if (!localLawData.products.trim()) {
       errors.products = page.mainProductsRequired[language];
     } else if (localLawData.products.trim().length < 3) {
-      errors.products = "Minimum 3 simvol daxil edilməlidir";
+      errors.products = "Minimum 3 simvol daxil edilməlidir"; //localizations
     }
 
     if (localLawData.exportActivity === null)
@@ -221,7 +219,7 @@ export default function ApplyTwo() {
         setLocalLawData(updatedData);
         updateLocalStorage(updatedData);
       } catch (error) {
-        console.error("Failed to save file to IndexedDB", error);
+        console.error("Failed to save file to IndexedDB", error); 
       }
     }
   };
@@ -239,7 +237,7 @@ export default function ApplyTwo() {
         </div>
 
         <div className="w-full max-w-2xl space-y-4 sm:space-y-6 relative z-20 px-4 sm:px-6">
-          {/* Company Type */}
+  
           <div className="space-y-2">
             <label className="text-sm">{page.companyType[language]}</label>
             <input
@@ -265,7 +263,7 @@ export default function ApplyTwo() {
             )}
           </div>
 
-          {/* Business Industry */}
+
           <div className="space-y-2">
             <label className="text-sm">
               {page.businessIndustry.label[language]}
@@ -302,7 +300,7 @@ export default function ApplyTwo() {
               </option>
               <option
                 className="text-white bg-[#131021]"
-                value="Maşın və avadanlıqların təmiri və quraşdırılması"
+                value="Maşın və avadanlıqların təmiri və quraşdırılması" //localizations
               >
                 {
                   page.businessIndustry.options.machineRepairAndInstallation[
@@ -334,7 +332,6 @@ export default function ApplyTwo() {
               </option>
             </select>
 
-            {/* Custom Industry Input */}
             {showCustomInput && (
               <input
                 type="text"
@@ -355,7 +352,6 @@ export default function ApplyTwo() {
             )}
           </div>
 
-          {/* Main Products */}
           <div className="space-y-2">
             <label className="text-sm">{page.mainProducts[language]}</label>
             <input
@@ -381,7 +377,6 @@ export default function ApplyTwo() {
             )}
           </div>
 
-          {/* Export Activity */}
           <div className="space-y-2">
             <label className="text-sm">{page.exportActivity[language]}</label>
             <div className="flex items-center space-x-4">
@@ -515,7 +510,6 @@ export default function ApplyTwo() {
             )}
           </div>
 
-          {/* RegisterCertificate upload */}
           <div className="space-y-2">
             <label className="text-sm ">
               {page.registerCertificate[language]}
@@ -554,7 +548,6 @@ export default function ApplyTwo() {
             </div>
           </div>
 
-          {/* Buttons */}
           <div className="flex justify-between mt-6 sm:mt-8 gap-4">
             <button
               type="button"

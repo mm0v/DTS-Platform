@@ -35,7 +35,6 @@ const Our_Success = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-7xl mx-auto">
-          {/* Card 1 */}
           <div onMouseEnter={() => setExpanded1(!expanded1)}
             onMouseLeave={() => setExpanded1(!expanded1)}
             className={`cursor-pointer bg-white rounded-lg p-6 m-4 shadow-[2px_2px_12px_0px_#2323234D] border-[1px] border-[#D0D0D0] flex flex-col transition-all duration-300 ease-in-out overflow-hidden ${expanded1 ? "max-h-[1000px]" : "max-h-[260px]"
@@ -95,7 +94,6 @@ const Our_Success = () => {
             </div>
           </div>
 
-          {/* Card 2 */}
           <div onMouseEnter={() => setExpanded2(!expanded2)}
             onMouseLeave={() => setExpanded2(!expanded2)}
             className={`cursor-pointer bg-white rounded-lg p-6 m-4 shadow-[2px_2px_12px_0px_#2323234D] border-[1px] border-[#D0D0D0] flex flex-col transition-all duration-300 ease-in-out overflow-hidden ${expanded2 ? "max-h-[1000px]" : "max-h-[260px]"
@@ -203,7 +201,6 @@ const Our_Success = () => {
               </div>
               <div className="mt-6">
                 <p
-                  // onClick={() => setExpanded2(!expanded2)}
                   className={`font-normal text-16 text-[#323232] text-center transition-all duration-300 ease-in-out ${expanded2
                     ? "max-h-full whitespace-normal line-clamp-none"
                     : "max-h-[6.8em] overflow-hidden line-clamp-4"

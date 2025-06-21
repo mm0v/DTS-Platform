@@ -82,9 +82,6 @@ export default function ControlledAccordions() {
                   </div>
                 </div>
               </Typography>
-              {/* <Typography component="span" sx={{ color: 'text.secondary' }}>
-                        I am an accordion
-                    </Typography> */}
             </AccordionSummary>
             <AccordionDetails>
               <Typography className="text-center text-[#323232] font-semibold text-[14px] leading-[24px]">
@@ -279,9 +276,6 @@ export default function ControlledAccordions() {
                   </div>
                 </div>
               </Typography>
-              {/* <Typography component="span" sx={{ color: 'text.secondary' }}>
-                        You are currently not an owner
-                    </Typography> */}
             </AccordionSummary>
             <AccordionDetails>
               <Typography className="text-center text-[#323232] font-semibold text-[14px] leading-[24px]">
@@ -375,9 +369,6 @@ export default function ControlledAccordions() {
                   </div>
                 </div>
               </Typography>
-              {/* <Typography component="span" sx={{ color: 'text.secondary' }}>
-                        Filtering has been entirely disabled for whole web server
-                    </Typography> */}
             </AccordionSummary>
             <AccordionDetails>
               <Typography className="text-center text-[#323232] font-semibold text-[14px] leading-[24px]">

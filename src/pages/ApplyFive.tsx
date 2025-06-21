@@ -8,9 +8,9 @@ import { FormContext } from "../context/FormContext";
 import { useLanguage } from "../context/LanguageContext";
 import ApplySteps from "../components/ApplySteps";
 import { motion, AnimatePresence } from "framer-motion";
-import { companyService } from "../services/companyService";
+import { companyService } from "../services/Operation/company.service";
 import ReCAPTCHA from "react-google-recaptcha";
-import useRecaptcha from "../services/recapture";
+import useRecaptcha from "../services/Operation/recapture.service";
 
 const DB_NAME = "ALL files";
 const STORE_NAME = "files";
@@ -609,7 +609,6 @@ export default function ApplyFive() {
             <h1 className="text-3xl font-bold">{page.title[language]}</h1>
           </div>
           <form className="space-y-8">
-            {/* Company registry file */}
             <div className="space-y-2">
               <label
                 htmlFor="companyRegistry"
@@ -663,7 +662,6 @@ export default function ApplyFive() {
               )}
             </div>
 
-            {/* Financial reports file */}
             <div className="space-y-2">
               <label
                 htmlFor="financialReports"
@@ -721,7 +719,6 @@ export default function ApplyFive() {
               )}
             </div>
 
-            {/* Agreement checkboxes */}
             <div className="space-y-4">
               <div className="flex items-start">
                 <label
@@ -844,7 +841,6 @@ export default function ApplyFive() {
               onChange={handleRecaptcha}
             />
 
-            {/* Buttons */}
             <div className="flex space-x-4 mt-10">
               <button
                 type="button"
@@ -869,7 +865,6 @@ export default function ApplyFive() {
                     : "bg-blue-900/50 text-gray-400 cursor-not-allowed "
                 }`}
               >
-                {/* {page.buttons.confirm[language]} */}
                 {localIsSubmitting
                   ? page.buttons.submitting[language]
                   : page.buttons.confirm[language]}

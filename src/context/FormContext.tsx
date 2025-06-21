@@ -1,8 +1,4 @@
-// Update your FormContext.tsx to include the new properties
-
 import { createContext } from "react";
-
-// Update the FormContextType to include the file state
 export interface FormContextType {
   formData: {
     companyData: {

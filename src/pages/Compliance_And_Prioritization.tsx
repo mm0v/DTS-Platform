@@ -12,7 +12,6 @@ const Compliance_And_Prioritization = () => {
       <BackgroundVideo />
       <ToContact />
 
-
       <div className="text-center">
         <h1 className="text-2xl pl-2 pr-2 md:text-5xl font-semibold text-[#FAFAFA] pb-18 mb-10 leading-[36px] md:leading-[48px]">
           {page.title[language]}
@@ -30,13 +29,14 @@ const Compliance_And_Prioritization = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-7xl mx-auto">
-
-          {/* Card 1 */}
           <div className="bg-white rounded-lg p-6 m-4 shadow-[2px_2px_12px_0px_#2323234D] border-[1px] border-[#D0D0D0] flex flex-col">
             <div className="flex items-center mb-4 flex-wrap sm:flex-nowrap">
               <div className=" p-2  mr-4">
-                {/* <ClipboardList size={24} className="text-blue-600" />*/}
-                <img alt="logo" src="/img/Comp_Prior/1.gif" className="w-28 h-28 object-contain" />
+                <img
+                  alt="logo"
+                  src="/img/Comp_Prior/1.gif"
+                  className="w-28 h-28 object-contain"
+                />
               </div>
               <div>
                 <h3 className=" text-[#323232] mb-2 font-medium text-[30px]">
@@ -49,12 +49,14 @@ const Compliance_And_Prioritization = () => {
             </div>
           </div>
 
-          {/* Card 2 */}
           <div className="bg-white rounded-lg p-6 m-4 shadow-[2px_2px_12px_0px_#2323234D] border-[1px] border-[#D0D0D0] flex flex-col">
             <div className="flex items-center mb-4 flex-wrap sm:flex-nowrap">
               <div className=" p-2 mr-4">
-                {/*<Briefcase size={24} className="text-blue-600" />*/}
-                <img alt="logo" src="/img/Comp_Prior/2.gif" className="w-28 h-28 object-contain" />
+                <img
+                  alt="logo"
+                  src="/img/Comp_Prior/2.gif"
+                  className="w-28 h-28 object-contain"
+                />
               </div>
               <div>
                 <h3 className=" text-[#323232] mb-2 font-medium text-[30px]">
@@ -67,12 +69,14 @@ const Compliance_And_Prioritization = () => {
             </div>
           </div>
 
-          {/* Card 3 */}
           <div className="bg-white rounded-lg p-6 m-4 shadow-[2px_2px_12px_0px_#2323234D] border-[1px] border-[#D0D0D0] flex flex-col">
             <div className="flex items-start mb-4 flex-wrap sm:flex-nowrap">
               <div className=" mr-4 flex items-start">
-                {/* <BarChart3 size={24} className="text-blue-600" />*/}
-                <img alt="logo" src="/img/Comp_Prior/3.gif" className="w-24 h-24 object-contain" />
+                <img
+                  alt="logo"
+                  src="/img/Comp_Prior/3.gif"
+                  className="w-24 h-24 object-contain"
+                />
               </div>
               <div>
                 <h3 className=" text-[#323232] mb-2 font-medium text-[30px]">
@@ -85,14 +89,18 @@ const Compliance_And_Prioritization = () => {
                   <div className="w-full sm:w-1/2">
                     <ul className="list-disc pl-5 text-base leading-5 font-medium text-gray-800 mt-3 space-y-2">
                       {page.cards[2]?.list?.[language]?.map((item, index) => (
-                        <li key={`list1-${index}`} className="">{item}</li>
+                        <li key={`list1-${index}`} className="">
+                          {item}
+                        </li>
                       ))}
                     </ul>
                   </div>
                   <div className="w-full sm:w-1/2">
                     <ul className="list-disc pl-5 text-base leading-5 font-medium text-gray-800 mt-3 space-y-2">
                       {page.cards[2]?.list2?.[language]?.map((item, index) => (
-                        <li key={`list2-${index}`} className="">{item}</li>
+                        <li key={`list2-${index}`} className="">
+                          {item}
+                        </li>
                       ))}
                     </ul>
                   </div>
@@ -101,12 +109,14 @@ const Compliance_And_Prioritization = () => {
             </div>
           </div>
 
-          {/* Card 4 */}
           <div className="bg-white rounded-lg p-6 m-4 shadow-[2px_2px_12px_0px_#2323234D] border-[1px] border-[#D0D0D0] flex flex-col">
             <div className="flex items-start mb-4 flex-wrap sm:flex-nowrap">
               <div className=" mr-4 flex items-start">
-                {/*   <UsersRound size={24} className="text-blue-600" />*/}
-                <img alt="logo" src="/img/Comp_Prior/4.gif" className="w-24 h-24 object-contain" />
+                <img
+                  alt="logo"
+                  src="/img/Comp_Prior/4.gif"
+                  className="w-24 h-24 object-contain"
+                />
               </div>
               <div>
                 <h3 className=" text-[#323232] mb-2 font-medium text-[30px]">
@@ -123,7 +133,6 @@ const Compliance_And_Prioritization = () => {
             </div>
           </div>
         </div>
-
 
         <div className="text-center mt-20 mb-4 p-3 max-w-5xl mx-auto ">
           <h1 className="mb-2 font-medium text-[24px] md:text-[36px] leading-[32px] md:leading-[40px] text-[#323232]">

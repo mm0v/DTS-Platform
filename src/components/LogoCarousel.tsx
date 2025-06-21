@@ -50,10 +50,8 @@ const LogoCarousel = () => {
         },
     ];
 
-    // Create a bigger array for infinite scrolling - using multiple clones for seamless looping
-    const clonedLogos: Logo[] = [...logos, ...logos, ...logos, ...logos, ...logos];
+    const clonedLogos: Logo[] = [...logos, ...logos, ...logos, ...logos, ...logos]; // ???
 
-    // Check if device is mobile
     useEffect(() => {
         const checkIsMobile = (): void => {
             setIsMobile(window.innerWidth < 768);
@@ -67,18 +65,14 @@ const LogoCarousel = () => {
         };
     }, []);
 
-    // Auto scroll animation with 2-second intervals - true loop effect
     useEffect(() => {
         const carousel = carouselRef.current;
         if (!carousel || !autoScroll) return;
 
-        // Calculate logo width based on viewport
         const logoWidth = isMobile ? carousel.clientWidth / 3 : carousel.clientWidth / 5;
         const singleLogoSetWidth = logos.length * logoWidth;
 
-        // Set initial starting point if needed
         if (currentPosition === 0) {
-            // Start at the first clone set (skip original set)
             carousel.scrollLeft = singleLogoSetWidth;
             setCurrentPosition(singleLogoSetWidth);
         }
@@ -88,10 +82,7 @@ const LogoCarousel = () => {
 
             let newPosition = carousel.scrollLeft + logoWidth;
 
-            // Create infinite loop effect
-            // If we reached near the end clones, jump back to the equivalent position in the first clone set
             if (newPosition > singleLogoSetWidth * 3) {
-                // Jump to the equivalent position in the first clone set without animation
                 carousel.style.scrollBehavior = 'auto';
                 newPosition = singleLogoSetWidth + (newPosition % singleLogoSetWidth);
                 carousel.scrollLeft = newPosition;
@@ -99,7 +90,6 @@ const LogoCarousel = () => {
                     if (carousel) carousel.style.scrollBehavior = 'smooth';
                 }, 10);
             } else {
-                // Normal smooth scroll
                 carousel.scrollTo({
                     left: newPosition,
                     behavior: 'smooth'
@@ -109,7 +99,6 @@ const LogoCarousel = () => {
             setCurrentPosition(newPosition);
         };
 
-        // Set interval for movement - exactly 2 seconds
         const scrollInterval = setInterval(moveCarousel, 2000);
 
         return () => {
@@ -117,7 +106,6 @@ const LogoCarousel = () => {
         };
     }, [autoScroll, logos.length, isMobile, currentPosition]);
 
-    // Handle interaction start
     const handleInteractionStart = (e: React.MouseEvent | React.TouchEvent): void => {
         setAutoScroll(false);
         setIsDragging(true);
@@ -125,13 +113,11 @@ const LogoCarousel = () => {
         const carousel = carouselRef.current;
         if (!carousel) return;
 
-        // Get starting position
         const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
         setStartX(clientX);
         setScrollLeft(carousel.scrollLeft);
     };
 
-    // Handle dragging
     const handleDrag = (e: React.MouseEvent | React.TouchEvent): void => {
         if (!isDragging) return;
         e.preventDefault();
@@ -139,31 +125,25 @@ const LogoCarousel = () => {
         const carousel = carouselRef.current;
         if (!carousel) return;
 
-        // Get current position and calculate movement
         const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
         const distance = clientX - startX;
         carousel.scrollLeft = scrollLeft - distance;
         setCurrentPosition(carousel.scrollLeft);
     };
 
-    // Handle interaction end
     const handleInteractionEnd = (): void => {
         setIsDragging(false);
 
-        // Handle loop correction
         const carousel = carouselRef.current;
         if (carousel) {
             const logoWidth = isMobile ? carousel.clientWidth / 3 : carousel.clientWidth / 5;
             const singleLogoSetWidth = logos.length * logoWidth;
 
-            // Create infinite loop effect
             if (carousel.scrollLeft < singleLogoSetWidth) {
-                // If scrolled before the first clone set, move to equivalent position in middle
                 carousel.style.scrollBehavior = 'auto';
                 carousel.scrollLeft = singleLogoSetWidth * 2 - (singleLogoSetWidth - carousel.scrollLeft);
                 setCurrentPosition(carousel.scrollLeft);
             } else if (carousel.scrollLeft > singleLogoSetWidth * 3) {
-                // If scrolled past the third clone set, move to equivalent position in second
                 carousel.style.scrollBehavior = 'auto';
                 carousel.scrollLeft = singleLogoSetWidth + (carousel.scrollLeft % singleLogoSetWidth);
                 setCurrentPosition(carousel.scrollLeft);
@@ -174,7 +154,6 @@ const LogoCarousel = () => {
             }, 10);
         }
 
-        // Resume auto-scroll after pause
         setTimeout(() => setAutoScroll(true), 4000);
     };
 
@@ -186,7 +165,6 @@ const LogoCarousel = () => {
             setCurrentPosition(carousel.scrollLeft);
         }
 
-        // Resume auto-scroll after pause
         setTimeout(() => setAutoScroll(true), 4000);
     };
 

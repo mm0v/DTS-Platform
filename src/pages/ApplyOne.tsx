@@ -54,41 +54,36 @@ export default function ApplyOne() {
     setLocalFormData(savedData);
   }, []);
 
-  // Validation functions
   const validateCompanyName = (value: string) => {
     if (!value.trim()) {
-      return "Boş buraxıla bilməz, minimum 2, maksimum 255 simvol";
+      return "Boş buraxıla bilməz, minimum 2, maksimum 255 simvol"; // localization
     }
     if (value.trim().length < 2) {
-      return "Boş buraxıla bilməz, minimum 2, maksimum 255 simvol";
+      return "Boş buraxıla bilməz, minimum 2, maksimum 255 simvol"; // localization
     }
     if (value.trim().length > 255) {
-      return "255+ simvol yaza bilməzsiniz";
+      return "255+ simvol yaza bilməzsiniz"; // localization
     }
     return "";
   };
 
-  // Company Register Number validation - Enhanced
   const validateCompanyRegisterNumber = (value: string) => {
     if (!value.trim()) {
       return page.companyRegisterNumberRequired[language];
     }
 
-    // Only allow latin letters and numbers
     const alphanumericPattern = /^[a-zA-Z0-9]+$/;
     if (!alphanumericPattern.test(value.trim())) {
-      return "Yalnız latın hərifləri və rəqəmlər daxil edilə bilər";
+      return "Yalnız latın hərifləri və rəqəmlər daxil edilə bilər"; // localization
     }
 
-    // Max 50 characters
     if (value.trim().length > 50) {
-      return "Maksimum 50 simvol ola bilər";
+      return "Maksimum 50 simvol ola bilər"; // localization
     }
 
     return "";
   };
 
-  // Create Year validation - Enhanced with business logic
   const validateCreateYear = (value: string) => {
     if (!value.trim()) {
       return page.createYearRequired[language];
@@ -97,12 +92,10 @@ export default function ApplyOne() {
     const year = parseInt(value, 10);
     const currentYear = new Date().getFullYear();
 
-    // Check if it's a valid 4-digit year
     if (!/^\d{4}$/.test(value)) {
       return "4 rəqəmli il daxil edin";
     }
 
-    // Reasonable business founding year (not before 1700 and not in future)
     if (year < 1000) {
       return "Şirkətin yaranma ili 1000-dən əvvəl ola bilməz";
     }
@@ -111,7 +104,6 @@ export default function ApplyOne() {
       return "Şirkətin yaranma ili gələcəkdə ola bilməz";
     }
 
-    // Additional business logic - warn if company is too old or too new
     if (year < 1000) {
       return "Şirkətin yaranma ili çox köhnə görünür";
     }
@@ -129,28 +121,26 @@ export default function ApplyOne() {
     return "";
   };
 
-  // Updated website validation - now required
   const validateWebsite = (value: string) => {
     if (!value.trim()) {
-      return "Veb sayt tələb olunur"; // Website is now required
+      return "Veb sayt tələb olunur"; // Lozalization
     }
 
     const urlPattern = /^(https?:\/\/)([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(\/.*)?$/;
     if (!urlPattern.test(value.trim())) {
-      return "URL tam olmalıdır (http:// və ya https:// ilə başlamalıdır)";
+      return "URL tam olmalıdır (http:// və ya https:// ilə başlamalıdır)"; // Lozalization
     }
     return "";
   };
 
-  // Optional website validation for real-time input (when user is typing)
   const validateWebsiteOptional = (value: string) => {
     if (!value.trim()) {
-      return ""; // Website is optional during typing
+      return ""; // Website is optional during typing // Lozalization
     }
 
     const urlPattern = /^(https?:\/\/)([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(\/.*)?$/;
     if (!urlPattern.test(value.trim())) {
-      return "URL tam olmalıdır (http:// və ya https:// ilə başlamalıdır)";
+      return "URL tam olmalıdır (http:// və ya https:// ilə başlamalıdır)"; // Lozalization
     }
     return "";
   };
@@ -162,7 +152,7 @@ export default function ApplyOne() {
 
     const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     if (!emailPattern.test(value.trim())) {
-      return "Düzgün email ünvanı daxil edin";
+      return "Düzgün email ünvanı daxil edin"; // Lozalization
     }
     return "";
   };
@@ -172,44 +162,34 @@ export default function ApplyOne() {
   ) => {
     const { name, value } = e.target;
 
-    // Enhanced createYear validation during input
     if (name === "createYear") {
-      // Only allow 4 digits
       if (!/^\d{0,4}$/.test(value)) return;
 
       if (value.length === 4) {
         const year = parseInt(value, 10);
         const currentYear = new Date().getFullYear();
 
-        // Don't allow future years or unreasonably old years
         if (year < 1000 || year > currentYear) return;
       }
     }
 
-    // Enhanced companyRegisterNumber validation during input
     if (name === "companyRegisterNumber") {
-      // Only allow alphanumeric characters and limit to 50
       if (value.length > 50) return;
       if (!/^[a-zA-Z0-9]*$/.test(value)) return;
     }
 
-    // Enhanced companyName validation during input - allow typing but show error at 255+
     if (name === "companyName") {
-      // Allow typing beyond 255 to show the error message
-      if (value.length > 300) return; // Hard limit to prevent excessive input
+      if (value.length > 300) return;
     }
 
-    // Clear previous error for this field
     setErrors((prev) => ({ ...prev, [name]: "" }));
 
-    // Update form data
     setLocalFormData((prevState) => ({ ...prevState, [name]: value }));
     localStorage.setItem(
       "companyData",
       JSON.stringify({ ...companyData, [name]: value })
     );
 
-    // Real-time validation
     let error = "";
     switch (name) {
       case "companyName":
@@ -225,7 +205,7 @@ export default function ApplyOne() {
         error = validateCompanyAddress(value);
         break;
       case "website":
-        error = validateWebsiteOptional(value); // Use optional validation during typing
+        error = validateWebsiteOptional(value);
         break;
       case "email":
         error = validateEmail(value);
@@ -237,7 +217,6 @@ export default function ApplyOne() {
     }
   };
 
-  // Enhanced phone validation
   const handlePhoneChange = (value: string) => {
     setLocalFormData((prev) => ({ ...prev, phone: value }));
     localStorage.setItem(
@@ -245,16 +224,15 @@ export default function ApplyOne() {
       JSON.stringify({ ...companyData, phone: value })
     );
 
-    // Extract only digits for validation
     const digits = value.replace(/\D/g, "");
     let errorMsg = "";
 
     if (digits.length === 0) {
-      errorMsg = "Zəhmət olmasa telefon nömrəsini daxil edin";
+      errorMsg = "Zəhmət olmasa telefon nömrəsini daxil edin"; // localization
     } else if (digits.length < 7) {
-      errorMsg = "Telefon nömrəsi ən azı 7 rəqəm olmalıdır";
+      errorMsg = "Telefon nömrəsi ən azı 7 rəqəm olmalıdır"; // localization
     } else if (digits.length > 15) {
-      errorMsg = "Telefon nömrəsi maksimum 15 rəqəm ola bilər";
+      errorMsg = "Telefon nömrəsi maksimum 15 rəqəm ola bilər"; // localization
     }
 
     setErrors((prev) => ({
@@ -268,21 +246,21 @@ export default function ApplyOne() {
       key: keyof typeof localFormData;
       errorKey: keyof typeof page;
     }[] = [
-        { key: "companyName", errorKey: "companyNameRequired" },
-        {
-          key: "companyRegisterNumber",
-          errorKey: "companyRegisterNumberRequired",
-        },
-        { key: "createYear", errorKey: "createYearRequired" },
-        { key: "companySize", errorKey: "companySizeRequired" },
-        { key: "annualTurnover", errorKey: "annualTurnoverRequired" },
-        { key: "companyAddress", errorKey: "companyAddressRequired" },
-        { key: "location", errorKey: "locationRequired" },
-        { key: "website", errorKey: "websiteRequired" }, // Add website as required
-        { key: "contactPerson", errorKey: "contactPersonRequired" },
-        { key: "email", errorKey: "emailRequired" },
-        { key: "phone", errorKey: "phoneRequired" },
-      ];
+      { key: "companyName", errorKey: "companyNameRequired" },
+      {
+        key: "companyRegisterNumber",
+        errorKey: "companyRegisterNumberRequired",
+      },
+      { key: "createYear", errorKey: "createYearRequired" },
+      { key: "companySize", errorKey: "companySizeRequired" },
+      { key: "annualTurnover", errorKey: "annualTurnoverRequired" },
+      { key: "companyAddress", errorKey: "companyAddressRequired" },
+      { key: "location", errorKey: "locationRequired" },
+      { key: "website", errorKey: "websiteRequired" }, // Add website as required
+      { key: "contactPerson", errorKey: "contactPersonRequired" },
+      { key: "email", errorKey: "emailRequired" },
+      { key: "phone", errorKey: "phoneRequired" },
+    ];
 
     const newErrors: Record<string, string> = {};
 
@@ -292,7 +270,7 @@ export default function ApplyOne() {
       if (typeof value === "string" && !value.trim()) {
         // For website, use custom error message if errorKey doesn't exist
         if (key === "website" && !page.websiteRequired) {
-          newErrors[key] = "Veb sayt tələb olunur";
+          newErrors[key] = "Veb sayt tələb olunur"; // localization
         } else {
           newErrors[key] = page[errorKey][language];
         }
@@ -305,7 +283,9 @@ export default function ApplyOne() {
       newErrors.companyName = companyNameError;
     }
 
-    const companyRegisterNumberError = validateCompanyRegisterNumber(localFormData.companyRegisterNumber);
+    const companyRegisterNumberError = validateCompanyRegisterNumber(
+      localFormData.companyRegisterNumber
+    );
     if (companyRegisterNumberError) {
       newErrors.companyRegisterNumber = companyRegisterNumberError;
     }
@@ -315,7 +295,9 @@ export default function ApplyOne() {
       newErrors.createYear = createYearError;
     }
 
-    const companyAddressError = validateCompanyAddress(localFormData.companyAddress);
+    const companyAddressError = validateCompanyAddress(
+      localFormData.companyAddress
+    );
     if (companyAddressError) {
       newErrors.companyAddress = companyAddressError;
     }
@@ -334,11 +316,11 @@ export default function ApplyOne() {
     // Enhanced phone validation
     const digits = localFormData.phone.replace(/\D/g, "");
     if (digits.length === 0) {
-      newErrors.phone = "Zəhmət olmasa telefon nömrəsini daxil edin";
+      newErrors.phone = "Zəhmət olmasa telefon nömrəsini daxil edin"; // localization
     } else if (digits.length < 7) {
-      newErrors.phone = "Telefon nömrəsi ən azı 7 rəqəm olmalıdır";
+      newErrors.phone = "Telefon nömrəsi ən azı 7 rəqəm olmalıdır"; // localization
     } else if (digits.length > 15) {
-      newErrors.phone = "Telefon nömrəsi maksimum 15 rəqəm ola bilər";
+      newErrors.phone = "Telefon nömrəsi maksimum 15 rəqəm ola bilər"; // localization
     }
 
     if (Object.keys(newErrors).length > 0) {
@@ -356,27 +338,26 @@ export default function ApplyOne() {
       key: keyof typeof errors;
       errorKey: keyof typeof page;
     }[] = [
-        { key: "companyName", errorKey: "companyNameRequired" },
-        {
-          key: "companyRegisterNumber",
-          errorKey: "companyRegisterNumberRequired",
-        },
-        { key: "createYear", errorKey: "createYearRequired" },
-        { key: "companySize", errorKey: "companySizeRequired" },
-        { key: "annualTurnover", errorKey: "annualTurnoverRequired" },
-        { key: "companyAddress", errorKey: "companyAddressRequired" },
-        { key: "location", errorKey: "locationRequired" },
-        { key: "website", errorKey: "websiteRequired" }, // Add website to language update
-        { key: "contactPerson", errorKey: "contactPersonRequired" },
-        { key: "email", errorKey: "emailRequired" },
-        { key: "phone", errorKey: "phoneRequired" },
-      ];
+      { key: "companyName", errorKey: "companyNameRequired" },
+      {
+        key: "companyRegisterNumber",
+        errorKey: "companyRegisterNumberRequired",
+      },
+      { key: "createYear", errorKey: "createYearRequired" },
+      { key: "companySize", errorKey: "companySizeRequired" },
+      { key: "annualTurnover", errorKey: "annualTurnoverRequired" },
+      { key: "companyAddress", errorKey: "companyAddressRequired" },
+      { key: "location", errorKey: "locationRequired" },
+      { key: "website", errorKey: "websiteRequired" },
+      { key: "contactPerson", errorKey: "contactPersonRequired" },
+      { key: "email", errorKey: "emailRequired" },
+      { key: "phone", errorKey: "phoneRequired" },
+    ];
 
     const updatedErrors: Record<string, string> = {};
 
     requiredFields.forEach(({ key, errorKey }) => {
       if (errors[key]) {
-        // For website, use custom error message if errorKey doesn't exist
         if (key === "website" && !page.websiteRequired) {
           updatedErrors[key] = "Veb sayt tələb olunur";
         } else {
@@ -401,7 +382,6 @@ export default function ApplyOne() {
         </div>
 
         <div className="w-full max-w-2xl space-y-6 relative z-20">
-          {/* Company Name */}
           <div className="space-y-2">
             <label className="text-sm">{page.companyName[language]}</label>
             <input
@@ -411,10 +391,11 @@ export default function ApplyOne() {
               onChange={handleInputChange}
               minLength={2}
               maxLength={255}
-              className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${errors.companyName
-                ? "border-red-500 focus:ring-red-500"
-                : "border-gray-700 focus:ring-blue-500"
-                }`}
+              className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${
+                errors.companyName
+                  ? "border-red-500 focus:ring-red-500"
+                  : "border-gray-700 focus:ring-blue-500"
+              }`}
             />
             {errors.companyName && (
               <p className="text-red-500 text-sm">{errors.companyName}</p>
@@ -422,7 +403,6 @@ export default function ApplyOne() {
           </div>
 
           <div className="flex gap-4">
-            {/* Company Register Number - Enhanced */}
             <div className="flex-1 space-y-2">
               <label className="text-sm">
                 {page.companyRegisterNumber[language]}
@@ -434,10 +414,11 @@ export default function ApplyOne() {
                 onChange={handleInputChange}
                 maxLength={50}
                 placeholder="Yalnız hərf və rəqəmlər"
-                className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${errors.companyRegisterNumber
-                  ? "border-red-500 focus:ring-red-500"
-                  : "border-gray-700 focus:ring-blue-500"
-                  }`}
+                className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${
+                  errors.companyRegisterNumber
+                    ? "border-red-500 focus:ring-red-500"
+                    : "border-gray-700 focus:ring-blue-500"
+                }`}
               />
               {errors.companyRegisterNumber && (
                 <p className="text-red-500 text-sm">
@@ -446,7 +427,6 @@ export default function ApplyOne() {
               )}
             </div>
 
-            {/* Create Year - Enhanced */}
             <div className="flex-1 space-y-2">
               <label className="text-sm">{page.createYear[language]}</label>
               <input
@@ -456,10 +436,11 @@ export default function ApplyOne() {
                 onChange={handleInputChange}
                 maxLength={4}
                 placeholder="YYYY"
-                className={`no-spinner w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${errors.createYear
-                  ? "border-red-500 focus:ring-red-500"
-                  : "border-gray-700 focus:ring-blue-500"
-                  }`}
+                className={`no-spinner w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${
+                  errors.createYear
+                    ? "border-red-500 focus:ring-red-500"
+                    : "border-gray-700 focus:ring-blue-500"
+                }`}
               />
               {errors.createYear && (
                 <p className="text-red-500 text-sm">{errors.createYear}</p>
@@ -475,10 +456,11 @@ export default function ApplyOne() {
                 name="companySize"
                 value={localFormData.companySize}
                 onChange={handleInputChange}
-                className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${errors.companySize
-                  ? "border-red-500 focus:ring-red-500"
-                  : "border-gray-700 focus:ring-blue-500"
-                  }`}
+                className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${
+                  errors.companySize
+                    ? "border-red-500 focus:ring-red-500"
+                    : "border-gray-700 focus:ring-blue-500"
+                }`}
               >
                 <option className="text-white bg-[#070618]" value="">
                   {page.placeholder[language]}
@@ -510,10 +492,11 @@ export default function ApplyOne() {
                 name="annualTurnover"
                 value={localFormData.annualTurnover}
                 onChange={handleInputChange}
-                className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${errors.annualTurnover
-                  ? "border-red-500 focus:ring-red-500"
-                  : "border-gray-700 focus:ring-blue-500"
-                  }`}
+                className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${
+                  errors.annualTurnover
+                    ? "border-red-500 focus:ring-red-500"
+                    : "border-gray-700 focus:ring-blue-500"
+                }`}
               >
                 <option className="text-white bg-[#070618]" value="">
                   {page.placeholder[language]}
@@ -542,10 +525,11 @@ export default function ApplyOne() {
               name="companyAddress"
               value={localFormData.companyAddress}
               onChange={handleInputChange}
-              className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${errors.companyAddress
-                ? "border-red-500 focus:ring-red-500"
-                : "border-gray-700 focus:ring-blue-500"
-                }`}
+              className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${
+                errors.companyAddress
+                  ? "border-red-500 focus:ring-red-500"
+                  : "border-gray-700 focus:ring-blue-500"
+              }`}
             />
             {errors.companyAddress && (
               <p className="text-red-500 text-sm">{errors.companyAddress}</p>
@@ -560,10 +544,11 @@ export default function ApplyOne() {
               name="location"
               value={localFormData.location}
               onChange={handleInputChange}
-              className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${errors.location
-                ? "border-red-500 focus:ring-red-500"
-                : "border-gray-700 focus:ring-blue-500"
-                }`}
+              className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${
+                errors.location
+                  ? "border-red-500 focus:ring-red-500"
+                  : "border-gray-700 focus:ring-blue-500"
+              }`}
             />
             {errors.location && (
               <p className="text-red-500 text-sm">{errors.location}</p>
@@ -579,10 +564,11 @@ export default function ApplyOne() {
               value={localFormData.website}
               onChange={handleInputChange}
               placeholder="https://example.com"
-              className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${errors.website
-                ? "border-red-500 focus:ring-red-500"
-                : "border-gray-700 focus:ring-blue-500"
-                }`}
+              className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${
+                errors.website
+                  ? "border-red-500 focus:ring-red-500"
+                  : "border-gray-700 focus:ring-blue-500"
+              }`}
             />
             {errors.website && (
               <p className="text-red-500 text-sm">{errors.website}</p>
@@ -597,10 +583,11 @@ export default function ApplyOne() {
               name="contactPerson"
               value={localFormData.contactPerson}
               onChange={handleInputChange}
-              className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${errors.contactPerson
-                ? "border-red-500 focus:ring-red-500"
-                : "border-gray-700 focus:ring-blue-500"
-                }`}
+              className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${
+                errors.contactPerson
+                  ? "border-red-500 focus:ring-red-500"
+                  : "border-gray-700 focus:ring-blue-500"
+              }`}
             />
             {errors.contactPerson && (
               <p className="text-red-500 text-sm">{errors.contactPerson}</p>
@@ -617,10 +604,11 @@ export default function ApplyOne() {
                 value={localFormData.email}
                 onChange={handleInputChange}
                 placeholder="example@domain.com"
-                className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${errors.email
-                  ? "border-red-500 focus:ring-red-500"
-                  : "border-gray-700 focus:ring-blue-500"
-                  }`}
+                className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${
+                  errors.email
+                    ? "border-red-500 focus:ring-red-500"
+                    : "border-gray-700 focus:ring-blue-500"
+                }`}
               />
               {errors.email && (
                 <p className="text-red-500 text-sm">{errors.email}</p>
@@ -635,10 +623,11 @@ export default function ApplyOne() {
                 defaultCountry="az"
                 value={localFormData.phone}
                 onChange={handlePhoneChange}
-                className={`w-full ${errors.phone
-                  ? "border border-red-500 rounded"
-                  : "border border-gray-700"
-                  }`}
+                className={`w-full ${
+                  errors.phone
+                    ? "border border-red-500 rounded"
+                    : "border border-gray-700"
+                }`}
               />
               {errors.phone && (
                 <p className="text-red-500 text-sm">{errors.phone}</p>
@@ -659,5 +648,3 @@ export default function ApplyOne() {
     </>
   );
 }
-
-// Enhanced with required website validation

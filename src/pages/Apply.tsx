@@ -6,7 +6,6 @@ import ApplyFour from "./ApplyFour";
 import { useState } from "react";
 import { FormContext } from "../context/FormContext";
 import type { FormContextType } from "../context/FormContext";
-// import ApplyFiveCopy from "./ApplyFive copy";
 import ApplyFive from "./ApplyFive";
 
 const Apply = () => {
