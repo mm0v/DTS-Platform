@@ -3,10 +3,10 @@
 import { useNavigate } from "react-router-dom";
 import { useContext, useState, useEffect } from "react";
 import type { ChangeEvent } from "react";
-import BackgroundVideo from "../components/BackgroundVideo";
-import { FormContext } from "../context/FormContext";
-import { useLanguage } from "../context/LanguageContext";
-import ApplySteps from "../components/ApplySteps";
+import BackgroundVideo from "../../components/videos/BackgroundVideo";
+import { FormContext } from "../../context/FormContext";
+import { useLanguage } from "../../context/LanguageContext";
+import ApplySteps from "../../components/ApplySteps";
 import { ChevronDown, ChevronUp } from "lucide-react";
 
 interface DigitalReadiness {

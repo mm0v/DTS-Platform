@@ -1,11 +1,12 @@
 import { Routes, Route } from "react-router-dom";
+
+import { useState } from "react";
+import { FormContext } from "../../context/FormContext";
+import type { FormContextType } from "../../context/FormContext";
 import ApplyOne from "./ApplyOne";
 import ApplyTwo from "./ApplyTwo";
 import ApplyThree from "./ApplyThree";
 import ApplyFour from "./ApplyFour";
-import { useState } from "react";
-import { FormContext } from "../context/FormContext";
-import type { FormContextType } from "../context/FormContext";
 import ApplyFive from "./ApplyFive";
 
 const Apply = () => {

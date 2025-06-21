@@ -1,7 +1,7 @@
 import { useState } from "react";
-import BackgroundVideo from "../components/BackgroundVideo";
-import { useLanguage } from "../context/LanguageContext";
-import ToContact from "../components/ToContact";
+import BackgroundVideo from "../../components/videos/BackgroundVideo";
+import { useLanguage } from "../../context/LanguageContext";
+import ToContact from "../../components/ToContact";
 
 const Our_Success = () => {
   const [expanded1, setExpanded1] = useState(false);

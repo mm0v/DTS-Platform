@@ -16,7 +16,6 @@ const LogoCarousel = () => {
     const [isMobile, setIsMobile] = useState<boolean>(false);
     const [currentPosition, setCurrentPosition] = useState<number>(0);
 
-    // Logo data
     const logos: Logo[] = [
         {
             id: 1,
@@ -157,7 +156,6 @@ const LogoCarousel = () => {
         setTimeout(() => setAutoScroll(true), 4000);
     };
 
-    // Handle wheel events
     const handleWheel = (): void => {
         setAutoScroll(false);
         const carousel = carouselRef.current;

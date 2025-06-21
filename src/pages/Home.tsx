@@ -3,8 +3,8 @@ import { useLanguage } from "../context/LanguageContext";
 import LogoCarousel from '../components/LogoCarousel';
 import BasicModal from '../components/ModalMui';
 import Timeline from '../components/Timeline';
-import BackgroundVideo from '../components/BackgroundVideo';
-import VideoSection from '../components/VideoSection';
+import BackgroundVideo from '../components/videos/BackgroundVideo';
+import VideoSection from '../components/videos/VideoSection';
 import ToContact from '../components/ToContact';
 
 

@@ -1,9 +1,9 @@
-import ControlledAccordions from "../components/AccordionMui";
-import BackgroundVideo from "../components/BackgroundVideo";
+import ControlledAccordions from "../components/shared/AccordionMui";
+import BackgroundVideo from "../components/videos/BackgroundVideo";
 import ToContact from "../components/ToContact";
 import { useLanguage } from "../context/LanguageContext";
 
-const Compliance_And_Prioritization = () => {
+const ComplianceAndPrioritization = () => {
   const { language, pagesTranslations } = useLanguage();
   const page = pagesTranslations.compliance;
 
@@ -151,4 +151,4 @@ const Compliance_And_Prioritization = () => {
   );
 };
 
-export default Compliance_And_Prioritization;
+export default ComplianceAndPrioritization;

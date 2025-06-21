@@ -2,10 +2,10 @@
 
 import React, { useState, useContext, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import BackgroundVideo from "../components/BackgroundVideo";
-import { FormContext } from "../context/FormContext";
-import { useLanguage } from "../context/LanguageContext";
-import ApplySteps from "../components/ApplySteps";
+import BackgroundVideo from "../../components/videos/BackgroundVideo";
+import { FormContext } from "../../context/FormContext";
+import { useLanguage } from "../../context/LanguageContext";
+import ApplySteps from "../../components/ApplySteps";
 import Select, { type MultiValue } from "react-select";
 import countryList from "react-select-country-list";
 import { Download } from "lucide-react";

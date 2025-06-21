@@ -2,12 +2,12 @@
 
 import React, { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import BackgroundVideo from "../components/BackgroundVideo";
-import { FormContext } from "../context/FormContext";
+import BackgroundVideo from "../../components/videos/BackgroundVideo";
+import { FormContext } from "../../context/FormContext";
 import "react-international-phone/style.css";
 import { PhoneInput } from "react-international-phone";
-import { useLanguage } from "../context/LanguageContext";
-import ApplySteps from "../components/ApplySteps";
+import { useLanguage } from "../../context/LanguageContext";
+import ApplySteps from "../../components/ApplySteps";
 
 export default function ApplyOne() {
   const navigate = useNavigate();

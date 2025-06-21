@@ -3,7 +3,7 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { useLanguage } from "../context/LanguageContext";
+import { useLanguage } from "../../context/LanguageContext";
 
 export default function AccordionExpandDefault() {
     const { language, componentsTranslations } = useLanguage();
