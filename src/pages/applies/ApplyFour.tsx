@@ -294,7 +294,7 @@ export default function ApplyFour() {
                       errors.digital?.digitalPath ? "text-red-400" : ""
                     }`}
                   >
-                    <input
+                    <input 
                       type="radio"
                       name="digitalPath"
                       value={option}
@@ -345,7 +345,7 @@ export default function ApplyFour() {
                         : ""
                     }`}
                   >
-                    <input
+                    <input 
                       type="radio"
                       name="digitalTransformationLoyality"
                       value={option}
@@ -402,7 +402,7 @@ export default function ApplyFour() {
                       errors.finance?.financialNeed ? "text-red-400" : ""
                     }`}
                   >
-                    <input
+                    <input 
                       type="radio"
                       name="financialNeed"
                       value={option}
@@ -445,7 +445,7 @@ export default function ApplyFour() {
                   {page.transformationBudget[language]}
                 </label>
                 <div className="relative">
-                  <input
+                  <input autoComplete="off"
                     type="text"
                     name="neededBudget"
                     value={

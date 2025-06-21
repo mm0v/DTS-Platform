@@ -252,7 +252,7 @@ export default function ApplyTwo() {
         <div className="w-full max-w-2xl space-y-4 sm:space-y-6 relative z-20 px-4 sm:px-6">
           <div className="space-y-2">
             <label className="text-sm">{page.companyType[language]}</label>
-            <input
+            <input autoComplete="off"
               type="text"
               name="companyLawType"
               value={localLawData.companyLawType}
@@ -348,7 +348,7 @@ export default function ApplyTwo() {
             </select>
 
             {showCustomInput && (
-              <input
+              <input autoComplete="off"
                 type="text"
                 placeholder="Sahəni daxil edin..."
                 value={customIndustry}
@@ -369,7 +369,7 @@ export default function ApplyTwo() {
 
           <div className="space-y-2">
             <label className="text-sm">{page.mainProducts[language]}</label>
-            <input
+            <input autoComplete="off"
               type="text"
               name="products"
               value={localLawData.products}
@@ -397,7 +397,7 @@ export default function ApplyTwo() {
             <label className="text-sm">{page.exportActivity[language]}</label>
             <div className="flex items-center space-x-4">
               <label className="flex items-center space-x-2 cursor-pointer">
-                <input
+                <input 
                   type="radio"
                   name="exportActivity"
                   value="Bəli"
@@ -412,7 +412,7 @@ export default function ApplyTwo() {
               </label>
 
               <label className="flex items-center space-x-2 cursor-pointer">
-                <input
+                <input 
                   type="radio"
                   name="exportActivity"
                   value="Xeyr"
@@ -512,7 +512,7 @@ export default function ApplyTwo() {
               </span>
               <Download size={20} className="text-white ml-2" />
             </label>
-            <input
+            <input 
               id="registerCertificate"
               type="file"
               name="registerCertificate"

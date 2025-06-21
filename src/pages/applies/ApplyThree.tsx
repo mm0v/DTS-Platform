@@ -297,7 +297,7 @@ const ApplyThree = () => {
                     ].map((tool) => (
                       <div key={tool.value}>
                         <label className="flex items-center px-4 py-2 hover:bg-gray-700 cursor-pointer">
-                          <input
+                          <input 
                             type="checkbox"
                             value={tool.value}
                             checked={formData.digitalTools.includes(tool.value)}
@@ -318,7 +318,7 @@ const ApplyThree = () => {
                               className="px-4 pb-3"
                               onClick={(e) => e.stopPropagation()}
                             >
-                              <input
+                              <input autoComplete="off"
                                 type="text"
                                 name="otherDigitalTool"
                                 value={formData.otherDigitalTool}
@@ -368,7 +368,7 @@ const ApplyThree = () => {
                     key={challenge}
                     className="flex items-center space-x-2 cursor-pointer"
                   >
-                    <input
+                    <input 
                       type="checkbox"
                       value={challenge}
                       checked={formData.keyChallenges.includes(challenge)}

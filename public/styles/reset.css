@@ -23,3 +23,7 @@ button:focus-visible {
   outline: 2px solid var(--secondary-color);
   outline-offset: 2px;
 }
+
+input:-internal-autofill-selected {
+  background-color: transparent!important;
+}
