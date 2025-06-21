@@ -1,19 +1,1 @@
 @import "./../public/styles/variable.css";
-
-.phone-dark-input {
-  background-color: --black-contrast-2 !important;
-  color: --white-contrast-2 !important;
-  height: 48px !important;
-}
-
-.react-international-phone-input-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.react-tel-input .flag-dropdown .selected-flag .flag {
-  width: 30px;
-  height: 20px;
-  background-size: contain;
-}

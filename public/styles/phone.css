@@ -1,5 +1,23 @@
 @import "./variable.css";
 
+.phone-dark-input {
+  background-color: var(--black-contrast-2) !important;
+  color: var(--white-contrast-2) !important;
+  height: 48px !important;
+}
+
+.react-international-phone-input-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.react-tel-input .flag-dropdown .selected-flag .flag {
+  width: 30px;
+  height: 20px;
+  background-size: contain;
+}
+
 .react-international-phone-country-selector-button {
   background-color: transparent !important;
   border-color: var(--color-gray-700) !important;
@@ -18,7 +36,7 @@
 
 .react-international-phone-country-selector-dropdown {
   background-color: var(--black-contrast-1) !important;
-  color: --white-contrast-1 !important;
+  color: var(--white-contrast-1) !important;
 }
 
 .react-international-phone-country-selector-dropdown__list-item:hover {
@@ -27,5 +45,5 @@
 
 .react-international-phone-country-selector-dropdown__list-item[aria-selected="true"] {
   background-color: var(--blue-color-contrast-2) !important;
-  color: --white-contrast-1 !important;
+  color: var(--white-contrast-1) !important;
 }
