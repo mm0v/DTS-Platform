@@ -9,6 +9,7 @@ import ApplySteps from "../../components/ApplySteps";
 import Select, { type MultiValue } from "react-select";
 import countryList from "react-select-country-list";
 import { Download } from "lucide-react";
+import { CommonApplySVG } from "../../components/SVG/Apply";
 
 interface PropertyLaw {
   exportBazaar: string[];
@@ -102,11 +103,21 @@ export default function ApplyTwo() {
           setLocalLawData(savedData);
         }
 
-    
-        if (savedData && savedData.businessOperations &&
-          !["", "Qida və içkilər", "Neft - qaz", "Kimya", "Metallurgiya",
+        if (
+          savedData &&
+          savedData.businessOperations &&
+          ![
+            "",
+            "Qida və içkilər",
+            "Neft - qaz",
+            "Kimya",
+            "Metallurgiya",
             "Maşın və avadanlıqların təmiri və quraşdırılması",
-            "Kauçuk və plastik məhsullar", "Tekstil", "Elektrik avadanlıqları"].includes(savedData.businessOperations)) {
+            "Kauçuk və plastik məhsullar",
+            "Tekstil",
+            "Elektrik avadanlıqları",
+          ].includes(savedData.businessOperations)
+        ) {
           setCustomIndustry(savedData.businessOperations);
           setShowCustomInput(true);
         }
@@ -146,7 +157,7 @@ export default function ApplyTwo() {
       if (value.trim().length > 0 && value.trim().length < 3) {
         setLocalLawDataErrors((prev) => ({
           ...prev,
-          [name]: "Minimum 3 simvol daxil edilməlidir" //localizations
+          [name]: "Minimum 3 simvol daxil edilməlidir", //localizations
         }));
       } else {
         setLocalLawDataErrors((prev) => ({ ...prev, [name]: "" }));
@@ -158,7 +169,9 @@ export default function ApplyTwo() {
     updateLocalStorage(updatedData);
   };
 
-  const handleCustomIndustryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleCustomIndustryChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const value = e.target.value;
     setCustomIndustry(value);
 
@@ -219,7 +232,7 @@ export default function ApplyTwo() {
         setLocalLawData(updatedData);
         updateLocalStorage(updatedData);
       } catch (error) {
-        console.error("Failed to save file to IndexedDB", error); 
+        console.error("Failed to save file to IndexedDB", error);
       }
     }
   };
@@ -237,7 +250,6 @@ export default function ApplyTwo() {
         </div>
 
         <div className="w-full max-w-2xl space-y-4 sm:space-y-6 relative z-20 px-4 sm:px-6">
-  
           <div className="space-y-2">
             <label className="text-sm">{page.companyType[language]}</label>
             <input
@@ -246,9 +258,10 @@ export default function ApplyTwo() {
               value={localLawData.companyLawType}
               onChange={handleInputChange}
               className={`w-full bg-transparent rounded-lg p-2 sm:p-3 text-xs sm:text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 transition duration-300
-                ${localLawDataErrors.companyLawType
-                  ? "border border-red-500"
-                  : "border border-gray-700"
+                ${
+                  localLawDataErrors.companyLawType
+                    ? "border border-red-500"
+                    : "border border-gray-700"
                 }`}
               aria-invalid={!!localLawDataErrors.companyLawType}
               aria-describedby="companyType-error"
@@ -263,19 +276,21 @@ export default function ApplyTwo() {
             )}
           </div>
 
-
           <div className="space-y-2">
             <label className="text-sm">
               {page.businessIndustry.label[language]}
             </label>
             <select
               name="businessOperations"
-              value={showCustomInput ? "Digər" : localLawData.businessOperations}
+              value={
+                showCustomInput ? "Digər" : localLawData.businessOperations
+              }
               onChange={handleInputChange}
               className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300
-                ${localLawDataErrors.businessOperations
-                  ? "border border-red-500"
-                  : "border border-gray-700"
+                ${
+                  localLawDataErrors.businessOperations
+                    ? "border border-red-500"
+                    : "border border-gray-700"
                 }`}
               aria-invalid={!!localLawDataErrors.businessOperations}
               aria-describedby="businessIndustry-error"
@@ -304,7 +319,7 @@ export default function ApplyTwo() {
               >
                 {
                   page.businessIndustry.options.machineRepairAndInstallation[
-                  language
+                    language
                   ]
                 }
               </option>
@@ -314,7 +329,7 @@ export default function ApplyTwo() {
               >
                 {
                   page.businessIndustry.options.rubberAndPlasticProducts[
-                  language
+                    language
                   ]
                 }
               </option>
@@ -360,9 +375,10 @@ export default function ApplyTwo() {
               value={localLawData.products}
               onChange={handleInputChange}
               className={`w-full bg-transparent rounded-lg p-2 sm:p-3 text-xs sm:text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 transition duration-300
-                ${localLawDataErrors.products
-                  ? "border border-red-500"
-                  : "border border-gray-700"
+                ${
+                  localLawDataErrors.products
+                    ? "border border-red-500"
+                    : "border border-gray-700"
                 }`}
               aria-invalid={!!localLawDataErrors.products}
               aria-describedby="mainProducts-error"
@@ -390,22 +406,7 @@ export default function ApplyTwo() {
                   className="hidden"
                 />
                 <span className="w-5 h-5 flex items-center justify-center border border-gray-400 rounded">
-                  {localLawData.exportActivity && (
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="w-4 h-4 text-blue-500"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      strokeWidth={3}
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M5 13l4 4L19 7"
-                      />
-                    </svg>
-                  )}
+                  {localLawData.exportActivity && <CommonApplySVG />}
                 </span>
                 <span className="text-sm">{page.yes[language]}</span>
               </label>
@@ -420,22 +421,7 @@ export default function ApplyTwo() {
                   className="hidden"
                 />
                 <span className="w-5 h-5 flex items-center justify-center border border-gray-400 rounded">
-                  {localLawData.exportActivity === false && (
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="w-4 h-4 text-blue-500"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      strokeWidth={3}
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M5 13l4 4L19 7"
-                      />
-                    </svg>
-                  )}
+                  {localLawData.exportActivity === false && <CommonApplySVG />}
                 </span>
                 <span className="text-sm">{page.no[language]}</span>
               </label>
@@ -460,10 +446,11 @@ export default function ApplyTwo() {
                 }
                 handleCountryChange(selected);
               }}
-              className={`w-full ${localLawDataErrors.exportBazaar
-                ? "border border-red-500 rounded"
-                : ""
-                }`}
+              className={`w-full ${
+                localLawDataErrors.exportBazaar
+                  ? "border border-red-500 rounded"
+                  : ""
+              }`}
               classNamePrefix="react-select"
               placeholder={page.exportMarketsPlaceholder[language]}
               isClearable

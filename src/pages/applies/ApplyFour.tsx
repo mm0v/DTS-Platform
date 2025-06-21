@@ -6,6 +6,7 @@ import BackgroundVideo from "../../components/videos/BackgroundVideo";
 import { FormContext } from "../../context/FormContext";
 import { useLanguage } from "../../context/LanguageContext";
 import ApplySteps from "../../components/ApplySteps";
+import { CommonApplySVG } from "../../components/SVG/Apply";
 
 interface DigitalAndFinancial {
   digital: DigitalLeadership;
@@ -261,20 +262,7 @@ export default function ApplyFour() {
                       {formData.digital.digitalTeamOrLead !== null &&
                         formData.digital.digitalTeamOrLead ===
                           (option === "Bəli" ? true : false) && (
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="w-4 h-4 text-blue-500"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                            strokeWidth={3}
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              d="M5 13l4 4L19 7"
-                            />
-                          </svg>
+                          <CommonApplySVG />
                         )}
                     </span>
                     <span className="text-sm">
@@ -323,22 +311,7 @@ export default function ApplyFour() {
                       {formData.digital.digitalPath !== null &&
                         (formData.digital.digitalPath === true
                           ? "Bəli"
-                          : "Xeyr") === option && (
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="w-4 h-4 text-blue-500"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                            strokeWidth={3}
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              d="M5 13l4 4L19 7"
-                            />
-                          </svg>
-                        )}
+                          : "Xeyr") === option && <CommonApplySVG />}
                     </span>
                     <span className="text-sm">
                       {
@@ -391,22 +364,7 @@ export default function ApplyFour() {
                         null &&
                         (formData.digital.digitalTransformationLoyality === true
                           ? "Bəli"
-                          : "Xeyr") === option && (
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="w-4 h-4 text-blue-500"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                            strokeWidth={3}
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              d="M5 13l4 4L19 7"
-                            />
-                          </svg>
-                        )}
+                          : "Xeyr") === option && <CommonApplySVG />}
                     </span>
                     <span className="text-sm">
                       {
@@ -461,22 +419,7 @@ export default function ApplyFour() {
                       {formData.finance.financialNeed !== null &&
                         (formData.finance.financialNeed === true
                           ? "Bəli"
-                          : "Xeyr") === option && (
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="w-4 h-4 text-blue-500"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                            strokeWidth={3}
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              d="M5 13l4 4L19 7"
-                            />
-                          </svg>
-                        )}
+                          : "Xeyr") === option && <CommonApplySVG />}
                     </span>
                     <span className="text-sm">
                       {

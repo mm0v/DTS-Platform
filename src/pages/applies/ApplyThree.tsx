@@ -8,13 +8,14 @@ import { FormContext } from "../../context/FormContext";
 import { useLanguage } from "../../context/LanguageContext";
 import ApplySteps from "../../components/ApplySteps";
 import { ChevronDown, ChevronUp } from "lucide-react";
+import {CommonApplySVG } from "../../components/SVG/Apply";
 
 interface DigitalReadiness {
   keyChallenges: string[];
   digitalLevel: number;
   digitalTools: string[];
   companyPurpose: string;
-  otherDigitalTool: string; 
+  otherDigitalTool: string;
 }
 
 const ApplyThree = () => {
@@ -30,7 +31,7 @@ const ApplyThree = () => {
     digitalLevel: 0,
     digitalTools: [],
     companyPurpose: "",
-    otherDigitalTool: "", 
+    otherDigitalTool: "",
   };
   const [formData, setFormData] = useState<DigitalReadiness>(initialValue);
 
@@ -77,7 +78,10 @@ const ApplyThree = () => {
     if (formData.digitalTools.length === 0)
       errors.digitalTools = page.errorMessages.required[language];
 
-    if (formData.digitalTools.includes("other") && formData.otherDigitalTool.trim().length === 0)
+    if (
+      formData.digitalTools.includes("other") &&
+      formData.otherDigitalTool.trim().length === 0
+    )
       errors.otherDigitalTool = page.errorMessages.required[language];
 
     if (formData.companyPurpose.trim().length === 0) {
@@ -136,13 +140,17 @@ const ApplyThree = () => {
     if (checked) {
       updatedDigitalTools = [...formData.digitalTools, value];
     } else {
-      updatedDigitalTools = formData.digitalTools.filter((tool) => tool !== value);
+      updatedDigitalTools = formData.digitalTools.filter(
+        (tool) => tool !== value
+      );
     }
 
     const updatedFormData = {
       ...formData,
       digitalTools: updatedDigitalTools,
-      otherDigitalTool: updatedDigitalTools.includes("other") ? formData.otherDigitalTool : "",
+      otherDigitalTool: updatedDigitalTools.includes("other")
+        ? formData.otherDigitalTool
+        : "",
     };
 
     setFormData(updatedFormData);
@@ -156,12 +164,14 @@ const ApplyThree = () => {
   };
 
   const getFinalDigitalTools = () => {
-    return formData.digitalTools.map(tool => {
-      if (tool === "other" && formData.otherDigitalTool.trim()) {
-        return formData.otherDigitalTool.trim();
-      }
-      return tool;
-    }).filter(tool => tool !== "other" || formData.otherDigitalTool.trim());
+    return formData.digitalTools
+      .map((tool) => {
+        if (tool === "other" && formData.otherDigitalTool.trim()) {
+          return formData.otherDigitalTool.trim();
+        }
+        return tool;
+      })
+      .filter((tool) => tool !== "other" || formData.otherDigitalTool.trim());
   };
 
   const handleGoBack = () => {
@@ -172,7 +182,7 @@ const ApplyThree = () => {
     if (validateForm()) {
       const finalFormData = {
         ...formData,
-        digitalTools: getFinalDigitalTools()
+        digitalTools: getFinalDigitalTools(),
       };
 
       localStorage.setItem("digitalReadiness", JSON.stringify(finalFormData));
@@ -207,9 +217,10 @@ const ApplyThree = () => {
                   value={getDigitalLevelString()}
                   onChange={handleInputChange}
                   className={`w-full p-2 bg-transparent text-white rounded
-                    ${errors.digitalLevel
-                      ? "border-2 border-red-500"
-                      : "border border-gray-700"
+                    ${
+                      errors.digitalLevel
+                        ? "border-2 border-red-500"
+                        : "border border-gray-700"
                     }`}
                 >
                   <option value="" className="bg-[#131021]">
@@ -248,15 +259,19 @@ const ApplyThree = () => {
                   type="button"
                   onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                   className={`w-full p-2 bg-trasnparent text-white rounded text-left flex justify-between items-center
-                    ${errors.digitalTools
-                      ? "border-2 border-red-500"
-                      : "border border-gray-700"
+                    ${
+                      errors.digitalTools
+                        ? "border-2 border-red-500"
+                        : "border border-gray-700"
                     }`}
                 >
                   <span>
                     {formData.digitalTools.length > 0
-                      ? `${formData.digitalTools.length} ${page.digitalToolsOptions?.selected?.[language] || 'selected'}`
-                      : (page.placeholder?.[language] || "Select digital tools")}
+                      ? `${formData.digitalTools.length} ${
+                          page.digitalToolsOptions?.selected?.[language] ||
+                          "selected"
+                        }`
+                      : page.placeholder?.[language] || "Select digital tools"}
                   </span>
                   <span className="ml-2">
                     {isDropdownOpen ? (
@@ -291,47 +306,39 @@ const ApplyThree = () => {
                           />
                           <span className="w-5 h-5 flex items-center justify-center border border-gray-400 rounded">
                             {formData.digitalTools.includes(tool.value) && (
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                className="w-4 h-4 text-blue-500"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                                strokeWidth={3}
-                              >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  d="M5 13l4 4L19 7"
-                                />
-                              </svg>
+                              <CommonApplySVG />
                             )}
                           </span>
                           <span className="ml-2">{tool.label}</span>
                         </label>
 
-                        {tool.value === "other" && formData.digitalTools.includes("other") && (
-                          <div className="px-4 pb-3" onClick={(e) => e.stopPropagation()}>
-                            <input
-                              type="text"
-                              name="otherDigitalTool"
-                              value={formData.otherDigitalTool}
-                              onChange={handleInputChange}
-                              placeholder="Please specify the digital tool..."
-                              className={`w-full p-2 bg-gray-800 text-white rounded text-sm
-                                ${errors.otherDigitalTool
-                                  ? "border-2 border-red-500"
-                                  : "border border-gray-600"
-                                }`}
+                        {tool.value === "other" &&
+                          formData.digitalTools.includes("other") && (
+                            <div
+                              className="px-4 pb-3"
                               onClick={(e) => e.stopPropagation()}
-                            />
-                            {errors.otherDigitalTool && (
-                              <p className="text-red-500 text-xs mt-1">
-                                {page.errorMessages.required[language]}
-                              </p>
-                            )}
-                          </div>
-                        )}
+                            >
+                              <input
+                                type="text"
+                                name="otherDigitalTool"
+                                value={formData.otherDigitalTool}
+                                onChange={handleInputChange}
+                                placeholder="Please specify the digital tool..."
+                                className={`w-full p-2 bg-gray-800 text-white rounded text-sm
+                                ${
+                                  errors.otherDigitalTool
+                                    ? "border-2 border-red-500"
+                                    : "border border-gray-600"
+                                }`}
+                                onClick={(e) => e.stopPropagation()}
+                              />
+                              {errors.otherDigitalTool && (
+                                <p className="text-red-500 text-xs mt-1">
+                                  {page.errorMessages.required[language]}
+                                </p>
+                              )}
+                            </div>
+                          )}
                       </div>
                     ))}
                   </div>
@@ -341,7 +348,6 @@ const ApplyThree = () => {
                     {page.errorMessages.required[language]}
                   </p>
                 )}
-
               </div>
             </div>
 
@@ -385,20 +391,7 @@ const ApplyThree = () => {
                     />
                     <span className="w-5 h-5 flex items-center justify-center border border-gray-400 rounded">
                       {formData.keyChallenges.includes(challenge) && (
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="w-4 h-4 text-blue-500"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                          strokeWidth={3}
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M5 13l4 4L19 7"
-                          />
-                        </svg>
+                        <CommonApplySVG />
                       )}
                     </span>
                     <span className="ml-2">
@@ -429,9 +422,10 @@ const ApplyThree = () => {
                 value={formData.companyPurpose}
                 onChange={handleInputChange}
                 className={`w-full p-4 bg-transparent text-white rounded
-                  ${errors.companyPurpose
-                    ? "border-2 border-red-500"
-                    : "border border-gray-700"
+                  ${
+                    errors.companyPurpose
+                      ? "border-2 border-red-500"
+                      : "border border-gray-700"
                   }`}
                 rows={4}
                 placeholder={page.companyPurpose.placeholder[language]}

@@ -11,6 +11,12 @@ import { motion, AnimatePresence } from "framer-motion";
 import { companyService } from "../../services/Operation/company.service";
 import ReCAPTCHA from "react-google-recaptcha";
 import useRecaptcha from "../../services/Operation/recapture.service";
+import {
+  CommonApplySVG,
+  Five1ApplySvg,
+  Five2ApplySvg,
+  Five3ApplySvg,
+} from "../../components/SVG/Apply";
 
 const DB_NAME = "ALL files";
 const STORE_NAME = "files";
@@ -454,20 +460,7 @@ export default function ApplyFive() {
                   className="absolute cursor-pointer top-5 right-5 text-red-500 hover:text-red-600 transition-colors"
                   aria-label="Close modal"
                 >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-6 w-6"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth={2}
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M6 18L18 6M6 6l12 12"
-                    />
-                  </svg>
+                  <Five1ApplySvg />
                 </button>
 
                 {submissionError && (
@@ -506,30 +499,11 @@ export default function ApplyFive() {
                   <button
                     onClick={handleConfirmModalYes}
                     className="bg-green-500 cursor-pointer text-white py-3 px-10 rounded-lg hover:bg-green-600 transition font-medium"
-                    // disabled={isSubmitting}
                   >
                     {localIsSubmitting ? (
                       <span className="flex items-center">
-                        <svg
-                          className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                        >
-                          <circle
-                            className="opacity-25"
-                            cx="12"
-                            cy="12"
-                            r="10"
-                            stroke="currentColor"
-                            strokeWidth="4"
-                          ></circle>
-                          <path
-                            className="opacity-75"
-                            fill="currentColor"
-                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                          ></path>
-                        </svg>
+                        <Five2ApplySvg />
+
                         {page.buttons.submitting[language]}
                       </span>
                     ) : (
@@ -570,20 +544,7 @@ export default function ApplyFive() {
                   className="absolute top-5 right-5 text-red-500 hover:text-red-600 transition-colors"
                   aria-label="Close modal"
                 >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-6 w-6"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth={2}
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M6 18L18 6M6 6l12 12"
-                    />
-                  </svg>
+                  <Five3ApplySvg />
                 </button>
 
                 <img
@@ -734,22 +695,7 @@ export default function ApplyFive() {
                     className="hidden"
                   />
                   <span className="mt-1 w-5 h-5 flex items-center justify-center border border-gray-400 rounded">
-                    {formData.declaration?.dataIsReal && (
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="w-4 h-4 text-blue-500"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        strokeWidth={3}
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M5 13l4 4L19 7"
-                        />
-                      </svg>
-                    )}
+                    {formData.declaration?.dataIsReal && <CommonApplySVG />}
                   </span>
                   <span className="ml-2 text-sm text-gray-400">
                     {page.checkboxes.dataIsReal[language]}
@@ -771,22 +717,7 @@ export default function ApplyFive() {
                     className="hidden"
                   />
                   <span className="mt-1 w-5 h-5 flex items-center justify-center border border-gray-400 rounded">
-                    {formData.declaration?.permitContact && (
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="w-4 h-4 text-blue-500"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        strokeWidth={3}
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M5 13l4 4L19 7"
-                        />
-                      </svg>
-                    )}
+                    {formData.declaration?.permitContact && <CommonApplySVG />}
                   </span>
                   <span className="ml-2 text-sm text-gray-400">
                     {page.checkboxes.permitContact[language]}
@@ -809,20 +740,7 @@ export default function ApplyFive() {
                   />
                   <span className="mt-1 w-5 h-5 flex items-center justify-center border border-gray-400 rounded">
                     {formData.declaration?.privacyAcceptance && (
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="w-4 h-4 text-blue-500"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        strokeWidth={3}
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M5 13l4 4L19 7"
-                        />
-                      </svg>
+                      <CommonApplySVG />
                     )}
                   </span>
                   <span
