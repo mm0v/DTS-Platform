@@ -215,7 +215,11 @@ export default function ApplyTwo() {
 
   const handleGoBack = () => navigate("/apply");
   const handleGoNext = () => {
-    if (validateForm()) navigate("/apply/three");
+    if (validateForm()) {
+      navigate("/apply/three");
+      return true;
+    }
+    return false;
   };
 
   const selectedOptions = options.filter((option) =>
@@ -239,7 +243,10 @@ export default function ApplyTwo() {
   return (
     <>
       <div className="relative min-h-screen w-full bg-[url('/images/space-background.jpg')] bg-cover bg-center bg-no-repeat text-white flex flex-col items-center justify-center py-4 sm:py-6 md:py-10 px-2 sm:px-4">
-        <ApplySteps step={2} />
+        <ApplySteps
+          step={2}
+          onClick={handleGoNext}
+        />
 
         <div className="text-center mb-8 relative z-20">
           <h1 className="text-2xl md:text-3xl font-medium">

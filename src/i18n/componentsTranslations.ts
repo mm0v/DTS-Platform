@@ -338,8 +338,8 @@ export const componentsTranslations = {
       EN: "Required Documents",
     },
     fillFieldsWarning: {
-      AZ: "Zəhmət olmasa əvvəlki xanaları doldurun 🚫",
-      EN: "Please fill in the previous fields 🚫",
+      AZ: "Zəhmət olmasa  xanaları doldurun",
+      EN: "Please fill all fields",
     },
   },
 };

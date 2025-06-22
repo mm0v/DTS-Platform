@@ -324,10 +324,11 @@ export default function ApplyOne() {
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
-      return;
+      return false;
     }
 
     navigate("/apply/two");
+    return true;
   };
 
   useEffect(() => {
@@ -371,7 +372,10 @@ export default function ApplyOne() {
   return (
     <>
       <div className="relative min-h-screen w-full text-white flex flex-col items-center justify-center py-10">
-        <ApplySteps step={1} />
+        <ApplySteps
+          onClick={handleNext}
+          step={1}
+        />
 
         <div className="text-center mb-8 relative z-20">
           <h1 className="text-2xl md:text-3xl font-medium">
@@ -382,7 +386,8 @@ export default function ApplyOne() {
         <div className="w-full max-w-2xl space-y-6 relative z-20">
           <div className="space-y-2">
             <label className="text-sm">{page.companyName[language]}</label>
-            <input autoComplete="off"
+            <input
+              autoComplete="off"
               type="text"
               name="companyName"
               value={localFormData.companyName}
@@ -405,7 +410,8 @@ export default function ApplyOne() {
               <label className="text-sm">
                 {page.companyRegisterNumber[language]}
               </label>
-              <input autoComplete="off"
+              <input
+                autoComplete="off"
                 type="text"
                 name="companyRegisterNumber"
                 value={localFormData.companyRegisterNumber}
@@ -427,7 +433,8 @@ export default function ApplyOne() {
 
             <div className="flex-1 space-y-2">
               <label className="text-sm">{page.createYear[language]}</label>
-              <input autoComplete="off"
+              <input
+                autoComplete="off"
                 type="text"
                 name="createYear"
                 value={localFormData.createYear}
@@ -518,7 +525,8 @@ export default function ApplyOne() {
           {/* Company Address */}
           <div className="space-y-2">
             <label className="text-sm">{page.companyAddress[language]}</label>
-            <input autoComplete="off"
+            <input
+              autoComplete="off"
               type="text"
               name="companyAddress"
               value={localFormData.companyAddress}
@@ -537,7 +545,8 @@ export default function ApplyOne() {
           {/* Location */}
           <div className="space-y-2">
             <label className="text-sm">{page.location[language]}</label>
-            <input autoComplete="off"
+            <input
+              autoComplete="off"
               type="text"
               name="location"
               value={localFormData.location}
@@ -556,7 +565,8 @@ export default function ApplyOne() {
           {/* Website - Now Required */}
           <div className="space-y-2">
             <label className="text-sm">{page.website[language]}</label>
-            <input autoComplete="off"
+            <input
+              autoComplete="off"
               type="text"
               name="website"
               value={localFormData.website}
@@ -576,7 +586,8 @@ export default function ApplyOne() {
           {/* Contact Person */}
           <div className="flex-1 space-y-2">
             <label className="text-sm">{page.contactPerson[language]}</label>
-            <input autoComplete="off"
+            <input
+              autoComplete="off"
               type="text"
               name="contactPerson"
               value={localFormData.contactPerson}
@@ -596,7 +607,7 @@ export default function ApplyOne() {
             {/* Email */}
             <div className="flex-1 space-y-2">
               <label className="text-sm">{page.email[language]}</label>
-              <input 
+              <input
                 type="email"
                 name="email"
                 value={localFormData.email}

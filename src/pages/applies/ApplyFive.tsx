@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import type React from "react";
 import { useState, useEffect, useContext, useRef } from "react";
@@ -16,6 +17,7 @@ import {
   Five2ApplySvg,
   Five3ApplySvg,
 } from "../../components/SVG/Apply";
+import { toast } from "react-toastify";
 
 const DB_NAME = "ALL files";
 const STORE_NAME = "files";
@@ -204,13 +206,16 @@ export default function ApplyFive() {
     }
 
     setErrors(errors);
-    return !!errors;
+    return !!errors && !!captchaToken;
   };
 
   const handleGoBack = () => {
     navigate("/apply/four");
   };
-
+  const showFillToast = (message: string) =>
+    toast.warning(message, {
+      position: "top-center",
+    });
   const handleConfirmModalYes = async () => {
     if (validateForm()) {
       setLocalIsSubmitting(true);
@@ -301,24 +306,30 @@ export default function ApplyFive() {
             files,
             captchaToken
           );
-          if (result.status !== 201) {
-            alert("ReCAPTCHA validation failed. Please try again.");
-            handleRecaptcha("");
-            if (recaptchaRef.current) {
-              recaptchaRef.current.reset();
+
+          if ((result as any)?.status !== 201) {
+            if (
+              (result as any).response?.data ===
+              "reCAPTCHA yoxlaması uğursuz oldu"
+            ) {
+              showFillToast((result as any).response?.data);
+              handleRecaptcha("");
+              if (recaptchaRef.current) {
+                recaptchaRef.current.reset();
+              }
+              return;
             }
+            showFillToast("Please fill all fields");
             return;
           }
 
           recaptchaRef.current?.reset();
-        } else {
-          alert("Please input valid recaptcha!");
         }
 
         setShowConfirmModal(false);
         setShowThankYouModal(true);
         setSubmitSuccess(true);
-        setShowThankYouModal(true);
+        localStorage.clear();
       } catch (error) {
         console.error("Submission failed:", error);
         setSubmissionError(page.submissionErrorMessage[language]);
@@ -432,7 +443,7 @@ export default function ApplyFive() {
   return (
     <>
       <div className="min-h-screen bg-[url('/images/space-background.jpg')] bg-cover bg-center bg-no-repeat text-white flex flex-col items-center justify-center py-10">
-        <ApplySteps step={5} />
+        <ApplySteps onClick={() => true} step={5} />
 
         {/* Confirmation Modal */}
         <AnimatePresence>
@@ -466,8 +477,7 @@ export default function ApplyFive() {
                     <p className="font-medium mb-2">
                       {page.submissionError.errorTitle[language]}
                     </p>
-                    <p>{submissionError}</p>
-
+                    <p>{submissionError}</p> asdasdasdasdasdasdasdasds
                     {retryCount < 3 && (
                       <button
                         onClick={handleRetry}
@@ -477,7 +487,6 @@ export default function ApplyFive() {
                         {retryCount}/3)
                       </button>
                     )}
-
                     {retryCount >= 3 && (
                       <div className="mt-3 text-amber-400 text-xs">
                         <p>{page.submissionError.maxRetryMessage[language]}</p>
@@ -596,9 +605,7 @@ export default function ApplyFive() {
                   } rounded p-3 focus:outline-none focus:border-blue-500`}
                   tabIndex={-1}
                   aria-hidden="true"
-                >
-                  {/* <Download size={20} /> */}
-                </button>
+                ></button>
                 <input
                   id="propertyLawCertificate"
                   type="file"
@@ -649,9 +656,7 @@ export default function ApplyFive() {
                   } rounded p-3 focus:outline-none focus:border-blue-500`}
                   tabIndex={-1}
                   aria-hidden="true"
-                >
-                  {/* <Download size={20} /> */}
-                </button>
+                ></button>
                 <input
                   id="financialStatement"
                   type="file"
@@ -765,18 +770,21 @@ export default function ApplyFive() {
               >
                 {pagesTranslations.applyBtns.backBtn[language]}
               </button>
+
               <button
                 type="button"
                 onClick={handleSubmitForm}
                 disabled={
-                  !formData.declaration?.dataIsReal &&
-                  !formData.declaration?.privacyAcceptance &&
-                  !formData.declaration?.permitContact
+                  captchaToken === null &&
+                  formData.declaration?.dataIsReal === false &&
+                  formData.declaration?.privacyAcceptance === false &&
+                  formData.declaration?.permitContact === false
                 }
                 className={`flex-1 py-3 rounded-lg transition-colors ${
-                  formData.declaration?.dataIsReal &&
-                  formData.declaration?.privacyAcceptance &&
-                  formData.declaration?.permitContact
+                  captchaToken &&
+                  formData.declaration?.dataIsReal === true &&
+                  formData.declaration?.privacyAcceptance === true &&
+                  formData.declaration?.permitContact === true
                     ? "bg-blue-600 hover:bg-blue-700 text-white cursor-pointer"
                     : "bg-blue-900/50 text-gray-400 cursor-not-allowed "
                 }`}
@@ -784,6 +792,8 @@ export default function ApplyFive() {
                 {localIsSubmitting
                   ? page.buttons.submitting[language]
                   : page.buttons.confirm[language]}
+
+                {!captchaToken}
               </button>
             </div>
           </form>
