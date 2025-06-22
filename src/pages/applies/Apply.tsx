@@ -8,6 +8,7 @@ import ApplyTwo from "./ApplyTwo";
 import ApplyThree from "./ApplyThree";
 import ApplyFour from "./ApplyFour";
 import ApplyFive from "./ApplyFive";
+import BackgroundVideo from "../../components/videos/BackgroundVideo";
 
 const Apply = () => {
   const [isSubmitting] = useState(false);
@@ -75,6 +76,8 @@ const Apply = () => {
         setFiles: setFilesToUpload,
       }}
     >
+      <BackgroundVideo />
+
       <Routes>
         <Route index element={<ApplyOne />} />
         <Route path="two" element={<ApplyTwo />} />

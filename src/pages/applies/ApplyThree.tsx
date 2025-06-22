@@ -3,7 +3,6 @@
 import { useNavigate } from "react-router-dom";
 import { useContext, useState, useEffect } from "react";
 import type { ChangeEvent } from "react";
-import BackgroundVideo from "../../components/videos/BackgroundVideo";
 import { FormContext } from "../../context/FormContext";
 import { useLanguage } from "../../context/LanguageContext";
 import ApplySteps from "../../components/ApplySteps";
@@ -197,7 +196,6 @@ const ApplyThree = () => {
 
   return (
     <>
-      <BackgroundVideo />
       <div className="min-h-screen bg-[url('/images/space-background.jpg')] bg-cover bg-center text-white flex flex-col items-center justify-center py-10">
         <ApplySteps step={3} />
 
