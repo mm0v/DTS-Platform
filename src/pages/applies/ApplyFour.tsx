@@ -2,7 +2,6 @@
 
 import React, { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import BackgroundVideo from "../../components/videos/BackgroundVideo";
 import { FormContext } from "../../context/FormContext";
 import { useLanguage } from "../../context/LanguageContext";
 import ApplySteps from "../../components/ApplySteps";
@@ -224,7 +223,6 @@ export default function ApplyFour() {
 
   return (
     <>
-      <BackgroundVideo />
       <div className="min-h-screen py-9 w-full bg-[url('/images/space-background.jpg')] bg-cover bg-center bg-no-repeat text-white flex flex-col items-center justify-center">
         <ApplySteps step={4} />
 
@@ -294,7 +292,7 @@ export default function ApplyFour() {
                       errors.digital?.digitalPath ? "text-red-400" : ""
                     }`}
                   >
-                    <input 
+                    <input
                       type="radio"
                       name="digitalPath"
                       value={option}
@@ -345,7 +343,7 @@ export default function ApplyFour() {
                         : ""
                     }`}
                   >
-                    <input 
+                    <input
                       type="radio"
                       name="digitalTransformationLoyality"
                       value={option}
@@ -402,7 +400,7 @@ export default function ApplyFour() {
                       errors.finance?.financialNeed ? "text-red-400" : ""
                     }`}
                   >
-                    <input 
+                    <input
                       type="radio"
                       name="financialNeed"
                       value={option}
@@ -445,7 +443,8 @@ export default function ApplyFour() {
                   {page.transformationBudget[language]}
                 </label>
                 <div className="relative">
-                  <input autoComplete="off"
+                  <input
+                    autoComplete="off"
                     type="text"
                     name="neededBudget"
                     value={

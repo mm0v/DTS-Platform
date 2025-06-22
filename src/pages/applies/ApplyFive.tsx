@@ -3,7 +3,6 @@ import type React from "react";
 import { useState, useEffect, useContext, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { Download } from "lucide-react";
-import BackgroundVideo from "../../components/videos/BackgroundVideo";
 import { FormContext } from "../../context/FormContext";
 import { useLanguage } from "../../context/LanguageContext";
 import ApplySteps from "../../components/ApplySteps";
@@ -432,7 +431,6 @@ export default function ApplyFive() {
 
   return (
     <>
-      <BackgroundVideo />
       <div className="min-h-screen bg-[url('/images/space-background.jpg')] bg-cover bg-center bg-no-repeat text-white flex flex-col items-center justify-center py-10">
         <ApplySteps step={5} />
 

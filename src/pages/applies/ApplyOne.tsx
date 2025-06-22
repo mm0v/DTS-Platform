@@ -2,7 +2,6 @@
 
 import React, { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import BackgroundVideo from "../../components/videos/BackgroundVideo";
 import { FormContext } from "../../context/FormContext";
 import "react-international-phone/style.css";
 import { PhoneInput } from "react-international-phone";
@@ -371,7 +370,6 @@ export default function ApplyOne() {
 
   return (
     <>
-      <BackgroundVideo />
       <div className="relative min-h-screen w-full text-white flex flex-col items-center justify-center py-10">
         <ApplySteps step={1} />
 
