@@ -1,8 +1,8 @@
 export const pagesTranslations = {
   home: {
     title: {
-      AZ: '“Sənaye 4.0 Hazırlıq" Proqramı',
-      EN: '“Industry 4.0 Readiness" Program',
+      AZ: '“Sənaye 4.0 Hazırlıq” Proqramı',
+      EN: '“Industry 4.0 Readiness” Program',
     },
     description: {
       AZ: `Proqram çərçivəsində şirkətlərin mövcud rəqəmsal bacarıqlarının
