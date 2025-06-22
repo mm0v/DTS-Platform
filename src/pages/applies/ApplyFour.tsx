@@ -197,6 +197,9 @@ export default function ApplyFour() {
   const handleNext = () => {
     if (validateForm()) {
       navigate("/apply/five");
+      return true;
+    } else {
+      return false;
     }
   };
 
@@ -224,7 +227,10 @@ export default function ApplyFour() {
   return (
     <>
       <div className="min-h-screen py-9 w-full bg-[url('/images/space-background.jpg')] bg-cover bg-center bg-no-repeat text-white flex flex-col items-center justify-center">
-        <ApplySteps step={4} />
+        <ApplySteps
+          onClick={handleNext}
+          step={4}
+        />
 
         <div className="text-center mb-8">
           <h1 className="text-2xl md:text-3xl font-medium">

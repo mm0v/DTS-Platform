@@ -6,9 +6,10 @@ import { toast } from "react-toastify";
 
 interface ApplyStepsProps {
   step: number;
+  onClick: () => boolean;
 }
 
-const ApplySteps = ({ step }: ApplyStepsProps) => {
+const ApplySteps = ({ step, onClick }: ApplyStepsProps) => {
   const navigate = useNavigate();
   const { language, componentsTranslations } = useLanguage();
   const steps = componentsTranslations.applySteps;
@@ -52,54 +53,10 @@ const ApplySteps = ({ step }: ApplyStepsProps) => {
             </div>
           );
 
-          const hasAllValues = (obj: unknown): boolean => {
-            if (obj == null || obj === "" || obj === undefined) return false;
-
-            if (typeof obj === "string") return obj.trim().length > 0;
-
-            if (Array.isArray(obj))
-              return obj.length > 0 && obj.every(hasAllValues);
-
-            if (typeof obj === "object") {
-              const keys = Object.keys(obj as object);
-              if (keys.length === 0) return false;
-              return keys.every((key) =>
-                hasAllValues((obj as Record<string, unknown>)[key])
-              );
-            }
-
-            return true;
-          };
-
           const handleClick = () => {
-            if (isPast) navigate(routes[index]);
-            redirectToAccessibleStep(num);
-          };
-
-          const redirectToAccessibleStep = (stepNum: number) => {
-            const storageName = getStepsStorageName(stepNum);
-            const relatedStepData = localStorage.getItem(`${storageName}`);
-            const canAccessibleRelatedStep = !hasAllValues(relatedStepData);
-            return canAccessibleRelatedStep
-              ? showFillToast()
-              : navigate(routes[index]);
-          };
-
-          const getStepsStorageName = (stepNum: number): string => {
-            switch (stepNum) {
-              case 1:
-                return "companyData";
-              case 2:
-                return "propertyLaw";
-              case 3:
-                return "digitalReadiness";
-              case 4:
-                return "digitalAndFinancial";
-              case 5:
-                return "restOfData";
-              default:
-                return "";
-            }
+            return onClick() || isPast
+              ? navigate(routes[index])
+              : showFillToast();
           };
 
           return (

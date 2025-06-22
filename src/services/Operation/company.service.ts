@@ -76,8 +76,7 @@ export const companyService = {
     try {
       return await API.post("/api/v1/company/add", formData);
     } catch (error) {
-      console.error("FormData submission failed:", error);
-      throw error;
+      return error;
     }
   },
 };
