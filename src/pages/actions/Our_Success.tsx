@@ -242,9 +242,16 @@ const Our_Success = () => {
 
         <div className="flex justify-center mt-10 px-4 ">
           <div className="w-full max-w-[700px] aspect-video mt-12 mb-10 md:mt-32">
-            <iframe
+            {/* <iframe
               className="w-full h-full rounded-lg  shadow-[2px_2px_12px_0px_#2323234D] border-[1px] border-[#D0D0D0]"
               src="https://www.youtube.com/embed/D4TZE5r9-Ks"
+              title="YouTube video"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            ></iframe> */}
+            <iframe
+              src="https://www.youtube.com/embed/_71L6RPmp7Y?si=oaHEtYyVIMSjSlav"
+              className="w-full h-full rounded-lg  shadow-[2px_2px_12px_0px_#2323234D] border-[1px] border-[#D0D0D0]"
               title="YouTube video"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
