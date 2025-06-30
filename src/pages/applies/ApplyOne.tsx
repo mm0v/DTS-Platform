@@ -260,8 +260,8 @@ export default function ApplyOne() {
 
     if (digits.length === 0) {
       errorMsg = "Zəhmət olmasa telefon nömrəsini daxil edin";
-    } else if (digits.length < 7) {
-      errorMsg = "Telefon nömrəsi ən azı 7 rəqəm olmalıdır";
+    } else if (digits.length < 9) {
+      errorMsg = "Telefon nömrəsi ən azı 9 rəqəm olmalıdır";
     } else if (digits.length > 15) {
       errorMsg = "Telefon nömrəsi maksimum 15 rəqəm ola bilər";
     }
