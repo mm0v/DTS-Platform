@@ -209,6 +209,11 @@ export default function ApplyTwo() {
     if (!localLawData.exportBazaar.length)
       errors.exportBazaar = page.exportMarketsRequired[language];
 
+    // File validation əlavə edildi
+    if (!localLawData.registerCertificate.trim()) {
+      errors.registerCertificate = "Qeydiyyat şəhadətnaməsi yüklənməlidir"; // localization lazımdır
+    }
+
     setLocalLawDataErrors(errors);
     return Object.keys(errors).length === 0;
   };
@@ -233,6 +238,8 @@ export default function ApplyTwo() {
         await saveFileToIndexedDB(file);
         const updatedData = { ...localLawData, registerCertificate: file.name };
         setLocalLawData(updatedData);
+        // File əlavə edildikdə error-u təmizlə
+        setLocalLawDataErrors((prev) => ({ ...prev, registerCertificate: "" }));
         updateLocalStorage(updatedData);
       } catch (error) {
         console.error("Failed to save file to IndexedDB", error);
@@ -264,10 +271,9 @@ export default function ApplyTwo() {
               value={localLawData.companyLawType}
               onChange={handleInputChange}
               className={`w-full bg-transparent rounded-lg p-2 sm:p-3 text-xs sm:text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 transition duration-300
-                ${
-                  localLawDataErrors.companyLawType
-                    ? "border border-red-500"
-                    : "border border-gray-700"
+                ${localLawDataErrors.companyLawType
+                  ? "border border-red-500"
+                  : "border border-gray-700"
                 }`}
               aria-invalid={!!localLawDataErrors.companyLawType}
               aria-describedby="companyType-error"
@@ -293,10 +299,9 @@ export default function ApplyTwo() {
               }
               onChange={handleInputChange}
               className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300
-                ${
-                  localLawDataErrors.businessOperations
-                    ? "border border-red-500"
-                    : "border border-gray-700"
+                ${localLawDataErrors.businessOperations
+                  ? "border border-red-500"
+                  : "border border-gray-700"
                 }`}
               aria-invalid={!!localLawDataErrors.businessOperations}
               aria-describedby="businessIndustry-error"
@@ -325,7 +330,7 @@ export default function ApplyTwo() {
               >
                 {
                   page.businessIndustry.options.machineRepairAndInstallation[
-                    language
+                  language
                   ]
                 }
               </option>
@@ -335,7 +340,7 @@ export default function ApplyTwo() {
               >
                 {
                   page.businessIndustry.options.rubberAndPlasticProducts[
-                    language
+                  language
                   ]
                 }
               </option>
@@ -383,10 +388,9 @@ export default function ApplyTwo() {
               value={localLawData.products}
               onChange={handleInputChange}
               className={`w-full bg-transparent rounded-lg p-2 sm:p-3 text-xs sm:text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 transition duration-300
-                ${
-                  localLawDataErrors.products
-                    ? "border border-red-500"
-                    : "border border-gray-700"
+                ${localLawDataErrors.products
+                  ? "border border-red-500"
+                  : "border border-gray-700"
                 }`}
               aria-invalid={!!localLawDataErrors.products}
               aria-describedby="mainProducts-error"
@@ -454,11 +458,10 @@ export default function ApplyTwo() {
                 }
                 handleCountryChange(selected);
               }}
-              className={`w-full ${
-                localLawDataErrors.exportBazaar
-                  ? "border border-red-500 rounded"
-                  : ""
-              }`}
+              className={`w-full ${localLawDataErrors.exportBazaar
+                ? "border border-red-500 rounded"
+                : ""
+                }`}
               classNamePrefix="react-select"
               placeholder={page.exportMarketsPlaceholder[language]}
               isClearable
@@ -511,7 +514,10 @@ export default function ApplyTwo() {
             </label>
             <label
               htmlFor="registerCertificate"
-              className="w-full h-14 border border-gray-700 rounded-lg flex items-center justify-between px-4 bg-transparent text-gray-400 text-sm cursor-pointer select-none"
+              className={`w-full h-14 rounded-lg flex items-center justify-between px-4 bg-transparent text-gray-400 text-sm cursor-pointer select-none ${localLawDataErrors.registerCertificate
+                ? "border border-red-500"
+                : "border border-gray-700"
+                }`}
             >
               <span className="truncate">
                 {localLawData?.registerCertificate
@@ -531,8 +537,7 @@ export default function ApplyTwo() {
             />
 
             {localLawDataErrors.registerCertificate && (
-              <p className="text-xs text-gray-400 mt-1">
-                {page.selectedFile[language]}{" "}
+              <p className="text-red-500 text-xs mt-1 input-error">
                 {localLawDataErrors.registerCertificate}
               </p>
             )}
