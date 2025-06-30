@@ -260,7 +260,7 @@ export default function ApplyOne() {
 
     if (digits.length === 0) {
       errorMsg = "Zəhmət olmasa telefon nömrəsini daxil edin";
-    } else if (digits.length < 9) {
+    } else if (digits.length < 12) {
       errorMsg = "Telefon nömrəsi ən azı 9 rəqəm olmalıdır";
     } else if (digits.length > 15) {
       errorMsg = "Telefon nömrəsi maksimum 15 rəqəm ola bilər";
@@ -356,8 +356,8 @@ export default function ApplyOne() {
     const digits = localFormData.phone.replace(/\D/g, "");
     if (digits.length === 0) {
       newErrors.phone = "Zəhmət olmasa telefon nömrəsini daxil edin";
-    } else if (digits.length < 7) {
-      newErrors.phone = "Telefon nömrəsi ən azı 7 rəqəm olmalıdır";
+    } else if (digits.length < 9) {
+      newErrors.phone = "Telefon nömrəsi ən azı 9 rəqəm olmalıdır";
     } else if (digits.length > 15) {
       newErrors.phone = "Telefon nömrəsi maksimum 15 rəqəm ola bilər";
     }
