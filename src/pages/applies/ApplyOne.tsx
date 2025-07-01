@@ -644,7 +644,7 @@ export default function ApplyOne() {
                 name="email"
                 value={localFormData.email}
                 onChange={handleInputChange}
-                placeholder="example@domain.com"
+                placeholder="example@gmail.com"
                 className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${errors.email
                   ? "border-red-500 focus:ring-red-500"
                   : "border-gray-700 focus:ring-blue-500"

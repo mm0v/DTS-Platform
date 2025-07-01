@@ -70,12 +70,15 @@ const ApplyThree = () => {
   }, [setFormData]);
 
   // Real-time validation function
-  const validateField = (fieldName: string, value: any) => {
+  const validateField = (
+    fieldName: string,
+    value: string | number | string[]
+  ) => {
     const newErrors = { ...errors };
 
     switch (fieldName) {
       case 'keyChallenges':
-        if (value.length === 0) {
+        if (Array.isArray(value) && value.length === 0) {
           newErrors.keyChallenges = page.errorMessages.required[language];
         } else {
           delete newErrors.keyChallenges;
@@ -89,23 +92,27 @@ const ApplyThree = () => {
         }
         break;
       case 'digitalTools':
-        if (value.length === 0) {
+        if (Array.isArray(value) && value.length === 0) {
           newErrors.digitalTools = page.errorMessages.required[language];
         } else {
           delete newErrors.digitalTools;
         }
         break;
       case 'otherDigitalTool':
-        if (formData.digitalTools.includes("other") && value.trim().length === 0) {
+        if (
+          formData.digitalTools.includes("other") &&
+          typeof value === "string" &&
+          value.trim().length === 0
+        ) {
           newErrors.otherDigitalTool = page.errorMessages.required[language];
         } else {
           delete newErrors.otherDigitalTool;
         }
         break;
       case 'companyPurpose':
-        if (value.trim().length === 0) {
+        if (typeof value === "string" && value.trim().length === 0) {
           newErrors.companyPurpose = page.errorMessages.required[language];
-        } else if (value.trim().length < 3) {
+        } else if (typeof value === "string" && value.trim().length < 3) {
           newErrors.companyPurpose = page.errorMessages.minLength[language];
         } else {
           delete newErrors.companyPurpose;

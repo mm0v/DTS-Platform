@@ -247,7 +247,14 @@ export default function ApplyFive() {
           captchaToken
         );
 
-        if ((result as any)?.status !== 201) {
+        interface SubmitResult {
+          status?: number;
+          response?: {
+            data?: string;
+          };
+        }
+        const typedResult = result as SubmitResult;
+        if (typedResult?.status !== 201) {
           showFillToast("Please fill all fields");
           return;
         }
