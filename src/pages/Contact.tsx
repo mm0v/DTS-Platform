@@ -28,7 +28,7 @@ const Contact = () => {
                   <p className="text-sm md:text-base">
                     {page.address[language]}
                     <br className="hidden md:block" />
-                    (Government House)
+                    {page.place[language]}
                   </p>
                 </div>
 

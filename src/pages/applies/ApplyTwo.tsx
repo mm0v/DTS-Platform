@@ -156,7 +156,7 @@ export default function ApplyTwo() {
       if (value.trim().length > 0 && value.trim().length < 3) {
         setLocalLawDataErrors((prev) => ({
           ...prev,
-          [name]: "Minimum 3 simvol daxil edilməlidir", //localizations
+          [name]: page.productsMinLength[language], //localizations
         }));
       } else {
         setLocalLawDataErrors((prev) => ({ ...prev, [name]: "" }));
@@ -201,7 +201,7 @@ export default function ApplyTwo() {
     if (!localLawData.products.trim()) {
       errors.products = page.mainProductsRequired[language];
     } else if (localLawData.products.trim().length < 3) {
-      errors.products = "Minimum 3 simvol daxil edilməlidir"; //localizations
+      errors.products = page.productsMinLength[language]; //localizations
     }
 
     if (localLawData.exportActivity === null)
@@ -211,7 +211,7 @@ export default function ApplyTwo() {
 
     // File validation əlavə edildi
     if (!localLawData.registerCertificate.trim()) {
-      errors.registerCertificate = "Qeydiyyat şəhadətnaməsi yüklənməlidir"; // localization lazımdır
+      errors.registerCertificate = page.registerCertificateRequired[language]; // localization lazımdır
     }
 
     setLocalLawDataErrors(errors);
@@ -354,7 +354,7 @@ export default function ApplyTwo() {
                 {page.businessIndustry.options.electricalEquipment[language]}
               </option>
               <option className="text-white bg-[#131021]" value="Digər">
-                Digər
+                {page.businessIndustry.options.other[language]}
               </option>
             </select>
 
