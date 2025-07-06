@@ -1,8 +1,8 @@
 export const pagesTranslations = {
   home: {
     title: {
-      AZ: '“Sənaye 4.0 Hazırlıq” Proqramı',
-      EN: '“Industry 4.0 Readiness” Program',
+      AZ: "“Sənaye 4.0 Hazırlıq” Proqramı",
+      EN: "“Industry 4.0 Readiness” Program",
     },
     description: {
       AZ: `Proqram çərçivəsində şirkətlərin mövcud rəqəmsal bacarıqlarının
@@ -90,6 +90,10 @@ export const pagesTranslations = {
     mapBtn: {
       AZ: "Google Maps-də açın",
       EN: "Open in Google Maps",
+    },
+    place: {
+      AZ: "(Hökumət evi)",
+      EN: "(Government House)",
     },
   },
   compliance: {
@@ -318,6 +322,78 @@ export const pagesTranslations = {
       AZ: "Zəhmət olmasa əlaqə nömrəsini daxil edin.",
       EN: "Please enter the phone number.",
     },
+    phoneMinLength: {
+      AZ: "Telefon nömrəsi ən azı 9 rəqəm olmalıdır",
+      EN: "Phone number must be at least 9 digits",
+    },
+    phoneMaxLength: {
+      AZ: "Telefon nömrəsi maksimum 15 rəqəm ola bilər",
+      EN: "Phone number can be maximum 15 digits",
+    },
+    companyNameEmpty: {
+      AZ: "Boş buraxıla bilməz, minimum 2, maksimum 255 simvol",
+      EN: "Cannot be left empty, minimum 2, maximum 255 characters",
+    },
+    companyNameTooLong: {
+      AZ: "255+ simvol yaza bilməzsiniz",
+      EN: "You cannot write more than 255 characters",
+    },
+    companyRegisterNumberNumeric: {
+      AZ: "Yalnız rəqəmlər daxil edilə bilər",
+      EN: "Only numbers can be entered",
+    },
+    companyRegisterNumberMinLength: {
+      AZ: "Minimum 3 rəqəm olmalıdır",
+      EN: "Must be at least 3 digits",
+    },
+    companyRegisterNumberMaxLength: {
+      AZ: "Maksimum 50 simvol ola bilər",
+      EN: "Maximum 50 characters allowed",
+    },
+    createYearFourDigits: {
+      AZ: "4 rəqəmli il daxil edin",
+      EN: "Enter a 4-digit year",
+    },
+    createYearMinimum: {
+      AZ: "Şirkətin yaranma ili 1000-dən əvvəl ola bilməz",
+      EN: "Company founding year cannot be before 1000",
+    },
+    createYearFuture: {
+      AZ: "Şirkətin yaranma ili gələcəkdə ola bilməz",
+      EN: "Company founding year cannot be in the future",
+    },
+    companyAddressMinLength: {
+      AZ: "Minimum 5 simvol olmalıdır",
+      EN: "Must be at least 5 characters",
+    },
+    locationMinLength: {
+      AZ: "Minimum 4 simvol olmalıdır",
+      EN: "Must be at least 4 characters",
+    },
+    contactPersonMinLength: {
+      AZ: "Minimum 4 simvol olmalıdır",
+      EN: "Must be at least 4 characters",
+    },
+    websiteInvalidFormat: {
+      AZ: "URL tam olmalıdır (http:// və ya https:// ilə başlamalıdır)",
+      EN: "URL must be complete (must start with http:// or https://)",
+    },
+    emailInvalidFormat: {
+      AZ: "Düzgün email ünvanı daxil edin",
+      EN: "Enter a valid email address",
+    },
+    companyRegisterNumberPlaceholder: {
+      AZ: "Minimum 3 rəqəm",
+      EN: "Minimum 3 digits",
+    },
+    locationPlaceholder: {
+      AZ: "Minimum 4 simvol",
+      EN: "Minimum 4 characters",
+    },
+    contactPersonPlaceholder: {
+      AZ: "Minimum 4 simvol",
+      EN: "Minimum 4 characters",
+    },
   },
   apply2: {
     title: {
@@ -443,6 +519,14 @@ export const pagesTranslations = {
     exportMarketsRequired: {
       AZ: "Minimum 1 ölkə seçilməlidir.",
       EN: "At least one country must be selected.",
+    },
+    productsMinLength: {
+      AZ: "Minimum 3 simvol daxil edilməlidir",
+      EN: "Minimum 3 characters must be entered",
+    },
+    registerCertificateRequired: {
+      AZ: "Qeydiyyat şəhadətnaməsi yüklənməlidir",
+      EN: "Registration certificate must be uploaded",
     },
   },
   apply3: {
