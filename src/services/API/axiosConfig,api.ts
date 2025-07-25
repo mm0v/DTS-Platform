@@ -6,7 +6,7 @@ const API = axios.create({
 });
 
 const AXIOS_PRIVATE = axios.create({
-  baseURL: "http://217.18.210.188:8081/api/v1",
+  baseURL: import.meta.env.VITE_API_URL,
   headers: {
     "Content-Type": "application/json",
   },

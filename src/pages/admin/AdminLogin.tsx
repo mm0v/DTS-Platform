@@ -1,13 +1,14 @@
 import { useLanguage } from "../../context/LanguageContext";
 import BackgroundVideo from "../../components/videos/BackgroundVideo";
 
-import { use, useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import axios from "../../services/API/axiosConfig,api";
 import useAuth from "../../hooks/useAuth";
 import { toast } from "react-toastify";
-const LOGIN_URL = "http://217.18.210.188:8081/api/v1/auth/login";
+
+const LOGIN_URL = `${import.meta.env.VITE_API_URL}/api/v1/auth/login`;
 
 function AdminLogin() {
   const { language, pagesTranslations } = useLanguage();
@@ -18,8 +19,6 @@ function AdminLogin() {
 
   const { setAuth } = useAuth();
   const navigate = useNavigate();
-  const location = useLocation();
-  const from = location.state?.from?.pathname || "/";
 
   const [errors, setErrors] = useState({ username: "", password: "" });
   const [errMsg, setErrMsg] = useState("");
@@ -77,9 +76,6 @@ function AdminLogin() {
     if (userError || passError) {
       return;
     }
-
-    console.log("Submitting form with:", { username, password });
-
     try {
       const response = await axios.post(
         LOGIN_URL,
@@ -89,11 +85,8 @@ function AdminLogin() {
           withCredentials: true,
         }
       );
-      console.log(JSON.stringify(response?.data));
-      //console.log(JSON.stringify(response));
       const accessToken = response?.data?.accessToken;
       setAuth({ user: { username, password }, accessToken: accessToken });
-      console.log({ user: { username, password }, accessToken: accessToken });
       setUsername("");
       setPassword("");
 

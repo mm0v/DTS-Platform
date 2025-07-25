@@ -18,6 +18,7 @@ function Admin() {
   const navigate = useNavigate();
   const axiosPrivate = useAxiosPrivate();
   const page = pagesTranslations.admin;
+  const BASE_URL = import.meta.env.VITE_API_URL;
 
   type CompanyTableRow = {
     id: any;
@@ -38,8 +39,8 @@ function Admin() {
     createdAt: string;
     registerCert: any;
     exportBazaar: any;
-    dataIsReal: boolean; // Add these if not already in your data
-    permitContact: boolean; // Add these if not already in your data
+    dataIsReal: boolean;
+    permitContact: boolean;
   };
 
   const [tableData, setTableData] = useState<CompanyTableRow[]>([]);
@@ -51,7 +52,9 @@ function Admin() {
     if (!confirmed) return;
 
     try {
-      await axiosPrivate.delete(`/company/delete/${id}`, { method: "DELETE" });
+      await axiosPrivate.delete(`/api/v1/company/delete/${id}`, {
+        method: "DELETE",
+      });
       setTableData((prev) => prev.filter((item) => item.id !== id));
     } catch (error) {
       console.error("Delete failed:", error);
@@ -90,28 +93,27 @@ function Admin() {
       title: "Register Certificate",
       data: "registerCert",
       render: function (data: string) {
-        return `<a href="http://217.18.210.188:8081/files/download/${data}" target="_blank">Download</a>`;
+        return `<a href="${BASE_URL}/files/download/${data}" target="_blank">Download</a>`;
       },
     },
     {
       title: "Financial Statement",
       data: "financialStatement",
       render: function (data: string) {
-        return `<a href="http://217.18.210.188:8081/files/download/${data}" target="_blank">Download</a>`;
+        return `<a href="${BASE_URL}/files/download/${data}" target="_blank">Download</a>`;
       },
     },
     {
       title: "Property Law Certificate",
       data: "propertyLawCertificate",
       render: function (data: string) {
-        return `<a href="http://217.18.210.188:8081/files/download/${data}" target="_blank">Download</a>`;
+        return `<a href="${BASE_URL}/files/download/${data}" target="_blank">Download</a>`;
       },
     },
     {
       title: "Consent",
       data: null,
       render: function (_: any, __: any, row: any) {
-        // Ensure row has dataIsReal and permitContact properties
         return `${row.dataIsReal ? "✅" : "❌"} / ${
           row.permitContact ? "✅" : "❌"
         }`;
@@ -125,7 +127,6 @@ function Admin() {
   ];
 
   useEffect(() => {
-    console.log(auth.accessToken, auth.user);
     if (!auth?.accessToken) {
       navigate("/admin/login");
 
@@ -139,7 +140,7 @@ function Admin() {
 
     const fetchData = async () => {
       try {
-        const response = await axiosPrivate.get("/company/getAll", {
+        const response = await axiosPrivate.get("/api/v1/company/getAll", {
           method: "GET",
           signal: controller.signal,
         });
@@ -197,10 +198,13 @@ function Admin() {
   const handleDownloadButton = async () => {
     const fetchData = async () => {
       try {
-        const response = await axiosPrivate.get("/company/export-excel", {
-          method: "GET",
-          responseType: "blob",
-        });
+        const response = await axiosPrivate.get(
+          "/api/v1/company/export-excel",
+          {
+            method: "GET",
+            responseType: "blob",
+          }
+        );
         const blob = response.data;
         const url = window.URL.createObjectURL(blob);
 
