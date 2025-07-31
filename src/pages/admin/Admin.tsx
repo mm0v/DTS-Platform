@@ -45,7 +45,11 @@ function Admin() {
 
   const [tableData, setTableData] = useState<CompanyTableRow[]>([]);
 
-  const handleDelete = async (id: number) => {
+  const handleDelete = async (
+    id: number,
+    e: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    e.preventDefault();
     const confirmed = window.confirm(
       "Are you sure you want to delete this company?"
     );
@@ -62,7 +66,13 @@ function Admin() {
   };
 
   const columns = [
-    { title: "ID", data: "id" },
+    {
+      title: "",
+      data: null,
+      render: function (_: any, __: any, ___: any, meta: any) {
+        return `${meta.row + 1}`;
+      },
+    },
     { title: "Company", data: "name" },
     { title: "Reg. No", data: "registerNumber" },
     { title: "Year", data: "year" },
@@ -118,6 +128,10 @@ function Admin() {
           row.permitContact ? "✅" : "❌"
         }`;
       },
+    },
+    {
+      title: "ID",
+      data: "id",
     },
     {
       title: "Actions",
@@ -243,11 +257,13 @@ function Admin() {
           }}
           className="display dark-table hover text-white"
           slots={{
-            24: (_: any, type: string, row: any) => {
+            25: (_: any, type: string, row: any) => {
               if (type === "display") {
                 return (
                   <button
-                    onClick={() => handleDelete(row.id)}
+                    onClick={(e: React.MouseEvent<HTMLButtonElement>) =>
+                      handleDelete(row.id, e)
+                    }
                     className="bg-red-600 cursor-pointer hover:bg-red-700 text-white px-3 py-1 rounded text-sm"
                   >
                     Delete

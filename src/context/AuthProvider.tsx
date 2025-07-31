@@ -4,9 +4,14 @@ export interface AuthContextType {
   auth: {
     user?: any;
     accessToken?: string;
+    refreshToken?: string;
   };
   setAuth: React.Dispatch<
-    React.SetStateAction<{ user?: any; accessToken?: string }>
+    React.SetStateAction<{
+      user?: any;
+      accessToken?: string;
+      refreshToken?: string;
+    }>
   >;
 }
 

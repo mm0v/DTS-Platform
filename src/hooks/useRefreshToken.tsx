@@ -2,11 +2,11 @@ import API from "../services/API/axiosConfig,api";
 import useAuth from "./useAuth";
 
 function useRefreshToken() {
-  const { setAuth } = useAuth();
+  const { auth, setAuth } = useAuth();
 
   const refresh = async () => {
-    const response = await API.get("/refresh", {
-      withCredentials: true,
+    const response = await API.get("/api/v1/auth/refresh", {
+      params: { refreshToken: auth?.refreshToken },
     });
     setAuth((prev: any) => {
       return {

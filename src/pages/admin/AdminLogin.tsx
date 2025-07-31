@@ -86,7 +86,12 @@ function AdminLogin() {
         }
       );
       const accessToken = response?.data?.accessToken;
-      setAuth({ user: { username, password }, accessToken: accessToken });
+      const refreshToken = response?.data?.refreshToken;
+      setAuth({
+        user: { username, password },
+        accessToken: accessToken,
+        refreshToken: refreshToken,
+      });
       setUsername("");
       setPassword("");
 
