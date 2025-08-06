@@ -813,4 +813,39 @@ export const pagesTranslations = {
       },
     },
   },
+  admin: {
+    downloadBtn:{
+      AZ: "Excel faylı olaraq yüklə",
+      EN: "Download as an Excel file",
+    },
+
+    login: {
+      loginTitle:{
+        AZ: "Daxil ol",
+        EN: "Login",
+      },
+      username : {
+        AZ: "İstifadəçi adı",
+        EN: "Username",
+      },
+      password: {
+        AZ: "Şifrə",
+        EN: "Password",
+      },
+      loginBtn: {
+        AZ: "Növbəti",
+        EN: "Next",
+      },
+      errors: {
+        usernameError: {
+          AZ: "Boş buraxıla bilməz. Minimum 2 simvol, maksimum 255 simvol",
+          EN: "Cannot be left empty. Minimum 2 characters, maximum 255 characters",
+        },
+        passwordError: {
+          AZ: "Boş buraxıla bilməz. Minimum 6 simvol, maksimum 255 simvol",
+          EN: "Cannot be left empty. Minimum 6 characters, maximum 255 characters",
+        },
+      }
+    }
+  }
 };

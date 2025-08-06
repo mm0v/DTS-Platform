@@ -5,6 +5,14 @@ const API = axios.create({
   timeout: 30000,
 });
 
+const AXIOS_PRIVATE = axios.create({
+  baseURL: import.meta.env.VITE_API_URL,
+  headers: {
+    "Content-Type": "application/json",
+  },
+  withCredentials: true,
+});
+
 API.interceptors.request.use(
   (config) => {
     if (config.data instanceof FormData) {
@@ -20,3 +28,4 @@ API.interceptors.request.use(
 );
 
 export default API;
+export const axiosPrivate = AXIOS_PRIVATE;
