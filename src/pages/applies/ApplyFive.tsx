@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useContext, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { Download } from "lucide-react";
@@ -190,6 +189,16 @@ export default function ApplyFive() {
       );
       const propertyLaw = JSON.parse(localStorage.getItem("propertyLaw")!);
       const restOfData = JSON.parse(localStorage.getItem("restOfData")!);
+      const propertyLawData = {
+        businessOperations: propertyLaw.businessOperations,
+        companyLawType: propertyLaw.companyLawType,
+        products: propertyLaw.products,
+        exportActivity: true,
+        exportBazaar: propertyLaw.exportActivity
+          ? propertyLaw.exportBazaar
+          : ["Turkey"], 
+      };
+
       const dataToSubmit = {
         companyData: {
           companyName: companyData.companyName,
@@ -225,18 +234,14 @@ export default function ApplyFive() {
           digitalTools: digitalReadiness.digitalTools,
           companyPurpose: digitalReadiness.companyPurpose,
         },
-        propertyLaw: {
-          businessOperations: propertyLaw.businessOperations,
-          companyLawType: propertyLaw.companyLawType,
-          products: propertyLaw.products,
-          exportActivity: propertyLaw.exportActivity,
-          exportBazaar: propertyLaw.exportBazaar,
-        },
+        propertyLaw: propertyLawData,
       };
 
       const files = {
         propertyLawCertificate: await getFileFromIndexedDB("propertyLawCertificate"),
-        registerCertificate: await getFileFromIndexedDB("registerCertificate"),
+        registerCertificate: propertyLaw.exportActivity
+          ? await getFileFromIndexedDB("registerCertificate")
+          : null,
         financialStatement: await getFileFromIndexedDB("financialStatement"),
       };
 
@@ -255,7 +260,11 @@ export default function ApplyFive() {
         }
         const typedResult = result as SubmitResult;
         if (typedResult?.status !== 201) {
-          showFillToast("Please fill all fields");
+          if (typedResult?.status === 403) {
+            showFillToast(typedResult?.response?.data || "Sizə icazə verilmir.");
+          } else {
+            showFillToast("Please fill all fields");
+          }
           return;
         }
 

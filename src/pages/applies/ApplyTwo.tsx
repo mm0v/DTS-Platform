@@ -9,6 +9,7 @@ import Select, { type MultiValue } from "react-select";
 import countryList from "react-select-country-list";
 import { Download } from "lucide-react";
 import { CommonApplySVG } from "../../components/SVG/Apply";
+import { toast } from "react-toastify";
 
 interface PropertyLaw {
   exportBazaar: string[];
@@ -48,6 +49,11 @@ async function saveFileToIndexedDB(file: File) {
   });
 }
 
+const showFillToast = (message: string) =>
+  toast.warning(message, {
+    position: "top-center",
+  });
+
 async function getFileFromIndexedDB(): Promise<File | null> {
   const db = await openDB();
   return new Promise((resolve, reject) => {
@@ -86,6 +92,7 @@ export default function ApplyTwo() {
   >({});
   const [customIndustry, setCustomIndustry] = useState<string>("");
   const [showCustomInput, setShowCustomInput] = useState<boolean>(false);
+  const [hideExportFields, setHideExportFields] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -97,7 +104,7 @@ export default function ApplyTwo() {
             ...savedData,
             registerCertificate: file.name,
           });
-          fileInputRef.current!.name = file.name;
+          fileInputRef.current!.name = file?.name;
         } else if (savedData) {
           setLocalLawData(savedData);
         }
@@ -201,17 +208,19 @@ export default function ApplyTwo() {
     if (!localLawData.products.trim()) {
       errors.products = page.mainProductsRequired[language];
     } else if (localLawData.products.trim().length < 3) {
-      errors.products = page.productsMinLength[language]; //localizations
+      errors.products = page.productsMinLength[language];
     }
 
     if (localLawData.exportActivity === null)
       errors.exportActivity = page.exportActivityRequired[language];
-    if (!localLawData.exportBazaar.length)
-      errors.exportBazaar = page.exportMarketsRequired[language];
 
-    // File validation əlavə edildi
-    if (!localLawData.registerCertificate.trim()) {
-      errors.registerCertificate = page.registerCertificateRequired[language]; // localization lazımdır
+    if (localLawData.exportActivity) {
+      if (!localLawData.exportBazaar.length)
+        errors.exportBazaar = page.exportMarketsRequired[language];
+
+      if (!localLawData.registerCertificate.trim()) {
+        errors.registerCertificate = page.registerCertificateRequired[language];
+      }
     }
 
     setLocalLawDataErrors(errors);
@@ -244,6 +253,31 @@ export default function ApplyTwo() {
       } catch (error) {
         console.error("Failed to save file to IndexedDB", error);
       }
+    }
+  };
+
+  const handleExportActivityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    if (value === "Xeyr") {
+      const updatedData = {
+        ...localLawData,
+        exportActivity: false,
+        exportBazaar: ["Turkey"],
+        registerCertificate: "",
+      };
+      setLocalLawData(updatedData);
+      updateLocalStorage(updatedData);
+      setHideExportFields(true);
+    } else {
+      const updatedData = {
+        ...localLawData,
+        exportActivity: true,
+        exportBazaar: [],
+        registerCertificate: "",
+      };
+      setLocalLawData(updatedData);
+      updateLocalStorage(updatedData);
+      setHideExportFields(false);
     }
   };
 
@@ -413,7 +447,7 @@ export default function ApplyTwo() {
                   type="radio"
                   name="exportActivity"
                   value="Bəli"
-                  onChange={handleInputChange}
+                  onChange={handleExportActivityChange}
                   checked={localLawData.exportActivity === true}
                   className="hidden"
                 />
@@ -428,7 +462,7 @@ export default function ApplyTwo() {
                   type="radio"
                   name="exportActivity"
                   value="Xeyr"
-                  onChange={handleInputChange}
+                  onChange={handleExportActivityChange}
                   checked={localLawData.exportActivity === false}
                   className="hidden"
                 />
@@ -443,108 +477,121 @@ export default function ApplyTwo() {
                 {localLawDataErrors.exportActivity}
               </p>
             )}
-          </div>
 
-          {/* Export Markets Multi-Select */}
-          <div className="space-y-2">
-            <label className="text-sm">{page.exportMarkets[language]}</label>
-            <Select
-              options={options}
-              value={selectedOptions}
-              onChange={(selected) => {
-                if (selected && selected.length > 4) {
-                  alert(page.exportMarketsAlert[language]);
-                  return;
-                }
-                handleCountryChange(selected);
+            <div
+              style={{
+                transition: "all 0.4s cubic-bezier(.4,0,.2,1)",
+                opacity: localLawData.exportActivity && !hideExportFields ? 1 : 0,
+                maxHeight: localLawData.exportActivity && !hideExportFields ? 1000 : 0,
+                overflow: "hidden",
+                pointerEvents: hideExportFields ? "none" : "auto", // inputlar bağlananda interaktiv olmasın
               }}
-              className={`w-full ${localLawDataErrors.exportBazaar
-                ? "border border-red-500 rounded"
-                : ""
-                }`}
-              classNamePrefix="react-select"
-              placeholder={page.exportMarketsPlaceholder[language]}
-              isClearable
-              isMulti
-              closeMenuOnSelect={false}
-              styles={{
-                menu: (provided) => ({
-                  ...provided,
-                  backgroundColor: "#131021",
-                  color: "white",
-                }),
-                control: (provided) => ({
-                  ...provided,
-                  backgroundColor: "transparent",
-                  borderColor: localLawDataErrors.exportBazaar
-                    ? "red"
-                    : "#4B5563",
-                }),
-                singleValue: (provided) => ({
-                  ...provided,
-                  color: "white",
-                }),
-                multiValue: (provided) => ({
-                  ...provided,
-                  backgroundColor: "#373176",
-                  color: "white",
-                }),
-                multiValueLabel: (provided) => ({
-                  ...provided,
-                  color: "white",
-                }),
-                option: (provided, state) => ({
-                  ...provided,
-                  backgroundColor: state.isFocused ? "#373176" : "#131021",
-                  color: "white",
-                  cursor: "pointer",
-                }),
-              }}
-            />
-            {localLawDataErrors.exportBazaar && (
-              <p className="text-red-500 text-xs mt-1 input-error">
-                {localLawDataErrors.exportBazaar}
-              </p>
-            )}
-          </div>
-
-          <div className="space-y-2">
-            <label className="text-sm ">
-              {page.registerCertificate[language]}
-            </label>
-            <label
-              htmlFor="registerCertificate"
-              className={`w-full h-14 rounded-lg flex items-center justify-between px-4 bg-transparent text-gray-400 text-sm cursor-pointer select-none ${localLawDataErrors.registerCertificate
-                ? "border border-red-500"
-                : "border border-gray-700"
-                }`}
             >
-              <span className="truncate">
-                {localLawData?.registerCertificate
-                  ? `${localLawData.registerCertificate}`
-                  : "No file selected"}
-              </span>
-              <Download size={20} className="text-white ml-2" />
-            </label>
-            <input
-              id="registerCertificate"
-              type="file"
-              name="registerCertificate"
-              accept=".doc,.docx,.pdf"
-              ref={fileInputRef}
-              onChange={handleFileChange}
-              className="hidden"
-            />
+              {localLawData.exportActivity && !hideExportFields && (
+                <>
+                  <div className="space-y-4">
+                    <label className="text-sm">{page.exportMarkets[language]}</label>
+                    <Select
+                      options={options}
+                      value={selectedOptions}
+                      onChange={(selected) => {
+                        if (selected && selected.length > 4) {
+                          showFillToast(page.exportMarketsAlert[language]);
+                          return;
+                        }
+                        handleCountryChange(selected);
+                      }}
+                      className={`w-full ${localLawDataErrors.exportBazaar
+                        ? "border border-red-500 rounded"
+                        : ""
+                        }`}
+                      classNamePrefix="react-select"
+                      placeholder={page.exportMarketsPlaceholder[language]}
+                      isClearable
+                      isMulti
+                      closeMenuOnSelect={false}
+                      styles={{
+                        menu: (provided) => ({
+                          ...provided,
+                          backgroundColor: "#131021",
+                          color: "white",
+                        }),
+                        control: (provided) => ({
+                          ...provided,
+                          backgroundColor: "transparent",
+                          borderColor: localLawDataErrors.exportBazaar
+                            ? "red"
+                            : "#4B5563",
+                        }),
+                        singleValue: (provided) => ({
+                          ...provided,
+                          color: "white",
+                        }),
+                        multiValue: (provided) => ({
+                          ...provided,
+                          backgroundColor: "#373176",
+                          color: "white",
+                        }),
+                        multiValueLabel: (provided) => ({
+                          ...provided,
+                          color: "white",
+                        }),
+                        option: (provided, state) => ({
+                          ...provided,
+                          backgroundColor: state.isFocused ? "#373176" : "#131021",
+                          color: "white",
+                          cursor: "pointer",
+                        }),
+                      }}
+                    />
+                    {localLawDataErrors.exportBazaar && (
+                      <p className="text-red-500 text-xs mt-1 input-error">
+                        {localLawDataErrors.exportBazaar}
+                      </p>
+                    )}
+                  </div>
 
-            {localLawDataErrors.registerCertificate && (
-              <p className="text-red-500 text-xs mt-1 input-error">
-                {localLawDataErrors.registerCertificate}
-              </p>
-            )}
-            <div>
-              <p className="text-sm text-gray-400">
-                {page.fileLimitNote[language]}{" "}
-              </p>
+                  <div className="space-y-2">
+                    <label className="text-sm ">
+                      {page.registerCertificate[language]}
+                    </label>
+                    <label
+                      htmlFor="registerCertificate"
+                      className={`w-full h-14 rounded-lg flex items-center justify-between px-4 bg-transparent text-gray-400 text-sm cursor-pointer select-none ${localLawDataErrors.registerCertificate
+                        ? "border border-red-500"
+                        : "border border-gray-700"
+                        }`}
+                    >
+                      <span className="truncate">
+                        {localLawData?.registerCertificate
+                          ? `${localLawData.registerCertificate}`
+                          : "No file selected"}
+                      </span>
+                      <Download size={20} className="text-white ml-2" />
+                    </label>
+                    <input
+                      id="registerCertificate"
+                      type="file"
+                      name="registerCertificate"
+                      accept=".doc,.docx,.pdf"
+                      ref={fileInputRef}
+                      onChange={handleFileChange}
+                      className="hidden"
+                    />
+
+                    {localLawDataErrors.registerCertificate && (
+                      <p className="text-red-500 text-xs mt-1 input-error">
+                        {localLawDataErrors.registerCertificate}
+                      </p>
+                    )}
+                    <div>
+                      <p className="text-sm text-gray-400">
+                        {page.fileLimitNote[language]}{" "}
+                      </p>
+                    </div>
+                  </div>
+                </>
+              )}
             </div>
           </div>
 
