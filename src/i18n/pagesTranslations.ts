@@ -198,7 +198,7 @@ export const pagesTranslations = {
       EN: "Prioritization Methodology",
     },
     methodologyText: {
-      AZ: `Proqram çərçivəsində hər il müəyyən sayda şirkətlər iştirak üçün seçilərək proqrama dəvət olunacaq. Uyğun hesab edilən müraciətçilər iştiraklarının başlanmasından əvvəl rəsmi şəkildə məlumatlandırılacaq. Bu vaxt çərçivəsi, iştirakçılara ilkin müzakirələrin aparılması və zəruri hazırlıqların görülməsi üçün kifayət qədər imkan yaradır. Proqramın növbəti mərhələlərində digər şirkətlər də iştirak etmək imkanı əldə edəcəkdir.`,
+      AZ: `Proqram çərçivində hər il müəyyən sayda şirkətlər iştirak üçün seçilərək proqrama dəvət olunacaq. Uyğun hesab edilən müraciətçilər iştiraklarının başlanmasından əvvəl rəsmi şəkildə məlumatlandırılacaq. Bu vaxt çərçivəsi, iştirakçılara ilkin müzakirələrin aparılması və zəruri hazırlıqların görülməsi üçün kifayət qədər imkan yaradır. Proqramın növbəti mərhələlərində digər şirkətlər də iştirak etmək imkanı əldə edəcəkdir.`,
       EN: `Each year, a certain number of companies will be selected to participate in the program. Applicants deemed eligible will be officially informed prior to the start of their participation. This timeline allows sufficient opportunity for preliminary discussions and necessary preparations. Other companies will have the opportunity to participate in future phases of the program.`,
     },
   },
@@ -399,6 +399,18 @@ export const pagesTranslations = {
     title: {
       AZ: "Mülkiyyət və hüquqi quruluş",
       EN: "Ownership and Legal Structure",
+    },
+    propertyLawCertificate: {
+      AZ: "Əmlak sənədinin faylı",
+      EN: "Property Law Certificate file"
+    },
+    propertyLawCertificateRequired: {
+      AZ: "Zəhmət olmasa şirkət qeydiyyatı sertifikatını əlavə edin!",
+      EN: "Please upload the company registration certificate!",
+    },
+    propertyLawCertificateType: {
+      AZ: "Zəhmət olmasa word və ya pdf faylarını əlavə edin!",
+      EN: "Please upload Word or PDF files!",
     },
     companyType: {
       AZ: "Şirkətin hüquqi növü (MMC, ASC, Fərdi sahibkar və s.)",
@@ -716,7 +728,7 @@ export const pagesTranslations = {
         EN: "I confirm the accuracy of the submitted information.",
       },
       permitContact: {
-        AZ: "Müraciətimlə əlaqədar 4SİM tərəfindən əlaqə saxlanmasını qəbul edirəm.",
+        AZ: "Müraciətimlə əlaqədar 4SİM tərəfindən əlaqə saxlanılmasını qəbul edirəm.",
         EN: "I accept to be contacted by 4SIM regarding my application.",
       },
       privacyAcceptance: {
@@ -728,14 +740,6 @@ export const pagesTranslations = {
       fileLimit: {
         AZ: "Fayl çox böyükdür.Maksimum 20 MB fayl yükləyə bilərsiz!",
         EN: "The uploaded file cannot exceed 20 MB",
-      },
-      propertyLawCertificateRequired: {
-        AZ: "Zəhmət olmasa şirkət qeydiyyatı sertifikatını əlavə edin!",
-        EN: "Please upload the company registration certificate!",
-      },
-      propertyLawCertificateType: {
-        AZ: "Zəhmət olmasa word və ya pdf faylarını əlavə edin!",
-        EN: "Please upload Word or PDF files!",
       },
       financialStatementType: {
         AZ: "Zəhmət olmasa word,pdf və ya excel faylarını əlavə edin!",
@@ -814,17 +818,17 @@ export const pagesTranslations = {
     },
   },
   admin: {
-    downloadBtn:{
+    downloadBtn: {
       AZ: "Excel faylı olaraq yüklə",
       EN: "Download as an Excel file",
     },
 
     login: {
-      loginTitle:{
+      loginTitle: {
         AZ: "Daxil ol",
         EN: "Login",
       },
-      username : {
+      username: {
         AZ: "İstifadəçi adı",
         EN: "Username",
       },

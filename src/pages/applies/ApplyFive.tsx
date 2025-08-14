@@ -39,7 +39,7 @@ async function saveFileToIndexedDB(file: File, FILE_KEY: string) {
   return new Promise<void>((resolve, reject) => {
     const tx = db.transaction(STORE_NAME, "readwrite");
     const store = tx.objectStore(STORE_NAME);
-    const putRequest = store.put(file, FILE_KEY);
+    const putRequest = store.put(file, FILE_KEY); 
     putRequest.onsuccess = () => resolve();
     putRequest.onerror = () => reject(putRequest.error);
   });
@@ -60,7 +60,7 @@ async function getFileFromIndexedDB(
 
 interface DeclarationAndFileState {
   files: {
-    propertyLawCertificate: { name: string; size: number; type: string } | null;
+    registerCertificate: { name: string; size: number; type: string } | null;
     financialStatement: { name: string; size: number; type: string } | null;
   };
   declaration: {
@@ -83,7 +83,7 @@ export default function ApplyFive() {
 
   const initialValue: DeclarationAndFileState = {
     files: {
-      propertyLawCertificate: null,
+      registerCertificate: null, 
       financialStatement: null,
     },
     declaration: {
@@ -96,7 +96,7 @@ export default function ApplyFive() {
   const [formData, setFormData] = useState<DeclarationAndFileState>(initialValue);
   const [isFormValid, setIsFormValid] = useState<boolean>(false);
   const [errors, setErrors] = useState<Record<string, string>>({
-    propertyLawCertificate: "",
+    registerCertificate: "", 
     financialStatement: "",
   });
   const [showConfirmModal, setShowConfirmModal] = useState<boolean>(false);
@@ -106,14 +106,13 @@ export default function ApplyFive() {
   const [retryCount, setRetryCount] = useState<number>(0);
   const [localIsSubmitting, setLocalIsSubmitting] = useState<boolean>(false);
 
-  const propertyLawCertificateRef = useRef<HTMLInputElement>(null);
   const financialStatementRef = useRef<HTMLInputElement>(null);
+  const registerCertificateRef = useRef<HTMLInputElement>(null);
 
-  // Validate form whenever form data changes
   useEffect(() => {
     const validateForm = () => {
       const filesUploaded =
-        formData.files.propertyLawCertificate !== null &&
+        formData.files.registerCertificate !== null &&
         formData.files.financialStatement !== null;
 
       const checkboxesChecked =
@@ -130,20 +129,20 @@ export default function ApplyFive() {
   useEffect(() => {
     const savedData = JSON.parse(localStorage.getItem("restOfData") || "null");
     Promise.all([
-      getFileFromIndexedDB("propertyLawCertificate").catch(() => null),
+      getFileFromIndexedDB("registerCertificate").catch(() => null),
       getFileFromIndexedDB("financialStatement").catch(() => null),
     ])
-      .then(([propertyFile, financialFile]) => {
+      .then(([registerFile, financialFile]) => {
         if (savedData) {
           const updatedData = {
             ...savedData,
             files: {
               ...savedData.files,
-              ...(propertyFile && {
-                propertyLawCertificate: {
-                  name: propertyFile.name,
-                  size: propertyFile.size,
-                  type: propertyFile.type,
+              ...(registerFile && {
+                registerCertificate: {
+                  name: registerFile.name,
+                  size: registerFile.size,
+                  type: registerFile.type,
                 },
               }),
               ...(financialFile && {
@@ -157,8 +156,8 @@ export default function ApplyFive() {
           };
           setFormData(updatedData);
 
-          if (propertyFile && propertyLawCertificateRef.current) {
-            propertyLawCertificateRef.current.name = propertyFile.name;
+          if (registerFile && registerCertificateRef.current) {
+            registerCertificateRef.current.name = registerFile.name;
           }
           if (financialFile && financialStatementRef.current) {
             financialStatementRef.current.name = financialFile.name;
@@ -236,12 +235,11 @@ export default function ApplyFive() {
         },
         propertyLaw: propertyLawData,
       };
+      console.log(dataToSubmit);
 
       const files = {
         propertyLawCertificate: await getFileFromIndexedDB("propertyLawCertificate"),
-        registerCertificate: propertyLaw.exportActivity
-          ? await getFileFromIndexedDB("registerCertificate")
-          : null,
+        registerCertificate: await getFileFromIndexedDB("registerCertificate"),
         financialStatement: await getFileFromIndexedDB("financialStatement"),
       };
 
@@ -300,7 +298,7 @@ export default function ApplyFive() {
 
   const handleFileChange = async (
     e: React.ChangeEvent<HTMLInputElement>,
-    type: "propertyLawCertificate" | "financialStatement"
+    type: "propertyLawCertificate" | "financialStatement" | "registerCertificate"
   ) => {
     const file = e.target.files?.[0];
 
@@ -501,31 +499,31 @@ export default function ApplyFive() {
               </label>
               <div className="relative">
                 <label
-                  htmlFor="propertyLawCertificate"
+                  htmlFor="registerCertificate"
                   className="w-full h-14 border border-gray-600 rounded-lg flex items-center justify-between px-4 bg-gray-800/30 text-gray-400 text-sm cursor-pointer select-none"
                 >
                   <span className="truncate">
-                    {formData.files?.propertyLawCertificate
-                      ? formData.files.propertyLawCertificate.name
+                    {formData.files?.registerCertificate
+                      ? formData.files.registerCertificate.name
                       : "No file selected"}
                   </span>
                   <Download size={20} className="text-white ml-2" />
                 </label>
                 <input
-                  id="propertyLawCertificate"
+                  id="registerCertificate"
                   type="file"
                   className="hidden"
                   accept=".doc,.docx,.pdf"
-                  ref={propertyLawCertificateRef}
-                  onChange={(e) => handleFileChange(e, "propertyLawCertificate")}
+                  ref={registerCertificateRef}
+                  onChange={(e) => handleFileChange(e, "registerCertificate")}
                 />
               </div>
               <p className="text-sm text-gray-400">
                 {page.fileFormatText[language]}
               </p>
-              {errors.propertyLawCertificate && (
+              {errors.registerCertificate && (
                 <p className="text-red-500 font-medium text-sm mt-1">
-                  {errors.propertyLawCertificate}
+                  {errors.registerCertificate}
                 </p>
               )}
             </div>

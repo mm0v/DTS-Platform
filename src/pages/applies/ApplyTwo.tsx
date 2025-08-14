@@ -17,12 +17,12 @@ interface PropertyLaw {
   companyLawType: string;
   products: string;
   exportActivity: boolean;
-  registerCertificate: string;
+  propertyLawCertificate: string; 
 }
 
 const DB_NAME = "ALL files";
 const STORE_NAME = "files";
-const FILE_KEY = "registerCertificate";
+const FILE_KEY = "propertyLawCertificate"; 
 
 function openDB() {
   return new Promise<IDBDatabase>((resolve, reject) => {
@@ -48,11 +48,6 @@ async function saveFileToIndexedDB(file: File) {
     putRequest.onerror = () => reject(putRequest.error);
   });
 }
-
-const showFillToast = (message: string) =>
-  toast.warning(message, {
-    position: "top-center",
-  });
 
 async function getFileFromIndexedDB(): Promise<File | null> {
   const db = await openDB();
@@ -83,7 +78,7 @@ export default function ApplyTwo() {
     companyLawType: "",
     products: "",
     exportActivity: false,
-    registerCertificate: "",
+    propertyLawCertificate: "", 
   };
 
   const [localLawData, setLocalLawData] = useState<PropertyLaw>(initialValue);
@@ -102,7 +97,7 @@ export default function ApplyTwo() {
         if (file && savedData) {
           setLocalLawData({
             ...savedData,
-            registerCertificate: file.name,
+            propertyLawCertificate: file.name,
           });
           fileInputRef.current!.name = file?.name;
         } else if (savedData) {
@@ -163,7 +158,7 @@ export default function ApplyTwo() {
       if (value.trim().length > 0 && value.trim().length < 3) {
         setLocalLawDataErrors((prev) => ({
           ...prev,
-          [name]: page.productsMinLength[language], //localizations
+          [name]: page.productsMinLength[language], 
         }));
       } else {
         setLocalLawDataErrors((prev) => ({ ...prev, [name]: "" }));
@@ -218,8 +213,8 @@ export default function ApplyTwo() {
       if (!localLawData.exportBazaar.length)
         errors.exportBazaar = page.exportMarketsRequired[language];
 
-      if (!localLawData.registerCertificate.trim()) {
-        errors.registerCertificate = page.registerCertificateRequired[language];
+      if (!localLawData.propertyLawCertificate.trim()) {
+        errors.propertyLawCertificate = page.propertyLawCertificateRequired[language];
       }
     }
 
@@ -236,6 +231,13 @@ export default function ApplyTwo() {
     return false;
   };
 
+  
+    const showFillToast = (message: string) =>
+      toast.warning(message, {
+        position: "top-center",
+      });
+  
+
   const selectedOptions = options.filter((option) =>
     localLawData.exportBazaar.includes(option.label)
   );
@@ -245,10 +247,9 @@ export default function ApplyTwo() {
     if (file) {
       try {
         await saveFileToIndexedDB(file);
-        const updatedData = { ...localLawData, registerCertificate: file.name };
+        const updatedData = { ...localLawData, propertyLawCertificate: file.name };
         setLocalLawData(updatedData);
-        // File əlavə edildikdə error-u təmizlə
-        setLocalLawDataErrors((prev) => ({ ...prev, registerCertificate: "" }));
+        setLocalLawDataErrors((prev) => ({ ...prev, propertyLawCertificate: "" }));
         updateLocalStorage(updatedData);
       } catch (error) {
         console.error("Failed to save file to IndexedDB", error);
@@ -263,7 +264,7 @@ export default function ApplyTwo() {
         ...localLawData,
         exportActivity: false,
         exportBazaar: ["Turkey"],
-        registerCertificate: "",
+        propertyLawCertificate: "", 
       };
       setLocalLawData(updatedData);
       updateLocalStorage(updatedData);
@@ -273,7 +274,7 @@ export default function ApplyTwo() {
         ...localLawData,
         exportActivity: true,
         exportBazaar: [],
-        registerCertificate: "",
+        propertyLawCertificate: "",
       };
       setLocalLawData(updatedData);
       updateLocalStorage(updatedData);
@@ -360,7 +361,7 @@ export default function ApplyTwo() {
               </option>
               <option
                 className="text-white bg-[#131021]"
-                value="Maşın və avadanlıqların təmiri və quraşdırılması" //localizations
+                value="Maşın və avadanlıqların təmiri və quraşdırılması"
               >
                 {
                   page.businessIndustry.options.machineRepairAndInstallation[
@@ -484,7 +485,7 @@ export default function ApplyTwo() {
                 opacity: localLawData.exportActivity && !hideExportFields ? 1 : 0,
                 maxHeight: localLawData.exportActivity && !hideExportFields ? 1000 : 0,
                 overflow: "hidden",
-                pointerEvents: hideExportFields ? "none" : "auto", // inputlar bağlananda interaktiv olmasın
+                pointerEvents: hideExportFields ? "none" : "auto",
               }}
             >
               {localLawData.exportActivity && !hideExportFields && (
@@ -553,40 +554,40 @@ export default function ApplyTwo() {
 
                   <div className="space-y-2">
                     <label className="text-sm ">
-                      {page.registerCertificate[language]}
+                      {page.propertyLawCertificate[language]}
                     </label>
                     <label
-                      htmlFor="registerCertificate"
-                      className={`w-full h-14 rounded-lg flex items-center justify-between px-4 bg-transparent text-gray-400 text-sm cursor-pointer select-none ${localLawDataErrors.registerCertificate
+                      htmlFor="propertyLawCertificate"
+                      className={`w-full h-14 rounded-lg flex items-center justify-between px-4 bg-transparent text-gray-400 text-sm cursor-pointer select-none ${localLawDataErrors.propertyLawCertificate
                         ? "border border-red-500"
                         : "border border-gray-700"
                         }`}
                     >
                       <span className="truncate">
-                        {localLawData?.registerCertificate
-                          ? `${localLawData.registerCertificate}`
+                        {localLawData?.propertyLawCertificate
+                          ? `${localLawData.propertyLawCertificate}`
                           : "No file selected"}
                       </span>
                       <Download size={20} className="text-white ml-2" />
                     </label>
                     <input
-                      id="registerCertificate"
+                      id="propertyLawCertificate"
                       type="file"
-                      name="registerCertificate"
+                      name="propertyLawCertificate"
                       accept=".doc,.docx,.pdf"
                       ref={fileInputRef}
                       onChange={handleFileChange}
                       className="hidden"
                     />
 
-                    {localLawDataErrors.registerCertificate && (
+                    {localLawDataErrors.propertyLawCertificate && (
                       <p className="text-red-500 text-xs mt-1 input-error">
-                        {localLawDataErrors.registerCertificate}
+                        {localLawDataErrors.propertyLawCertificate}
                       </p>
                     )}
                     <div>
                       <p className="text-sm text-gray-400">
-                        {page.fileLimitNote[language]}{" "}
+                        {page.propertyLawCertificateType[language]}
                       </p>
                     </div>
                   </div>
