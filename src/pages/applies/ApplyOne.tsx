@@ -53,130 +53,130 @@ export default function ApplyOne() {
     setLocalFormData(savedData);
   }, []);
 
-const validateCompanyName = (value: string) => {
-  if (!value.trim()) {
-    return page.companyNameEmpty[language];
-  }
-  if (value.trim().length < 2) {
-    return page.companyNameEmpty[language];
-  }
-  if (value.trim().length > 255) {
-    return page.companyNameTooLong[language];
-  }
-  return "";
-};
-
-const validateCompanyRegisterNumber = (value: string) => {
-  if (!value.trim()) {
-    return page.companyRegisterNumberRequired[language];
-  }
-
-  const numericPattern = /^[0-9]+$/;
-  if (!numericPattern.test(value.trim())) {
-    return page.companyRegisterNumberNumeric[language];
-  }
-
-  if (value.trim().length < 3) {
-    return page.companyRegisterNumberMinLength[language];
-  }
-
-  if (value.trim().length > 50) {
-    return page.companyRegisterNumberMaxLength[language];
-  }
-
-  return "";
-};
-
-const validateCreateYear = (value: string) => {
-  if (!value.trim()) {
-    return page.createYearRequired[language];
-  }
-
-  const year = parseInt(value, 10);
-  const currentYear = new Date().getFullYear();
-
-  if (!/^\d{4}$/.test(value)) {
-    return page.createYearFourDigits[language];
-  }
-
-  if (year < 1000) {
-    return page.createYearMinimum[language];
-  }
-
-  if (year > currentYear) {
-    return page.createYearFuture[language];
-  }
-
-  return "";
-};
-
-const validateCompanyAddress = (value: string) => {
-  if (!value.trim()) {
-    return page.companyAddressRequired[language];
-  }
-  if (value.trim().length < 5) {
-    return page.companyAddressMinLength[language];
-  }
-  return "";
-};
-
-// New validation function for location
-const validateLocation = (value: string) => {
-  if (!value.trim()) {
-    return page.locationRequired[language];
-  }
-  if (value.trim().length < 4) {
-    return page.locationMinLength[language];
-  }
-  return "";
-};
-
-// New validation function for contact person
-const validateContactPerson = (value: string) => {
-  if (!value.trim()) {
-    return page.contactPersonRequired[language];
-  }
-  if (value.trim().length < 4) {
-    return page.contactPersonMinLength[language];
-  }
-  return "";
-};
-
-const validateWebsite = (value: string) => {
-  if (!value.trim()) {
-    return page.websiteRequired[language];
-  }
-
-  const urlPattern = /^(https?:\/\/)([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(\/.*)?$/;
-  if (!urlPattern.test(value.trim())) {
-    return page.websiteInvalidFormat[language];
-  }
-  return "";
-};
-
-const validateWebsiteOptional = (value: string) => {
-  if (!value.trim()) {
+  const validateCompanyName = (value: string) => {
+    if (!value.trim()) {
+      return page.companyNameEmpty[language];
+    }
+    if (value.trim().length < 2) {
+      return page.companyNameEmpty[language];
+    }
+    if (value.trim().length > 255) {
+      return page.companyNameTooLong[language];
+    }
     return "";
-  }
+  };
 
-  const urlPattern = /^(https?:\/\/)([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(\/.*)?$/;
-  if (!urlPattern.test(value.trim())) {
-    return page.websiteInvalidFormat[language];
-  }
-  return "";
-};
+  const validateCompanyRegisterNumber = (value: string) => {
+    if (!value.trim()) {
+      return page.companyRegisterNumberRequired[language];
+    }
 
-const validateEmail = (value: string) => {
-  if (!value.trim()) {
-    return page.emailRequired[language];
-  }
+    const numericPattern = /^[0-9]+$/;
+    if (!numericPattern.test(value.trim())) {
+      return page.companyRegisterNumberNumeric[language];
+    }
 
-  const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-  if (!emailPattern.test(value.trim())) {
-    return page.emailInvalidFormat[language];
-  }
-  return "";
-};
+    if (value.trim().length < 3) {
+      return page.companyRegisterNumberMinLength[language];
+    }
+
+    if (value.trim().length > 50) {
+      return page.companyRegisterNumberMaxLength[language];
+    }
+
+    return "";
+  };
+
+  const validateCreateYear = (value: string) => {
+    if (!value.trim()) {
+      return page.createYearRequired[language];
+    }
+
+    const year = parseInt(value, 10);
+    const currentYear = new Date().getFullYear();
+
+    if (!/^\d{4}$/.test(value)) {
+      return page.createYearFourDigits[language];
+    }
+
+    if (year < 1000) {
+      return page.createYearMinimum[language];
+    }
+
+    if (year > currentYear) {
+      return page.createYearFuture[language];
+    }
+
+    return "";
+  };
+
+  const validateCompanyAddress = (value: string) => {
+    if (!value.trim()) {
+      return page.companyAddressRequired[language];
+    }
+    if (value.trim().length < 5) {
+      return page.companyAddressMinLength[language];
+    }
+    return "";
+  };
+
+  // New validation function for location
+  const validateLocation = (value: string) => {
+    if (!value.trim()) {
+      return page.locationRequired[language];
+    }
+    if (value.trim().length < 4) {
+      return page.locationMinLength[language];
+    }
+    return "";
+  };
+
+  // New validation function for contact person
+  const validateContactPerson = (value: string) => {
+    if (!value.trim()) {
+      return page.contactPersonRequired[language];
+    }
+    if (value.trim().length < 4) {
+      return page.contactPersonMinLength[language];
+    }
+    return "";
+  };
+
+  const validateWebsite = (value: string) => {
+    if (!value.trim()) {
+      return page.websiteRequired[language];
+    }
+
+    const urlPattern = /^(https?:\/\/)([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(\/.*)?$/;
+    if (!urlPattern.test(value.trim())) {
+      return page.websiteInvalidFormat[language];
+    }
+    return "";
+  };
+
+  const validateWebsiteOptional = (value: string) => {
+    if (!value.trim()) {
+      return "";
+    }
+
+    const urlPattern = /^(https?:\/\/)([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(\/.*)?$/;
+    if (!urlPattern.test(value.trim())) {
+      return page.websiteInvalidFormat[language];
+    }
+    return "";
+  };
+
+  const validateEmail = (value: string) => {
+    if (!value.trim()) {
+      return page.emailRequired[language];
+    }
+
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!emailPattern.test(value.trim())) {
+      return page.emailInvalidFormat[language];
+    }
+    return "";
+  };
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -249,34 +249,34 @@ const validateEmail = (value: string) => {
   };
 
   const handlePhoneChange = (value: string) => {
-  setLocalFormData((prev) => ({ ...prev, phone: value }));
-  localStorage.setItem(
-    "companyData",
-    JSON.stringify({ ...companyData, phone: value })
-  );
+    setLocalFormData((prev) => ({ ...prev, phone: value }));
+    localStorage.setItem(
+      "companyData",
+      JSON.stringify({ ...companyData, phone: value })
+    );
 
-  const digits = value.replace(/\D/g, "");
-  let errorMsg = "";
+    const digits = value.replace(/\D/g, "");
+    let errorMsg = "";
 
-  if (digits.length === 0) {
-    errorMsg = page.phoneRequired[language];
-  } else if (digits.length < 12) {
-    errorMsg = page.phoneMinLength[language];
-  } else if (digits.length > 15) {
-    errorMsg = page.phoneMaxLength[language];
-  }
+    if (digits.length === 0) {
+      errorMsg = page.phoneRequired[language];
+    } else if (digits.length < 12) {
+      errorMsg = page.phoneMinLength[language];
+    } else if (digits.length > 15) {
+      errorMsg = page.phoneMaxLength[language];
+    }
 
-  setErrors((prev) => ({
-    ...prev,
-    phone: errorMsg,
-  }));
-};
+    setErrors((prev) => ({
+      ...prev,
+      phone: errorMsg,
+    }));
+  };
 
-const handleNext = () => {
-  const requiredFields: {
-    key: keyof typeof localFormData;
-    errorKey: keyof typeof page;
-  }[] = [
+  const handleNext = () => {
+    const requiredFields: {
+      key: keyof typeof localFormData;
+      errorKey: keyof typeof page;
+    }[] = [
       { key: "companyName", errorKey: "companyNameRequired" },
       {
         key: "companyRegisterNumber",
@@ -293,91 +293,93 @@ const handleNext = () => {
       { key: "phone", errorKey: "phoneRequired" },
     ];
 
-  const newErrors: Record<string, string> = {};
+    const newErrors: Record<string, string> = {};
 
-  requiredFields.forEach(({ key, errorKey }) => {
-    const value = localFormData[key];
-    if (typeof value === "string" && !value.trim()) {
-      if (key === "website" && !page.websiteRequired) {
-        newErrors[key] = page.websiteRequired[language];
-      } else {
-        newErrors[key] = page[errorKey][language];
+    requiredFields.forEach(({ key, errorKey }) => {
+      const value = localFormData[key];
+      if (typeof value === "string" && !value.trim()) {
+        if (key === "website" && !page.websiteRequired) {
+          newErrors[key] = page.websiteRequired[language];
+        } else {
+          newErrors[key] = page[errorKey][language];
+        }
       }
+    });
+
+    // Apply specific validation rules
+    const companyNameError = validateCompanyName(localFormData.companyName);
+    if (companyNameError) {
+      newErrors.companyName = companyNameError;
     }
-  });
 
-  // Apply specific validation rules
-  const companyNameError = validateCompanyName(localFormData.companyName);
-  if (companyNameError) {
-    newErrors.companyName = companyNameError;
-  }
+    const companyRegisterNumberError = validateCompanyRegisterNumber(
+      localFormData.companyRegisterNumber
+    );
+    if (companyRegisterNumberError) {
+      newErrors.companyRegisterNumber = companyRegisterNumberError;
+    }
 
-  const companyRegisterNumberError = validateCompanyRegisterNumber(
-    localFormData.companyRegisterNumber
-  );
-  if (companyRegisterNumberError) {
-    newErrors.companyRegisterNumber = companyRegisterNumberError;
-  }
+    const createYearError = validateCreateYear(localFormData.createYear);
+    if (createYearError) {
+      newErrors.createYear = createYearError;
+    }
 
-  const createYearError = validateCreateYear(localFormData.createYear);
-  if (createYearError) {
-    newErrors.createYear = createYearError;
-  }
+    const companyAddressError = validateCompanyAddress(
+      localFormData.companyAddress
+    );
+    if (companyAddressError) {
+      newErrors.companyAddress = companyAddressError;
+    }
 
-  const companyAddressError = validateCompanyAddress(
-    localFormData.companyAddress
-  );
-  if (companyAddressError) {
-    newErrors.companyAddress = companyAddressError;
-  }
+    // Add location validation
+    const locationError = validateLocation(localFormData.location);
+    if (locationError) {
+      newErrors.location = locationError;
+    }
 
-  // Add location validation
-  const locationError = validateLocation(localFormData.location);
-  if (locationError) {
-    newErrors.location = locationError;
-  }
+    // Add contact person validation
+    const contactPersonError = validateContactPerson(
+      localFormData.contactPerson
+    );
+    if (contactPersonError) {
+      newErrors.contactPerson = contactPersonError;
+    }
 
-  // Add contact person validation
-  const contactPersonError = validateContactPerson(localFormData.contactPerson);
-  if (contactPersonError) {
-    newErrors.contactPerson = contactPersonError;
-  }
+    const websiteError = validateWebsite(localFormData.website);
+    if (websiteError) {
+      newErrors.website = websiteError;
+    }
 
-  const websiteError = validateWebsite(localFormData.website);
-  if (websiteError) {
-    newErrors.website = websiteError;
-  }
+    const emailError = validateEmail(localFormData.email);
+    if (emailError) {
+      newErrors.email = emailError;
+    }
 
-  const emailError = validateEmail(localFormData.email);
-  if (emailError) {
-    newErrors.email = emailError;
-  }
+    const digits = localFormData.phone.replace(/\D/g, "");
+    if (digits.length === 0) {
+      newErrors.phone = page.phoneRequired[language];
+    } else if (digits.length < 9) {
+      newErrors.phone = page.phoneMinLength[language];
+    } else if (digits.length > 15) {
+      newErrors.phone = page.phoneMaxLength[language];
+    }
 
-  const digits = localFormData.phone.replace(/\D/g, "");
-  if (digits.length === 0) {
-    newErrors.phone = page.phoneRequired[language];
-  } else if (digits.length < 9) {
-    newErrors.phone = page.phoneMinLength[language];
-  } else if (digits.length > 15) {
-    newErrors.phone = page.phoneMaxLength[language];
-  }
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return false;
+    }
 
-  if (Object.keys(newErrors).length > 0) {
-    setErrors(newErrors);
-    return false;
-  }
+    navigate("/apply/two");
+    return true;
+  };
 
-  navigate("/apply/two");
-  return true;
-};
+  useEffect(() => {
+    if (Object.keys(errors).length === 0) return;
 
-useEffect(() => {
-  if (Object.keys(errors).length === 0) return;
-
-  const requiredFields: {
-    key: keyof typeof errors;
-    errorKey: keyof typeof page;
-  }[] = [
+    const requiredFields: {
+      key: keyof typeof errors;
+      errorKey: keyof typeof page;
+    }[] = [
       { key: "companyName", errorKey: "companyNameRequired" },
       {
         key: "companyRegisterNumber",
@@ -394,28 +396,25 @@ useEffect(() => {
       { key: "phone", errorKey: "phoneRequired" },
     ];
 
-  const updatedErrors: Record<string, string> = {};
+    const updatedErrors: Record<string, string> = {};
 
-  requiredFields.forEach(({ key, errorKey }) => {
-    if (errors[key]) {
-      if (key === "website" && !page.websiteRequired) {
-        updatedErrors[key] = page.websiteRequired[language];
-      } else {
-        updatedErrors[key] = page[errorKey][language];
+    requiredFields.forEach(({ key, errorKey }) => {
+      if (errors[key]) {
+        if (key === "website" && !page.websiteRequired) {
+          updatedErrors[key] = page.websiteRequired[language];
+        } else {
+          updatedErrors[key] = page[errorKey][language];
+        }
       }
-    }
-  });
+    });
 
-  setErrors(updatedErrors);
-}, [language]);
+    setErrors(updatedErrors);
+  }, [language]);
 
   return (
     <>
       <div className="relative min-h-screen w-full text-white flex flex-col items-center justify-center py-10">
-        <ApplySteps
-          onClick={handleNext}
-          step={1}
-        />
+        <ApplySteps onClick={handleNext} step={1} />
 
         <div className="text-center mb-8 relative z-20">
           <h1 className="text-2xl md:text-3xl font-medium">
@@ -434,10 +433,11 @@ useEffect(() => {
               onChange={handleInputChange}
               minLength={2}
               maxLength={255}
-              className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${errors.companyName
-                ? "border-red-500 focus:ring-red-500"
-                : "border-gray-700 focus:ring-blue-500"
-                }`}
+              className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${
+                errors.companyName
+                  ? "border-red-500 focus:ring-red-500"
+                  : "border-gray-700 focus:ring-blue-500"
+              }`}
             />
             {errors.companyName && (
               <p className="text-red-500 text-sm">{errors.companyName}</p>
@@ -457,10 +457,11 @@ useEffect(() => {
                 onChange={handleInputChange}
                 maxLength={50}
                 placeholder={page.companyRegisterNumberPlaceholder[language]}
-                className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${errors.companyRegisterNumber
-                  ? "border-red-500 focus:ring-red-500"
-                  : "border-gray-700 focus:ring-blue-500"
-                  }`}
+                className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${
+                  errors.companyRegisterNumber
+                    ? "border-red-500 focus:ring-red-500"
+                    : "border-gray-700 focus:ring-blue-500"
+                }`}
               />
               {errors.companyRegisterNumber && (
                 <p className="text-red-500 text-sm">
@@ -479,10 +480,11 @@ useEffect(() => {
                 onChange={handleInputChange}
                 maxLength={4}
                 placeholder="YYYY"
-                className={`no-spinner w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${errors.createYear
-                  ? "border-red-500 focus:ring-red-500"
-                  : "border-gray-700 focus:ring-blue-500"
-                  }`}
+                className={`no-spinner w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${
+                  errors.createYear
+                    ? "border-red-500 focus:ring-red-500"
+                    : "border-gray-700 focus:ring-blue-500"
+                }`}
               />
               {errors.createYear && (
                 <p className="text-red-500 text-sm">{errors.createYear}</p>
@@ -497,10 +499,11 @@ useEffect(() => {
                 name="companySize"
                 value={localFormData.companySize}
                 onChange={handleInputChange}
-                className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${errors.companySize
-                  ? "border-red-500 focus:ring-red-500"
-                  : "border-gray-700 focus:ring-blue-500"
-                  }`}
+                className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${
+                  errors.companySize
+                    ? "border-red-500 focus:ring-red-500"
+                    : "border-gray-700 focus:ring-blue-500"
+                }`}
               >
                 <option className="text-white bg-[#070618]" value="">
                   {page.placeholder[language]}
@@ -531,21 +534,31 @@ useEffect(() => {
                 name="annualTurnover"
                 value={localFormData.annualTurnover}
                 onChange={handleInputChange}
-                className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${errors.annualTurnover
-                  ? "border-red-500 focus:ring-red-500"
-                  : "border-gray-700 focus:ring-blue-500"
-                  }`}
+                className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${
+                  errors.annualTurnover
+                    ? "border-red-500 focus:ring-red-500"
+                    : "border-gray-700 focus:ring-blue-500"
+                }`}
               >
                 <option className="text-white bg-[#070618]" value="">
                   {page.placeholder[language]}
                 </option>
-                <option className="text-white bg-[#070618]" value="3">
+                <option
+                  className="text-white bg-[#070618]"
+                  value={page.annualTurnoverOption1["EN"]}
+                >
                   {page.annualTurnoverOption1[language]}
                 </option>
-                <option className="text-white bg-[#070618]" value="30">
+                <option
+                  className="text-white bg-[#070618]"
+                  value={page.annualTurnoverOption2["EN"]}
+                >
                   {page.annualTurnoverOption2[language]}
                 </option>
-                <option className="text-white bg-[#070618]" value="60">
+                <option
+                  className="text-white bg-[#070618]"
+                  value={page.annualTurnoverOption3["EN"]}
+                >
                   {page.annualTurnoverOption3[language]}
                 </option>
               </select>
@@ -563,10 +576,11 @@ useEffect(() => {
               name="companyAddress"
               value={localFormData.companyAddress}
               onChange={handleInputChange}
-              className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${errors.companyAddress
-                ? "border-red-500 focus:ring-red-500"
-                : "border-gray-700 focus:ring-blue-500"
-                }`}
+              className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${
+                errors.companyAddress
+                  ? "border-red-500 focus:ring-red-500"
+                  : "border-gray-700 focus:ring-blue-500"
+              }`}
             />
             {errors.companyAddress && (
               <p className="text-red-500 text-sm">{errors.companyAddress}</p>
@@ -585,10 +599,11 @@ useEffect(() => {
               minLength={4}
               maxLength={100}
               placeholder={page.locationPlaceholder[language]}
-              className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${errors.location
-                ? "border-red-500 focus:ring-red-500"
-                : "border-gray-700 focus:ring-blue-500"
-                }`}
+              className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${
+                errors.location
+                  ? "border-red-500 focus:ring-red-500"
+                  : "border-gray-700 focus:ring-blue-500"
+              }`}
             />
             {errors.location && (
               <p className="text-red-500 text-sm">{errors.location}</p>
@@ -604,10 +619,11 @@ useEffect(() => {
               value={localFormData.website}
               onChange={handleInputChange}
               placeholder="https://example.com"
-              className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${errors.website
-                ? "border-red-500 focus:ring-red-500"
-                : "border-gray-700 focus:ring-blue-500"
-                }`}
+              className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${
+                errors.website
+                  ? "border-red-500 focus:ring-red-500"
+                  : "border-gray-700 focus:ring-blue-500"
+              }`}
             />
             {errors.website && (
               <p className="text-red-500 text-sm">{errors.website}</p>
@@ -626,10 +642,11 @@ useEffect(() => {
               minLength={4}
               maxLength={100}
               placeholder={page.contactPersonPlaceholder[language]}
-              className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${errors.contactPerson
-                ? "border-red-500 focus:ring-red-500"
-                : "border-gray-700 focus:ring-blue-500"
-                }`}
+              className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${
+                errors.contactPerson
+                  ? "border-red-500 focus:ring-red-500"
+                  : "border-gray-700 focus:ring-blue-500"
+              }`}
             />
             {errors.contactPerson && (
               <p className="text-red-500 text-sm">{errors.contactPerson}</p>
@@ -645,10 +662,11 @@ useEffect(() => {
                 value={localFormData.email}
                 onChange={handleInputChange}
                 placeholder="example@gmail.com"
-                className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${errors.email
-                  ? "border-red-500 focus:ring-red-500"
-                  : "border-gray-700 focus:ring-blue-500"
-                  }`}
+                className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${
+                  errors.email
+                    ? "border-red-500 focus:ring-red-500"
+                    : "border-gray-700 focus:ring-blue-500"
+                }`}
               />
               {errors.email && (
                 <p className="text-red-500 text-sm">{errors.email}</p>
@@ -662,10 +680,11 @@ useEffect(() => {
                 defaultCountry="az"
                 value={localFormData.phone}
                 onChange={handlePhoneChange}
-                className={`w-full ${errors.phone
-                  ? "border border-red-500 rounded"
-                  : "border border-gray-700"
-                  }`}
+                className={`w-full ${
+                  errors.phone
+                    ? "border border-red-500 rounded"
+                    : "border border-gray-700"
+                }`}
               />
               {errors.phone && (
                 <p className="text-red-500 text-sm">{errors.phone}</p>
@@ -685,8 +704,6 @@ useEffect(() => {
     </>
   );
 }
-
-
 
 // "use client";
 
@@ -1186,7 +1203,6 @@ useEffect(() => {
 //                 {page.companyRegisterNumber[language]}
 //               </label>
 
-
 //               <input
 //                 autoComplete="off"
 //                 type="text"  // Changed from "number" to "text"
@@ -1424,4 +1440,3 @@ useEffect(() => {
 //     </>
 //   );
 // }
-

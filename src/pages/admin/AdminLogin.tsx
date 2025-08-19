@@ -118,51 +118,53 @@ function AdminLogin() {
             {page.loginTitle[language]}
           </h1>
         </div>
-        <div className="space-y-2">
-          <label className="text-sm">{page.username[language]}</label>
-          <input
-            autoComplete="off"
-            type="text"
-            name="username"
-            onChange={(e) => handleUsernameChange(e.target.value)}
-            minLength={2}
-            maxLength={255}
-            className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${
-              errors.username
-                ? "border-red-500 focus:ring-red-500"
-                : "border-gray-700 focus:ring-blue-500"
-            }`}
-          />
-          {errors.username && (
-            <p className="text-red-500 text-sm">{errors.username}</p>
-          )}
-        </div>
-        <div className="space-y-2">
-          <label className="text-sm">{page.password[language]}</label>
-          <input
-            autoComplete="off"
-            type="password"
-            name="password"
-            onChange={(e) => handlePasswordChange(e.target.value)}
-            minLength={2}
-            maxLength={255}
-            className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${
-              errors.password
-                ? "border-red-500 focus:ring-red-500"
-                : "border-gray-700 focus:ring-blue-500"
-            }`}
-          />
-          {errors.password && (
-            <p className="text-red-500 text-sm">{errors.password}</p>
-          )}
-        </div>
-        <button
-          type="button"
-          onClick={handleSubmitForm}
-          className="w-full py-3 rounded-lg transition duration-300 mt-6 text-white bg-blue-600 hover:bg-[#1a4381] cursor-pointer"
-        >
-          {page.loginBtn[language]}
-        </button>
+        <form>
+          <div className="space-y-2">
+            <label className="text-sm">{page.username[language]}</label>
+            <input
+              autoComplete="off"
+              type="text"
+              name="username"
+              onChange={(e) => handleUsernameChange(e.target.value)}
+              minLength={2}
+              maxLength={255}
+              className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${
+                errors.username
+                  ? "border-red-500 focus:ring-red-500"
+                  : "border-gray-700 focus:ring-blue-500"
+              }`}
+            />
+            {errors.username && (
+              <p className="text-red-500 text-sm">{errors.username}</p>
+            )}
+          </div>
+          <div className="space-y-2">
+            <label className="text-sm">{page.password[language]}</label>
+            <input
+              autoComplete="off"
+              type="password"
+              name="password"
+              onChange={(e) => handlePasswordChange(e.target.value)}
+              minLength={2}
+              maxLength={255}
+              className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${
+                errors.password
+                  ? "border-red-500 focus:ring-red-500"
+                  : "border-gray-700 focus:ring-blue-500"
+              }`}
+            />
+            {errors.password && (
+              <p className="text-red-500 text-sm">{errors.password}</p>
+            )}
+          </div>
+          <button
+            type="button"
+            onClick={handleSubmitForm}
+            className="w-full py-3 rounded-lg transition duration-300 mt-6 text-white bg-blue-600 hover:bg-[#1a4381] cursor-pointer"
+          >
+            {page.loginBtn[language]}
+          </button>
+        </form>
       </div>
     </div>
   );

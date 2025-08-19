@@ -50,6 +50,7 @@ function Admin() {
     e: React.MouseEvent<HTMLButtonElement>
   ) => {
     e.preventDefault();
+    console.log(auth.accessToken);
     const confirmed = window.confirm(
       "Are you sure you want to delete this company?"
     );
@@ -143,7 +144,6 @@ function Admin() {
   useEffect(() => {
     if (!auth?.accessToken) {
       navigate("/admin/login");
-
       return;
     }
   }, [auth, navigate]);
