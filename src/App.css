@@ -6,6 +6,7 @@
 @import "./../public/styles/video.css";
 @import "./../public/styles/spinner.css";
 @import "./../public/fonts/font.css";
+@import "./../public/styles/register.css";
 @import "datatables.net-dt";
 @import "datatables.net-responsive-dt";
 @import "datatables.net-select-dt";

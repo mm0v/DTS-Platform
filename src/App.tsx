@@ -18,6 +18,7 @@ const Contact = lazy(() => import("./pages/Contact"));
 const NotFound = lazy(() => import("./pages/actions/NotFound"));
 const Admin = lazy(() => import("./pages/admin/Admin"));
 const AdminLogin = lazy(() => import("./pages/admin/AdminLogin"));
+const AdminRegister = lazy(() => import("./pages/admin/AdminRegister"));
 
 const App: React.FC = () => {
   const location = useLocation();
@@ -59,6 +60,7 @@ const App: React.FC = () => {
           <Route path="/success" element={<Our_Success />} />
           <Route path="/admin" element={<Admin />} />
           <Route path="/admin/login" element={<AdminLogin />} />
+          <Route path="/admin/register" element={<AdminRegister />} />
         </Routes>
       </Suspense>
       {!isNotFound && <Footer />}
