@@ -821,20 +821,25 @@ export const pagesTranslations = {
 
     login: {
       loginTitle:{
-        AZ: "Daxil ol",
-        EN: "Login",
+        AZ: "Xoş gəlmisiniz!",
+        EN: "Welcome!",
       },
       username : {
         AZ: "İstifadəçi adı",
         EN: "Username",
+      },
+      email:
+      {
+        AZ: "E-poçt",
+        EN: "Email",
       },
       password: {
         AZ: "Şifrə",
         EN: "Password",
       },
       loginBtn: {
-        AZ: "Növbəti",
-        EN: "Next",
+        AZ: "Daxİl ol",
+        EN: "Login",
       },
       errors: {
         usernameError: {
