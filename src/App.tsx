@@ -7,6 +7,7 @@ import { LanguageProvider } from "./context/LanguageContext";
 import LoadingSpinner from "./components/shared/LoadingSpinner";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+
 const Home = lazy(() => import("./pages/Home"));
 const ComplianceAndPrioritization = lazy(
   () => import("./pages/ComplianceAndPrioritization")
@@ -19,6 +20,8 @@ const NotFound = lazy(() => import("./pages/actions/NotFound"));
 const Admin = lazy(() => import("./pages/admin/Admin"));
 const AdminLogin = lazy(() => import("./pages/admin/AdminLogin"));
 const AdminRegister = lazy(() => import("./pages/admin/AdminRegister"));
+const Profile = lazy(() => import("./pages/Profile"));
+const ProfileInfo = lazy(() => import("./pages/ProfileInfo"));
 
 const App: React.FC = () => {
   const location = useLocation();
@@ -58,9 +61,15 @@ const App: React.FC = () => {
           <Route path="/apply/*" element={<Apply />} />
           <Route path="*" element={<NotFound />} />
           <Route path="/success" element={<Our_Success />} />
+
           <Route path="/admin" element={<Admin />} />
           <Route path="/admin/login" element={<AdminLogin />} />
           <Route path="/admin/register" element={<AdminRegister />} />
+          <Route path="/profile" element={<Profile />}>
+            <Route index element={<ProfileInfo />} />
+            <Route path="profile_info" element={<ProfileInfo />} />
+          </Route>
+
         </Routes>
       </Suspense>
       {!isNotFound && <Footer />}

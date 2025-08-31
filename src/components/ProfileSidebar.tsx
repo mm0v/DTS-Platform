@@ -1,0 +1,59 @@
+import { NavLink } from "react-router-dom";
+import GroupIcon from "@mui/icons-material/Group";
+import BusinessIcon from "@mui/icons-material/Business";
+
+const ProfileSidebar = () => {
+  return (
+    <div className="w-full md:w-1/3 lg:w-1/4 bg-white p-4 min-h-screen">
+      <ul className="space-y-2">
+        <li>
+          <NavLink
+            to="/profile/profile_info"
+            className={({ isActive }) =>
+              `flex items-center gap-2 px-4 py-2 rounded transition ${
+                isActive
+                  ? "bg-[#e9edf3] text-[#1a4381]"
+                  : "bg-transparent text-[#000] hover:bg-[#e9edf3] hover:text-[#1a4381]"
+              }`
+            }
+          >
+            <GroupIcon />
+            Müraciətlər
+          </NavLink>
+        </li>
+        <li>
+          <NavLink
+            to="/profile/inczibatxiliq"
+            className={({ isActive }) =>
+              `flex items-center gap-2 px-4 py-2 rounded transition ${
+                isActive
+                  ? "bg-[#e9edf3] text-[#1a4381]"
+                  : "bg-transparent text-[#000] hover:bg-[#e9edf3] hover:text-[#1a4381]"
+              }`
+            }
+          >
+            <BusinessIcon />
+            İnzibatçılıq
+          </NavLink>
+        </li>
+        <li>
+          <NavLink
+            to="/profile/hesabatlar"
+            className={({ isActive }) =>
+              `flex items-center gap-2 px-4 py-2 rounded transition ${
+                isActive
+                  ? "bg-[#e9edf3] text-[#1a4381]"
+                  : "bg-transparent text-[#000] hover:bg-[#e9edf3] hover:text-[#1a4381]"
+              }`
+            }
+          >
+            <BusinessIcon />
+            Hesabatlar
+          </NavLink>
+        </li>
+      </ul>
+    </div>
+  );
+};
+
+export default ProfileSidebar;

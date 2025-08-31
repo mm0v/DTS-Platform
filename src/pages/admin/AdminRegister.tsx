@@ -1,96 +1,158 @@
-import { Link } from "react-router-dom"
-import { useState } from 'react';
-import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { useState } from "react";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { DateScrollPicker } from "react-date-wheel-picker";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { Link, useNavigate } from "react-router-dom";
 
 const AdminRegister = () => {
+    const [formValues, setFormValues] = useState({
+        firstName: "",
+        lastName: "",
+        email: "",
+        dateOfBirth: "",
+        password: "",
+        confirmPassword: "",
+    });
+
+    const [errors, setErrors] = useState({
+        firstName: "",
+        lastName: "",
+        email: "",
+        dateOfBirth: "",
+        password: "",
+        confirmPassword: "",
+    });
+
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-    const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined)
-    const [showPicker, setShowPicker] = useState(false)
+    const [showPicker, setShowPicker] = useState(false);
+    const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
+    const navigate = useNavigate()
+
     const monthsAZ = [
         "Yanvar", "Fevral", "Mart", "Aprel", "May", "İyun",
         "İyul", "Avqust", "Sentyabr", "Oktyabr", "Noyabr", "Dekabr"
     ];
 
-    const formatDateAZ = (date: Date) => {
-        return `${date.getDate()} ${monthsAZ[date.getMonth()]} ${date.getFullYear()}`;
+    const formatDateAZ = (date: Date) =>
+        `${date.getDate()} ${monthsAZ[date.getMonth()]} ${date.getFullYear()}`;
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        setFormValues((prev) => ({ ...prev, [name]: value }));
+
+        let errorMsg = "";
+        if (name === "firstName" && value.length < 2) errorMsg = "Ad çox qısadır";
+        if (name === "lastName" && value.length < 2) errorMsg = "Soyad çox qısadır";
+        if (name === "email" && !value.includes("@")) errorMsg = "Düzgün email daxil edin";
+        if (name === "password" && value.length < 6) errorMsg = "Şifrə çox qısadır";
+        if (name === "confirmPassword" && value !== formValues.password)
+            errorMsg = "Şifrə uyğun deyil";
+
+        setErrors((prev) => ({ ...prev, [name]: errorMsg }));
+    };
+
+    const handleDateChange = (date: Date) => {
+        setSelectedDate(date);
+        setFormValues((prev) => ({ ...prev, dateOfBirth: formatDateAZ(date) }));
+        setErrors((prev) => ({ ...prev, dateOfBirth: "" }));
+    };
+
+    const handleSubmit = () => {
+        let hasError = false;
+
+        Object.values(formValues).forEach((val) => { if (!val) hasError = true });
+        Object.values(errors).forEach((err) => { if (err) hasError = true });
+
+        if (hasError) {
+            toast.error("Zəhmət olmasa bütün sahələri düzgün doldurun.");
+            return;
+        }
+
+        try {
+            toast.success("Qeydiyyat tamamlandı.");
+            setFormValues({
+                firstName: "",
+                lastName: "",
+                email: "",
+                dateOfBirth: "",
+                password: "",
+                confirmPassword: "",
+            });
+            setErrors({
+                firstName: "",
+                lastName: "",
+                email: "",
+                dateOfBirth: "",
+                password: "",
+                confirmPassword: "",
+            });
+            setSelectedDate(undefined);
+            navigate("/admin/login");
+        } catch {
+            toast.error("Qeydiyyat zamanı xəta baş verdi.");
+        }
     };
 
     return (
         <div className="register h-screen flex flex-col items-center justify-center gap-7">
             <h1 className="text-center text-[32px] font-[500] text-[#323232]">Xoş Gəlmisiniz</h1>
-            <form className="w-full px-5 lg:w-[748px] grid grid-cols-1 md:grid-cols-2 gap-6">
-                <style>
-                    {`
-                    input:focus {
-                        outline: none ;
-                    }
-                `}
-                </style>
-
-                {/* Name */}
+            <form className="w-full px-5 lg:w-[748px] grid grid-cols-1 md:grid-cols-2 gap-x-6">
+                {/* First Name */}
                 <div>
-                    <label htmlFor="ad" className="block text-sm font-medium mb-1 text-[#2D3748]">
-                        Ad
-                    </label>
+                    <label className="block text-sm font-medium mb-1 text-[#2D3748]">Ad</label>
                     <input
                         type="text"
-                        id="ad"
-                        name="ad"
+                        name="firstName"
+                        value={formValues.firstName}
+                        onChange={handleChange}
                         className="w-full border border-[#D1D1D1] rounded-md p-2"
-                        required
                     />
+                    <div className="min-h-[20px] text-red-500 text-sm">{errors.firstName}</div>
                 </div>
 
-                {/* Surname */}
+                {/* Last Name */}
                 <div>
-                    <label htmlFor="soyad" className="block text-sm font-medium mb-1 text-[#2D3748]">
-                        Soyad
-                    </label>
+                    <label className="block text-sm font-medium mb-1 text-[#2D3748]">Soyad</label>
                     <input
                         type="text"
-                        id="soyad"
-                        name="soyad"
+                        name="lastName"
+                        value={formValues.lastName}
+                        onChange={handleChange}
                         className="w-full border border-[#D1D1D1] rounded-md p-2"
-                        required
                     />
+                    <div className="min-h-[20px] text-red-500 text-sm">{errors.lastName}</div>
                 </div>
 
-                {/* E-mail */}
+                {/* Email */}
                 <div>
-                    <label htmlFor="email" className="block text-sm font-medium mb-1 text-[#2D3748]">
-                        E-poçt
-                    </label>
+                    <label className="block text-sm font-medium mb-1 text-[#2D3748]">E-poçt</label>
                     <input
                         type="email"
-                        id="email"
                         name="email"
+                        value={formValues.email}
+                        onChange={handleChange}
                         className="w-full border border-[#D1D1D1] rounded-md p-2"
-                        required
                     />
+                    <div className="min-h-[20px] text-red-500 text-sm">{errors.email}</div>
                 </div>
 
-                {/* Date */}
+                {/* Date of Birth */}
                 <div className="relative">
-                    <label htmlFor="date" className="block text-sm font-medium mb-1 text-[#2D3748]">
-                        Doğum tarixi
-                    </label>
+                    <label className="block text-sm font-medium mb-1 text-[#2D3748]">Doğum tarixi</label>
                     <button
                         type="button"
-                        id="date"
-                        name="date"
                         className="w-full border border-[#D1D1D1] rounded-md p-2 text-start text-[#2D3748]"
                         onClick={() => setShowPicker(!showPicker)}
                     >
-                        <p>{selectedDate ? formatDateAZ(selectedDate) : "Tarix seç"}</p>
+                        {selectedDate ? formatDateAZ(selectedDate) : "Tarix seç"}
                     </button>
-
                     {showPicker && (
                         <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
                             <div className="date bg-white p-4 rounded-lg shadow-lg relative">
                                 <DateScrollPicker
-                                    onDateChange={(date: Date) => setSelectedDate(date)}
+                                    onDateChange={handleDateChange}
                                     pickerItemHeight={35}
                                     visibleRows={5}
                                     startYear={1950}
@@ -100,7 +162,6 @@ const AdminRegister = () => {
                                     defaultSelectedDay={new Date().getDate()}
                                     monthNames={monthsAZ}
                                 />
-
                                 <button
                                     type="button"
                                     onClick={() => setShowPicker(false)}
@@ -115,57 +176,63 @@ const AdminRegister = () => {
 
                 {/* Password */}
                 <div className="relative">
-                    <label htmlFor="password" className="block text-sm font-medium mb-1 text-[#2D3748]">
-                        Şifrə
-                    </label>
+                    <label className="block text-sm font-medium mb-1 text-[#2D3748]">Şifrə</label>
                     <input
                         type={showPassword ? "text" : "password"}
-                        id="password"
                         name="password"
+                        value={formValues.password}
+                        onChange={handleChange}
                         className="w-full border border-[#D1D1D1] rounded-md p-2 pr-10"
-                        required
                     />
                     <button
                         type="button"
                         className="absolute right-3 top-8 text-gray-300"
                         onClick={() => setShowPassword(!showPassword)}
                     >
-                        {showPassword ? <Visibility className="w-4 h-4" /> : <VisibilityOff className="w-4 h-4" />}
+                        {showPassword ? <Visibility /> : <VisibilityOff />}
                     </button>
+                    <div className="min-h-[20px] text-red-500 text-sm">{errors.password}</div>
                 </div>
 
                 {/* Confirm Password */}
                 <div className="relative">
-                    <label htmlFor="confirmPassword" className="block text-sm font-medium mb-1 text-[#2D3748]">
-                        Şifrənin təsdiqi
-                    </label>
+                    <label className="block text-sm font-medium mb-1 text-[#2D3748]">Şifrənin təsdiqi</label>
                     <input
                         type={showConfirmPassword ? "text" : "password"}
-                        id="confirmPassword"
                         name="confirmPassword"
+                        value={formValues.confirmPassword}
+                        onChange={handleChange}
                         className="w-full border border-[#D1D1D1] rounded-md p-2 pr-10"
-                        required
                     />
                     <button
                         type="button"
                         className="absolute right-3 top-8 text-gray-300"
                         onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                     >
-                        {showConfirmPassword ? <Visibility className="w-4 h-4" /> : <VisibilityOff className="w-4 h-4" />}
+                        {showConfirmPassword ? <Visibility /> : <VisibilityOff />}
                     </button>
+                    <div className="min-h-[20px] text-red-500 text-sm">{errors.confirmPassword}</div>
                 </div>
+
+                {/* Submit */}
                 <div className="col-span-1 md:col-span-2 flex flex-col justify-center items-center gap-2">
                     <button
-                        type="submit"
-                        className="w-[220px] bg-[#1a4381] transition-all ease hover:bg-[#102c56] hover:cursor-pointer text-white rounded-[30px] py-2"
+                        type="button"
+                        onClick={handleSubmit}
+                        className="w-[220px] bg-[#1a4381] hover:bg-[#102c56] text-white rounded-[30px] py-2 transition-all"
                     >
-                        Daxil ol
+                        Qeydiyyat
                     </button>
-                    <Link to={'/admin/login'} className="text-[#8E8E93] text-[12px] underline hover:text-[#1a4381] transition-all ease">Hesabınız var artıq?</Link>
+                    <Link
+                        to="/admin/login"
+                        className="text-[#8E8E93] text-[12px] underline hover:text-[#1a4381] transition-all"
+                    >
+                        Hesabınız var artıq?
+                    </Link>
                 </div>
             </form>
         </div>
-    )
-}
+    );
+};
 
-export default AdminRegister
+export default AdminRegister;
