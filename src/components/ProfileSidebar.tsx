@@ -4,8 +4,8 @@ import BusinessIcon from "@mui/icons-material/Business";
 
 const ProfileSidebar = () => {
   return (
-    <div className="w-full md:w-1/3 lg:w-1/4 bg-white p-4 min-h-screen">
-      <ul className="space-y-2">
+    <div className="w-full md:w-1/3 lg:w-1/4 p-4 lg:min-h-screen">
+      <ul className="space-y-2 bg-white p-[24px] rounded-[14px]">
         <li>
           <NavLink
             to="/profile/profile_info"

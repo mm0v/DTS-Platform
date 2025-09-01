@@ -27,6 +27,7 @@
     "datatables.net-responsive-dt": "^3.0.5",
     "datatables.net-select-dt": "^3.0.1",
     "dts-platform": "file:",
+    "formik": "^2.4.6",
     "framer-motion": "^12.11.4",
     "jquery": "^3.7.1",
     "lucide-react": "^0.507.0",
@@ -36,14 +37,17 @@
     "react-datepicker": "^8.7.0",
     "react-dom": "^19.1.0",
     "react-google-recaptcha": "^3.1.0",
+    "react-icons": "^5.5.0",
     "react-international-phone": "^4.5.0",
+    "react-phone-input-2": "^2.15.1",
     "react-router-dom": "^7.6.0",
     "react-select": "^5.10.1",
     "react-select-country-list": "^2.2.3",
     "react-toastify": "^11.0.5",
     "sass": "^1.87.0",
     "styled-components": "^6.1.17",
-    "swiper": "^11.2.6"
+    "swiper": "^11.2.6",
+    "yup": "^1.7.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.25.0",
