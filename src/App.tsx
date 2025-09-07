@@ -7,6 +7,9 @@ import { LanguageProvider } from "./context/LanguageContext";
 import LoadingSpinner from "./components/shared/LoadingSpinner";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Applies from "./pages/admin/Applies";
+import Administration from "./pages/admin/Administration";
+import Reports from "./pages/admin/Reports";
 const Home = lazy(() => import("./pages/Home"));
 const ComplianceAndPrioritization = lazy(
   () => import("./pages/ComplianceAndPrioritization")
@@ -58,7 +61,13 @@ const App: React.FC = () => {
           <Route path="/apply/*" element={<Apply />} />
           <Route path="*" element={<NotFound />} />
           <Route path="/success" element={<Our_Success />} />
-          <Route path="/admin" element={<Admin />} />
+          <Route path="/admin" element={<Admin />}>
+            <Route index path="applies" element={<Applies />} /> {/* /admin */}
+            <Route path="administration" element={<Administration />} />{" "}
+            {/* /admin/administration */}
+            <Route path="reports" element={<Reports />} />{" "}
+            {/* /admin/reports */}
+          </Route>
           <Route path="/admin/login" element={<AdminLogin />} />
           <Route path="/admin/register" element={<AdminRegister />} />
         </Routes>

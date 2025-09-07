@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200..800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,100..700;1,100..700&display=swap");
 @import "tailwindcss";
 @import "./../public/styles/variable.css";
 @import "./../public/styles/scroll.css";
@@ -11,6 +13,14 @@
 @import "datatables.net-responsive-dt";
 @import "datatables.net-select-dt";
 @import "datatables.net-bs5";
+
+@theme {
+  --font-plus-jakarta: "Plus Jakarta Sans", sans-serif;
+}
+
+@theme {
+  --font-ibm-plex-sans: "IBM Plex Sans", sans-serif;
+}
 
 table.dark-table.dataTable {
   @apply w-full bg-gray-800 text-white border border-gray-700 rounded-lg;

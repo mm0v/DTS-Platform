@@ -157,6 +157,7 @@ function AdminLogin() {
                 type={showPassword ? "text" : "password"}
                 autoComplete="off"
                 name="password"
+                id="password"
                 onChange={(e) => handlePasswordChange(e.target.value)}
                 minLength={2}
                 maxLength={255}
