@@ -2,194 +2,146 @@ import { useLanguage } from "../../context/LanguageContext";
 
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-
-import axios from "../../services/API/axiosConfig,api";
+import axios from "axios";
 import useAuth from "../../hooks/useAuth";
 import { toast } from "react-toastify";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 
-const LOGIN_URL = `${import.meta.env.VITE_API_URL}/api/v1/auth/login`;
+const LOGIN_URL = "http://217.18.210.188:7777/api/v1/auth/login";
 
 function AdminLogin() {
   const { language, pagesTranslations } = useLanguage();
   const page = pagesTranslations.admin.login;
 
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
   const [showPassword, setShowPassword] = useState(false);
-
   const { setAuth } = useAuth();
   const navigate = useNavigate();
 
-  const [errors, setErrors] = useState({ username: "", password: "" });
+  const [errors, setErrors] = useState({ email: "", password: "" });
   const [errMsg, setErrMsg] = useState("");
 
-  const handleUsernameChange = (username: string) => {
-    setUsername(username);
-
-    let errorMsg = "";
-
-    if (username.length < 2 || username.length > 255) {
-      errorMsg = page.errors.usernameError[language];
-    }
-    setErrors((prev) => ({
+  const handleEmailChange = (value: string) => {
+    setEmail(value);
+    setErrors(prev => ({
       ...prev,
-      username: errorMsg,
+      email: value.length < 2 || value.length > 255 ? page.errors.emailError[language] : "",
     }));
-
-    return errorMsg !== "";
   };
 
-  const handlePasswordChange = (password: string) => {
-    setPassword(password);
-
-    let errorMsg = "";
-
-    if (password.length < 6 || password.length > 255) {
-      errorMsg = page.errors.passwordError[language];
-    }
-    setErrors((prev) => ({
+  const handlePasswordChange = (value: string) => {
+    setPassword(value);
+    setErrors(prev => ({
       ...prev,
-      password: errorMsg,
+      password: value.length < 6 || value.length > 255 ? page.errors.passwordError[language] : "",
     }));
-
-    return errorMsg !== "";
   };
 
   useEffect(() => {
     if (errMsg) {
-      toast.error(errMsg, {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
+      toast.error(errMsg, { position: "top-right", autoClose: 5000 });
       setErrMsg("");
     }
   }, [errMsg]);
 
-  const handleSubmitForm = async () => {
-    let userError = handleUsernameChange(username);
-    let passError = handlePasswordChange(password);
-    if (userError || passError) {
-      return;
-    }
+  const handleSubmitForm = async (e: any) => {
+    e.preventDefault();
+    if (errors.email || errors.password) return;
+
     try {
       const response = await axios.post(
         LOGIN_URL,
-        JSON.stringify({ username, password }),
+        { email, password },
         {
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json", Accept: "application/json" },
           withCredentials: true,
         }
       );
-      const accessToken = response?.data?.accessToken;
-      const refreshToken = response?.data?.refreshToken;
-      setAuth({
-        user: { username, password },
-        accessToken: accessToken,
-        refreshToken: refreshToken,
+
+      const { accessToken, refreshToken } = response.data;
+
+      setAuth({ user: { email }, accessToken, refreshToken });
+      toast.success("Login successful!", {
+        position: "top-right",
+        autoClose: 3000,
       });
-      setUsername("");
+      setEmail("");
       setPassword("");
 
       navigate("/admin", { replace: true });
     } catch (err: any) {
-      if (!err?.response) {
-        setErrMsg("No Server Response");
-      } else if (err.response?.status === 400) {
-        setErrMsg("Missing Username or Password");
-      } else if (err.response?.status === 401) {
-        setErrMsg("Unauthorized");
-      } else {
-        setErrMsg("Login Failed");
-      }
+      setErrMsg(err.response?.data?.message || "Login Failed");
     }
   };
 
   return (
-    <div className="h-dvh w-full flex items-center justify-center flex-col">
-      <div className="rounded-lg w-full max-w-2xl space-y-6 relative z-20 p-10 bg-opacity-80 flex flex-col items-center">
-        <div className="text-center mb-8 relative z-20">
-          <h1 className="text-3xl md:text-4xl mb-10 font-medium">
-            {page.loginTitle[language]}
+    <div className="h-dvh w-full flex items-center justify-center">
+      <div className="w-[358px]">
+        <div className="text-center mb-[40px] relative z-20">
+          <h1 className="text-center text-[32px] font-[500] text-[#323232]">
+            {pagesTranslations.admin.title[language]}
           </h1>
         </div>
-        <form className=" w-full flex items-center justify-center flex-col gap-6 mb-3.5">
-          <div className="space-y-2 max-w-96 w-full">
-            <label htmlFor="email" className="text-sm font-light">
-              {page.email[language]}
-              <span className="text-red-500">*</span>
-              <p className="m-0 text-red-500 text-xs mb-[5px]">
-                Zəhmət olmazsa korporativ e-poçt ünvanınızı daxil edin.
-              </p>
-            </label>
+        <form className="grid gap-3">
+          <div>
+            <label className="text-sm">{page.eMail[language]} <span className="text-red-500">*</span></label>
             <input
+              autoComplete="off"
               type="email"
               name="email"
-              id="email"
-              onChange={(e) => handleUsernameChange(e.target.value)}
+              onChange={(e) => handleEmailChange(e.target.value)}
               minLength={2}
               maxLength={255}
-              className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${
-                errors.username
-                  ? "border-red-500 focus:ring-red-500"
-                  : "border-[#D1D1D1] focus:ring-blue-500"
-              }`}
+              className={`w-full rounded-lg p-3 !focus:outline-none focus:ring-2 transition duration-300 border ${errors.email
+                ? "border-red-500 focus:ring-red-500"
+                : "border-[#D1D1D1] focus:border-blue-500"
+                }`}
             />
-            {errors.username && (
-              <p className="text-red-500 text-sm">{errors.username}</p>
+            {errors.email && (
+              <p className="text-red-500 text-sm">{errors.email}</p>
             )}
           </div>
-          <div className="space-y-2 max-w-96 w-full">
-            <div className="relative">
-              <label
-                htmlFor="password"
-                className="block text-sm font-light mb-1 text-[#2D3748]"
-              >
-                {page.password[language]}
-              </label>
-              <input
-                type={showPassword ? "text" : "password"}
-                autoComplete="off"
-                name="password"
-                id="password"
-                onChange={(e) => handlePasswordChange(e.target.value)}
-                minLength={2}
-                maxLength={255}
-                className={`w-full border rounded-md p-3 pr-10 bg-transparent focus:outline-none focus:ring-2 transition duration-300 ${
-                  errors.password
-                    ? "border-red-500 focus:ring-red-500"
-                    : "border-[#D1D1D1] focus:ring-blue-500"
+          <div className="relative space-y-2">
+            <label className="text-sm">{page.password[language]}</label>
+            <input
+              autoComplete="off"
+              type={showPassword ? "text" : "password"}
+              name="password"
+              onChange={(e) => handlePasswordChange(e.target.value)}
+              minLength={2}
+              maxLength={255}
+              className={`w-full bg-transparent rounded-lg p-3 focus:outline-none focus:ring-2 transition duration-300 border ${errors.password
+                ? "border-red-500 focus:ring-red-500"
+                : "border-[#D1D1D1] focus:border-blue-500"
                 }`}
-              />
-              <button
-                type="button"
-                className="absolute right-3 top-[50%] text-gray-300 cursor-pointer"
-                onClick={() => setShowPassword(!showPassword)}
-              >
-                {showPassword ? (
-                  <Visibility className="w-4 h-4" />
-                ) : (
-                  <VisibilityOff className="w-4 h-4" />
-                )}
-              </button>
-            </div>
+            />
+            <button
+              type="button"
+              className="absolute right-3 top-9 text-gray-300"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? <Visibility /> : <VisibilityOff />}
+            </button>
             {errors.password && (
               <p className="text-red-500 text-sm">{errors.password}</p>
             )}
           </div>
-          <button
-            type="button"
-            onClick={handleSubmitForm}
-            className="w-full mt-[26px] max-w-3xs px-{17px} py-2 hover:bg-[#122e58] bg-[#1A4381] transition-all rounded-[34px] shadow-xl text-[16px] uppercase tracking-wider text-white font-light cursor-pointer"
-          >
-            {page.loginBtn[language].toUpperCase()}
-          </button>
+          <div className="flex flex-col justify-center items-center gap-3 pt-3">
+            <button
+              type="submit"
+              onClick={handleSubmitForm}
+              className="w-[220px] bg-[#1a4381] hover:bg-[#102c56] text-white rounded-[30px] py-2 transition-all cursor-pointer"
+            >
+              {page.loginBtn[language]}
+            </button>
+            <Link
+              to="/admin/register"
+              className="text-[#8E8E93] text-[12px] underline hover:text-[#1a4381] transition-all"
+            >
+              Hesabınız yoxdu?
+            </Link>
+          </div>
         </form>
         <Link
           to={"/admin/forgot-password"}

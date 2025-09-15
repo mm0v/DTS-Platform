@@ -22,6 +22,10 @@ const NotFound = lazy(() => import("./pages/actions/NotFound"));
 const Admin = lazy(() => import("./pages/admin/Admin"));
 const AdminLogin = lazy(() => import("./pages/admin/AdminLogin"));
 const AdminRegister = lazy(() => import("./pages/admin/AdminRegister"));
+const Profile = lazy(() => import("./pages/Profile"));
+const ProfileInfo = lazy(() => import("./pages/ProfileInfo"));
+const Notification = lazy(() => import("./pages/Notifications"));
+const Administration = lazy(() => import("./pages/Administration"));
 
 const App: React.FC = () => {
   const location = useLocation();
@@ -61,6 +65,7 @@ const App: React.FC = () => {
           <Route path="/apply/*" element={<Apply />} />
           <Route path="*" element={<NotFound />} />
           <Route path="/success" element={<Our_Success />} />
+
           <Route path="/admin" element={<Admin />}>
             <Route index path="applies" element={<Applies />} /> {/* /admin */}
             <Route path="administration" element={<Administration />} />{" "}
@@ -70,6 +75,13 @@ const App: React.FC = () => {
           </Route>
           <Route path="/admin/login" element={<AdminLogin />} />
           <Route path="/admin/register" element={<AdminRegister />} />
+          <Route path="/profile" element={<Profile />}>
+            <Route index element={<ProfileInfo />} />
+            <Route path="profile_info" element={<ProfileInfo />} />
+            <Route path="notification" element={<Notification />} />
+            <Route path="administration" element={<Administration />} />
+          </Route>
+
         </Routes>
       </Suspense>
       {!isNotFound && <Footer />}

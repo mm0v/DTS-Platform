@@ -818,15 +818,16 @@ export const pagesTranslations = {
       AZ: "Excel faylı olaraq yüklə",
       EN: "Download as an Excel file",
     },
+    
+    title:{
+      AZ: "Xoş gəlmisiniz!",
+      EN: "Welcome!",
+    },
 
     login: {
-      loginTitle:{
-        AZ: "Xoş gəlmisiniz!",
-        EN: "Welcome!",
-      },
-      username : {
-        AZ: "İstifadəçi adı",
-        EN: "Username",
+      eMail : {
+        AZ: "E-poçt",
+        EN: "E-mail",
       },
       email:
       {
@@ -838,11 +839,11 @@ export const pagesTranslations = {
         EN: "Password",
       },
       loginBtn: {
-        AZ: "Daxİl ol",
-        EN: "Login",
+        AZ: "Daxil ol",
+        EN: "login",
       },
       errors: {
-        usernameError: {
+        emailError: {
           AZ: "Boş buraxıla bilməz. Minimum 2 simvol, maksimum 255 simvol",
           EN: "Cannot be left empty. Minimum 2 characters, maximum 255 characters",
         },
@@ -852,5 +853,6 @@ export const pagesTranslations = {
         },
       }
     }
+
   }
 };
