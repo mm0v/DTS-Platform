@@ -825,6 +825,10 @@ export const pagesTranslations = {
     },
 
     login: {
+       loginTitle:{
+        AZ: "Xoş gəlmisiniz!",
+        EN: "Welcome!",
+      },
       eMail : {
         AZ: "E-poçt",
         EN: "E-mail",
