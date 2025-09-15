@@ -17,4 +17,25 @@
             }
         }
     }
+
+    .react-international-phone-input {
+        border-color: #CED4DA !important;
+        border-top-right-radius: 8px !important;
+        border-bottom-right-radius: 12px !important;
+        color: black !important;
+    }
+
+    .react-international-phone-country-selector-button {
+        padding: 10px;
+        border-color: #CED4DA !important;
+        border-top-left-radius: 8px !important;
+        border-bottom-left-radius: 8px !important;
+    }
+}
+
+input {
+    &:focus {
+        box-shadow: none;
+        outline: none;
+    }
 }

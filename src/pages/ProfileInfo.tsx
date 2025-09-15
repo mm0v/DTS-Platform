@@ -3,7 +3,6 @@ import { PhoneInput } from "react-international-phone";
 import * as Yup from "yup";
 import "react-international-phone/style.css";
 
-// Define the form values interface
 interface FormValues {
   firstName: string;
   lastName: string;
@@ -84,32 +83,65 @@ const ProfileInfo: React.FC = () => {
             </div>
 
             {/* Birth Date */}
+            {/* Birth Date */}
             <div>
               <label className="block mb-1 font-medium">Doğum tarixi</label>
               <div className="flex gap-3">
-                <div className="flex-1">
-                  <Field as="select" name="birthDay" className="border border-[#CED4DA] rounded-[8px] w-full p-2 focus:outline-none focus:border-blue-500">
+
+                {/* Day */}
+                <div className="flex-1 relative">
+                  <Field
+                    as="select"
+                    name="birthDay"
+                    className="border border-[#CED4DA] rounded-[8px] w-full p-2 focus:outline-none focus:border-blue-500 appearance-none"
+                  >
                     <option value="">Gün</option>
                     {days.map(d => <option key={d} value={d}>{d}</option>)}
                   </Field>
-                  <ErrorMessage name="birthDay" component="div" className="text-red-500 text-sm" />
+                  <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center">
+                    <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </div>
                 </div>
-                <div className="flex-1">
-                  <Field as="select" name="birthMonth" className="border border-[#CED4DA] rounded-[8px] w-full p-2 focus:outline-none focus:border-blue-500">
+
+                {/* Month */}
+                <div className="flex-1 relative">
+                  <Field
+                    as="select"
+                    name="birthMonth"
+                    className="border border-[#CED4DA] rounded-[8px] w-full p-2 focus:outline-none focus:border-blue-500 appearance-none"
+                  >
                     <option value="">Ay</option>
                     {months.map((m, i) => <option key={i} value={i + 1}>{m}</option>)}
                   </Field>
-                  <ErrorMessage name="birthMonth" component="div" className="text-red-500 text-sm" />
+                  <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center">
+                    <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </div>
                 </div>
-                <div className="flex-1">
-                  <Field as="select" name="birthYear" className="border border-[#CED4DA] rounded-[8px] w-full p-2 focus:outline-none focus:border-blue-500">
+
+                {/* Year */}
+                <div className="flex-1 relative">
+                  <Field
+                    as="select"
+                    name="birthYear"
+                    className="border border-[#CED4DA] rounded-[8px] w-full p-2 focus:outline-none focus:border-blue-500 appearance-none"
+                  >
                     <option value="">İl</option>
                     {years.map(y => <option key={y} value={y}>{y}</option>)}
                   </Field>
-                  <ErrorMessage name="birthYear" component="div" className="text-red-500 text-sm" />
+                  <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center">
+                    <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </div>
                 </div>
+
               </div>
             </div>
+
 
             {/* Phone */}
             <div className="phone-input-container">
@@ -144,7 +176,7 @@ const ProfileInfo: React.FC = () => {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="bg-[#E8ECF2] text-[#1A4381] px-6 py-2 rounded disabled:opacity-50"
+                className="bg-[#E8ECF2] text-[#1A4381] cursor-pointer px-6 py-2 rounded disabled:opacity-50 transition-all duration-500 hover:bg-[#1A4381] hover:text-white"
               >
                 Göndər
               </button>
