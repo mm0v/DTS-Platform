@@ -6,11 +6,13 @@ function useRefreshToken() {
 
   const refresh = async () => {
     const response = await API.get("/api/v1/auth/refresh", {
-      params: { refreshToken: auth?.refreshToken },
+      // params: { refreshToken: auth?.refreshToken },
+      params: { refreshToken: localStorage.getItem("refreshToken") },
     });
     setAuth((prev: any) => {
       return {
         ...prev,
+        role: response.data.role,
         accessToken: response.data.accessToken,
       };
     });

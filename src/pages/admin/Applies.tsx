@@ -151,7 +151,7 @@ function Applies() {
 
     const fetchData = async () => {
       try {
-        const response = await axiosPrivate.get("/api/v1/company/getAll", {
+        const response = await axiosPrivate.get("/api/v1/companies/getAll", {
           method: "GET",
           signal: controller.signal,
         });
@@ -164,6 +164,7 @@ function Applies() {
         }
       }
     };
+    console.log("Auth Token in Applies:", auth?.accessToken);
     fetchData();
     return () => {
       isMounted = false;
@@ -214,14 +215,14 @@ function Applies() {
           type="text"
           placeholder="Axtar"
         />
-        <div className="flex gap-3">
-          <button className="flex items-center gap-1.5 pl-3 px-2 py-2 border text-[#666666CC] rounded-xl text-[12px] leading-4 font-[700]  border-[#d1d1d1] transition hover:bg-[#cacaca] cursor-pointer">
+        <div className="flex gap-3 font-plus-jakarta">
+          <button className="flex items-center gap-1.5 pl-3 px-2 py-2 border text-[#666666CC] rounded-xl text-[12px] leading-4 font-[700]  border-[#d1d1d1] transition hover:bg-[#cacaca] cursor-pointer ">
             Filter <FilterIcon />
           </button>
-          <button className="flex items-center gap-1.5 pl-3 px-2 py-2 border text-[#666666CC] rounded-xl text-[12px] leading-4 font-[700]  border-[#d1d1d1] transition hover:bg-[#cacaca] cursor-pointer">
+          <button className="flex items-center gap-1.5 pl-3 px-2 py-2 border text-[#666666CC] rounded-xl text-[12px] leading-4 font-[700]  border-[#d1d1d1] transition hover:bg-[#cacaca] cursor-pointer ">
             Sırala <SortIcon />
           </button>
-          <button className="flex items-center gap-1.5 pl-3 px-2 py-2 border text-[#fff] bg-[#1A4381] rounded-xl text-[12px] leading-4 font-[700]  border-[#1A4381] transition hover:bg-[#112b52] cursor-pointer whitespace-nowrap">
+          <button className="flex items-center gap-1.5 pl-3 px-2 py-2 border text-[#fff] bg-[#1A4381] rounded-xl text-[12px] leading-4 font-[700]  border-[#1A4381] transition hover:bg-[#112b52] cursor-pointer whitespace-nowrap ">
             Əlavə Et <AddIcon />
           </button>
         </div>

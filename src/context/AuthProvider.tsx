@@ -3,12 +3,14 @@ import { createContext, useState, type ReactNode } from "react";
 export interface AuthContextType {
   auth: {
     user?: any;
+    role?: string;
     accessToken?: string;
     refreshToken?: string;
   };
   setAuth: React.Dispatch<
     React.SetStateAction<{
       user?: any;
+      role?: string;
       accessToken?: string;
       refreshToken?: string;
     }>

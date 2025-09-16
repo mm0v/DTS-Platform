@@ -9,6 +9,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Applies from "./pages/admin/Applies";
 import Reports from "./pages/admin/Reports";
+import PersistLogin from "./pages/admin/PersistLogin";
 const Home = lazy(() => import("./pages/Home"));
 const ComplianceAndPrioritization = lazy(
   () => import("./pages/ComplianceAndPrioritization")
@@ -65,20 +66,22 @@ const App: React.FC = () => {
           <Route path="*" element={<NotFound />} />
           <Route path="/success" element={<Our_Success />} />
 
-          <Route path="/admin" element={<Admin />}>
-            <Route index path="applies" element={<Applies />} />
-            <Route path="administration" element={<Administration />} />{" "}
-            <Route path="reports" element={<Reports />} />{" "}
+          {/* Protected Routes */}
+          <Route element={<PersistLogin />}>
+            <Route path="/admin" element={<Admin />}>
+              <Route index path="applies" element={<Applies />} />
+              <Route path="administration" element={<Administration />} />{" "}
+              <Route path="reports" element={<Reports />} />{" "}
+            </Route>
+            <Route path="/admin/login" element={<AdminLogin />} />
+            <Route path="/admin/register" element={<AdminRegister />} />
+            <Route path="/profile" element={<Profile />}>
+              <Route index element={<ProfileInfo />} />
+              <Route path="profile_info" element={<ProfileInfo />} />
+              <Route path="notification" element={<Notification />} />
+              <Route path="administration" element={<Administration />} />
+            </Route>
           </Route>
-          <Route path="/admin/login" element={<AdminLogin />} />
-          <Route path="/admin/register" element={<AdminRegister />} />
-          <Route path="/profile" element={<Profile />}>
-            <Route index element={<ProfileInfo />} />
-            <Route path="profile_info" element={<ProfileInfo />} />
-            <Route path="notification" element={<Notification />} />
-            <Route path="administration" element={<Administration />} />
-          </Route>
-
         </Routes>
       </Suspense>
       {!isNotFound && <Footer />}

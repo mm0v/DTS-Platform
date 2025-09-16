@@ -2,6 +2,7 @@ import { useLanguage } from "../../context/LanguageContext";
 
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 
 import axios from "../../services/API/axiosConfig,api";
 import useAuth from "../../hooks/useAuth";
@@ -16,6 +17,7 @@ function AdminLogin() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const axiosPrivate = useAxiosPrivate();
 
   const [showPassword, setShowPassword] = useState(false);
 
@@ -89,6 +91,7 @@ function AdminLogin() {
       );
       const accessToken = response?.data?.accessToken;
       const refreshToken = response?.data?.refreshToken;
+      localStorage.setItem("refreshToken", refreshToken);
       setAuth({
         user: { email, password },
         accessToken: accessToken,
