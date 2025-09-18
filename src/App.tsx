@@ -22,10 +22,9 @@ const NotFound = lazy(() => import("./pages/actions/NotFound"));
 const Admin = lazy(() => import("./pages/admin/Admin"));
 const AdminLogin = lazy(() => import("./pages/admin/AdminLogin"));
 const AdminRegister = lazy(() => import("./pages/admin/AdminRegister"));
-const Profile = lazy(() => import("./pages/Profile"));
-const ProfileInfo = lazy(() => import("./pages/ProfileInfo"));
-const Notification = lazy(() => import("./pages/Notifications"));
-const Administration = lazy(() => import("./pages/Administration"));
+const ProfileInfo = lazy(() => import("./pages/admin/ProfileInfo"));
+const Notification = lazy(() => import("./pages/admin/Notifications"));
+const Administration = lazy(() => import("./pages/admin/Administration"));
 
 const App: React.FC = () => {
   const location = useLocation();
@@ -69,18 +68,15 @@ const App: React.FC = () => {
           {/* Protected Routes */}
           <Route element={<PersistLogin />}>
             <Route path="/admin" element={<Admin />}>
-              <Route index path="applies" element={<Applies />} />
+              <Route index element={<Applies />} />
+              <Route path="applies" element={<Applies />} />
               <Route path="administration" element={<Administration />} />{" "}
               <Route path="reports" element={<Reports />} />{" "}
+              <Route path="profile_info" element={<ProfileInfo />} />{" "}
+              <Route path="notification" element={<Notification />} />{" "}
             </Route>
             <Route path="/admin/login" element={<AdminLogin />} />
             <Route path="/admin/register" element={<AdminRegister />} />
-            <Route path="/profile" element={<Profile />}>
-              <Route index element={<ProfileInfo />} />
-              <Route path="profile_info" element={<ProfileInfo />} />
-              <Route path="notification" element={<Notification />} />
-              <Route path="administration" element={<Administration />} />
-            </Route>
           </Route>
         </Routes>
       </Suspense>

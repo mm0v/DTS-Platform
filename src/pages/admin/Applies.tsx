@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import type { AxiosInstance } from "axios";
 import AppliesTable from "../../components/AppliesTable";
+import { BASE_URL } from "./Admin";
 
 DataTable.use(DT);
 
@@ -20,7 +21,6 @@ function useAdminContext() {
 }
 
 function Applies() {
-  const BASE_URL = import.meta.env.VITE_API_URL;
 
   const { auth, axiosPrivate } = useAdminContext();
 

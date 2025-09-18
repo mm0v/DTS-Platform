@@ -8,8 +8,9 @@ import axios from "../../services/API/axiosConfig,api";
 import useAuth from "../../hooks/useAuth";
 import { toast } from "react-toastify";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { BASE_URL } from "./Admin";
 
-const LOGIN_URL = `${import.meta.env.VITE_API_URL}/api/v1/auth/login`;
+const LOGIN_URL = `${BASE_URL}/api/v1/auth/login`;
 
 function AdminLogin() {
   const { language, pagesTranslations } = useLanguage();

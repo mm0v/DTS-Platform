@@ -8,6 +8,7 @@ import axios from "axios";
 import { PhoneInput } from "react-international-phone";
 import "react-international-phone/style.css";
 import '../../../public/styles/phone.css'
+import { BASE_URL } from "./Admin";
 const AdminRegister = () => {
     const [formValues, setFormValues] = useState({
         name: "",
@@ -88,7 +89,7 @@ const AdminRegister = () => {
         }
 
         // Submit form
-        axios.post(`${import.meta.env.VITE_API_URL}/api/v1/auth/register`, formValues, {
+        axios.post(`${BASE_URL}/api/v1/auth/register`, formValues, {
             headers: { "Content-Type": "application/json" },
             withCredentials: true,
         })

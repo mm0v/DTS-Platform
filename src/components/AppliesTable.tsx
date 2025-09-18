@@ -158,7 +158,7 @@ function DataTable() {
   });
 
   return (
-    <div className="p-4 w-full bg-white rounded-[8px]">
+    <div className="p-4 w-full bg-white rounded-[8px] overflow-x-auto">
       <table className="w-full text-left p-4 border-collapse ">
         <thead className="text-[#6C757D] text-xs leading-5 whitespace-nowrap font-ibm-plex-sans">
           {table.getHeaderGroups().map((headerGroup) => (
