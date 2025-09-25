@@ -11,6 +11,7 @@ import Applies from "./pages/admin/Applies";
 import Reports from "./pages/admin/Reports";
 import PersistLogin from "./pages/admin/PersistLogin";
 import CompanyInfo from "./pages/admin/CompanyInfo";
+import AddCompany from "./pages/admin/AddCompany";
 const Home = lazy(() => import("./pages/Home"));
 const ComplianceAndPrioritization = lazy(
   () => import("./pages/ComplianceAndPrioritization")
@@ -72,6 +73,7 @@ const App: React.FC = () => {
               <Route index element={<Applies />} />
               <Route path="applies" element={<Applies />} />
               <Route path="applies/info/:id" element={<CompanyInfo />} />
+              <Route path="add_company" element={<AddCompany />} />
               <Route path="administration" element={<Administration />} />{" "}
               <Route path="reports" element={<Reports />} />{" "}
               <Route path="profile_info" element={<ProfileInfo />} />{" "}

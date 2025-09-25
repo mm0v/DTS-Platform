@@ -4,7 +4,7 @@ import DT from "datatables.net-dt";
 import "datatables.net-select-dt";
 import "datatables.net-responsive-dt";
 import { useEffect, useState } from "react";
-import { useOutletContext } from "react-router-dom";
+import { data, Link, useOutletContext, useParams } from "react-router-dom";
 import type { AxiosInstance } from "axios";
 import AppliesTable from "../../components/AppliesTable";
 import ConfirmModal from "./ConfirmModal";
@@ -23,6 +23,8 @@ function useAdminContext() {
 function Applies() {
   const { auth, axiosPrivate } = useAdminContext();
 
+  const { pageNumber } = useParams();
+
   type Company = {
     id: number;
     name: string;
@@ -36,6 +38,8 @@ function Applies() {
   const [lastClickedDeleteId, setLastClickedDeleteId] = useState<number | null>(
     null
   );
+
+  const [dataLoaded, setDataLoaded] = useState<boolean>(false);
 
   const handleDelete = async (id: number | null) => {
     try {
@@ -65,6 +69,7 @@ function Applies() {
         });
         if (isMounted) {
           flattenData(response.data);
+          setDataLoaded(true);
         }
       } catch (error) {
         if (isMounted) {
@@ -76,6 +81,7 @@ function Applies() {
     fetchData();
     return () => {
       isMounted = false;
+      setDataLoaded(false);
       controller.abort();
     };
   }, [auth]);
@@ -129,9 +135,11 @@ function Applies() {
           <button className="flex items-center gap-1.5 pl-3 px-2 py-2 border text-[#666666CC] rounded-xl text-[12px] leading-4 font-[700]  border-[#d1d1d1] transition hover:bg-[#cacaca] cursor-pointer ">
             Sırala <SortIcon />
           </button>
-          <button className="flex items-center gap-1.5 pl-3 px-2 py-2 border text-[#fff] bg-[#1A4381] rounded-xl text-[12px] leading-4 font-[700]  border-[#1A4381] transition hover:bg-[#112b52] cursor-pointer whitespace-nowrap ">
-            Əlavə Et <AddIcon />
-          </button>
+          <Link to={"/admin/add_company"}>
+            <button className="flex items-center gap-1.5 pl-3 px-2 py-2 border text-[#fff] bg-[#1A4381] rounded-xl text-[12px] leading-4 font-[700]  border-[#1A4381] transition hover:bg-[#112b52] cursor-pointer whitespace-nowrap ">
+              Əlavə Et <AddIcon />
+            </button>
+          </Link>
         </div>
       </div>
       <div>
@@ -144,6 +152,7 @@ function Applies() {
             handleOpenModal={() => {
               setDeleteModalOpen(true);
             }}
+            isDataLoaded={dataLoaded}
             setLastId={(id: number) => {
               setLastClickedDeleteId(id);
             }}

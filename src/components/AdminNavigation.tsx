@@ -3,7 +3,7 @@ import { PeopleIcon, BusinessIcon } from "../components/SVG/Admin";
 
 function AdminNavigation() {
   return (
-    <div className="w-full lg:w-1/4 p-4 lg:min-h-screen">
+    <div className="w-full lg:w-1/4 p-4 lg:min-h-screen font-plus-jakarta">
       <div className="space-y-2 bg-white p-[24px] rounded-[14px] shadow-md self-start">
         <div>
           <NavLink

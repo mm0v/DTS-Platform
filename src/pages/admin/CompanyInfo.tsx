@@ -144,7 +144,7 @@ export default function CompanyForm() {
 
       const a = document.createElement("a");
       a.href = url;
-      a.download = `${downloadName}${exportExcel && ".xlsx"}`;
+      a.download = `${downloadName}${exportExcel ? ".xlsx" : ""}`;
       document.body.appendChild(a);
       a.click();
       a.remove();

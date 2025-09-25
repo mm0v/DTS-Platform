@@ -6,9 +6,9 @@ import {
   flexRender,
 } from "@tanstack/react-table";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-
 import { ViewIcon, ArrowUpRightIcon, TrashIcon } from "../components/SVG/Admin";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 type Company = {
   id: number;
@@ -18,11 +18,29 @@ type Company = {
   date: string;
 };
 
-function Pagination({ table }: { table: any }) {
+function Pagination({
+  table,
+  isDataLoaded,
+}: {
+  table: any;
+  isDataLoaded: boolean;
+}) {
   const pageCount = table.getPageCount();
   const currentPage = table.getState().pagination.pageIndex;
+  const pageSize = table.getState().pagination.pageSize;
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const pages = Array.from({ length: pageCount }, (_, i) => i);
+
+  // ✅ Sync page & size to URL
+  useEffect(() => {
+    if (!isDataLoaded) return;
+    searchParams.set("page", (currentPage + 1).toString()); // +1 because table uses 0-index
+    searchParams.set("size", pageSize.toString());
+    setSearchParams(searchParams, { replace: true });
+  }, [currentPage, pageSize, searchParams, setSearchParams, isDataLoaded]);
+
+  if (!isDataLoaded) return null;
 
   return (
     <div className="flex items-center justify-between mt-4 font-ibm-plex-sans">
@@ -61,7 +79,7 @@ function Pagination({ table }: { table: any }) {
         </button>
         <div className="flex items-center gap-2 ml-4">
           <select
-            value={table.getState().pagination.pageSize}
+            value={pageSize}
             onChange={(e) => table.setPageSize(Number(e.target.value))}
             className="h-full rounded-lg border border-[#CED4DA] bg-white hover:bg-gray-100 px-2 py-1 transition cursor-pointer font-plus-jakarta"
           >
@@ -82,10 +100,34 @@ type DataTableProps = {
   data: Company[];
   handleOpenModal: () => void;
   setLastId: (id: number) => void;
+  isDataLoaded: boolean;
 };
 
-function DataTable({ data, handleOpenModal, setLastId }: DataTableProps) {
+function DataTable({
+  data,
+  handleOpenModal,
+  setLastId,
+  isDataLoaded,
+}: DataTableProps) {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  // ✅ Initialize state from URL (only once)
+  const [pageIndex, setPageIndex] = useState(0);
+  const [pageSize, setPageSize] = useState(10);
+
+  // initialize from URL only once data is ready
+  useEffect(() => {
+    if (!isDataLoaded || data.length === 0) return;
+
+    const page = Number(searchParams.get("page")) || 1;
+    const size = Number(searchParams.get("size")) || 10;
+
+    const maxPage = Math.max(0, Math.ceil(data.length / size) - 1);
+    const clamped = Math.min(Math.max(page - 1, 0), maxPage);
+
+    setPageIndex(clamped);
+    setPageSize(size);
+  }, [isDataLoaded, data.length, searchParams]);
 
   const columns: ColumnDef<Company>[] = [
     {
@@ -170,8 +212,22 @@ function DataTable({ data, handleOpenModal, setLastId }: DataTableProps) {
   const table = useReactTable({
     data,
     columns,
+    state: {
+      pagination: { pageIndex, pageSize }, // ✅ controlled state
+    },
+    onPaginationChange: (updater) => {
+      if (typeof updater === "function") {
+        const newState = updater({ pageIndex, pageSize });
+        setPageIndex(newState.pageIndex);
+        setPageSize(newState.pageSize);
+      } else {
+        setPageIndex(updater.pageIndex);
+        setPageSize(updater.pageSize);
+      }
+    },
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    manualPagination: false,
   });
 
   return (
@@ -224,7 +280,7 @@ function DataTable({ data, handleOpenModal, setLastId }: DataTableProps) {
       </table>
 
       {/* Pagination */}
-      <Pagination table={table} />
+      <Pagination table={table} isDataLoaded={isDataLoaded} />
     </div>
   );
 }
