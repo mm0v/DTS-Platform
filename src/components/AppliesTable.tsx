@@ -9,6 +9,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { ViewIcon, ArrowUpRightIcon, TrashIcon } from "../components/SVG/Admin";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { useTableSettings } from "../pages/admin/Applies";
 
 type Company = {
   id: number;
@@ -16,6 +17,8 @@ type Company = {
   status: string;
   sector: string;
   date: string;
+  region: string;
+  createdDate: string;
 };
 
 function Pagination({
@@ -59,7 +62,7 @@ function Pagination({
           <button
             key={page}
             onClick={() => table.setPageIndex(page)}
-            className={`p-2.5 rounded-lg border bg-white hover:bg-gray-100 transition cursor-pointer font-medium tracking-widest ${
+            className={`p-2.5 rounded-lg border bg-white hover:bg-gray-100 transition cursor-pointer font-medium ${
               page === currentPage
                 ? " text-[#0057FC] border-[#0057FC]"
                 : " text-[#343A40] border-[#CED4DA]"
@@ -115,6 +118,8 @@ function DataTable({
   const [pageIndex, setPageIndex] = useState(0);
   const [pageSize, setPageSize] = useState(10);
 
+  const { tableSettings } = useTableSettings();
+
   // initialize from URL only once data is ready
   useEffect(() => {
     if (!isDataLoaded || data.length === 0) return;
@@ -132,7 +137,7 @@ function DataTable({
   const columns: ColumnDef<Company>[] = [
     {
       header: "#",
-      cell: (row) => row.row.index + 1,
+      cell: (row) => row.row.index + pageIndex * pageSize + 1,
       enableHiding: true,
     },
     {
@@ -209,12 +214,51 @@ function DataTable({
       ),
     },
   ];
+
+  const filteredData = data.filter((company) => {
+    const regionMatch =
+      tableSettings.region.length === 0 ||
+      tableSettings.region.includes(company.region);
+    const sectorMatch =
+      tableSettings.sector.length === 0 ||
+      tableSettings.sector.includes(company.sector);
+
+    const query = tableSettings.searchQuery.toLowerCase();
+    const searchMatch =
+      query === "" ||
+      company.name.toLowerCase().includes(query) ||
+      company.status.toLowerCase().includes(query) ||
+      company.sector.toLowerCase().includes(query) ||
+      company.region.toLowerCase().includes(query) ||
+      company.id.toString().includes(query);
+
+    return regionMatch && sectorMatch && searchMatch;
+  });
+
+  let sortedData = [...filteredData];
+
+  if (tableSettings.sort === "newest") {
+    sortedData.sort(
+      (a, b) =>
+        new Date(b.createdDate).getTime() - new Date(a.createdDate).getTime()
+    );
+  } else if (tableSettings.sort === "oldest") {
+    sortedData.sort(
+      (a, b) =>
+        new Date(a.createdDate).getTime() - new Date(b.createdDate).getTime()
+    );
+  } else if (tableSettings.sort === "name") {
+    sortedData.sort((a, b) => a.name.localeCompare(b.name));
+  }
+
+  const start = pageIndex * pageSize;
+  const end = start + pageSize;
+  const paginatedData = sortedData.slice(start, end);
+
   const table = useReactTable({
-    data,
+    data: paginatedData,
     columns,
-    state: {
-      pagination: { pageIndex, pageSize }, // ✅ controlled state
-    },
+    state: { pagination: { pageIndex, pageSize } },
     onPaginationChange: (updater) => {
       if (typeof updater === "function") {
         const newState = updater({ pageIndex, pageSize });
@@ -227,7 +271,8 @@ function DataTable({
     },
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
-    manualPagination: false,
+    manualPagination: true,
+    pageCount: Math.ceil(sortedData.length / pageSize), // ✅ add this
   });
 
   return (
