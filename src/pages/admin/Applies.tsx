@@ -8,6 +8,9 @@ import type { AxiosInstance } from "axios";
 import AppliesTable from "../../components/AppliesTable";
 import ConfirmModal from "./ConfirmModal";
 import AppliesTableControllers from "../../components/AppliesTableControllers";
+import SendToExpertModal from "../../components/SendToExpertModal";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import { toast } from "react-toastify";
 
 DataTable.use(DT);
 
@@ -47,7 +50,9 @@ function useTableSettings() {
 }
 
 function Applies() {
-  const { auth, axiosPrivate } = useAdminContext();
+  const { auth } = useAdminContext();
+  const axiosPrivate = useAxiosPrivate();
+  const [expertsList, setExpertsList] = useState<any[]>([]);
 
   const [tableSettings, setTableSettings] = useState<Settings>({
     region: [],
@@ -55,6 +60,12 @@ function Applies() {
     sort: "newest",
     searchQuery: "",
   });
+
+  const statusTranslate = {
+    COMPLETED: "Tamamlandı",
+    UNCOMPLETED: "Tamamlanmadı",
+    PENDING: "İcrada",
+  };
 
   type Company = {
     id: number;
@@ -71,6 +82,10 @@ function Applies() {
   const [lastClickedDeleteId, setLastClickedDeleteId] = useState<number | null>(
     null
   );
+  const [lastClickedExpertId, setLastClickedExpertId] = useState<number | null>(
+    null
+  );
+  const [openExpertModal, setOpenExpertModal] = useState(false);
 
   const [dataLoaded, setDataLoaded] = useState<boolean>(false);
 
@@ -85,8 +100,38 @@ function Applies() {
     }
   };
 
+  const fetchData = async (controller: AbortController) => {
+    try {
+      const response = await axiosPrivate.get(
+        "/api/v1/admins/getAllCompanies",
+        {
+          signal: controller.signal,
+        }
+      );
+
+      flattenData(response.data);
+      console.log("Fetched Data:", response.data);
+      setDataLoaded(true);
+    } catch (error) {
+      console.error("Error fetching admin data:", error);
+    }
+  };
+
+  const fetchExperts = async (controller: AbortController) => {
+    try {
+      const response = await axiosPrivate.get("/api/v1/admins/getAllExperts", {
+        signal: controller.signal,
+      });
+
+      setExpertsList(response.data);
+      console.log("Fetched Experts:", response.data);
+      setDataLoaded(true);
+    } catch (error) {
+      console.error("Error fetching expert data:", error);
+    }
+  };
+
   useEffect(() => {
-    let isMounted = true;
     const controller = new AbortController();
 
     if (!auth?.accessToken) {
@@ -94,31 +139,18 @@ function Applies() {
       return;
     }
 
-    const fetchData = async () => {
-      try {
-        const response = await axiosPrivate.get("/api/v1/companies/getAll", {
-          method: "GET",
-          signal: controller.signal,
-        });
-        if (isMounted) {
-          flattenData(response.data);
-          console.log("Fetched Data:", response.data);
-          setDataLoaded(true);
-        }
-      } catch (error) {
-        if (isMounted) {
-          console.error("Error fetching admin data:", error);
-        }
-      }
-    };
-    console.log("Auth Token in Applies:", auth?.accessToken);
-    fetchData();
+    fetchData(controller);
+    fetchExperts(controller);
+
     return () => {
-      isMounted = false;
       setDataLoaded(false);
-      controller.abort();
+      controller.abort(); // cancel pending requests
     };
   }, [auth]);
+
+  useEffect(() => {
+    console.log("Experts List Updated:", expertsList);
+  }, [expertsList]);
 
   const formatHour = (dateString: string) => {
     const options: Intl.DateTimeFormatOptions = {
@@ -133,7 +165,10 @@ function Applies() {
     const data = companies.map((company) => ({
       id: company.id,
       name: company.companyData?.companyName,
-      status: "Tamamlandı",
+      status:
+        statusTranslate[
+          company?.companyStatus as keyof typeof statusTranslate
+        ] || company?.companyStatus,
       sector: company.propertyLaw?.businessOperations,
       region: company.companyData?.cityAndRegion,
       date: `${new Date(company.createdDate)
@@ -145,6 +180,26 @@ function Applies() {
     }));
     setTableData(data);
     console.log("Flattened Data:", data);
+  };
+
+  const sendCompanyToExpert = async (
+    companyId: number | null,
+    expertId: number | null
+  ) => {
+    const controller = new AbortController();
+    try {
+      await axiosPrivate.post("/api/v1/admins/send-company", null, {
+        params: {
+          companyId: companyId,
+          expertId: expertId,
+        },
+      });
+      toast.success("Müraciət eksperte göndərildi!");
+      setOpenExpertModal(false);
+      fetchData(controller);
+    } catch (error) {
+      toast.error("Müraciətin eksperte göndərilməsi uğursuz oldu.");
+    }
   };
 
   return (
@@ -161,7 +216,15 @@ function Applies() {
             setDeleteModalOpen(false);
           }}
         />
-        <div className="flex items-center gap-5 justify-between mb-7">
+        <SendToExpertModal
+          openModal={openExpertModal}
+          handleCloseModal={() => setOpenExpertModal(false)}
+          expertList={expertsList}
+          onSend={(expertId: number | null) => {
+            sendCompanyToExpert(lastClickedExpertId, expertId);
+          }}
+        />
+        <div className="flex flex-col  sm:flex-row items-center gap-5 justify-between mb-7">
           <AppliesTableControllers />
         </div>
         <div>
@@ -178,6 +241,10 @@ function Applies() {
               setLastId={(id: number) => {
                 setLastClickedDeleteId(id);
               }}
+              setLastExpertId={(id: number) => {
+                setLastClickedExpertId(id);
+              }}
+              openExpertModal={() => setOpenExpertModal(true)}
             />
           </div>
         </div>

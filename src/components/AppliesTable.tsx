@@ -104,6 +104,8 @@ type DataTableProps = {
   handleOpenModal: () => void;
   setLastId: (id: number) => void;
   isDataLoaded: boolean;
+  setLastExpertId: (id: number) => void;
+  openExpertModal: () => void;
 };
 
 function DataTable({
@@ -111,6 +113,8 @@ function DataTable({
   handleOpenModal,
   setLastId,
   isDataLoaded,
+  setLastExpertId,
+  openExpertModal,
 }: DataTableProps) {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -195,7 +199,11 @@ function DataTable({
             <ViewIcon />
           </button>
           <button
-            title="Edit"
+            title="Send To An Expert"
+            onClick={() => {
+              setLastExpertId(cell.row.original.id);
+              openExpertModal();
+            }}
             className="p-2.5 rounded-lg border border-[#CED4DA] bg-white hover:bg-gray-100 transition cursor-pointer"
           >
             <ArrowUpRightIcon />
@@ -218,7 +226,10 @@ function DataTable({
   const filteredData = data.filter((company) => {
     const regionMatch =
       tableSettings.region.length === 0 ||
-      tableSettings.region.includes(company.region);
+      tableSettings.region.some((region) =>
+        company.region.toLowerCase().includes(region.toLowerCase())
+      );
+
     const sectorMatch =
       tableSettings.sector.length === 0 ||
       tableSettings.sector.includes(company.sector);
@@ -323,6 +334,9 @@ function DataTable({
           ))}
         </tbody>
       </table>
+      {table.getRowModel().rows.length === 0 && (
+        <p className="w-full text-center mt-4">Məlumat yoxdur</p>
+      )}
 
       {/* Pagination */}
       <Pagination table={table} isDataLoaded={isDataLoaded} />
