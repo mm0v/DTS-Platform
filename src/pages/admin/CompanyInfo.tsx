@@ -17,31 +17,31 @@ export default function CompanyForm() {
   const { axiosPrivate } = useAdminContext();
   const { id } = useParams<{ id: string }>();
 
-  useEffect(() => {
-    let isMounted = true;
-    const controller = new AbortController();
+    useEffect(() => {
+      let isMounted = true;
+      const controller = new AbortController();
 
-    const fetchData = async () => {
-      try {
-        const response = await axiosPrivate.get(`/api/v1/companies/get/${id}`, {
-          method: "GET",
-          signal: controller.signal,
-        });
-        if (isMounted) {
-          flattenData(response.data);
+      const fetchData = async () => {
+        try {
+          const response = await axiosPrivate.get(`/api/v1/companies/get/${id}`, {
+            method: "GET",
+            signal: controller.signal,
+          });
+          if (isMounted) {
+            flattenData(response.data);
+          }
+        } catch (error) {
+          if (isMounted) {
+            console.error("Error fetching admin data:", error);
+          }
         }
-      } catch (error) {
-        if (isMounted) {
-          console.error("Error fetching admin data:", error);
-        }
-      }
-    };
-    fetchData();
-    return () => {
-      isMounted = false;
-      controller.abort();
-    };
-  }, []);
+      };
+      fetchData();
+      return () => {
+        isMounted = false;
+        controller.abort();
+      };
+    }, []);
 
   const flattenData = (data: any) => {
     const newData = {
