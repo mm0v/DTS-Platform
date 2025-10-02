@@ -16,6 +16,7 @@ function AppliesTableControllers() {
 
   const [region, setRegion] = useState<string[]>([]);
   const [sector, setSector] = useState<string[]>([]);
+  const [status, setStatus] = useState<string[]>([]);
   const [sort, setSort] = useState<string>("newest");
 
   const handleSubmit = () => {
@@ -24,6 +25,7 @@ function AppliesTableControllers() {
       region,
       sector,
       sort,
+      status,
     });
     handleClose("filter");
     handleClose("sort");
@@ -255,6 +257,33 @@ function AppliesTableControllers() {
                   setFunction={setSector}
                 />
               </div>
+              <div className="flex flex-col gap-3">
+                <h1 className="text-[13px] font-[700] leading-4 text-[#666] font-plus-jakarta">
+                  Status
+                </h1>
+                <StyledCheckbox
+                  value={"Tamamlandı"}
+                  name={"status"}
+                  id={"done"}
+                  array={status}
+                  setFunction={setStatus}
+                />
+
+                <StyledCheckbox
+                  value={"İcrada"}
+                  name={"status"}
+                  id={"process"}
+                  array={status}
+                  setFunction={setStatus}
+                />
+                <StyledCheckbox
+                  value={"Tamamlanmadı"}
+                  name={"status"}
+                  id={"undone"}
+                  array={status}
+                  setFunction={setStatus}
+                />
+              </div>
             </div>
 
             <div className="flex justify-end">
@@ -264,7 +293,9 @@ function AppliesTableControllers() {
                   tableSettings.region.sort().toString() ===
                     region.sort().toString() &&
                   tableSettings.sector.sort().toString() ===
-                    sector.sort().toString()
+                    sector.sort().toString() &&
+                  tableSettings.status.sort().toString() ===
+                    status.sort().toString()
                 }
                 className="cursor-pointer text-xs text-[#1A4381] disabled:cursor-not-allowed disabled:text-[#A0A0A0] font-[700] leading-4"
               >

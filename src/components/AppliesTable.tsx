@@ -5,7 +5,7 @@ import {
   type ColumnDef,
   flexRender,
 } from "@tanstack/react-table";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { Check, ChevronLeft, ChevronRight, Clock } from "lucide-react";
 import { ViewIcon, ArrowUpRightIcon, TrashIcon } from "../components/SVG/Admin";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -106,6 +106,7 @@ type DataTableProps = {
   isDataLoaded: boolean;
   setLastExpertId: (id: number) => void;
   openExpertModal: () => void;
+  isLoading: boolean;
 };
 
 function DataTable({
@@ -115,6 +116,7 @@ function DataTable({
   isDataLoaded,
   setLastExpertId,
   openExpertModal,
+  isLoading,
 }: DataTableProps) {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -198,16 +200,42 @@ function DataTable({
           >
             <ViewIcon />
           </button>
-          <button
-            title="Send To An Expert"
-            onClick={() => {
-              setLastExpertId(cell.row.original.id);
-              openExpertModal();
-            }}
-            className="p-2.5 rounded-lg border border-[#CED4DA] bg-white hover:bg-gray-100 transition cursor-pointer"
-          >
-            <ArrowUpRightIcon />
-          </button>
+          {cell.row.original.status === "Tamamlandı" && (
+            <button
+              title={"Show Feedback"}
+              onClick={() => {
+                setLastExpertId(cell.row.original.id);
+                openExpertModal();
+              }}
+              className="p-2.5 rounded-lg border border-[#CED4DA] bg-white hover:bg-gray-100 transition cursor-pointer"
+            >
+              <Check width="20px" height="20px" />
+            </button>
+          )}
+          {cell.row.original.status === "Tamamlanmadı" && (
+            <button
+              title={"Send To An Expert"}
+              onClick={() => {
+                setLastExpertId(cell.row.original.id);
+                openExpertModal();
+              }}
+              className="p-2.5 rounded-lg border border-[#CED4DA] bg-white hover:bg-gray-100 transition cursor-pointer"
+            >
+              <ArrowUpRightIcon />
+            </button>
+          )}
+          {cell.row.original.status === "İcrada" && (
+            <button
+              title={"Wait..."}
+              onClick={() => {
+                setLastExpertId(cell.row.original.id);
+                openExpertModal();
+              }}
+              className="p-2.5 rounded-lg border border-[#CED4DA] bg-white hover:bg-gray-100 transition cursor-pointer"
+            >
+              <Clock width="20px" height="20px" />
+            </button>
+          )}
           <button
             title="Delete"
             onClick={() => {
@@ -234,6 +262,10 @@ function DataTable({
       tableSettings.sector.length === 0 ||
       tableSettings.sector.includes(company.sector);
 
+    const statusMatch =
+      tableSettings.status.length === 0 ||
+      tableSettings.status.includes(company.status);
+
     const query = tableSettings.searchQuery.toLowerCase();
     const searchMatch =
       query === "" ||
@@ -243,7 +275,7 @@ function DataTable({
       company.region.toLowerCase().includes(query) ||
       company.id.toString().includes(query);
 
-    return regionMatch && sectorMatch && searchMatch;
+    return regionMatch && sectorMatch && searchMatch && statusMatch;
   });
 
   let sortedData = [...filteredData];
@@ -334,9 +366,10 @@ function DataTable({
           ))}
         </tbody>
       </table>
-      {table.getRowModel().rows.length === 0 && (
+      {(table.getRowModel().rows.length && !isLoading) === 0 && (
         <p className="w-full text-center mt-4">Məlumat yoxdur</p>
       )}
+      {isLoading && <p className="w-full text-center mt-4">Yüklənir...</p>}
 
       {/* Pagination */}
       <Pagination table={table} isDataLoaded={isDataLoaded} />

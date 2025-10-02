@@ -22,6 +22,7 @@ type AdminContextType = {
 type Settings = {
   region: string[];
   sector: string[];
+  status: string[];
   sort: string;
   searchQuery: string;
 };
@@ -53,10 +54,12 @@ function Applies() {
   const { auth } = useAdminContext();
   const axiosPrivate = useAxiosPrivate();
   const [expertsList, setExpertsList] = useState<any[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const [tableSettings, setTableSettings] = useState<Settings>({
     region: [],
     sector: [],
+    status: [],
     sort: "newest",
     searchQuery: "",
   });
@@ -100,20 +103,30 @@ function Applies() {
     }
   };
 
-  const fetchData = async (controller: AbortController) => {
+  const fetchData = async (controller: AbortController, role: string) => {
     try {
-      const response = await axiosPrivate.get(
-        "/api/v1/admins/getAllCompanies",
-        {
-          signal: controller.signal,
-        }
-      );
+      setLoading(true);
+      let API_URL = "";
+      if (role === "SUPER_ADMIN") {
+        API_URL = "/api/v1/admins/getAllCompanies";
+      } else if (role === "EXPERT") {
+        API_URL = "/api/v1/experts/getAllPendingCompanies";
+      } else {
+        console.error("Unauthorized role:", role);
+        return;
+      }
+
+      const response = await axiosPrivate.get(API_URL, {
+        signal: controller.signal,
+      });
 
       flattenData(response.data);
-      console.log("Fetched Data:", response.data);
       setDataLoaded(true);
+      console.log("Fetched Data:", response.data);
     } catch (error) {
       console.error("Error fetching admin data:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -139,8 +152,18 @@ function Applies() {
       return;
     }
 
-    fetchData(controller);
-    fetchExperts(controller);
+    switch (auth?.role) {
+      case "SUPER_ADMIN":
+        fetchData(controller, "SUPER_ADMIN");
+        fetchExperts(controller);
+        break;
+      case "EXPERT":
+        fetchData(controller, "EXPERT");
+        break;
+      default:
+        console.error("Unauthorized role:", auth?.role);
+        return;
+    }
 
     return () => {
       setDataLoaded(false);
@@ -179,6 +202,7 @@ function Applies() {
       createdDate: company.createdDate,
     }));
     setTableData(data);
+
     console.log("Flattened Data:", data);
   };
 
@@ -196,7 +220,7 @@ function Applies() {
       });
       toast.success("Müraciət eksperte göndərildi!");
       setOpenExpertModal(false);
-      fetchData(controller);
+      fetchData(controller, "SUPER_ADMIN");
     } catch (error) {
       toast.error("Müraciətin eksperte göndərilməsi uğursuz oldu.");
     }
@@ -245,6 +269,7 @@ function Applies() {
                 setLastClickedExpertId(id);
               }}
               openExpertModal={() => setOpenExpertModal(true)}
+              isLoading={loading}
             />
           </div>
         </div>

@@ -3,7 +3,6 @@ import { PhoneInput } from "react-international-phone";
 import * as Yup from "yup";
 import "react-international-phone/style.css";
 import { useEffect, useState } from "react";
-import { axiosPrivate } from "../../services/API/axiosConfig,api";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 
 interface FormValues {
@@ -95,12 +94,22 @@ const ProfileInfo: React.FC = () => {
   const updateProfile = async (data: FormValues) => {
     const formData = new FormData();
 
-    formData.append("name", data.name);
-    formData.append("surname", data.surname);
-    formData.append("dateOfBirth", `${data.birthYear}-${data.birthMonth}-${data.birthDay}`)
-    formData.append("phoneNumber", data.phone);
-    formData.append("email", data.email);
-    // formData.append("password", "Admin123");
+    const infos = {
+      name: data.name,
+      surname: data.surname,
+      dateOfBirth: `${data.birthYear}-${
+        data.birthMonth.length === 1 ? `0${data.birthMonth}` : data.birthMonth
+      }-${data.birthDay.length === 1 ? `0${data.birthDay}` : data.birthDay}`,
+      phoneNumber: data.phone,
+      email: data.email,
+    };
+
+    formData.append(
+      "request",
+      new Blob([JSON.stringify(infos)], {
+        type: "application/json",
+      })
+    );
 
     try {
       const response = await axiosPrivate.put(
@@ -120,20 +129,20 @@ const ProfileInfo: React.FC = () => {
     }
   };
 
-const handleSubmit = async (
-  values: FormValues,
-  { setSubmitting }: FormikHelpers<FormValues>
-) => {
-  try {
-    await updateProfile(values);
-    alert("Göndərildi!");
-  } catch (error) {
-    console.error(error);
-    alert("Xəta baş verdi!");
-  } finally {
-    setSubmitting(false);
-  }
-};
+  const handleSubmit = async (
+    values: FormValues,
+    { setSubmitting }: FormikHelpers<FormValues>
+  ) => {
+    try {
+      await updateProfile(values);
+      alert("Göndərildi!");
+    } catch (error) {
+      console.error(error);
+      alert("Xəta baş verdi!");
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   return (
     <div className="bg-white rounded-[8px] w-content max-w-[750px] p-[30px]">

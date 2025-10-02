@@ -6,6 +6,7 @@ export interface AuthContextType {
     role?: string;
     accessToken?: string;
     refreshToken?: string;
+    isVerified?: boolean;
   };
   setAuth: React.Dispatch<
     React.SetStateAction<{
@@ -13,6 +14,7 @@ export interface AuthContextType {
       role?: string;
       accessToken?: string;
       refreshToken?: string;
+      isVerified?: boolean;
     }>
   >;
 }

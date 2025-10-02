@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import useAuth from "../../hooks/useAuth";
 import { useNavigate, Outlet, Link } from "react-router-dom";
@@ -10,15 +10,46 @@ import "datatables.net-select-dt";
 import "datatables.net-responsive-dt";
 
 import AdminNavigation from "../../components/AdminNavigation";
+import { UserRound } from "lucide-react";
 
 DataTable.use(DT);
 
 export const BASE_URL = import.meta.env.VITE_API_URL;
 
 function Admin() {
-  const { auth } = useAuth();
+  const { auth, setAuth } = useAuth();
   const navigate = useNavigate();
   const axiosPrivate = useAxiosPrivate();
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (!auth?.accessToken) {
+      console.error("No auth token available.");
+      return;
+    }
+
+    const controller = new AbortController();
+    const fetchProfile = async () => {
+      setLoading(true);
+      try {
+        const response = await axiosPrivate.get("/api/v1/users/profile", {
+          signal: controller.signal,
+        });
+
+        setAuth((prev) => ({ ...prev, user: response.data }));
+      } catch (error) {
+        console.error("Error fetching expert data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProfile();
+
+    return () => {
+      controller.abort(); // cancel pending requests
+    };
+  }, [auth?.accessToken]);
 
   useEffect(() => {
     if (!auth?.accessToken) {
@@ -31,12 +62,25 @@ function Admin() {
     <div className="flex flex-col h-dvh">
       <div className="bg-white w-full px-[18px] py-[10px] flex justify-between items-center">
         <Link to={"/admin/profile_info"} className="flex items-center gap-3">
-          <img
-            src={ProfilePhoto}
-            alt=""
-            className="w-[40px] h-[40px] rounded-[50%]"
-          />
-          <p className="font-[500] text-[20px]">Admin</p>
+          {auth?.user?.imageUrl ? (
+            <img
+              src={auth?.user?.imageUrl}
+              alt="Profile"
+              className="w-[40px] h-[40px] rounded-[50%]"
+            />
+          ) : (
+            <span className="w-10 h-10 rounded-full bg-gray-400 flex items-center justify-center">
+              <UserRound className="w-[25px] h-[25px] text-white" />
+            </span>
+          )}
+
+          <p className="font-[500] text-[20px]">
+            {loading
+              ? "Yüklənir..."
+              : auth?.user
+              ? `${auth.user.name} ${auth.user.surname}`
+              : "Data Yoxdur"}
+          </p>
         </Link>
         <Link
           to={"/admin/notification"}
