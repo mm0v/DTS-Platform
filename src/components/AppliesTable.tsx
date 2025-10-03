@@ -6,10 +6,26 @@ import {
   flexRender,
 } from "@tanstack/react-table";
 import { Check, ChevronLeft, ChevronRight, Clock } from "lucide-react";
-import { ViewIcon, ArrowUpRightIcon, TrashIcon } from "../components/SVG/Admin";
+import {
+  ViewIcon,
+  ArrowUpRightIcon,
+  TrashIcon,
+  FeedbackIcon,
+} from "../components/SVG/Admin";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useTableSettings } from "../pages/admin/Applies";
+import { toast } from "react-toastify";
+
+type Expert = {
+  id: number;
+  name: string;
+  surname: string;
+  email: string;
+  phoneNumber: string;
+  imageUrl: string;
+  dateOfBirth: string;
+};
 
 type Company = {
   id: number;
@@ -19,6 +35,8 @@ type Company = {
   date: string;
   region: string;
   createdDate: string;
+  expert: Expert | null;
+  feedback: string | null;
 };
 
 function Pagination({
@@ -99,24 +117,27 @@ function Pagination({
   );
 }
 
+type ModalType =
+  | "confirm"
+  | "sendToExpert"
+  | "readFeedback"
+  | "writeFeedback"
+  | null;
+
 type DataTableProps = {
   data: Company[];
-  handleOpenModal: () => void;
-  setLastId: (id: number) => void;
   isDataLoaded: boolean;
-  setLastExpertId: (id: number) => void;
-  openExpertModal: () => void;
   isLoading: boolean;
+  onOpenModal: (type: ModalType, companyId: number | null) => void;
+  role: string;
 };
 
 function DataTable({
   data,
-  handleOpenModal,
-  setLastId,
   isDataLoaded,
-  setLastExpertId,
-  openExpertModal,
   isLoading,
+  onOpenModal,
+  role,
 }: DataTableProps) {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -139,6 +160,74 @@ function DataTable({
     setPageIndex(clamped);
     setPageSize(size);
   }, [isDataLoaded, data.length, searchParams]);
+
+  const renderActionButton = (row: any) => {
+    const { status, id, expert } = row.original;
+
+    if (status === "Tamamlandı") {
+      return (
+        <button
+          title="Show Feedback"
+          onClick={() => {
+            onOpenModal("readFeedback", id);
+          }}
+          className="p-2.5 rounded-lg border border-[#CED4DA] bg-white hover:bg-gray-100 transition cursor-pointer"
+        >
+          <Check width="20px" height="20px" />
+        </button>
+      );
+    }
+
+    if (role === "SUPER_ADMIN" || role === "ADMIN") {
+      switch (status) {
+        case "Tamamlanmadı":
+          return (
+            <button
+              title="Send To An Expert"
+              onClick={() => {
+                onOpenModal("sendToExpert", id);
+              }}
+              className="p-2.5 rounded-lg border border-[#CED4DA] bg-white hover:bg-gray-100 transition cursor-pointer"
+            >
+              <ArrowUpRightIcon />
+            </button>
+          );
+
+        case "İcrada":
+          return (
+            <button
+              title="Wait..."
+              onClick={() => {
+                toast.warning(
+                  `${expert?.name} ${expert?.surname}-dən cavab gözlənilir.`
+                );
+              }}
+              className="p-2.5 rounded-lg border border-[#CED4DA] bg-white hover:bg-gray-100 transition cursor-pointer"
+            >
+              <Clock width="20px" height="20px" />
+            </button>
+          );
+      }
+    } else {
+      if (status === "İcrada") {
+        return (
+          <button
+            title="Write Feedback"
+            onClick={() => {
+              onOpenModal("writeFeedback", id);
+            }}
+            className="p-2.5 rounded-lg border border-[#CED4DA] bg-white hover:bg-gray-100 transition cursor-pointer"
+          >
+            <span className="w-5 flex justify-center">
+              <FeedbackIcon />
+            </span>
+          </button>
+        );
+      }
+    }
+
+    return null;
+  };
 
   const columns: ColumnDef<Company>[] = [
     {
@@ -200,47 +289,13 @@ function DataTable({
           >
             <ViewIcon />
           </button>
-          {cell.row.original.status === "Tamamlandı" && (
-            <button
-              title={"Show Feedback"}
-              onClick={() => {
-                setLastExpertId(cell.row.original.id);
-                openExpertModal();
-              }}
-              className="p-2.5 rounded-lg border border-[#CED4DA] bg-white hover:bg-gray-100 transition cursor-pointer"
-            >
-              <Check width="20px" height="20px" />
-            </button>
-          )}
-          {cell.row.original.status === "Tamamlanmadı" && (
-            <button
-              title={"Send To An Expert"}
-              onClick={() => {
-                setLastExpertId(cell.row.original.id);
-                openExpertModal();
-              }}
-              className="p-2.5 rounded-lg border border-[#CED4DA] bg-white hover:bg-gray-100 transition cursor-pointer"
-            >
-              <ArrowUpRightIcon />
-            </button>
-          )}
-          {cell.row.original.status === "İcrada" && (
-            <button
-              title={"Wait..."}
-              onClick={() => {
-                setLastExpertId(cell.row.original.id);
-                openExpertModal();
-              }}
-              className="p-2.5 rounded-lg border border-[#CED4DA] bg-white hover:bg-gray-100 transition cursor-pointer"
-            >
-              <Clock width="20px" height="20px" />
-            </button>
-          )}
+
+          {renderActionButton(cell.row)}
+
           <button
             title="Delete"
             onClick={() => {
-              setLastId(cell.row.original.id);
-              handleOpenModal();
+              onOpenModal("confirm", cell.row.original.id);
             }}
             className="p-2.5 rounded-lg border border-[#CED4DA] bg-white hover:bg-gray-100 transition cursor-pointer"
           >

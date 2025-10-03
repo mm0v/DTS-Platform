@@ -11,6 +11,8 @@ import AppliesTableControllers from "../../components/AppliesTableControllers";
 import SendToExpertModal from "../../components/SendToExpertModal";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { toast } from "react-toastify";
+import ReadFeedback from "./ReadFeedback";
+import WriteFeedback from "../../components/WriteFeedback";
 
 DataTable.use(DT);
 
@@ -50,6 +52,40 @@ function useTableSettings() {
   return context;
 }
 
+type Expert = {
+  id: number;
+  name: string;
+  surname: string;
+  email: string;
+  phoneNumber: string;
+  imageUrl: string;
+  dateOfBirth: string;
+};
+
+type Company = {
+  id: number;
+  name: string;
+  status: string;
+  sector: string;
+  date: string;
+  region: string;
+  createdDate: string;
+  expert: Expert | null;
+  feedback: string | null;
+};
+
+type ModalType =
+  | "confirm"
+  | "sendToExpert"
+  | "readFeedback"
+  | "writeFeedback"
+  | null;
+
+interface ModalState {
+  type: ModalType;
+  companyId: number | null;
+}
+
 function Applies() {
   const { auth } = useAdminContext();
   const axiosPrivate = useAxiosPrivate();
@@ -70,25 +106,22 @@ function Applies() {
     PENDING: "İcrada",
   };
 
-  type Company = {
-    id: number;
-    name: string;
-    status: string;
-    sector: string;
-    date: string;
-    region: string;
-    createdDate: string;
+  const [tableData, setTableData] = useState<Company[]>([]);
+
+  const [rawCompanies, setRawCompanies] = useState<any[]>([]);
+
+  const [modalState, setModalState] = useState<ModalState>({
+    type: null,
+    companyId: null,
+  });
+
+  const openModal = (type: ModalType, companyId: number | null = null) => {
+    setModalState({ type, companyId });
   };
 
-  const [tableData, setTableData] = useState<Company[]>([]);
-  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
-  const [lastClickedDeleteId, setLastClickedDeleteId] = useState<number | null>(
-    null
-  );
-  const [lastClickedExpertId, setLastClickedExpertId] = useState<number | null>(
-    null
-  );
-  const [openExpertModal, setOpenExpertModal] = useState(false);
+  const closeModal = () => {
+    setModalState({ type: null, companyId: null });
+  };
 
   const [dataLoaded, setDataLoaded] = useState<boolean>(false);
 
@@ -104,13 +137,13 @@ function Applies() {
   };
 
   const fetchData = async (controller: AbortController, role: string) => {
+    setLoading(true);
     try {
-      setLoading(true);
       let API_URL = "";
-      if (role === "SUPER_ADMIN") {
+      if (role === "SUPER_ADMIN" || role === "ADMIN") {
         API_URL = "/api/v1/admins/getAllCompanies";
       } else if (role === "EXPERT") {
-        API_URL = "/api/v1/experts/getAllPendingCompanies";
+        API_URL = "/api/v1/experts/getAllCompanies";
       } else {
         console.error("Unauthorized role:", role);
         return;
@@ -129,6 +162,12 @@ function Applies() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (rawCompanies.length > 0) {
+      flattenData(rawCompanies);
+    }
+  }, [rawCompanies, expertsList]);
 
   const fetchExperts = async (controller: AbortController) => {
     try {
@@ -154,8 +193,8 @@ function Applies() {
 
     switch (auth?.role) {
       case "SUPER_ADMIN":
-        fetchData(controller, "SUPER_ADMIN");
         fetchExperts(controller);
+        fetchData(controller, "SUPER_ADMIN");
         break;
       case "EXPERT":
         fetchData(controller, "EXPERT");
@@ -200,6 +239,8 @@ function Applies() {
         new Date(company.createdDate).toString()
       )}`,
       createdDate: company.createdDate,
+      expert: expertsList.find((expert) => company.expertId === expert.id),
+      feedback: company.feedback,
     }));
     setTableData(data);
 
@@ -219,12 +260,36 @@ function Applies() {
         },
       });
       toast.success("Müraciət eksperte göndərildi!");
-      setOpenExpertModal(false);
+      closeModal();
       fetchData(controller, "SUPER_ADMIN");
     } catch (error) {
       toast.error("Müraciətin eksperte göndərilməsi uğursuz oldu.");
     }
   };
+
+  const sendFeedback = async (feedback: string, companyId: number | null) => {
+    const controller = new AbortController();
+    try {
+      await axiosPrivate.post(
+        `/api/v1/experts/giveFeedback/${companyId}`,
+        null,
+        {
+          params: {
+            feedback: feedback,
+          },
+        }
+      );
+      toast.success("Rəy göndərildi!");
+      closeModal();
+      fetchData(controller, "EXPERT");
+    } catch (error) {
+      toast.error("Rəyin göndərilməsi uğursuz oldu.");
+    }
+  };
+
+  const selectedCompany = tableData.find(
+    (company) => company.id === modalState.companyId
+  );
 
   return (
     <div>
@@ -233,19 +298,29 @@ function Applies() {
       >
         <ConfirmModal
           handleDelete={() => {
-            handleDelete(lastClickedDeleteId);
+            handleDelete(modalState.companyId);
           }}
-          openModal={deleteModalOpen}
-          handleCloseModal={() => {
-            setDeleteModalOpen(false);
-          }}
+          openModal={modalState.type === "confirm"}
+          handleCloseModal={closeModal}
         />
         <SendToExpertModal
-          openModal={openExpertModal}
-          handleCloseModal={() => setOpenExpertModal(false)}
+          openModal={modalState.type === "sendToExpert"}
+          handleCloseModal={closeModal}
           expertList={expertsList}
           onSend={(expertId: number | null) => {
-            sendCompanyToExpert(lastClickedExpertId, expertId);
+            sendCompanyToExpert(modalState.companyId, expertId);
+          }}
+        />
+        <ReadFeedback
+          openModal={modalState.type === "readFeedback"}
+          handleCloseModal={closeModal}
+          company={selectedCompany}
+        />
+        <WriteFeedback
+          openModal={modalState.type === "writeFeedback"}
+          handleCloseModal={closeModal}
+          onSend={(note: string) => {
+            sendFeedback(note, modalState.companyId);
           }}
         />
         <div className="flex flex-col  sm:flex-row items-center gap-5 justify-between mb-7">
@@ -258,18 +333,10 @@ function Applies() {
           <div>
             <AppliesTable
               data={tableData}
-              handleOpenModal={() => {
-                setDeleteModalOpen(true);
-              }}
               isDataLoaded={dataLoaded}
-              setLastId={(id: number) => {
-                setLastClickedDeleteId(id);
-              }}
-              setLastExpertId={(id: number) => {
-                setLastClickedExpertId(id);
-              }}
-              openExpertModal={() => setOpenExpertModal(true)}
+              onOpenModal={openModal}
               isLoading={loading}
+              role={auth?.user?.role}
             />
           </div>
         </div>
