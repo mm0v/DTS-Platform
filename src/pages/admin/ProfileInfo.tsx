@@ -4,7 +4,7 @@ import * as Yup from "yup";
 import "react-international-phone/style.css";
 import { useEffect, useState } from "react";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
-
+import { toast } from "react-toastify";
 interface FormValues {
   name: string;
   surname: string;
@@ -135,7 +135,7 @@ const ProfileInfo: React.FC = () => {
   ) => {
     try {
       await updateProfile(values);
-      alert("Göndərildi!");
+      toast.success("Dəyişikliklər tətbiq olundu.");
     } catch (error) {
       console.error(error);
       alert("Xəta baş verdi!");
@@ -211,7 +211,7 @@ const ProfileInfo: React.FC = () => {
                   >
                     <option value="">Gün</option>
                     {days.map((d) => (
-                      <option key={d} value={d}>
+                      <option key={d} value={d < 10 ? `0${d}` : d}>
                         {d}
                       </option>
                     ))}
