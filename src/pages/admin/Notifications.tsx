@@ -63,25 +63,28 @@ const Notification = () => {
     getNotifications();
   }, []);
 
-  const deleteNotification = (id: string, accessToken: string) => {
-    return axios.delete(`${BASE_URL}/api/v1/notifications/id`, {
+  const markAsRead = async (id: string, accessToken: string) => {
+    const response = await axios.get(`${BASE_URL}/api/v1/notifications/id`, {
       params: { id },
       headers: {
+        Accept: "*/*",
         Authorization: `Bearer ${accessToken}`,
       },
       withCredentials: true,
     });
+    console.log(response.data)
+    return response.data;
   };
 
-  const handleDeleteNotification = async (id: string) => {
+  const handleMarkAsRead = async (id: string) => {
     if (!auth.accessToken) {
       console.error("No access token!");
       return;
     }
 
     try {
-      const res = await deleteNotification(id, auth.accessToken);
-      console.log("Deleted:", res.data);
+      const res = await markAsRead(id, auth.accessToken);
+      console.log("Marked as read:", res);
 
       setNotifications((prev) => prev.filter((n) => n.id !== id));
     } catch (err: any) {
@@ -96,15 +99,15 @@ const Notification = () => {
 
           setAuth({ ...auth, accessToken: newAccessToken });
 
-          const retryRes = await deleteNotification(id, newAccessToken);
-          console.log("Deleted after refresh:", retryRes.data);
+          const retryRes = await markAsRead(id, newAccessToken);
+          console.log("Marked as read after refresh:", retryRes);
 
           setNotifications((prev) => prev.filter((n) => n.id !== id));
         } catch (refreshErr) {
           console.error("Token refresh failed:", refreshErr);
         }
       } else {
-        console.error("Delete failed:", err);
+        console.error("Failed:", err);
       }
     }
   };
@@ -128,7 +131,7 @@ const Notification = () => {
             </div>
           </div>
           <button
-            onClick={() => handleDeleteNotification(item.id)}
+            onClick={() => handleMarkAsRead(item.id)}
             className="text-end cursor-pointer"
           >
             <CloseIcon />
