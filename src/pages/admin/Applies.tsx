@@ -52,6 +52,14 @@ function useTableSettings() {
   return context;
 }
 
+type Admin = {
+  id: number;
+  name: string;
+  surname: string;
+  email: string;
+  imageUrl: string;
+};
+
 type Expert = {
   id: number;
   name: string;
@@ -90,6 +98,7 @@ function Applies() {
   const { auth } = useAdminContext();
   const axiosPrivate = useAxiosPrivate();
   const [expertsList, setExpertsList] = useState<any[]>([]);
+  const [adminsList, setAdminsList] = useState<Admin[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
   const [tableSettings, setTableSettings] = useState<Settings>({
@@ -152,7 +161,7 @@ function Applies() {
       const response = await axiosPrivate.get(API_URL, {
         signal: controller.signal,
       });
-
+      setRawCompanies(response.data);
       flattenData(response.data);
       setDataLoaded(true);
       console.log("Fetched Data:", response.data);
@@ -177,9 +186,21 @@ function Applies() {
 
       setExpertsList(response.data);
       console.log("Fetched Experts:", response.data);
-      setDataLoaded(true);
     } catch (error) {
       console.error("Error fetching expert data:", error);
+    }
+  };
+
+  const fetchAdmins = async (controller: AbortController) => {
+    try {
+      const response = await axiosPrivate.get("/api/v1/users/admins", {
+        signal: controller.signal,
+      });
+
+      setAdminsList(response.data);
+      console.log("Fetched Admins:", response.data);
+    } catch (error) {
+      console.error("Error fetching admin data:", error);
     }
   };
 
@@ -198,12 +219,12 @@ function Applies() {
         break;
       case "EXPERT":
         fetchData(controller, "EXPERT");
+        fetchAdmins(controller);
         break;
       default:
         console.error("Unauthorized role:", auth?.role);
         return;
     }
-
     return () => {
       setDataLoaded(false);
       controller.abort(); // cancel pending requests
@@ -261,6 +282,12 @@ function Applies() {
       });
       toast.success("Müraciət eksperte göndərildi!");
       closeModal();
+      sendNotification(
+        expertsList.find((expert) => expert.id === expertId)?.email,
+        `Müraciətin nömrəsi: #${companyId}`,
+        "Yeni müraciət əlavə olundu!",
+        "newApply"
+      );
       fetchData(controller, "SUPER_ADMIN");
     } catch (error) {
       toast.error("Müraciətin eksperte göndərilməsi uğursuz oldu.");
@@ -281,9 +308,47 @@ function Applies() {
       );
       toast.success("Rəy göndərildi!");
       closeModal();
+      adminsList.forEach((admin) => {
+        sendNotification(
+          admin?.email,
+          `Müraciətin nömrəsi: #${companyId}`,
+          "Ekspert rəyi əlavə olundu!",
+          "feedbackAdded"
+        );
+      });
+
       fetchData(controller, "EXPERT");
     } catch (error) {
       toast.error("Rəyin göndərilməsi uğursuz oldu.");
+    }
+  };
+
+  const sendNotification = async (
+    to: string,
+    message: string,
+    title: string,
+    type: string
+  ) => {
+    const controller = new AbortController();
+
+    const request = {
+      toEmail: to,
+      title: title,
+      message: JSON.stringify({
+        message: message,
+        type: type,
+      }),
+    };
+
+    try {
+      const response = await axiosPrivate.post("/api/v1/notifications", null, {
+        params: request,
+        signal: controller.signal,
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Error sending notification:", error);
+      throw error;
     }
   };
 

@@ -39,13 +39,13 @@ function Admin() {
 
         setAuth((prev) => ({ ...prev, user: response.data }));
       } catch (error) {
-        console.error("Error fetching expert data:", error);
+        console.error("Error profile data:", error);
       } finally {
         setLoading(false);
       }
     };
+
     const fetchNotifications = async () => {
-      setLoading(true);
       try {
         const response = await axiosPrivate.get(
           "/api/v1/notifications/my-received-and-unread",
@@ -58,8 +58,6 @@ function Admin() {
         setNotifications(response.data);
       } catch (error) {
         console.error("Error fetching notifications data:", error);
-      } finally {
-        setLoading(false);
       }
     };
 
@@ -80,7 +78,7 @@ function Admin() {
 
   return (
     <div className="flex flex-col h-dvh">
-      <div className="bg-white w-full px-[18px] py-[10px] flex justify-between items-center">
+      <div className="bg-white w-full px-[18px] py-[10px] flex justify-between items-center relative">
         <Link to={"/admin/profile_info"} className="flex items-center gap-3">
           {auth?.user?.imageUrl ? (
             <img
@@ -114,7 +112,7 @@ function Admin() {
             {notifications.length === 0 ? "" : notifications.length}
           </span>
         </Link>
-        <div className="absolute top-[40px] right-[30px] z-10">
+        <div className="sm:max-w-[485px] w-full right-0 absolute top-[40px] sm:right-[30px] z-10">
           <NotificationToast
             notification={notifications[notifications.length - 1]}
           />
@@ -123,7 +121,9 @@ function Admin() {
       <div className="flex flex-col lg:flex-row h-content bg-[#f1f1f1]">
         <AdminNavigation />
         <div className="flex-1 p-4">
-          <Outlet context={{ auth, axiosPrivate }} />
+          <Outlet
+            context={{ auth, axiosPrivate, notifications, setNotifications }}
+          />
         </div>
       </div>
     </div>

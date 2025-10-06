@@ -1,8 +1,10 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import CloseIcon from "@mui/icons-material/Close";
 import { BASE_URL } from "./Admin";
 import useAuth from "../../hooks/useAuth";
 import axios from "axios";
+import { useOutletContext } from "react-router-dom";
+import { Check, LayoutList } from "lucide-react";
 
 interface NotificationType {
   id: string;
@@ -13,9 +15,25 @@ interface NotificationType {
   read: boolean;
 }
 
+type AdminContextType = {
+  notifications: NotificationType[];
+  setNotifications: React.Dispatch<React.SetStateAction<NotificationType[]>>;
+};
+
+function useAdminContext() {
+  return useOutletContext<AdminContextType>();
+}
+
 const Notification = () => {
   const { auth, setAuth } = useAuth();
-  const [notifications, setNotifications] = useState<NotificationType[]>([]);
+  const { notifications, setNotifications } = useAdminContext();
+  const bgColors = {
+    newApply: "bg-[#FB8C00]",
+    feedbackAdded: "bg-[#4CAF50]",
+    default: "bg-[#1A4381]",
+  };
+
+  type NotificationTypeKey = keyof typeof bgColors;
 
   const fetchNotifications = (accessToken: string) => {
     return axios.get(
@@ -72,7 +90,7 @@ const Notification = () => {
       },
       withCredentials: true,
     });
-    console.log(response.data)
+    console.log(response.data);
     return response.data;
   };
 
@@ -86,7 +104,9 @@ const Notification = () => {
       const res = await markAsRead(id, auth.accessToken);
       console.log("Marked as read:", res);
 
-      setNotifications((prev) => prev.filter((n) => n.id !== id));
+      setNotifications((prev: NotificationType[]) =>
+        prev.filter((n) => n.id !== id)
+      );
     } catch (err: any) {
       if (err.response?.status === 401) {
         try {
@@ -115,29 +135,53 @@ const Notification = () => {
   return (
     <div>
       <h1 className="font-[600] text-[20px]">Bildirişlər</h1>
-      {notifications.map((item) => (
-        <div
-          key={item.id}
-          className="flex items-center w-full md:w-[612px] border-b border-[#DDDDDD] py-[20px] px-4 mt-10 justify-between"
-        >
-          <div className="flex items-center gap-5">
-            <div className="w-[48px] h-[48px] bg-[#1A4381] rounded-full"></div>
-            <div>
-              <p className="font-semibold">{item.title}</p>
-              <p className="text-[#717171] text-[13px]">{item.message}</p>
-              <span className="text-[#717171] text-[13px]">
-                {new Date(item.createdAt).toLocaleDateString()}
-              </span>
+      {notifications.length === 0 && (
+        <p className="mt-5 text-gray-500">Bildiriş yoxdur.</p>
+      )}
+      {notifications
+        .sort(
+          (a, b) =>
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        )
+        .map((item) => {
+          let isComplex = false;
+          try {
+            isComplex = JSON.parse(item.message).type !== null;
+          } catch (e) {}
+          const parsed = isComplex ? JSON.parse(item.message) : {};
+          const message = isComplex ? parsed.message : item.message;
+          const type: NotificationTypeKey =
+            parsed.type in bgColors ? parsed.type : "default";
+
+          return (
+            <div
+              key={item.id}
+              className="flex items-center w-full md:w-[612px] border-b border-[#DDDDDD] py-[20px] px-4 mt-10 justify-between"
+            >
+              <div className="flex items-center gap-5">
+                <div
+                  className={`w-[48px] h-[48px] ${bgColors[type]} rounded-full flex items-center justify-center`}
+                >
+                  {type === "newApply" && <LayoutList color="white" />}
+                  {type === "feedbackAdded" && <Check color="white" />}
+                </div>
+                <div>
+                  <p className="font-semibold">{item.title}</p>
+                  <p className="text-[#717171] text-[13px]">{message}</p>
+                  <span className="text-[#717171] text-[13px]">
+                    {new Date(item.createdAt).toLocaleDateString()}
+                  </span>
+                </div>
+              </div>
+              <button
+                onClick={() => handleMarkAsRead(item.id)}
+                className="text-end cursor-pointer"
+              >
+                <CloseIcon />
+              </button>
             </div>
-          </div>
-          <button
-            onClick={() => handleMarkAsRead(item.id)}
-            className="text-end cursor-pointer"
-          >
-            <CloseIcon />
-          </button>
-        </div>
-      ))}
+          );
+        })}
     </div>
   );
 };

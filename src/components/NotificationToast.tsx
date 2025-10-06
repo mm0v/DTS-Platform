@@ -31,7 +31,7 @@ export default function NotificationToast({
   if (!notification || id === notification.id) return null;
 
   return (
-    <div className="w-[485px] h-[130px] bg-[#E9F1FF] p-4 rounded-sm shadow-md">
+    <div className="w-full bg-[#E9F1FF] p-4 rounded-sm shadow-md">
       <div className="flex text-[#0041D1]">
         <div className="me-4">
           <NotificationInfoIcon />
@@ -41,7 +41,9 @@ export default function NotificationToast({
             {notification.title}
           </h1>
           <p className="font-ibm-plex-sans mb-4 font-medium text-sm">
-            {notification.message}
+            {JSON.parse(notification.message).type
+              ? JSON.parse(notification.message).message
+              : notification.message}
           </p>
           <div className="flex font-semibold gap-8">
             <Link
@@ -50,7 +52,7 @@ export default function NotificationToast({
                 closeToast?.();
               }}
               to="/admin/notification"
-              className="text-[#0041D1]"
+              className="text-[#0041D1] text-sm font-ibm-plex-sans"
             >
               Gör
             </Link>
@@ -60,9 +62,9 @@ export default function NotificationToast({
                 setId(notification.id);
                 closeToast?.();
               }}
-              className="text-[#ED1C24] hover:cursor-pointer"
+              className="text-[#ED1C24] hover:cursor-pointer text-sm font-ibm-plex-sans"
             >
-              Sil
+              Gizlət
             </button>
           </div>
         </div>
