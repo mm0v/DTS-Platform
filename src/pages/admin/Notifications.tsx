@@ -138,9 +138,9 @@ const Notification = () => {
       {notifications.length === 0 && (
         <p className="mt-5 text-gray-500">Bildiriş yoxdur.</p>
       )}
-      {notifications
+      {[...notifications]
         .sort(
-          (a, b) =>
+          (a: any, b: any) =>
             new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
         )
         .map((item) => {
@@ -169,7 +169,7 @@ const Notification = () => {
                   <p className="font-semibold">{item.title}</p>
                   <p className="text-[#717171] text-[13px]">{message}</p>
                   <span className="text-[#717171] text-[13px]">
-                    {new Date(item.createdAt).toLocaleDateString()}
+                    {new Date(item.createdAt).toLocaleString("en-GB")}
                   </span>
                 </div>
               </div>
