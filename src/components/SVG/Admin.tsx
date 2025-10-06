@@ -279,3 +279,34 @@ export const ExcelIcon = () => (
     </defs>
   </svg>
 );
+export const NotificationInfoIcon = ({ className }: { className?: string }) => {
+  return (
+    <svg
+      className={className}
+      width="16"
+      height="17"
+      viewBox="0 0 16 17"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <g clip-path="url(#clip0_1846_6419)">
+        <path
+          fill-rule="evenodd"
+          clip-rule="evenodd"
+          d="M16 9C16 13.4183 12.4183 17 8 17C3.58172 17 0 13.4183 0 9C0 4.58172 3.58172 1 8 1C12.4183 1 16 4.58172 16 9ZM9 5C9 5.55228 8.55228 6 8 6C7.44772 6 7 5.55228 7 5C7 4.44772 7.44772 4 8 4C8.55228 4 9 4.44772 9 5ZM7 8C6.44772 8 6 8.44772 6 9C6 9.55229 6.44772 10 7 10V13C7 13.5523 7.44772 14 8 14H9C9.55228 14 10 13.5523 10 13C10 12.4477 9.55228 12 9 12V9C9 8.44772 8.55228 8 8 8H7Z"
+          fill="#648EFF"
+        />
+      </g>
+      <defs>
+        <clipPath id="clip0_1846_6419">
+          <rect
+            width="16"
+            height="16"
+            fill="white"
+            transform="translate(0 1)"
+          />
+        </clipPath>
+      </defs>
+    </svg>
+  );
+};

@@ -3,7 +3,6 @@ import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import useAuth from "../../hooks/useAuth";
 import { useNavigate, Outlet, Link } from "react-router-dom";
 import { NotificationIcon } from "../../components/SVG/Admin";
-import ProfilePhoto from "../../../public/img/Admin/pp.jpg";
 import DataTable from "datatables.net-react";
 import DT from "datatables.net-dt";
 import "datatables.net-select-dt";
@@ -11,6 +10,7 @@ import "datatables.net-responsive-dt";
 
 import AdminNavigation from "../../components/AdminNavigation";
 import { UserRound } from "lucide-react";
+import NotificationToast from "../../components/NotificationToast";
 
 DataTable.use(DT);
 
@@ -21,6 +21,7 @@ function Admin() {
   const navigate = useNavigate();
   const axiosPrivate = useAxiosPrivate();
   const [loading, setLoading] = useState(false);
+  const [notifications, setNotifications] = useState([]);
 
   useEffect(() => {
     if (!auth?.accessToken) {
@@ -43,7 +44,26 @@ function Admin() {
         setLoading(false);
       }
     };
+    const fetchNotifications = async () => {
+      setLoading(true);
+      try {
+        const response = await axiosPrivate.get(
+          "/api/v1/notifications/my-received-and-unread",
+          {
+            signal: controller.signal,
+          }
+        );
 
+        console.log("Fetchet notifications:", response.data);
+        setNotifications(response.data);
+      } catch (error) {
+        console.error("Error fetching notifications data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchNotifications();
     fetchProfile();
 
     return () => {
@@ -91,9 +111,14 @@ function Admin() {
         >
           <NotificationIcon className="cursor-pointer " />
           <span className="absolute top-0 -right-1 bg-[#EA3030] text-[10px] text-white rounded-[4px] select-none px-1.5">
-            5
+            {notifications.length === 0 ? "" : notifications.length}
           </span>
         </Link>
+        <div className="absolute top-[40px] right-[30px] z-10">
+          <NotificationToast
+            notification={notifications[notifications.length - 1]}
+          />
+        </div>
       </div>
       <div className="flex flex-col lg:flex-row h-content bg-[#f1f1f1]">
         <AdminNavigation />
