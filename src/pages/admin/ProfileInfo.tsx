@@ -5,7 +5,6 @@ import "react-international-phone/style.css";
 import { useEffect, useState } from "react";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { toast } from "react-toastify";
-
 interface FormValues {
   name: string;
   surname: string;
@@ -139,7 +138,7 @@ const ProfileInfo: React.FC = () => {
       toast.success("Dəyişikliklər tətbiq olundu.");
     } catch (error) {
       console.error(error);
-      toast.error("Xəta baş verdi!");
+      alert("Xəta baş verdi!");
     } finally {
       setSubmitting(false);
     }
@@ -212,7 +211,7 @@ const ProfileInfo: React.FC = () => {
                   >
                     <option value="">Gün</option>
                     {days.map((d) => (
-                      <option key={d} value={d}>
+                      <option key={d} value={d < 10 ? `0${d}` : d}>
                         {d}
                       </option>
                     ))}
