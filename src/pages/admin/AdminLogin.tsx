@@ -92,9 +92,10 @@ function AdminLogin() {
       );
       const accessToken = response?.data?.accessToken;
       const refreshToken = response?.data?.refreshToken;
+      const role = response?.data?.role;
       localStorage.setItem("refreshToken", refreshToken);
       setAuth({
-        user: { email, password },
+        user: { email, password, role },
         accessToken: accessToken,
         refreshToken: refreshToken,
       });

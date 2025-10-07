@@ -24,6 +24,7 @@ const NotFound = lazy(() => import("./pages/actions/NotFound"));
 const Admin = lazy(() => import("./pages/admin/Admin"));
 const AdminLogin = lazy(() => import("./pages/admin/AdminLogin"));
 const AdminRegister = lazy(() => import("./pages/admin/AdminRegister"));
+const VerifyRegistration = lazy(() => import("./pages/admin/VerifyRegistration"));
 const ProfileInfo = lazy(() => import("./pages/admin/ProfileInfo"));
 const Notification = lazy(() => import("./pages/admin/Notifications"));
 const Administration = lazy(() => import("./pages/admin/Administration"));
@@ -67,6 +68,7 @@ const App: React.FC = () => {
           <Route path="*" element={<NotFound />} />
           <Route path="/success" element={<Our_Success />} />
 
+          <Route path="/verify-register" element={<VerifyRegistration />} />
           {/* Protected Routes */}
           <Route element={<PersistLogin />}>
             <Route path="/admin" element={<Admin />}>

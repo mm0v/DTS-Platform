@@ -15,9 +15,9 @@ export const NotificationIcon = ({ className }: IconProps) => (
     <path
       d="M8 3.5C10.7614 3.5 13 5.73858 13 8.5V10.7396C13 11.2294 13.1798 11.7022 13.5052 12.0683L14.7808 13.5035C15.6407 14.4708 14.954 16 13.6597 16H2.34025C1.04598 16 0.35927 14.4708 1.21913 13.5035L2.4948 12.0683C2.82022 11.7022 2.99998 11.2294 2.99998 10.7396L3 8.5C3 5.73858 5.23858 3.5 8 3.5ZM8 3.5V1M6.99994 19H8.99994"
       stroke="#454545"
-      stroke-width="1.4"
-      stroke-linecap="round"
-      stroke-linejoin="round"
+      strokeWidth="1.4"
+      strokeLinecap="round"
+      strokeLinejoin="round"
     />
   </svg>
 );
@@ -65,9 +65,9 @@ export const TrashIcon = () => (
     <path
       d="M5.62533 6.4585L6.32628 14.5196C6.40118 15.3808 7.12218 16.0418 7.98668 16.0418H12.014C12.8785 16.0418 13.5995 15.3808 13.6743 14.5196L14.3753 6.4585M8.12533 6.25016V5.62516C8.12533 4.70469 8.87149 3.9585 9.79199 3.9585H10.2087C11.1292 3.9585 11.8753 4.70469 11.8753 5.62516V6.25016M4.16699 6.4585H15.8337"
       stroke="#212529"
-      stroke-width="1.5"
-      stroke-linecap="round"
-      stroke-linejoin="round"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
     />
   </svg>
 );
@@ -83,9 +83,9 @@ export const ArrowUpRightIcon = () => (
     <path
       d="M14.375 12.7083V5.625H7.29167M14.1667 5.83333L5.625 14.375"
       stroke="#212529"
-      stroke-width="1.5"
-      stroke-linecap="round"
-      stroke-linejoin="round"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
     />
   </svg>
 );
@@ -101,16 +101,16 @@ export const ViewIcon = () => (
     <path
       d="M17.9537 9.204C18.207 9.559 18.3337 9.73734 18.3337 9.99984C18.3337 10.2632 18.207 10.4407 17.9537 10.7957C16.8153 12.3923 13.9078 15.8332 10.0003 15.8332C6.09199 15.8332 3.18533 12.3915 2.04699 10.7957C1.79366 10.4407 1.66699 10.2623 1.66699 9.99984C1.66699 9.7365 1.79366 9.559 2.04699 9.204C3.18533 7.60734 6.09283 4.1665 10.0003 4.1665C13.9087 4.1665 16.8153 7.60817 17.9537 9.204Z"
       stroke="black"
-      stroke-width="1.5"
-      stroke-linecap="round"
-      stroke-linejoin="round"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
     />
     <path
       d="M12.5 10C12.5 9.33696 12.2366 8.70107 11.7678 8.23223C11.2989 7.76339 10.663 7.5 10 7.5C9.33696 7.5 8.70107 7.76339 8.23223 8.23223C7.76339 8.70107 7.5 9.33696 7.5 10C7.5 10.663 7.76339 11.2989 8.23223 11.7678C8.70107 12.2366 9.33696 12.5 10 12.5C10.663 12.5 11.2989 12.2366 11.7678 11.7678C12.2366 11.2989 12.5 10.663 12.5 10Z"
       stroke="black"
-      stroke-width="1.5"
-      stroke-linecap="round"
-      stroke-linejoin="round"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
     />
   </svg>
 );
@@ -126,9 +126,9 @@ export const AddIcon = () => (
     <path
       d="M12 6V18M18 12H6"
       stroke="white"
-      stroke-width="2"
-      stroke-linecap="round"
-      stroke-linejoin="round"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
     />
   </svg>
 );
@@ -159,9 +159,9 @@ export const FilterIcon = () => (
     <path
       d="M4 7H20M6.99994 12H16.9999M10.9999 17H12.9999"
       stroke="#828282"
-      stroke-width="1.4"
-      stroke-linecap="round"
-      stroke-linejoin="round"
+      strokeWidth="1.4"
+      strokeLinecap="round"
+      strokeLinejoin="round"
     />
   </svg>
 );
@@ -177,7 +177,7 @@ export const QuestionMarkIcon = () => (
     <path
       d="M16.5 28C23.1274 28 28.5 22.6274 28.5 16C28.5 9.37258 23.1274 4 16.5 4C9.87258 4 4.5 9.37258 4.5 16C4.5 22.6274 9.87258 28 16.5 28Z"
       stroke="white"
-      stroke-width="2"
+      strokeWidth="2"
     />
     <path
       d="M16.5007 24.6663C16.8688 24.6663 17.1673 24.3679 17.1673 23.9997C17.1673 23.6315 16.8688 23.333 16.5007 23.333C16.1325 23.333 15.834 23.6315 15.834 23.9997C15.834 24.3679 16.1325 24.6663 16.5007 24.6663Z"
@@ -187,7 +187,7 @@ export const QuestionMarkIcon = () => (
     <path
       d="M16.5 21.333V19.441C16.5 18.1823 17.3053 17.065 18.5 16.6663C19.0823 16.4722 19.5888 16.0997 19.9478 15.6018C20.3067 15.1038 20.4999 14.5055 20.5 13.8917V13.2077C20.5 11.0663 18.7667 9.33301 16.6253 9.33301H16.5C15.4391 9.33301 14.4217 9.75444 13.6716 10.5046C12.9214 11.2547 12.5 12.2721 12.5 13.333"
       stroke="white"
-      stroke-width="2"
+      strokeWidth="2"
     />
   </svg>
 );
