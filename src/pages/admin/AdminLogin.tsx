@@ -98,6 +98,8 @@ function AdminLogin() {
         user: { email, password, role },
         accessToken: accessToken,
         refreshToken: refreshToken,
+        role: response?.data?.role,
+        isVerified: response?.data?.isVerified,
       });
       setEmail("");
       setPassword("");
@@ -162,6 +164,12 @@ function AdminLogin() {
                 type={showPassword ? "text" : "password"}
                 autoComplete="off"
                 name="password"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    handleSubmitForm();
+                  }
+                }}
                 onChange={(e) => handlePasswordChange(e.target.value)}
                 minLength={2}
                 maxLength={255}

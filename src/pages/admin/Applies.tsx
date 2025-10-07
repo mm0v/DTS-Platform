@@ -1,13 +1,18 @@
-import { FilterIcon, SortIcon, AddIcon } from "../../components/SVG/Admin";
 import DataTable from "datatables.net-react";
 import DT from "datatables.net-dt";
 import "datatables.net-select-dt";
 import "datatables.net-responsive-dt";
-import { useEffect, useState } from "react";
-import { data, Link, useOutletContext, useParams } from "react-router-dom";
+import { createContext, useContext, useEffect, useState } from "react";
+import { useOutletContext } from "react-router-dom";
 import type { AxiosInstance } from "axios";
 import AppliesTable from "../../components/AppliesTable";
 import ConfirmModal from "./ConfirmModal";
+import AppliesTableControllers from "../../components/AppliesTableControllers";
+import SendToExpertModal from "../../components/SendToExpertModal";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import { toast } from "react-toastify";
+import ReadFeedback from "./ReadFeedback";
+import WriteFeedback from "../../components/WriteFeedback";
 
 DataTable.use(DT);
 
@@ -16,28 +21,116 @@ type AdminContextType = {
   axiosPrivate: AxiosInstance;
 };
 
+type Settings = {
+  region: string[];
+  sector: string[];
+  status: string[];
+  sort: string;
+  searchQuery: string;
+};
+
+interface TableSettingsContextType {
+  tableSettings: Settings;
+  setTableSettings: (tableSettings: Settings) => void;
+}
+
 function useAdminContext() {
   return useOutletContext<AdminContextType>();
 }
 
+const TableSettingsContext = createContext<
+  TableSettingsContextType | undefined
+>(undefined);
+
+function useTableSettings() {
+  const context = useContext(TableSettingsContext);
+  if (!context) {
+    throw new Error(
+      "useTableSettings must be used within TableSettingsContext.Provider"
+    );
+  }
+  return context;
+}
+
+type Admin = {
+  id: number;
+  name: string;
+  surname: string;
+  email: string;
+  imageUrl: string;
+};
+
+type Expert = {
+  id: number;
+  name: string;
+  surname: string;
+  email: string;
+  phoneNumber: string;
+  imageUrl: string;
+  dateOfBirth: string;
+};
+
+type Company = {
+  id: number;
+  name: string;
+  status: string;
+  sector: string;
+  date: string;
+  region: string;
+  createdDate: string;
+  expert: Expert | null;
+  feedback: string | null;
+};
+
+type ModalType =
+  | "confirm"
+  | "sendToExpert"
+  | "readFeedback"
+  | "writeFeedback"
+  | null;
+
+interface ModalState {
+  type: ModalType;
+  companyId: number | null;
+}
+
 function Applies() {
-  const { auth, axiosPrivate } = useAdminContext();
+  const { auth } = useAdminContext();
+  const axiosPrivate = useAxiosPrivate();
+  const [expertsList, setExpertsList] = useState<any[]>([]);
+  const [adminsList, setAdminsList] = useState<Admin[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
 
-  const { pageNumber } = useParams();
+  const [tableSettings, setTableSettings] = useState<Settings>({
+    region: [],
+    sector: [],
+    status: [],
+    sort: "newest",
+    searchQuery: "",
+  });
 
-  type Company = {
-    id: number;
-    name: string;
-    status: string;
-    sector: string;
-    date: string;
+  const statusTranslate = {
+    COMPLETED: "Tamamlandı",
+    UNCOMPLETED: "Tamamlanmadı",
+    PENDING: "İcrada",
   };
 
   const [tableData, setTableData] = useState<Company[]>([]);
-  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
-  const [lastClickedDeleteId, setLastClickedDeleteId] = useState<number | null>(
-    null
-  );
+
+  const [rawCompanies, setRawCompanies] = useState<any[]>([]);
+
+  const [modalState, setModalState] = useState<ModalState>({
+    type: null,
+    companyId: null,
+  });
+
+  const openModal = (type: ModalType, companyId: number | null = null) => {
+    setModalState({ type, companyId });
+  };
+
+  const closeModal = () => {
+    setModalState({ type: null, companyId: null });
+  };
 
   const [dataLoaded, setDataLoaded] = useState<boolean>(false);
 
@@ -52,8 +145,66 @@ function Applies() {
     }
   };
 
+  const fetchData = async (controller: AbortController, role: string) => {
+    setLoading(true);
+    try {
+      let API_URL = "";
+      if (role === "SUPER_ADMIN" || role === "ADMIN") {
+        API_URL = "/api/v1/admins/getAllCompanies";
+      } else if (role === "EXPERT") {
+        API_URL = "/api/v1/experts/getAllCompanies";
+      } else {
+        console.error("Unauthorized role:", role);
+        return;
+      }
+
+      const response = await axiosPrivate.get(API_URL, {
+        signal: controller.signal,
+      });
+      setRawCompanies(response.data);
+      flattenData(response.data);
+      setDataLoaded(true);
+      console.log("Fetched Data:", response.data);
+    } catch (error) {
+      console.error("Error fetching admin data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    let isMounted = true;
+    if (rawCompanies.length > 0) {
+      flattenData(rawCompanies);
+    }
+  }, [rawCompanies, expertsList]);
+
+  const fetchExperts = async (controller: AbortController) => {
+    try {
+      const response = await axiosPrivate.get("/api/v1/admins/getAllExperts", {
+        signal: controller.signal,
+      });
+
+      setExpertsList(response.data);
+      console.log("Fetched Experts:", response.data);
+    } catch (error) {
+      console.error("Error fetching expert data:", error);
+    }
+  };
+
+  const fetchAdmins = async (controller: AbortController) => {
+    try {
+      const response = await axiosPrivate.get("/api/v1/users/admins", {
+        signal: controller.signal,
+      });
+
+      setAdminsList(response.data);
+      console.log("Fetched Admins:", response.data);
+    } catch (error) {
+      console.error("Error fetching admin data:", error);
+    }
+  };
+
+  useEffect(() => {
     const controller = new AbortController();
 
     if (!auth?.accessToken) {
@@ -61,30 +212,28 @@ function Applies() {
       return;
     }
 
-    const fetchData = async () => {
-      try {
-        const response = await axiosPrivate.get("/api/v1/companies/getAll", {
-          method: "GET",
-          signal: controller.signal,
-        });
-        if (isMounted) {
-          flattenData(response.data);
-          setDataLoaded(true);
-        }
-      } catch (error) {
-        if (isMounted) {
-          console.error("Error fetching admin data:", error);
-        }
-      }
-    };
-    console.log("Auth Token in Applies:", auth?.accessToken);
-    fetchData();
+    switch (auth?.role) {
+      case "SUPER_ADMIN":
+        fetchExperts(controller);
+        fetchData(controller, "SUPER_ADMIN");
+        break;
+      case "EXPERT":
+        fetchData(controller, "EXPERT");
+        fetchAdmins(controller);
+        break;
+      default:
+        console.error("Unauthorized role:", auth?.role);
+        return;
+    }
     return () => {
-      isMounted = false;
       setDataLoaded(false);
-      controller.abort();
+      controller.abort(); // cancel pending requests
     };
   }, [auth]);
+
+  useEffect(() => {
+    console.log("Experts List Updated:", expertsList);
+  }, [expertsList]);
 
   const formatHour = (dateString: string) => {
     const options: Intl.DateTimeFormatOptions = {
@@ -99,68 +248,167 @@ function Applies() {
     const data = companies.map((company) => ({
       id: company.id,
       name: company.companyData?.companyName,
-      status: "Tamamlandı",
+      status:
+        statusTranslate[
+          company?.companyStatus as keyof typeof statusTranslate
+        ] || company?.companyStatus,
       sector: company.propertyLaw?.businessOperations,
+      region: company.companyData?.cityAndRegion,
       date: `${new Date(company.createdDate)
         .toLocaleDateString("en-GB")
         .replace(/\//g, ".")} · ${formatHour(
         new Date(company.createdDate).toString()
       )}`,
+      createdDate: company.createdDate,
+      expert: expertsList.find((expert) => company.expertId === expert.id),
+      feedback: company.feedback,
     }));
     setTableData(data);
+
     console.log("Flattened Data:", data);
   };
 
+  const sendCompanyToExpert = async (
+    companyId: number | null,
+    expertId: number | null
+  ) => {
+    const controller = new AbortController();
+    try {
+      await axiosPrivate.post("/api/v1/admins/send-company", null, {
+        params: {
+          companyId: companyId,
+          expertId: expertId,
+        },
+      });
+      toast.success("Müraciət eksperte göndərildi!");
+      closeModal();
+      sendNotification(
+        expertsList.find((expert) => expert.id === expertId)?.email,
+        `Müraciətin nömrəsi: #${companyId}`,
+        "Yeni müraciət əlavə olundu!",
+        "newApply"
+      );
+      fetchData(controller, "SUPER_ADMIN");
+    } catch (error) {
+      toast.error("Müraciətin eksperte göndərilməsi uğursuz oldu.");
+    }
+  };
+
+  const sendFeedback = async (feedback: string, companyId: number | null) => {
+    const controller = new AbortController();
+    try {
+      await axiosPrivate.post(
+        `/api/v1/experts/giveFeedback/${companyId}`,
+        null,
+        {
+          params: {
+            feedback: feedback,
+          },
+        }
+      );
+      toast.success("Rəy göndərildi!");
+      closeModal();
+      adminsList.forEach((admin) => {
+        sendNotification(
+          admin?.email,
+          `Müraciətin nömrəsi: #${companyId}`,
+          "Ekspert rəyi əlavə olundu!",
+          "feedbackAdded"
+        );
+      });
+
+      fetchData(controller, "EXPERT");
+    } catch (error) {
+      toast.error("Rəyin göndərilməsi uğursuz oldu.");
+    }
+  };
+
+  const sendNotification = async (
+    to: string,
+    message: string,
+    title: string,
+    type: string
+  ) => {
+    const controller = new AbortController();
+
+    const request = {
+      toEmail: to,
+      title: title,
+      message: JSON.stringify({
+        message: message,
+        type: type,
+      }),
+    };
+
+    try {
+      const response = await axiosPrivate.post("/api/v1/notifications", null, {
+        params: request,
+        signal: controller.signal,
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Error sending notification:", error);
+      throw error;
+    }
+  };
+
+  const selectedCompany = tableData.find(
+    (company) => company.id === modalState.companyId
+  );
+
   return (
     <div>
-      <ConfirmModal
-        handleDelete={() => {
-          handleDelete(lastClickedDeleteId);
-        }}
-        openModal={deleteModalOpen}
-        handleCloseModal={() => {
-          setDeleteModalOpen(false);
-        }}
-      />
-      <div className="flex items-center gap-5 justify-between mb-7">
-        <input
-          className="text-[#949494] transition hover:not-focus:bg-[#e6e5e5] w-full max-w-[500px] text-[14px] border border-[#d1d1d1] leading-5 px-4 py-2 rounded-[12px]"
-          type="text"
-          placeholder="Axtar"
+      <TableSettingsContext.Provider
+        value={{ tableSettings, setTableSettings }}
+      >
+        <ConfirmModal
+          handleDelete={() => {
+            handleDelete(modalState.companyId);
+          }}
+          openModal={modalState.type === "confirm"}
+          handleCloseModal={closeModal}
         />
-        <div className="flex gap-3 font-plus-jakarta">
-          <button className="flex items-center gap-1.5 pl-3 px-2 py-2 border text-[#666666CC] rounded-xl text-[12px] leading-4 font-[700]  border-[#d1d1d1] transition hover:bg-[#cacaca] cursor-pointer ">
-            Filter <FilterIcon />
-          </button>
-          <button className="flex items-center gap-1.5 pl-3 px-2 py-2 border text-[#666666CC] rounded-xl text-[12px] leading-4 font-[700]  border-[#d1d1d1] transition hover:bg-[#cacaca] cursor-pointer ">
-            Sırala <SortIcon />
-          </button>
-          <Link to={"/admin/add_company"}>
-            <button className="flex items-center gap-1.5 pl-3 px-2 py-2 border text-[#fff] bg-[#1A4381] rounded-xl text-[12px] leading-4 font-[700]  border-[#1A4381] transition hover:bg-[#112b52] cursor-pointer whitespace-nowrap ">
-              Əlavə Et <AddIcon />
-            </button>
-          </Link>
+        <SendToExpertModal
+          openModal={modalState.type === "sendToExpert"}
+          handleCloseModal={closeModal}
+          expertList={expertsList}
+          onSend={(expertId: number | null) => {
+            sendCompanyToExpert(modalState.companyId, expertId);
+          }}
+        />
+        <ReadFeedback
+          openModal={modalState.type === "readFeedback"}
+          handleCloseModal={closeModal}
+          company={selectedCompany}
+        />
+        <WriteFeedback
+          openModal={modalState.type === "writeFeedback"}
+          handleCloseModal={closeModal}
+          onSend={(note: string) => {
+            sendFeedback(note, modalState.companyId);
+          }}
+        />
+        <div className="flex flex-col  sm:flex-row items-center gap-5 justify-between mb-7">
+          <AppliesTableControllers />
         </div>
-      </div>
-      <div>
-        <h1 className="text-xl leading-6 tracking-wide font-medium mb-5">
-          Müraciətlər
-        </h1>
         <div>
-          <AppliesTable
-            data={tableData}
-            handleOpenModal={() => {
-              setDeleteModalOpen(true);
-            }}
-            isDataLoaded={dataLoaded}
-            setLastId={(id: number) => {
-              setLastClickedDeleteId(id);
-            }}
-          />
+          <h1 className="text-xl leading-6 tracking-wide font-medium mb-5">
+            Müraciətlər
+          </h1>
+          <div>
+            <AppliesTable
+              data={tableData}
+              isDataLoaded={dataLoaded}
+              onOpenModal={openModal}
+              isLoading={loading}
+              role={auth?.user?.role}
+            />
+          </div>
         </div>
-      </div>
+      </TableSettingsContext.Provider>
     </div>
   );
 }
 
 export default Applies;
+export { useTableSettings };

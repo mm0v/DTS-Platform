@@ -5,10 +5,27 @@ import {
   type ColumnDef,
   flexRender,
 } from "@tanstack/react-table";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import { ViewIcon, ArrowUpRightIcon, TrashIcon } from "../components/SVG/Admin";
+import { Check, ChevronLeft, ChevronRight, Clock } from "lucide-react";
+import {
+  ViewIcon,
+  ArrowUpRightIcon,
+  TrashIcon,
+  FeedbackIcon,
+} from "../components/SVG/Admin";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { useTableSettings } from "../pages/admin/Applies";
+import { toast } from "react-toastify";
+
+type Expert = {
+  id: number;
+  name: string;
+  surname: string;
+  email: string;
+  phoneNumber: string;
+  imageUrl: string;
+  dateOfBirth: string;
+};
 
 type Company = {
   id: number;
@@ -16,6 +33,10 @@ type Company = {
   status: string;
   sector: string;
   date: string;
+  region: string;
+  createdDate: string;
+  expert: Expert | null;
+  feedback: string | null;
 };
 
 function Pagination({
@@ -59,7 +80,7 @@ function Pagination({
           <button
             key={page}
             onClick={() => table.setPageIndex(page)}
-            className={`p-2.5 rounded-lg border bg-white hover:bg-gray-100 transition cursor-pointer font-medium tracking-widest ${
+            className={`p-2.5 rounded-lg border bg-white hover:bg-gray-100 transition cursor-pointer font-medium ${
               page === currentPage
                 ? " text-[#0057FC] border-[#0057FC]"
                 : " text-[#343A40] border-[#CED4DA]"
@@ -96,24 +117,35 @@ function Pagination({
   );
 }
 
+type ModalType =
+  | "confirm"
+  | "sendToExpert"
+  | "readFeedback"
+  | "writeFeedback"
+  | null;
+
 type DataTableProps = {
   data: Company[];
-  handleOpenModal: () => void;
-  setLastId: (id: number) => void;
   isDataLoaded: boolean;
+  isLoading: boolean;
+  onOpenModal: (type: ModalType, companyId: number | null) => void;
+  role: string;
 };
 
 function DataTable({
   data,
-  handleOpenModal,
-  setLastId,
   isDataLoaded,
+  isLoading,
+  onOpenModal,
+  role,
 }: DataTableProps) {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   // ✅ Initialize state from URL (only once)
   const [pageIndex, setPageIndex] = useState(0);
   const [pageSize, setPageSize] = useState(10);
+
+  const { tableSettings } = useTableSettings();
 
   // initialize from URL only once data is ready
   useEffect(() => {
@@ -129,10 +161,78 @@ function DataTable({
     setPageSize(size);
   }, [isDataLoaded, data.length, searchParams]);
 
+  const renderActionButton = (row: any) => {
+    const { status, id, expert } = row.original;
+
+    if (status === "Tamamlandı") {
+      return (
+        <button
+          title="Show Feedback"
+          onClick={() => {
+            onOpenModal("readFeedback", id);
+          }}
+          className="p-2.5 rounded-lg border border-[#CED4DA] bg-white hover:bg-gray-100 transition cursor-pointer"
+        >
+          <Check width="20px" height="20px" />
+        </button>
+      );
+    }
+
+    if (role === "SUPER_ADMIN" || role === "ADMIN") {
+      switch (status) {
+        case "Tamamlanmadı":
+          return (
+            <button
+              title="Send To An Expert"
+              onClick={() => {
+                onOpenModal("sendToExpert", id);
+              }}
+              className="p-2.5 rounded-lg border border-[#CED4DA] bg-white hover:bg-gray-100 transition cursor-pointer"
+            >
+              <ArrowUpRightIcon />
+            </button>
+          );
+
+        case "İcrada":
+          return (
+            <button
+              title="Wait..."
+              onClick={() => {
+                toast.warning(
+                  `${expert?.name} ${expert?.surname}-dən cavab gözlənilir.`
+                );
+              }}
+              className="p-2.5 rounded-lg border border-[#CED4DA] bg-white hover:bg-gray-100 transition cursor-pointer"
+            >
+              <Clock width="20px" height="20px" />
+            </button>
+          );
+      }
+    } else {
+      if (status === "İcrada") {
+        return (
+          <button
+            title="Write Feedback"
+            onClick={() => {
+              onOpenModal("writeFeedback", id);
+            }}
+            className="p-2.5 rounded-lg border border-[#CED4DA] bg-white hover:bg-gray-100 transition cursor-pointer"
+          >
+            <span className="w-5 flex justify-center">
+              <FeedbackIcon />
+            </span>
+          </button>
+        );
+      }
+    }
+
+    return null;
+  };
+
   const columns: ColumnDef<Company>[] = [
     {
       header: "#",
-      cell: (row) => row.row.index + 1,
+      cell: (row) => row.row.index + pageIndex * pageSize + 1,
       enableHiding: true,
     },
     {
@@ -189,17 +289,13 @@ function DataTable({
           >
             <ViewIcon />
           </button>
-          <button
-            title="Edit"
-            className="p-2.5 rounded-lg border border-[#CED4DA] bg-white hover:bg-gray-100 transition cursor-pointer"
-          >
-            <ArrowUpRightIcon />
-          </button>
+
+          {renderActionButton(cell.row)}
+
           <button
             title="Delete"
             onClick={() => {
-              setLastId(cell.row.original.id);
-              handleOpenModal();
+              onOpenModal("confirm", cell.row.original.id);
             }}
             className="p-2.5 rounded-lg border border-[#CED4DA] bg-white hover:bg-gray-100 transition cursor-pointer"
           >
@@ -209,12 +305,58 @@ function DataTable({
       ),
     },
   ];
+
+  const filteredData = data.filter((company) => {
+    const regionMatch =
+      tableSettings.region.length === 0 ||
+      tableSettings.region.some((region) =>
+        company.region.toLowerCase().includes(region.toLowerCase())
+      );
+
+    const sectorMatch =
+      tableSettings.sector.length === 0 ||
+      tableSettings.sector.includes(company.sector);
+
+    const statusMatch =
+      tableSettings.status.length === 0 ||
+      tableSettings.status.includes(company.status);
+
+    const query = tableSettings.searchQuery.toLowerCase();
+    const searchMatch =
+      query === "" ||
+      company.name.toLowerCase().includes(query) ||
+      company.status.toLowerCase().includes(query) ||
+      company.sector.toLowerCase().includes(query) ||
+      company.region.toLowerCase().includes(query) ||
+      company.id.toString().includes(query);
+
+    return regionMatch && sectorMatch && searchMatch && statusMatch;
+  });
+
+  let sortedData = [...filteredData];
+
+  if (tableSettings.sort === "newest") {
+    sortedData.sort(
+      (a, b) =>
+        new Date(b.createdDate).getTime() - new Date(a.createdDate).getTime()
+    );
+  } else if (tableSettings.sort === "oldest") {
+    sortedData.sort(
+      (a, b) =>
+        new Date(a.createdDate).getTime() - new Date(b.createdDate).getTime()
+    );
+  } else if (tableSettings.sort === "name") {
+    sortedData.sort((a, b) => a.name.localeCompare(b.name));
+  }
+
+  const start = pageIndex * pageSize;
+  const end = start + pageSize;
+  const paginatedData = sortedData.slice(start, end);
+
   const table = useReactTable({
-    data,
+    data: paginatedData,
     columns,
-    state: {
-      pagination: { pageIndex, pageSize }, // ✅ controlled state
-    },
+    state: { pagination: { pageIndex, pageSize } },
     onPaginationChange: (updater) => {
       if (typeof updater === "function") {
         const newState = updater({ pageIndex, pageSize });
@@ -227,7 +369,8 @@ function DataTable({
     },
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
-    manualPagination: false,
+    manualPagination: true,
+    pageCount: Math.ceil(sortedData.length / pageSize), // ✅ add this
   });
 
   return (
@@ -278,6 +421,10 @@ function DataTable({
           ))}
         </tbody>
       </table>
+      {(table.getRowModel().rows.length && !isLoading) === 0 && (
+        <p className="w-full text-center mt-4">Məlumat yoxdur</p>
+      )}
+      {isLoading && <p className="w-full text-center mt-4">Yüklənir...</p>}
 
       {/* Pagination */}
       <Pagination table={table} isDataLoaded={isDataLoaded} />
