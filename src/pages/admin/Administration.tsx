@@ -6,6 +6,7 @@ import { Select, MenuItem } from "@mui/material";
 import { toast, ToastContainer } from "react-toastify";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import useAuth from "../../hooks/useAuth";
+import { useNavigate } from "react-router-dom";
 
 interface User {
   id?: number;
@@ -58,7 +59,14 @@ const Administration = () => {
   const [isLoading, setIsLoading] = useState(true);
   const axiosPrivate = useAxiosPrivate();
   const { auth } = useAuth();
+  const navigate = useNavigate();
 
+  useEffect(() => {
+    if (auth?.role === "EXPERT") {
+      navigate("/admin/applies", { replace: true });
+    }
+  }, [auth, navigate]);
+  
   const isSuperAdmin = auth?.role === "SUPER_ADMIN";
   const isAdmin = auth?.role === "ADMIN";
 
@@ -193,7 +201,7 @@ const Administration = () => {
         toast.error("Super Admin silinə bilməz");
         return;
       }
-      
+
       if (isAdmin && user.role !== "EXPERT") {
         toast.error("Admin yalnız Expert istifadəçiləri silə bilər");
         return;
@@ -259,15 +267,15 @@ const Administration = () => {
     if (isPending) {
       return isSuperAdmin || isAdmin;
     }
-    
+
     if (isSuperAdmin) {
       return user.role !== "SUPER_ADMIN";
     }
-    
+
     if (isAdmin) {
       return user.role === "EXPERT";
     }
-    
+
     return false;
   };
 

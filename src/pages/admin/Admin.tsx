@@ -23,6 +23,12 @@ function Admin() {
   const [loading, setLoading] = useState(false);
   const [notifications, setNotifications] = useState([]);
 
+  const handleLogout = () => {
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+    navigate("/login", { replace: true });
+  };
+
   useEffect(() => {
     if (!auth?.accessToken) {
       console.error("No auth token available.");
@@ -96,22 +102,30 @@ function Admin() {
             {loading
               ? "Yüklənir..."
               : auth?.user
-              ? `${auth.user.name} ${auth.user.surname}`
-              : "Data Yoxdur"}
+                ? `${auth.user.name} ${auth.user.surname}`
+                : "Data Yoxdur"}
           </p>
         </Link>
-        <Link
-          to={"/admin/notification"}
-          className="relative p-1.5"
-          onClick={() => {
-            console.log("Notification");
-          }}
-        >
-          <NotificationIcon className="cursor-pointer " />
-          <span className="absolute top-0 -right-1 bg-[#EA3030] text-[10px] text-white rounded-[4px] select-none px-1.5">
-            {notifications.length === 0 ? "" : notifications.length}
-          </span>
-        </Link>
+
+        {/* --- LogOut Btn & Notification Bell --- */}
+
+        <div className="flex gap-3">
+          <button className="px-4 py-2 border text-white bg-[#1A4381] rounded-md text-[14px] font-[500] transition hover:bg-[#112b52] cursor-pointer" onClick={handleLogout}>Log out</button>
+
+          <Link
+            to={"/admin/notification"}
+            className="relative p-1.5"
+            onClick={() => {
+              console.log("Notification");
+            }}
+          >
+            <NotificationIcon className="cursor-pointer " />
+            <span className="absolute top-0 -right-1 bg-[#EA3030] text-[10px] text-white rounded-[4px] select-none px-1.5">
+              {notifications.length === 0 ? "" : notifications.length}
+            </span>
+          </Link>
+        </div>
+
         <div className="sm:max-w-[485px] w-full right-0 absolute top-[40px] sm:right-[30px] z-10">
           <NotificationToast
             notification={notifications[notifications.length - 1]}

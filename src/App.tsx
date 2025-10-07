@@ -8,7 +8,6 @@ import LoadingSpinner from "./components/shared/LoadingSpinner";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Applies from "./pages/admin/Applies";
-import Reports from "./pages/admin/Reports";
 import PersistLogin from "./pages/admin/PersistLogin";
 import CompanyInfo from "./pages/admin/CompanyInfo";
 import AddCompany from "./pages/admin/AddCompany";
@@ -77,11 +76,11 @@ const App: React.FC = () => {
               <Route path="applies/info/:id" element={<CompanyInfo />} />
               <Route path="add_company" element={<AddCompany />} />
               <Route path="administration" element={<Administration />} />{" "}
-              <Route path="reports" element={<Reports />} />{" "}
+              {/* <Route path="reports" element={<Reports />} />{" "} */}
               <Route path="profile_info" element={<ProfileInfo />} />{" "}
               <Route path="notification" element={<Notification />} />{" "}
             </Route>
-            <Route path="/admin/login" element={<AdminLogin />} />
+            <Route path="/login" element={<AdminLogin />} />
             <Route path="/admin/register" element={<AdminRegister />} />
           </Route>
         </Routes>
