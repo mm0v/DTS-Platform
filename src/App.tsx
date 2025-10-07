@@ -68,7 +68,7 @@ const App: React.FC = () => {
           <Route path="*" element={<NotFound />} />
           <Route path="/success" element={<Our_Success />} />
 
-          <Route path="/verify-register" element={<VerifyRegistration />} />
+          <Route path="/users/verify-register" element={<VerifyRegistration />} />
           {/* Protected Routes */}
           <Route element={<PersistLogin />}>
             <Route path="/admin" element={<Admin />}>
