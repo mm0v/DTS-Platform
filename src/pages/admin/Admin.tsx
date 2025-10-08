@@ -77,7 +77,7 @@ function Admin() {
 
   useEffect(() => {
     if (!auth?.accessToken) {
-      navigate("/admin/login");
+      navigate("/login");
       return;
     }
   }, [auth, navigate]);
@@ -102,15 +102,20 @@ function Admin() {
             {loading
               ? "Yüklənir..."
               : auth?.user
-                ? `${auth.user.name} ${auth.user.surname}`
-                : "Data Yoxdur"}
+              ? `${auth.user.name} ${auth.user.surname}`
+              : "Data Yoxdur"}
           </p>
         </Link>
 
         {/* --- LogOut Btn & Notification Bell --- */}
 
         <div className="flex gap-3">
-          <button className="px-4 py-2 border text-white bg-[#1A4381] rounded-md text-[14px] font-[500] transition hover:bg-[#112b52] cursor-pointer" onClick={handleLogout}>Log out</button>
+          <button
+            className="px-4 py-2 border text-white bg-[#1A4381] rounded-md text-[14px] font-[500] transition hover:bg-[#112b52] cursor-pointer"
+            onClick={handleLogout}
+          >
+            Log out
+          </button>
 
           <Link
             to={"/admin/notification"}
