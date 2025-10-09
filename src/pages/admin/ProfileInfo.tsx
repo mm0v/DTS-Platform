@@ -67,7 +67,6 @@ const ProfileInfo: React.FC = () => {
           signal: controller.signal,
         });
         if (isMounted) {
-          console.log(response.data);
           const dateOfBirth = response.data.dateOfBirth
             ? response.data.dateOfBirth.split("-")
             : null;
@@ -143,6 +142,14 @@ const ProfileInfo: React.FC = () => {
       setSubmitting(false);
     }
   };
+
+  useEffect(() => {
+    document.title = "Profil Məlumatları";
+
+    return () => {
+      document.title = "DTS Platform";
+    };
+  }, []);
 
   return (
     <div className="bg-white rounded-[8px] w-content max-w-[750px] p-[30px]">

@@ -5,7 +5,7 @@ import { Formik, Form, Field, ErrorMessage, type FieldProps } from "formik";
 import * as Yup from "yup";
 import RadioYesNo from "../../components/RadioYesNo";
 import { toast } from "react-toastify";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Select, { type MultiValue } from "react-select";
 import countryList from "react-select-country-list";
 
@@ -139,10 +139,6 @@ export default function AddCompany() {
         })
       );
 
-      console.log(values.propertyLawCertificate);
-      console.log(values.propertyLawCertificate);
-      console.log(values.propertyLawCertificate);
-
       formData.append("propertyLawCertificate", values.propertyLawCertificate);
       formData.append("registerCertificate", values.registerCertificate);
       formData.append("financialStatement", values.financialStatement);
@@ -273,6 +269,14 @@ export default function AddCompany() {
       </div>
     </div>
   );
+
+  useEffect(() => {
+    document.title = "Şirkət Əlavə Et";
+
+    return () => {
+      document.title = "DTS Platform";
+    };
+  }, []);
 
   return (
     <div className="max-w-8xl mx-auto w-full px-3.5 pt-7 pb-3.5 bg-white min-h-screen rounded-[8px] overflow-x-auto shadow-md">
@@ -924,9 +928,6 @@ export default function AddCompany() {
             <div className="pt-6 pb-3.5 flex justify-end gap-2">
               <button
                 type="submit"
-                onClick={() => {
-                  console.log(values);
-                }}
                 className="font-plus-jakarta leading-6 text-[#1A4381] text-sm font-medium tracking-widest uppercase px-4 py-2 rounded-lg bg-[#E8ECF2] cursor-pointer transition hover:bg-gray-300 "
               >
                 yadda saxla

@@ -1,19 +1,19 @@
 import { useEffect, useState } from "react";
 import { Formik, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import pic from "../../../public/img/Admin/pp.jpg";
 import { Select, MenuItem } from "@mui/material";
 import { toast, ToastContainer } from "react-toastify";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import useAuth from "../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
+import { UserRound } from "lucide-react";
 
 interface User {
   id?: number;
   name: string;
   surname: string;
   email: string;
-  imageUrl: string;
+  imageUrl: string | null;
   createdDate?: string;
   role: "" | "ADMIN" | "EXPERT" | "SUPER_ADMIN";
   isVerified?: boolean;
@@ -27,9 +27,18 @@ interface PendingUser extends User {
 }
 
 const FORBIDDEN_DOMAINS = [
-  "gmail.com", "yahoo.com", "outlook.com", "hotmail.com",
-  "icloud.com", "mail.ru", "yandex.com", "yandex.ru",
-  "protonmail.com", "gmx.com", "aol.com", "zoho.com"
+  "gmail.com",
+  "yahoo.com",
+  "outlook.com",
+  "hotmail.com",
+  "icloud.com",
+  "mail.ru",
+  "yandex.com",
+  "yandex.ru",
+  "protonmail.com",
+  "gmx.com",
+  "aol.com",
+  "zoho.com",
 ];
 
 const initialValues = {
@@ -44,12 +53,16 @@ const validationSchema = Yup.object({
   email: Yup.string()
     .email("Düzgün email yazın")
     .required("Email mütləqdir")
-    .test('corporate-email', 'Zəhmət olmasa korporativ email ünvanı daxil edin', (value) => {
-      if (!value) return false;
-      const domain = value.split('@')[1];
-      if (!domain) return false;
-      return !FORBIDDEN_DOMAINS.includes(domain.toLowerCase());
-    }),
+    .test(
+      "corporate-email",
+      "Zəhmət olmasa korporativ email ünvanı daxil edin",
+      (value) => {
+        if (!value) return false;
+        const domain = value.split("@")[1];
+        if (!domain) return false;
+        return !FORBIDDEN_DOMAINS.includes(domain.toLowerCase());
+      }
+    ),
 });
 
 const Administration = () => {
@@ -66,7 +79,7 @@ const Administration = () => {
       navigate("/admin/applies", { replace: true });
     }
   }, [auth, navigate]);
-  
+
   const isSuperAdmin = auth?.role === "SUPER_ADMIN";
   const isAdmin = auth?.role === "ADMIN";
 
@@ -82,10 +95,10 @@ const Administration = () => {
         response.data.forEach((user: any) => {
           const mappedUser = {
             id: user.id,
-            name: user.name || '',
-            surname: user.surname || '',
-            email: user.email || '',
-            imageUrl: user.imageUrl || pic,
+            name: user.name || "",
+            surname: user.surname || "",
+            email: user.email || "",
+            imageUrl: user.imageUrl,
             createdDate: user.createdDate,
             role: user.role || "",
             isVerified: user.isVerified || false,
@@ -102,9 +115,11 @@ const Administration = () => {
 
         setPendingUsers(pending);
         setUsers(verified);
-
       } catch (err: any) {
-        console.error("Error fetching users:", err.response?.data || err.message);
+        console.error(
+          "Error fetching users:",
+          err.response?.data || err.message
+        );
         toast.error("İstifadəçilər yüklənərkən xəta baş verdi");
       } finally {
         setIsLoading(false);
@@ -114,7 +129,10 @@ const Administration = () => {
     fetchUsers();
   }, [axiosPrivate]);
 
-  const handleRoleChange = async (user: User, newRole: "ADMIN" | "EXPERT" | "SUPER_ADMIN" | "") => {
+  const handleRoleChange = async (
+    user: User,
+    newRole: "ADMIN" | "EXPERT" | "SUPER_ADMIN" | ""
+  ) => {
     if (!isSuperAdmin) {
       toast.error("Rol dəyişmək üçün SUPER_ADMIN olmalısınız");
       return;
@@ -126,18 +144,25 @@ const Administration = () => {
     }
 
     try {
-      await axiosPrivate.patch(`/api/v1/users/change-role?id=${user.id}&role=${newRole}`);
+      await axiosPrivate.patch(
+        `/api/v1/users/change-role?id=${user.id}&role=${newRole}`
+      );
 
-      setUsers(prev => prev.map(u =>
-        u.id === user.id ? { ...u, role: newRole } : u
-      ));
+      setUsers((prev) =>
+        prev.map((u) => (u.id === user.id ? { ...u, role: newRole } : u))
+      );
 
-      toast.success(`${user.name} ${user.surname} rol uğurla dəyişdirildi: ${newRole}`);
+      toast.success(
+        `${user.name} ${user.surname} rol uğurla dəyişdirildi: ${newRole}`
+      );
     } catch (err: any) {
       console.error("Role change error:", err);
-      const errorMessage = err.code === 'ERR_NETWORK'
-        ? "Serverə bağlantı xətası. Zəhmət olmasa sonra yenidən cəhd edin."
-        : `Rol dəyişmə uğursuz oldu: ${err.response?.data?.message || err.message}`;
+      const errorMessage =
+        err.code === "ERR_NETWORK"
+          ? "Serverə bağlantı xətası. Zəhmət olmasa sonra yenidən cəhd edin."
+          : `Rol dəyişmə uğursuz oldu: ${
+              err.response?.data?.message || err.message
+            }`;
       toast.error(errorMessage);
     }
   };
@@ -145,14 +170,16 @@ const Administration = () => {
   const addPendingUser = (values: typeof initialValues) => {
     const newUser: PendingUser = {
       ...values,
-      imageUrl: pic,
+      imageUrl: null,
       role: "",
       invitationSent: false,
     };
 
-    setPendingUsers(prev => [...prev, newUser]);
+    setPendingUsers((prev) => [...prev, newUser]);
     setIsModalOpen(false);
-    toast.success(`${values.name} ${values.surname} siyahıya əlavə edildi. Zəhmət olmasa rolu seçin və dəvət edin.`);
+    toast.success(
+      `${values.name} ${values.surname} siyahıya əlavə edildi. Zəhmət olmasa rolu seçin və dəvət edin.`
+    );
   };
 
   const inviteUser = async (user: PendingUser, index: number) => {
@@ -171,26 +198,35 @@ const Administration = () => {
         name: user.name,
         surname: user.surname,
         email: user.email,
-        role: user.role
+        role: user.role,
       });
 
-      setPendingUsers(prev => prev.map((u, i) =>
-        i === index ? { ...u, invitationSent: true, uuid: response.data.uuid } : u
-      ));
+      setPendingUsers((prev) =>
+        prev.map((u, i) =>
+          i === index
+            ? { ...u, invitationSent: true, uuid: response.data.uuid }
+            : u
+        )
+      );
 
-      toast.success(`${user.name} ${user.surname} uğurla dəvət edildi. İstifadəçi email linkinə klik etdikdən sonra siyahıya əlavə olunacaq.`);
+      toast.success(
+        `${user.name} ${user.surname} uğurla dəvət edildi. İstifadəçi email linkinə klik etdikdən sonra siyahıya əlavə olunacaq.`
+      );
     } catch (err: any) {
       console.error("Invite error:", err);
       const errorMessage = !err?.response
         ? "Serverdən cavab yoxdur."
         : err.response.status === 403
-          ? `${user.name} ${user.surname} artıq dəvət edilib və ya icazəniz yoxdur.`
-          : `Dəvət göndərilmədi: ${err.response?.data?.message || err.message}`;
+        ? `${user.name} ${user.surname} artıq dəvət edilib və ya icazəniz yoxdur.`
+        : `Dəvət göndərilmədi: ${err.response?.data?.message || err.message}`;
       toast.error(errorMessage);
     }
   };
 
-  const deleteUser = async (user: User | PendingUser, isPending: boolean = false) => {
+  const deleteUser = async (
+    user: User | PendingUser,
+    isPending: boolean = false
+  ) => {
     if (isPending) {
       if (!isSuperAdmin && !isAdmin) {
         toast.error("Silinmə üçün icazəniz yoxdur");
@@ -209,7 +245,7 @@ const Administration = () => {
     }
 
     if (!user.id) {
-      setPendingUsers(prev => prev.filter(u => u !== user));
+      setPendingUsers((prev) => prev.filter((u) => u !== user));
       toast.success(`${user.name} ${user.surname} siyahıdan silindi.`);
       return;
     }
@@ -225,10 +261,10 @@ const Administration = () => {
       response.data.forEach((u: any) => {
         const mappedUser = {
           id: u.id,
-          name: u.name || '',
-          surname: u.surname || '',
-          email: u.email || '',
-          imageUrl: u.imageUrl || pic,
+          name: u.name || "",
+          surname: u.surname || "",
+          email: u.email || "",
+          imageUrl: u.imageUrl,
           createdDate: u.createdDate,
           role: u.role || "",
           isVerified: u.isVerified || false,
@@ -253,8 +289,10 @@ const Administration = () => {
         err.response?.status === 404
           ? `${user.name} ${user.surname} tapılmadı.`
           : err.response?.status === 403
-            ? "Silinmə üçün icazəniz yoxdur."
-            : `Silinmə uğursuz oldu: ${err.response?.data?.message || err.message}`;
+          ? "Silinmə üçün icazəniz yoxdur."
+          : `Silinmə uğursuz oldu: ${
+              err.response?.data?.message || err.message
+            }`;
       toast.error(errorMessage);
     }
   };
@@ -263,7 +301,10 @@ const Administration = () => {
     return isSuperAdmin && user.role !== "EXPERT";
   };
 
-  const canDeleteUser = (user: User | PendingUser, isPending: boolean = false) => {
+  const canDeleteUser = (
+    user: User | PendingUser,
+    isPending: boolean = false
+  ) => {
     if (isPending) {
       return isSuperAdmin || isAdmin;
     }
@@ -281,6 +322,14 @@ const Administration = () => {
 
   const allDisplayUsers = [...pendingUsers, ...users];
 
+  useEffect(() => {
+    document.title = "İnzibatçılıq";
+
+    return () => {
+      document.title = "DTS Platform";
+    };
+  }, []);
+
   if (isLoading) {
     return (
       <div className="w-full bg-[#F8F8F8] rounded-[24px] overflow-hidden">
@@ -294,7 +343,9 @@ const Administration = () => {
   return (
     <div className="w-full bg-[#F8F8F8] rounded-[24px] overflow-hidden">
       <ToastContainer position="top-right" autoClose={3000} />
-      <h1 className="bg-white p-5">Nümayəndələr</h1>
+      <h1 className="bg-white p-5 font-semibold text-[22px] leading-8 font-plus-jakarta">
+        Nümayəndələr
+      </h1>
 
       {/* Users list and add button */}
       <div className="p-3 md:p-5">
@@ -305,13 +356,19 @@ const Administration = () => {
                 <div
                   key={user.id || `pending-${index}`}
                   className={`inline-flex bg-[#F8F8F8] px-3 py-1 rounded-xl gap-1 items-center max-w-[150px] 
-                    ${index < pendingUsers.length ? "text-orange-500" : "text-black"}`}
+                    ${
+                      index < pendingUsers.length
+                        ? "text-orange-500"
+                        : "text-black"
+                    }`}
                 >
                   <div className="flex flex-col truncate">
                     <span className="text-xs truncate">
                       {user.name} {user.surname}
                     </span>
-                    <p className="text-xs text-[#969696] truncate">{user.email}</p>
+                    <p className="text-xs text-[#969696] truncate">
+                      {user.email}
+                    </p>
                   </div>
                 </div>
               ))}
@@ -337,23 +394,48 @@ const Administration = () => {
             onSubmit={addPendingUser}
           >
             {({ handleSubmit, errors, touched }) => (
-              <form onSubmit={handleSubmit} className="w-[90%] p-[20px] space-y-6 max-w-sm mx-auto bg-white rounded-[8px] relative">
+              <form
+                onSubmit={handleSubmit}
+                className="w-[90%] p-[20px] space-y-6 max-w-sm mx-auto bg-white rounded-[8px] relative"
+              >
                 <div className="text-end">
-                  <button type="button" onClick={() => setIsModalOpen(false)} className="text-[#000] hover:text-gray-700 cursor-pointer">
+                  <button
+                    type="button"
+                    onClick={() => setIsModalOpen(false)}
+                    className="text-[#000] hover:text-gray-700 cursor-pointer"
+                  >
                     ✕
                   </button>
                 </div>
 
                 <div>
                   <label className="block mb-1">Ad</label>
-                  <Field name="name" type="text" placeholder="Ad" className="w-full border border-[#CED4DA] p-2 rounded" />
-                  <ErrorMessage name="name" component="div" className="text-red-500 text-sm" />
+                  <Field
+                    name="name"
+                    type="text"
+                    placeholder="Ad"
+                    className="w-full border border-[#CED4DA] p-2 rounded"
+                  />
+                  <ErrorMessage
+                    name="name"
+                    component="div"
+                    className="text-red-500 text-sm"
+                  />
                 </div>
 
                 <div>
                   <label className="block mb-1">Soyad</label>
-                  <Field name="surname" type="text" placeholder="Soyad" className="w-full border border-[#CED4DA] p-2 rounded" />
-                  <ErrorMessage name="surname" component="div" className="text-red-500 text-sm" />
+                  <Field
+                    name="surname"
+                    type="text"
+                    placeholder="Soyad"
+                    className="w-full border border-[#CED4DA] p-2 rounded"
+                  />
+                  <ErrorMessage
+                    name="surname"
+                    component="div"
+                    className="text-red-500 text-sm"
+                  />
                 </div>
 
                 <div>
@@ -361,13 +443,24 @@ const Administration = () => {
                   <Field
                     name="email"
                     type="email"
-                    className={`w-full border p-2 rounded ${errors.email && touched.email ? 'border-red-500' : 'border-[#CED4DA]'}`}
+                    className={`w-full border p-2 rounded ${
+                      errors.email && touched.email
+                        ? "border-red-500"
+                        : "border-[#CED4DA]"
+                    }`}
                     placeholder="ali.aliyev@company.com"
                   />
-                  <ErrorMessage name="email" component="div" className="text-red-500 text-sm" />
+                  <ErrorMessage
+                    name="email"
+                    component="div"
+                    className="text-red-500 text-sm"
+                  />
                 </div>
 
-                <button type="submit" className="w-full px-4 py-2 bg-[#1A4381] text-white rounded cursor-pointer mt-4">
+                <button
+                  type="submit"
+                  className="w-full px-4 py-2 bg-[#1A4381] text-white rounded cursor-pointer mt-4"
+                >
                   Əlavə et +
                 </button>
               </form>
@@ -397,9 +490,11 @@ const Administration = () => {
                 isPending={true}
                 invitationSent={user.invitationSent}
                 onRoleChange={(newRole) => {
-                  setPendingUsers(prev => prev.map((u, i) =>
-                    i === index ? { ...u, role: newRole } : u
-                  ));
+                  setPendingUsers((prev) =>
+                    prev.map((u, i) =>
+                      i === index ? { ...u, role: newRole } : u
+                    )
+                  );
                 }}
                 onInvite={() => inviteUser(user, index)}
                 onDelete={() => deleteUser(user, true)}
@@ -450,15 +545,20 @@ const UserRow = ({
   canEditRole = false,
   showDeleteButton = false,
 }: UserRowProps) => {
-
   const getRoleBackgroundColor = (role: string) => {
     switch (role) {
-      case "EXPERT": return "#3F9C3563";
-      case "ADMIN": return "#FABAB6";
-      case "SUPER_ADMIN": return "#F8F3F1";
-      default: return "#F8F3F1";
+      case "EXPERT":
+        return "#3F9C3563";
+      case "ADMIN":
+        return "#FABAB6";
+      case "SUPER_ADMIN":
+        return "#F8F3F1";
+      default:
+        return "#F8F3F1";
     }
   };
+
+  const [imgError, setImgError] = useState(false);
 
   const formatDate = (dateString?: string) => {
     if (!dateString) return "—";
@@ -471,13 +571,28 @@ const UserRow = ({
 
   return (
     <div className="grid grid-cols-4 gap-4 items-center p-4 mb-3">
-      <div className="grid grid-cols-4 items-center">
-        <img src={user.imageUrl} alt="" className="col-span-1 w-[32px] h-[32px] rounded-full" />
+      <div className=" flex gap-3 items-center">
+        {user?.imageUrl && !imgError ? (
+          <img
+            src={user.imageUrl}
+            onError={() => setImgError(true)}
+            alt="Profile"
+            className="col-span-1 w-[32px] h-[32px] rounded-full"
+          />
+        ) : (
+          <span className="w-8 h-8 rounded-full bg-gradient-to-br from-gray-400 to-gray-300  flex items-center justify-center col-span-1">
+            <UserRound className="w-5 h-5 text-white" />
+          </span>
+        )}
         <div className="col-span-3">
-          <p className="font-medium">{user.name} {user.surname}</p>
+          <p className="font-medium">
+            {user.name} {user.surname}
+          </p>
           {isPending && (
             <span className="text-xs text-orange-500">
-              {invitationSent ? "Dəvət göndərildi - Gözləyir" : "Dəvət göndərilməyib"}
+              {invitationSent
+                ? "Dəvət göndərildi - Gözləyir"
+                : "Dəvət göndərilməyib"}
             </span>
           )}
         </div>
@@ -491,21 +606,23 @@ const UserRow = ({
         {isPending ? (
           <Select
             value={user.role}
-            onChange={(e) => onRoleChange(e.target.value as "ADMIN" | "EXPERT" | "")}
+            onChange={(e) =>
+              onRoleChange(e.target.value as "ADMIN" | "EXPERT" | "")
+            }
             displayEmpty
             className="w-[126px] h-[42px]"
             disabled={invitationSent}
             sx={{
               borderRadius: "8px",
               backgroundColor: "#F8F3F1",
-              '& .MuiOutlinedInput-notchedOutline': { border: 'none' },
-              '& .MuiSelect-select': {
-                padding: '8px 12px',
-                fontSize: '12px',
-                fontWeight: 'bold',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center'
+              "& .MuiOutlinedInput-notchedOutline": { border: "none" },
+              "& .MuiSelect-select": {
+                padding: "8px 12px",
+                fontSize: "12px",
+                fontWeight: "bold",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
               },
             }}
           >
@@ -520,18 +637,20 @@ const UserRow = ({
         ) : canEditRole ? (
           <Select
             value={user.role}
-            onChange={(e) => onRoleChange(e.target.value as "ADMIN" | "SUPER_ADMIN")}
+            onChange={(e) =>
+              onRoleChange(e.target.value as "ADMIN" | "SUPER_ADMIN")
+            }
             className="w-[126px] h-[42px]"
             sx={{
               borderRadius: "8px",
               backgroundColor: getRoleBackgroundColor(user.role),
-              '& .MuiOutlinedInput-notchedOutline': { border: 'none' },
-              '& .MuiSelect-select': {
-                fontSize: '12px',
-                fontWeight: 'bold',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
+              "& .MuiOutlinedInput-notchedOutline": { border: "none" },
+              "& .MuiSelect-select": {
+                fontSize: "12px",
+                fontWeight: "bold",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
               },
             }}
           >
@@ -543,8 +662,11 @@ const UserRow = ({
             className="w-[126px] h-[42px] flex items-center justify-center rounded-lg text-[12px] font-bold"
             style={{ backgroundColor: getRoleBackgroundColor(user.role) }}
           >
-            {user.role === "SUPER_ADMIN" ? "SUPER ADMIN" :
-              user.role === "ADMIN" ? "Admin" : "Rol yoxdur"}
+            {user.role === "SUPER_ADMIN"
+              ? "SUPER ADMIN"
+              : user.role === "ADMIN"
+              ? "Admin"
+              : "Rol yoxdur"}
           </span>
         )}
       </div>
@@ -571,14 +693,16 @@ const UserRow = ({
               Dəvət et
             </button>
           )
-        ) : showDeleteButton && (
-          <button
-            type="button"
-            className="bg-red-600 text-white w-[126px] h-[42px] rounded-lg text-sm cursor-pointer hover:bg-red-700"
-            onClick={onDelete}
-          >
-            Sil
-          </button>
+        ) : (
+          showDeleteButton && (
+            <button
+              type="button"
+              className="bg-red-600 text-white w-[126px] h-[42px] rounded-lg text-sm cursor-pointer hover:bg-red-700"
+              onClick={onDelete}
+            >
+              Sil
+            </button>
+          )
         )}
       </div>
     </div>

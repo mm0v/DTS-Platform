@@ -11,6 +11,7 @@ import Applies from "./pages/admin/Applies";
 import PersistLogin from "./pages/admin/PersistLogin";
 import CompanyInfo from "./pages/admin/CompanyInfo";
 import AddCompany from "./pages/admin/AddCompany";
+import ForgotPassword from "./pages/admin/ForgotPassword";
 const Home = lazy(() => import("./pages/Home"));
 const ComplianceAndPrioritization = lazy(
   () => import("./pages/ComplianceAndPrioritization")
@@ -23,7 +24,9 @@ const NotFound = lazy(() => import("./pages/actions/NotFound"));
 const Admin = lazy(() => import("./pages/admin/Admin"));
 const AdminLogin = lazy(() => import("./pages/admin/AdminLogin"));
 const AdminRegister = lazy(() => import("./pages/admin/AdminRegister"));
-const VerifyRegistration = lazy(() => import("./pages/admin/VerifyRegistration"));
+const VerifyRegistration = lazy(
+  () => import("./pages/admin/VerifyRegistration")
+);
 const ProfileInfo = lazy(() => import("./pages/admin/ProfileInfo"));
 const Notification = lazy(() => import("./pages/admin/Notifications"));
 const Administration = lazy(() => import("./pages/admin/Administration"));
@@ -67,21 +70,25 @@ const App: React.FC = () => {
           <Route path="*" element={<NotFound />} />
           <Route path="/success" element={<Our_Success />} />
 
-          <Route path="/users/verify-register" element={<VerifyRegistration />} />
+          <Route
+            path="/users/verify-register"
+            element={<VerifyRegistration />}
+          />
           {/* Protected Routes */}
           <Route element={<PersistLogin />}>
             <Route path="/admin" element={<Admin />}>
               <Route index element={<Applies />} />
               <Route path="applies" element={<Applies />} />
               <Route path="applies/info/:id" element={<CompanyInfo />} />
-              <Route path="add_company" element={<AddCompany />} />
+              <Route path="add-company" element={<AddCompany />} />
               <Route path="administration" element={<Administration />} />{" "}
               {/* <Route path="reports" element={<Reports />} />{" "} */}
-              <Route path="profile_info" element={<ProfileInfo />} />{" "}
+              <Route path="profile-info" element={<ProfileInfo />} />{" "}
               <Route path="notification" element={<Notification />} />{" "}
             </Route>
             <Route path="/login" element={<AdminLogin />} />
             <Route path="/admin/register" element={<AdminRegister />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
           </Route>
         </Routes>
       </Suspense>

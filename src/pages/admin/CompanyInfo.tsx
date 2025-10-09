@@ -17,31 +17,33 @@ export default function CompanyForm() {
   const { axiosPrivate } = useAdminContext();
   const { id } = useParams<{ id: string }>();
 
-    useEffect(() => {
-      let isMounted = true;
-      const controller = new AbortController();
+  useEffect(() => {
+    let isMounted = true;
+    const controller = new AbortController();
+    document.title = "Şirkət Məlumatları";
 
-      const fetchData = async () => {
-        try {
-          const response = await axiosPrivate.get(`/api/v1/companies/get/${id}`, {
-            method: "GET",
-            signal: controller.signal,
-          });
-          if (isMounted) {
-            flattenData(response.data);
-          }
-        } catch (error) {
-          if (isMounted) {
-            console.error("Error fetching admin data:", error);
-          }
+    const fetchData = async () => {
+      try {
+        const response = await axiosPrivate.get(`/api/v1/companies/get/${id}`, {
+          method: "GET",
+          signal: controller.signal,
+        });
+        if (isMounted) {
+          flattenData(response.data);
         }
-      };
-      fetchData();
-      return () => {
-        isMounted = false;
-        controller.abort();
-      };
-    }, []);
+      } catch (error) {
+        if (isMounted) {
+          console.error("Error fetching admin data:", error);
+        }
+      }
+    };
+    fetchData();
+    return () => {
+      isMounted = false;
+      controller.abort();
+      document.title = "DTS Platform";
+    };
+  }, []);
 
   const flattenData = (data: any) => {
     const newData = {

@@ -31,8 +31,11 @@ function AdminLogin() {
 
     let errorMsg = "";
 
-    if (email.length < 2 || email.length > 255) {
-      errorMsg = page.errors.emailError[language];
+    if (email.length < 2) {
+      errorMsg = "Boş buraxıla bilməz. Minimum 2 simvol.";
+    }
+    if (email.length > 255) {
+      errorMsg = "Maksimum 255 simvol";
     }
     setErrors((prev) => ({
       ...prev,
@@ -47,8 +50,11 @@ function AdminLogin() {
 
     let errorMsg = "";
 
-    if (password.length < 6 || password.length > 255) {
-      errorMsg = page.errors.passwordError[language];
+    if (password.length < 8) {
+      errorMsg = "Boş buraxıla bilməz. Minimum 8 simvol.";
+    }
+    if (password.length > 255) {
+      errorMsg = "Maksimum 255 simvol";
     }
     setErrors((prev) => ({
       ...prev,
@@ -116,6 +122,14 @@ function AdminLogin() {
     }
   };
 
+  useEffect(() => {
+    document.title = "Giriş";
+
+    return () => {
+      document.title = "DTS Platform";
+    };
+  }, []);
+
   return (
     <div className="h-dvh w-full flex items-center justify-center flex-col">
       <div className="rounded-lg w-full max-w-2xl space-y-6 relative z-20 p-10 bg-opacity-80 flex flex-col items-center">
@@ -179,7 +193,7 @@ function AdminLogin() {
               />
               <button
                 type="button"
-                className="absolute right-3 top-[50%] text-gray-300 cursor-pointer"
+                className="absolute right-3 top-[50%] text-gray-400 cursor-pointer"
                 onClick={() => setShowPassword(!showPassword)}
               >
                 {showPassword ? (
@@ -202,7 +216,7 @@ function AdminLogin() {
           </button>
         </form>
         <Link
-          to={"/admin/forgot-password"}
+          to={"/forgot-password"}
           className="text-[#8E8E93] text-[12px] mb-0.5 underline hover:text-[#1a4381] transition-all ease"
         >
           Şifrənizi unutmusunuz?

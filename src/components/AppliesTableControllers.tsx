@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { AddIcon, FilterIcon, SortIcon } from "./SVG/Admin";
 import Popover from "@mui/material/Popover";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Check } from "lucide-react";
 import { useTableSettings } from "../pages/admin/Applies";
 
@@ -61,12 +61,6 @@ function AppliesTableControllers() {
       borderRadius: "12px",
     },
   };
-
-  useEffect(() => {
-    console.log("Region selected:", region);
-    console.log("Sector selected:", sector);
-    console.log("Sort:", sort);
-  }, [region, sector, sort]);
 
   const StyledCheckbox = ({
     value,
@@ -356,7 +350,7 @@ function AppliesTableControllers() {
             </div>
           </div>
         </Popover>
-        <Link to={"/admin/add_company"}>
+        <Link to={"/admin/add-company"}>
           <button className="flex items-center gap-1.5 pl-3 px-2 py-2 border text-[#fff] bg-[#1A4381] rounded-xl text-[12px] leading-4 font-[700]  border-[#1A4381] transition hover:bg-[#112b52] cursor-pointer whitespace-nowrap ">
             Əlavə Et <AddIcon />
           </button>

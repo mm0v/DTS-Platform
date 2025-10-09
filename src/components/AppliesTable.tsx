@@ -234,6 +234,7 @@ function DataTable({
       header: "#",
       cell: (row) => row.row.index + pageIndex * pageSize + 1,
       enableHiding: true,
+      meta: { className: "text-center" },
     },
     {
       accessorKey: "name",
@@ -421,7 +422,7 @@ function DataTable({
           ))}
         </tbody>
       </table>
-      {(table.getRowModel().rows.length && !isLoading) === 0 && (
+      {table.getRowModel().rows.length === 0 && !isLoading && (
         <p className="w-full text-center mt-4">Məlumat yoxdur</p>
       )}
       {isLoading && <p className="w-full text-center mt-4">Yüklənir...</p>}

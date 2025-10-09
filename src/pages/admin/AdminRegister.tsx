@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { DateScrollPicker } from "react-date-wheel-picker";
 import { toast } from "react-toastify";
@@ -130,12 +130,20 @@ const AdminRegister = () => {
           confirmPassword: "",
         });
         setSelectedDate(undefined);
-        navigate("/admin/login");
+        navigate("/login");
       })
       .catch((e) => {
         toast.error(e?.response?.data?.message || "Qeydiyyat uğursuz oldu.");
       });
   };
+
+  useEffect(() => {
+    document.title = "Qeydiyyat";
+
+    return () => {
+      document.title = "DTS Platform";
+    };
+  }, []);
 
   return (
     <div className="register h-screen flex flex-col items-center justify-center gap-7">
@@ -332,12 +340,12 @@ const AdminRegister = () => {
           <button
             type="button"
             onClick={handleSubmit}
-            className="w-[220px] bg-[#1a4381] hover:bg-[#102c56] text-white rounded-[30px] py-2 transition-all cursor-pointer"
+            className="w-[220px] uppercase bg-[#1a4381] hover:bg-[#102c56] text-white rounded-[30px] py-2 transition-all cursor-pointer"
           >
-            Qeydiyyat
+            Tamamla
           </button>
           <Link
-            to="/admin/login"
+            to="/login"
             className="text-[#8E8E93] text-[12px] underline hover:text-[#1a4381] transition-all"
           >
             Hesabınız var artıq?

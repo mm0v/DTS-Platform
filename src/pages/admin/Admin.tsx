@@ -9,7 +9,7 @@ import "datatables.net-select-dt";
 import "datatables.net-responsive-dt";
 
 import AdminNavigation from "../../components/AdminNavigation";
-import { UserRound } from "lucide-react";
+import { UserRound, LogOut } from "lucide-react";
 import NotificationToast from "../../components/NotificationToast";
 
 DataTable.use(DT);
@@ -60,7 +60,6 @@ function Admin() {
           }
         );
 
-        console.log("Fetchet notifications:", response.data);
         setNotifications(response.data);
       } catch (error) {
         console.error("Error fetching notifications data:", error);
@@ -85,15 +84,22 @@ function Admin() {
   return (
     <div className="flex flex-col h-dvh">
       <div className="bg-white w-full px-[18px] py-[10px] flex justify-between items-center relative">
-        <Link to={"/admin/profile_info"} className="flex items-center gap-3">
+        <Link to={"/admin/profile-info"} className="flex items-center gap-3">
           {auth?.user?.imageUrl ? (
             <img
               src={auth?.user?.imageUrl}
+              onError={(e) => {
+                e.currentTarget.onerror = null;
+                setAuth((prev) => ({
+                  ...prev,
+                  user: { ...prev.user, imageUrl: "" },
+                }));
+              }}
               alt="Profile"
               className="w-[40px] h-[40px] rounded-[50%]"
             />
           ) : (
-            <span className="w-10 h-10 rounded-full bg-gray-400 flex items-center justify-center">
+            <span className="w-10 h-10 rounded-full bg-gradient-to-br from-gray-400 to-gray-300 flex items-center justify-center">
               <UserRound className="w-[25px] h-[25px] text-white" />
             </span>
           )}
@@ -109,21 +115,16 @@ function Admin() {
 
         {/* --- LogOut Btn & Notification Bell --- */}
 
-        <div className="flex gap-3">
+        <div className="flex gap-3 items-center">
           <button
-            className="px-4 py-2 border text-white bg-[#1A4381] rounded-md text-[14px] font-[500] transition hover:bg-[#112b52] cursor-pointer"
+            className="flex bg-linear-180 from-gray-100 to-white items-center gap-1.5 pr-3 px-2 py-2 border bg-white rounded-xl text-[12px] leading-4 font-[700]  border-white transition hover:bg-[#112b52] cursor-pointer whitespace-nowrap text-red-500 hover:from-red-600 hover:to-red-500 hover:text-white"
             onClick={handleLogout}
           >
-            Log out
+            <LogOut />
+            Çıxış
           </button>
 
-          <Link
-            to={"/admin/notification"}
-            className="relative p-1.5"
-            onClick={() => {
-              console.log("Notification");
-            }}
-          >
+          <Link to={"/admin/notification"} className="relative p-1.5">
             <NotificationIcon className="cursor-pointer " />
             <span className="absolute top-0 -right-1 bg-[#EA3030] text-[10px] text-white rounded-[4px] select-none px-1.5">
               {notifications.length === 0 ? "" : notifications.length}

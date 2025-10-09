@@ -146,8 +146,8 @@ function Applies() {
   };
 
   const fetchData = async (controller: AbortController, role: string) => {
-    setLoading(true);
     try {
+      setLoading(true);
       let API_URL = "";
       if (role === "SUPER_ADMIN" || role === "ADMIN") {
         API_URL = "/api/v1/admins/getAllCompanies";
@@ -164,11 +164,8 @@ function Applies() {
       setRawCompanies(response.data);
       flattenData(response.data);
       setDataLoaded(true);
-      console.log("Fetched Data:", response.data);
     } catch (error) {
       console.error("Error fetching admin data:", error);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -178,6 +175,14 @@ function Applies() {
     }
   }, [rawCompanies, expertsList]);
 
+  useEffect(() => {
+    document.title = "Müraciətlər";
+
+    return () => {
+      document.title = "DTS Platform";
+    };
+  }, []);
+
   const fetchExperts = async (controller: AbortController) => {
     try {
       const response = await axiosPrivate.get("/api/v1/admins/getAllExperts", {
@@ -185,7 +190,6 @@ function Applies() {
       });
 
       setExpertsList(response.data);
-      console.log("Fetched Experts:", response.data);
     } catch (error) {
       console.error("Error fetching expert data:", error);
     }
@@ -198,7 +202,6 @@ function Applies() {
       });
 
       setAdminsList(response.data);
-      console.log("Fetched Admins:", response.data);
     } catch (error) {
       console.error("Error fetching admin data:", error);
     }
@@ -208,7 +211,6 @@ function Applies() {
     const controller = new AbortController();
 
     if (!auth?.accessToken) {
-      console.log("No auth token available.");
       return;
     }
 
@@ -230,10 +232,6 @@ function Applies() {
       controller.abort(); // cancel pending requests
     };
   }, [auth]);
-
-  useEffect(() => {
-    console.log("Experts List Updated:", expertsList);
-  }, [expertsList]);
 
   const formatHour = (dateString: string) => {
     const options: Intl.DateTimeFormatOptions = {
@@ -263,9 +261,8 @@ function Applies() {
       expert: expertsList.find((expert) => company.expertId === expert.id),
       feedback: company.feedback,
     }));
+    setLoading(false);
     setTableData(data);
-
-    console.log("Flattened Data:", data);
   };
 
   const sendCompanyToExpert = async (

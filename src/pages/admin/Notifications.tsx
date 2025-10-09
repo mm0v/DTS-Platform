@@ -54,7 +54,6 @@ const Notification = () => {
     }
     try {
       const res = await fetchNotifications(auth.accessToken);
-      console.log(res.data);
       setNotifications(res.data);
     } catch (err: any) {
       if (err.response?.status === 401) {
@@ -90,7 +89,6 @@ const Notification = () => {
       },
       withCredentials: true,
     });
-    console.log(response.data);
     return response.data;
   };
 
@@ -101,8 +99,7 @@ const Notification = () => {
     }
 
     try {
-      const res = await markAsRead(id, auth.accessToken);
-      console.log("Marked as read:", res);
+      await markAsRead(id, auth.accessToken);
 
       setNotifications((prev: NotificationType[]) =>
         prev.filter((n) => n.id !== id)
@@ -119,8 +116,7 @@ const Notification = () => {
 
           setAuth({ ...auth, accessToken: newAccessToken });
 
-          const retryRes = await markAsRead(id, newAccessToken);
-          console.log("Marked as read after refresh:", retryRes);
+          await markAsRead(id, newAccessToken);
 
           setNotifications((prev) => prev.filter((n) => n.id !== id));
         } catch (refreshErr) {
@@ -131,6 +127,14 @@ const Notification = () => {
       }
     }
   };
+
+  useEffect(() => {
+    document.title = "Bildirişlər";
+
+    return () => {
+      document.title = "DTS Platform";
+    };
+  }, []);
 
   return (
     <div>
