@@ -8,7 +8,6 @@ import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { DateScrollPicker } from "react-date-wheel-picker";
 import { PhoneInput } from "react-international-phone";
 import "react-international-phone/style.css";
-import { axiosPrivate } from "../../services/API/axiosConfig,api";
 import { BASE_URL } from "./Admin";
 
 interface UserInfo {
@@ -72,9 +71,15 @@ const VerifyRegistration = () => {
 
       try {
         // ✅ Use public axios without token
-        const response = await axiosPrivate.get(
-          `/api/v1/users/verify-register?uuid=${uuid}`
-        );
+        const response = await axios.get(`${BASE_URL}/users/verify-register`, {
+          params: {
+            uuid: uuid,
+          },
+          headers: {
+            accept: "*/*",
+          },
+        });
+        console.log(response.data);
         const userData = response.data;
 
         setUserInfo(userData);
@@ -108,6 +113,15 @@ const VerifyRegistration = () => {
     if (!userInfo) return;
 
     try {
+      console.log({
+        id: userInfo.id,
+        email: userInfo.email,
+        name: userInfo.name,
+        surname: userInfo.surname,
+        phoneNumber: values.phoneNumber,
+        password: values.password,
+        dateOfBirth: values.dateOfBirth,
+      });
       const response = await axios.post(
         `${BASE_URL}/api/v1/users/finish-register`,
         {
