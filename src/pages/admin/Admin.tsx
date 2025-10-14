@@ -103,21 +103,21 @@ function Admin() {
       title: "Register Certificate",
       data: "registerCert",
       render: function (data: string) {
-        return `<a href="${BASE_URL}/files/download/${data}" target="_blank">Download</a>`;
+        return `<a href="${BASE_URL}/api/v1/files/download/${data}" target="_blank">Download</a>`;
       },
     },
     {
       title: "Financial Statement",
       data: "financialStatement",
       render: function (data: string) {
-        return `<a href="${BASE_URL}/files/download/${data}" target="_blank">Download</a>`;
+        return `<a href="${BASE_URL}/api/v1/files/download/${data}" target="_blank">Download</a>`;
       },
     },
     {
       title: "Property Law Certificate",
       data: "propertyLawCertificate",
       render: function (data: string) {
-        return `<a href="${BASE_URL}/files/download/${data}" target="_blank">Download</a>`;
+        return `<a href="${BASE_URL}/api/v1/files/download/${data}" target="_blank">Download</a>`;
       },
     },
     {
